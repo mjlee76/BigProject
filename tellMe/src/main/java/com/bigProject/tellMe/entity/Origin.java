@@ -13,11 +13,11 @@ import java.time.LocalDateTime;
 public class Origin {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "origin_id", nullable = false)
+    @Column(name = "origin_id")
     private Integer id;
 
     @OneToOne
-    @JoinColumn(name = "question_id", nullable = false)
+    @JoinColumn(name = "question_id")
     private Question question;
 
     @Column(nullable = false)
@@ -30,6 +30,6 @@ public class Origin {
     private LocalDateTime createDate;
 
     @ManyToOne
-    @JoinColumn(name = "category_id", nullable = false)
+    @JoinColumn(name = "category_id")
     private Category category;
 }

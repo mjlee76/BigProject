@@ -2,7 +2,6 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.3.7'
 	id 'io.spring.dependency-management' version '1.1.7'
-	id 'com.github.node-gradle.node' version '7.1.0' //react
 }
 
 group = 'com.bigProject'
@@ -42,48 +41,3 @@ dependencies {
 tasks.named('test') {
 	useJUnitPlatform()
 }
-
-// react install
-node {
-	version = '22.13.0' // Node.js 버전 (React 요구사항에 맞는 버전 사용)
-	npmVersion = '10.9.2' // npm 버전 (선택사항)
-	download = true // Node.js와 npm 자동 다운로드
-	workDir = file("${project.projectDir}/src/main/frontend/nodejs")
-	npmWorkDir = file("${project.projectDir}/src/main/frontend/npm")
-}
-
-// npm install을 실행해 React 프로젝트에 필요한 의존성을 설치합니다.
-task npmInstallDependencies(type: NpmTask) {
-	description = 'Install npm dependencies'
-	group = 'build'
-
-	dependsOn 'npmSetup' // npm 설치 준비가 끝난 후 실행
-	workingDir = file("${project.projectDir}/src/main/frontend")
-	args = ['install'] // npm install 실행
-}
-
-// React 애플리케이션을 빌드합니다. (예: npm run build
-task npmBuild(type: NpmTask) {
-	description = 'Build the React application'
-	group = 'build'
-
-	dependsOn 'npmInstallDependencies' // npm dependencies 설치 이후 실행
-	workingDir = file("${project.projectDir}/src/main/frontend")
-	args = ['run', 'build'] // npm run build 실행
-}
-
-// 빌드된 React 결과물을 Spring Boot의 정적 리소스 폴더(resources/static)로 복사합니다.
-// 이 작업을 통해 React 애플리케이션을 Spring Boot에서 서빙할 수 있습니다.
-task copyFrontendToStatic(type: Copy) {
-	description = 'Copy built React application to Spring Boot static folder'
-	group = 'build'
-
-	dependsOn 'npmBuild' // React 빌드 이후 실행
-	from "${project.projectDir}/src/main/frontend/build/" // React 빌드 결과물 위치
-	into file("${project.projectDir}/src/main/resources/static/") // Spring Boot 정적 리소스 폴더
-}
-
-// Spring Boot의 리소스 처리 과정에서 React 빌드 결과를 포함합니다.
-processResources {
-	dependsOn 'copyFrontendToStatic' // Spring Boot의 리소스 처리 과정에 포함(ToBuild)
-}									 // React 애플리케이션의 빌드 결과물을 Spring Boot의 정적 리소스 폴더(static)로 복사

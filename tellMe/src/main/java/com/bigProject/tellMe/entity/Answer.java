@@ -13,19 +13,19 @@ import java.time.LocalDateTime;
 public class Answer {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "answer_id", nullable = false)
+    @Column(name = "answer_id")
     private Integer id;
 
     @Column(nullable = false)
     private String content;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id")
     private User user;
 
     @Column(nullable = false)
     private LocalDateTime createDate;
 
-    @Column(nullable = false)
+    @Column
     private String file1;
 }

@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 public class Category {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "category_id", nullable = false)
+    @Column(name = "category_id")
     private Integer id;
 
     @Column(nullable = false)
