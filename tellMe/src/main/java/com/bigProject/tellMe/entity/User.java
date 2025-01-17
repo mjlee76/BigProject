@@ -1,5 +1,6 @@
 package com.bigProject.tellMe.entity;
 
+import com.bigProject.tellMe.enumClass.Role;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -40,8 +41,8 @@ public class User {
     @Column(nullable = false)
     private Integer age;
 
-    @ManyToOne
-    @JoinColumn(name="role_id")
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private Role role;
 
     @Column(nullable = false)

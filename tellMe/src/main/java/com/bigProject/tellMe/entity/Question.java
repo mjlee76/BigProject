@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 public class Question {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "question_id", nullable = false)
+    @Column(name = "question_id")
     private Integer id;
 
     @Column(nullable = false)
@@ -28,8 +28,12 @@ public class Question {
     private User user;
 
     @OneToOne
-    @JoinColumn(name = "answer_id", nullable = false)
+    @JoinColumn(name = "answer_id")
     private Answer answer;
+
+    @OneToOne
+    @JoinColumn(name = "origin_id")
+    private Origin origin;
 
     @Column(nullable = false)
     private LocalDateTime createDate;
@@ -43,13 +47,13 @@ public class Question {
     @Column(nullable = false)
     private Integer views;
 
-    @Column(nullable = false)
+    @Column
     private String file1;
 
-    @Column(nullable = false)
+    @Column
     private String file2;
 
-    @Column(nullable = false)
+    @Column
     private String file3;
 
 
