@@ -1,5 +1,6 @@
 package com.bigProject.tellMe.entity;
 
+import com.bigProject.tellMe.enumClass.Category;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -16,10 +17,13 @@ public class Origin {
     @Column(name = "origin_id")
     private Integer id;
 
+<<<<<<< HEAD
     @OneToOne
     @JoinColumn(name = "question_id")
     private Question question;
 
+=======
+>>>>>>> taesik
     @Column(nullable = false)
     private String title;
 
@@ -29,7 +33,12 @@ public class Origin {
     @Column(nullable = false)
     private LocalDateTime createDate;
 
+<<<<<<< HEAD
     @ManyToOne
     @JoinColumn(name = "category_id")
+=======
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+>>>>>>> taesik
     private Category category;
 }

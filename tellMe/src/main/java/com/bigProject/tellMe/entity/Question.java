@@ -31,6 +31,10 @@ public class Question {
     @JoinColumn(name = "answer_id")
     private Answer answer;
 
+    @OneToOne
+    @JoinColumn(name = "origin_id")
+    private Origin origin;
+
     @Column(nullable = false)
     private LocalDateTime createDate;
 
