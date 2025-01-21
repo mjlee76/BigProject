@@ -1,0 +1,28 @@
+<!-- 상단 내비게이션 바 -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
+<head>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/header.css}" />
+    <script type="text/javascript" th:src="@{/js/common.js}"></script>
+</head>
+<body>
+<nav class="navbar" th:fragment="navbar">
+    <div class="nav-container">
+        <div class="logo">Aivle</div>
+        <div>
+            <ul class="nav-menu">
+                <li><a th:href="@{/customer/service}">고객센터</a></li>
+                <li><a th:href="@{/customer/notice}">공지사항</a></li>
+                <li><a th:href="@{/complaint/board}">문의게시판</a></li>
+            </ul>
+        </div>
+        <div class="auth-buttons">
+            <a th:href="@{/login}">로그인</a>
+            <a th:href="@{/user/signUp}">회원가입</a>
+        </div>
+    </div>
+</nav>
+</body>
+</html>
+</html>

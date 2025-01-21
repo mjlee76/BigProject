@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>공지사항</title>
+    <link rel="stylesheet" href="notice.css">
+</head>
+<body>
+<div th:replace="layouts/navbar :: navbar"></div>
+<main class="content">
+    <h1 class="title">공지사항</h1>
+
+    <div class="tabs">
+        <button class="tab" data-category="all">전체</button>
+        <button class="tab" data-category="공고">공고</button>
+        <button class="tab" data-category="행사">행사</button>
+        <button class="tab" data-category="업데이트">업데이트</button>
+        <button class="tab" data-category="기타">기타</button>
+    </div>
+
+    <div class="summary">
+        <span>전체 <strong id="total-count">0</strong></span>
+    </div>
+
+    <table class="notice-table">
+        <thead>
+        <tr>
+            <th>번호</th>
+            <th>제목</th>
+            <th>첨부 파일</th>
+            <th>등록일</th>
+            <th>조회</th>
+        </tr>
+        </thead>
+        <tbody id="table-body">
+        <!-- JavaScript로 데이터 추가 -->
+        </tbody>
+    </table>
+
+    <div class="pagination" id="pagination">
+        <!-- JavaScript로 페이지네이션 추가 -->
+    </div>
+</main>
+
+<script src="notice.js"></script>
+</body>
+</html>

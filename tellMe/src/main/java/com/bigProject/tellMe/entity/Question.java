@@ -1,5 +1,7 @@
 package com.bigProject.tellMe.entity;
 
+import com.bigProject.tellMe.enumClass.Reveal;
+import com.bigProject.tellMe.enumClass.Status;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -23,26 +25,29 @@ public class Question {
     @Column(nullable = false)
     private String content;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+//    @ManyToOne
+//    @JoinColumn(name = "user_id")
+//    private User user;
+//
+//    @OneToOne
+//    @JoinColumn(name = "answer_id")
+//    private Answer answer;
+//
+//    @OneToOne
+//    @JoinColumn(name = "origin_id")
+//    private Origin origin;
 
-    @OneToOne
-    @JoinColumn(name = "answer_id")
-    private Answer answer;
-
-    @OneToOne
-    @JoinColumn(name = "origin_id")
-    private Origin origin;
+    @Builder.Default
+    @Column(nullable = false)
+    private LocalDateTime createDate = LocalDateTime.now();
 
     @Column(nullable = false)
-    private LocalDateTime createDate;
+    @Enumerated(EnumType.STRING)
+    private Reveal reveal;
 
     @Column(nullable = false)
-    private Boolean reveal;
-
-    @Column(nullable = false)
-    private Boolean status;
+    @Enumerated(EnumType.STRING)
+    private Status status;
 
     @Column(nullable = false)
     private Integer views;

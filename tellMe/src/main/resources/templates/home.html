@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Aivle</title>
+    <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<div th:replace="layouts/navbar :: navbar"></div>
+<div class="content">
+    <h1>민원처리 및 고충이 있다면 언제든지 게시판을 이용해 주세요.</h1>
+    <p>궁금한 내용을 게시판에 물어보세요.</p>
+    <div class="buttons">
+        <a th:href="@{/complaint/new}">시작하기</a></li>
+    </div>
+</div>
+</body>
+</html>

@@ -39,7 +39,7 @@ public class User {
     private String gender;
 
     @Column(nullable = false)
-    private Integer age;
+    private String birthDate;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)

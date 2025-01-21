@@ -1,0 +1,30 @@
+<!--고객센터 페이지-->
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>상담 페이지</title>
+    <link rel="stylesheet" href="CS.css">
+</head>
+<body>
+<div th:replace="layouts/navbar :: navbar"></div>
+<div class="menu-bar">
+    <button class="menu-button" onclick="updateContent('유선 상담 내용을 여기에 표시합니다.')">유선상담</button>
+    <button class="menu-button" onclick="updateContent('채팅 상담 내용을 여기에 표시합니다.')">채팅상담</button>
+    <button class="menu-button" onclick="updateContent('기술 지원 내용을 여기에 표시합니다.')">기술지원</button>
+</div>
+<div class="divider"></div>
+<div class="content">
+    <h2 id="main-text">민원처리 및 고충이 있다면 언제든지 연락주세요.</h2>
+    <p id="sub-text">원하는 상담 및 기능을 클릭해주세요.</p>
+    <div class="contact">
+        <span id="contact-icon"></span> <strong id = "contact-strong"></strong> <span id="contact-info"></span>
+    </div>
+</div>
+<script src="CS.js"></script>
+</body>
+</html>
+</html>
