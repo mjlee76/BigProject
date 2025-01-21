@@ -1,10 +1,7 @@
 package com.bigProject.tellMe.dto;
 
-import com.bigProject.tellMe.entity.User;
 import com.bigProject.tellMe.enumClass.Role;
-import jakarta.persistence.*;
 import lombok.*;
-
 import java.time.LocalDateTime;
 
 @Getter

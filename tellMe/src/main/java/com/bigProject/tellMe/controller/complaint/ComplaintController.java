@@ -1,20 +1,23 @@
 package com.bigProject.tellMe.controller.complaint;
 
-import com.bigProject.tellMe.dto.ComplaintFormDTO;
+import com.bigProject.tellMe.dto.QuestionDTO;
 import com.bigProject.tellMe.entity.Question;
-import com.bigProject.tellMe.repository.QuestionRepository;
+import com.bigProject.tellMe.enumClass.Status;
+import com.bigProject.tellMe.service.QuestionService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.time.LocalDateTime;
+
 @Controller
 @RequestMapping("/complaint")
+@RequiredArgsConstructor
 public class ComplaintController {
-
-    @Autowired // 스프링 부트가 미리 생성해놓은 객체를 가져다가 자동 연결
-    private QuestionRepository questionRepository;
+    private final QuestionService questionService;
 
     @GetMapping("/board")
     public String complaintBoard() {
@@ -27,14 +30,14 @@ public class ComplaintController {
     }
 
     @PostMapping("/create")
-    public String createComplaint(ComplaintFormDTO complaintFormDTO) {
-        System.out.println(complaintFormDTO.toString());
-
-        // 1. Dto를 Entity로 변환!
-        Question question = complaintFormDTO.toEntity();
+    public String createComplaint(QuestionDTO questionDTO) {
+        System.out.println(questionDTO.toString());
+        questionDTO.setCreateDate(LocalDateTime.now());
+        questionDTO.setViews(0);
+        questionDTO.setStatus(Status.처리중);
 
         // 2. Repository에게 Entity를 DB안에 저장하게 함!
-        Question saved = questionRepository.save(question);
+        Question saved = questionService.save(questionDTO);
 
         return "";
     }
