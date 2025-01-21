@@ -1,10 +1,7 @@
 package com.bigProject.tellMe.dto;
 
-import com.bigProject.tellMe.entity.User;
 import com.bigProject.tellMe.enumClass.Role;
-import jakarta.persistence.*;
 import lombok.*;
-
 import java.time.LocalDateTime;
 
 @Getter
@@ -21,7 +18,7 @@ public class UserDTO {
     private String phone;
     private String address;
     private String gender;
-    private String brithDate;
+    private String birthDate;
     private Role role;
     private LocalDateTime createDate;
     private Integer count;

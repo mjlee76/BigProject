@@ -25,15 +25,7 @@
     <div class="buttons">
         <a th:href="@{/complaint/new}">시작하기</a></li>
     </div>
-<div sec:authorize="isAnonymous()">
-    <a th:href="@{/login}">로그인</a>
 </div>
-<div sec:authorize="isAuthenticated()">
-    <form th:action="@{/logout}" method="post" th:hidden="true" name="logoutForm" >
-        <input type="submit"/>
-    </form>
-    <a class="head-a" id="logoutLink" href="">로그아웃</a>
-</div>
-</div>
+<h2>하윙ㅁㄴㅇㄹ</h2>
 </body>
 </html>
