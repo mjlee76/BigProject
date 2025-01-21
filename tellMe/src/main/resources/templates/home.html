@@ -1,11 +1,21 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+html xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Aivle</title>
     <link rel="stylesheet" href="styles.css" />
+    <script src="https://code.jquery.com/jquery-3.6.3.js"
+            integrity="sha256-nQLuAZGRRcILA+6dMBOvcRh5Pe310sBpanc6+QBmyVM=" crossorigin="anonymous"></script>
+    <script>
+        $(document).ready(function() {
+           $("#logoutLink").on("click", function(e) {
+              e.preventDefault();
+              document.logoutForm.submit();
+           });
+        });
+    </script>
 </head>
 <body>
 <div th:replace="layouts/navbar :: navbar"></div>
@@ -15,6 +25,14 @@
     <div class="buttons">
         <a th:href="@{/complaint/new}">시작하기</a></li>
     </div>
+<div sec:authorize="isAnonymous()">
+    <a th:href="@{/login}">로그인</a>
+</div>
+<div sec:authorize="isAuthenticated()">
+    <form th:action="@{/logout}" method="post" th:hidden="true" name="logoutForm" >
+        <input type="submit"/>
+    </form>
+    <a class="head-a" id="logoutLink" href="">로그아웃</a>
 </div>
 </body>
 </html>
