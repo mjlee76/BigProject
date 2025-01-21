@@ -3,6 +3,7 @@ package com.bigProject.tellMe.entity;
 import com.bigProject.tellMe.enumClass.Role;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDateTime;
 
@@ -11,6 +12,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor //기본 생성자
 @AllArgsConstructor //전체 생성자
 @Getter
+@ToString
 public class User {
 
     @Id @GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -18,10 +20,10 @@ public class User {
     private Integer id;
 
     @Column(unique = true, nullable = false)
-    private String user_id;
+    private String userId;
 
     @Column(nullable = false)
-    private String user_name;
+    private String userName;
 
     @Column(nullable = false)
     private String password;
@@ -39,13 +41,13 @@ public class User {
     private String gender;
 
     @Column(nullable = false)
-    private Integer age;
+    private String brithDate;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @Column(nullable = false)
+    @CreatedDate
     private LocalDateTime createDate;
 
     @Column(nullable = false)
