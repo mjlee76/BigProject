@@ -21,7 +21,7 @@ public class UserDTO {
     private String phone;
     private String address;
     private String gender;
-    private String brithDate;
+    private String birthDate;
     private Role role;
     private LocalDateTime createDate;
     private Integer count;
