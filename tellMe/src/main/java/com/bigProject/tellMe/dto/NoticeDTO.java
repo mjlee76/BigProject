@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class NoticeDTO {
-    private Integer id;
+    private Long id;
     private String title;
     private String content;
     private LocalDateTime createDate;

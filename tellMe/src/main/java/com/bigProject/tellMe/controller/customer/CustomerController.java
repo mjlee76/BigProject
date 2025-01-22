@@ -58,14 +58,14 @@ public class CustomerController {
 //        return "customer/notice-detail"; // 공지사항 상세 페이지 뷰 반환
 //    }
     @GetMapping("/notice/{id}")
-    public String getNotice(@PathVariable Integer id, Model model) { // 경로 상의 데이터를 받아올때는 @PathVariable 사용
+    public String getNotice(@PathVariable Long id, Model model) { // 경로 상의 데이터를 받아올때는 @PathVariable 사용
         NoticeDTO noticeDTO = noticeService.getNotice(id); // NoticeDTO 반환
         model.addAttribute("notice", noticeDTO); // 뷰에 NoticeDTO 전달
         return "customer/notice-detail"; // 공지사항 상세 페이지 뷰 반환
     }
 
     @GetMapping("/update/{id}")
-    public String updateNotice(@PathVariable Integer id, Model model) {
+    public String updateNotice(@PathVariable Long id, Model model) {
         NoticeDTO noticeDTO = noticeService.getNotice(id);
         model.addAttribute("noticeUpdate", noticeDTO);
         return "customer/update";
