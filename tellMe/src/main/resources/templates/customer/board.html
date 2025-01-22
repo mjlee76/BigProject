@@ -3,6 +3,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <html lang="en">
+<head th:replace="layouts/navbar::tellMe_head"/>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,7 +12,7 @@
     <script src="board.js" defer></script>
 </head>
 <body>
-<div th:replace="layouts/navbar :: navbar"></div>
+<div th:replace="layouts/navbar::tellMe_header"></div>
 <main id="inquiry-board">
     <h1>문의게시판</h1>
     <!-- 전체 게시글 수 및 페이지 수 -->

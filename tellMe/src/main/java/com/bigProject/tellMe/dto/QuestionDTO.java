@@ -1,6 +1,9 @@
 package com.bigProject.tellMe.dto;
 
+import com.bigProject.tellMe.entity.Answer;
+import com.bigProject.tellMe.entity.Origin;
 import com.bigProject.tellMe.entity.Question;
+import com.bigProject.tellMe.entity.User;
 import com.bigProject.tellMe.enumClass.Reveal;
 import com.bigProject.tellMe.enumClass.Status;
 import lombok.*;
@@ -13,16 +16,33 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class QuestionDTO {
-    private Integer id;
+    private Long id;
     private String title;
     private String content;
+    private Long userId;
+    private LocalDateTime createDate = LocalDateTime.now();
     private Reveal reveal;
     private Status status;
-    private LocalDateTime createDate;
-    private String file1;
-    private String file2;
-    private String file3;
-    private Integer views;
+    private Integer views = 0;
+    private String file1 = null;
+    private String file2 = null;
+    private String file3 = null;
+
+//    public QuestionDTO(Question question) {
+//        id = question.getId();
+//        title = question.getTitle();
+//        content = question.getContent();
+//        userId = question.getUser().getId();
+//        //answerId = question.getAnswer().getId();
+//        //originId = question.getOrigin().getId();
+//        createDate = question.getCreateDate();
+//        reveal = question.getReveal();
+//        status = question.getStatus();
+//        views = question.getViews();
+//        file1 = question.getFile1();
+//        file2 = question.getFile2();
+//        file3 = question.getFile3();
+//    }
 
 //    public Question toEntity() {
 //        return Question.builder()

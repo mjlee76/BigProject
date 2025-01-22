@@ -14,7 +14,7 @@ public class Answer {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "answer_id")
-    private Integer id;
+    private Long id;
 
     @Column(nullable = false)
     private String content;

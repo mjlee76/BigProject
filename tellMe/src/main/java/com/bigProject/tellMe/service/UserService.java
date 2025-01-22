@@ -9,6 +9,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -30,5 +33,73 @@ public class UserService {
         System.out.println(user.toString());
 
         userRepository.save(user);
+    }
+
+    public User findByUserId(String name) {
+        return userRepository.findByUserId(name);
+    }
+
+
+    public boolean isuserIdUnique(Long id, String userId) {
+        User user = userRepository.findByUserId(userId);
+        if(user == null) {
+            return true;
+        }
+
+        boolean isCreatingNew = (id == null);
+
+        if(isCreatingNew) {
+            if (user != null) {
+                return false;
+            }
+        }else {
+            if(user.getId() != id) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public boolean isphoneUnique(Long id, String phoneNum) {
+        User user = userRepository.findByPhone(phoneNum);
+        if(user == null) {
+            return true;
+        }
+
+        boolean isCreatingNew = (id == null);
+
+        if(isCreatingNew) {
+            if (user != null) {
+                return false;
+            }
+        }else {
+            if(user.getId() != id) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public boolean isemailUnique(Long id, String eMail) {
+        User user = userRepository.findByEmail(eMail);
+        if(user == null) {
+            return true;
+        }
+
+        boolean isCreatingNew = (id == null);
+
+        if(isCreatingNew) {
+            if (user != null) {
+                return false;
+            }
+        }else {
+            if(user.getId() != id) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

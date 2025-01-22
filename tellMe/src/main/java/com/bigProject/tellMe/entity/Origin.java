@@ -15,7 +15,7 @@ public class Origin {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "origin_id")
-    private Integer id;
+    private Long id;
 
     @Column(nullable = false)
     private String title;

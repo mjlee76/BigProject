@@ -17,4 +17,9 @@ public class CustomerController {
     public String customerNotice() {
         return "customer/notice";
     }
+
+    @GetMapping("/board")
+    public String complaintBoard() {
+        return "customer/board";
+    }
 }
