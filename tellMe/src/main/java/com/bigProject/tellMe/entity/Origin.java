@@ -1,5 +1,6 @@
 package com.bigProject.tellMe.entity;
 
+import com.bigProject.tellMe.enumClass.Category;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -14,11 +15,7 @@ public class Origin {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "origin_id")
-    private Integer id;
-
-    @OneToOne
-    @JoinColumn(name = "question_id")
-    private Question question;
+    private Long id;
 
     @Column(nullable = false)
     private String title;
@@ -29,7 +26,7 @@ public class Origin {
     @Column(nullable = false)
     private LocalDateTime createDate;
 
-    @ManyToOne
-    @JoinColumn(name = "category_id")
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private Category category;
 }

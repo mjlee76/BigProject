@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
 @Entity
-@Builder
+@Builder // notice
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -17,7 +17,7 @@ public class Notice {
 
     @Id @GeneratedValue(strategy= GenerationType.IDENTITY)
     @Column(name="notice_id")
-    private Integer id;
+    private Long id;
 
     @Column(nullable=false)
     private String title;
@@ -30,4 +30,11 @@ public class Notice {
 
     @Column(nullable=false)
     private Integer views;
+
+    @Column
+    private String file;
+
+    public void incrementViews() {
+        this.views += 1;
+    }
 }

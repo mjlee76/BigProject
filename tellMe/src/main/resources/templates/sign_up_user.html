@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <title>home</title>
+  <script src="https://code.jquery.com/jquery-3.6.3.js"></script>
+  <script type="text/javascript" th:src="@{/js/common.js}"></script>
+  <script type="text/javascript">
+    function checkNameUnique(form){
+      url = "[[@{/user/check/unique}]]";
+      console.log(url);
+
+      id=$("#id").val();
+      userId=$("#userId").val();
+      phone=$("#phone").val();
+      email=$("#email").val();
+      csrfValue=$("input[name='_csrf']").val();
+
+      params={id:id,userId:userId,phone:phone,email:email,_csrf: csrfValue};
+
+      $.post(url,params,function(response){
+          if(response == "OK"){
+              form.submit();
+          }else if(response == "IdDuplicated"){
+              showToast("Warning","User ID is alread exist!!");
+          }else if(response == "PhoneDuplicated"){
+              showToast("Warning","Phone is alread exist!!");
+          }else if(response == "EmailDuplicated"){
+               showToast("Warning","email is alread exist!!");
+           }else if(response == "Duplicated"){
+              showToast("Warning","User ID and Phone and email is alread exist!!");
+          }else{
+              showToast("Error","Unknown response from server");
+          }
+      }).fail(function(){
+          showToast("Error","Could not connect to the server");
+      });
+      return false;
+    }
+    function showToast(type, message) {
+      const toast = document.getElementById("toastMessage");
+      toast.textContent = message;  // 메시지 내용 설정
+      toast.className = "toast show " + type;  // 타입에 따른 클래스 추가
+
+      // 3초 후에 메시지 숨기기
+      setTimeout(function() {
+          toast.className = toast.className.replace("show", ""); // 숨기기
+      }, 3000); // 3초 동안 표시
+    }
+  </script>
+
+</head>
+<body>
+<div>
+  <div class="title">
+    회원가입
+  </div>
+  <div style="color:red;" id="toastMessage" class="toast"></div>
+  <form th:action="@{/user/save}" th:object="${user}" method="post" onsubmit="return checkNameUnique(this)">
+    <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
+    <input type="hidden" th:field="*{id}"/>
+    <div class="field">
+      <input type="text" th:field="*{userId}" required>
+      <label>사용자ID</label>
+    </div>
+    <div class="field">
+      <input type="password" th:field="*{password}" required>
+      <label>비밀번호</label>
+    </div>
+    <div class="field">
+      <input type="email" th:field="*{email}" required>
+      <label>이메일</label>
+    </div>
+    <div class="field">
+      <input type="text" th:field="*{userName}" required>
+      <label>이름</label>
+    </div>
+    <div class="field">
+      <input type="text" th:field="*{birthDate}" placeholder="8자리" required>
+      <label>생년월일</label>
+    </div>
+    <div class="field">
+      <input type="text" th:field="*{address}" required>
+      <label>주소</label>
+    </div>
+    <div class="field">
+      <ul>
+        <li>
+          <input type="radio" th:field="*{gender}" value="M">
+          <label>남성</label>
+        </li>
+        <li>
+          <input type="radio" th:field="*{gender}" value="W">
+          <label>여성</label>
+        </li>
+      </ul>
+    </div>
+    <div class="field">
+      <input type="text" th:field="*{phone}" required>
+      <label>전화번호</label>
+    </div>
+    <div class="field">
+      <input type="submit" value="회원가입">
+    </div>
+    <div class="content">
+      <div class="pass-link">
+        <a th:href="@{/}">홈으로</a>
+      </div>
+    </div>
+  </form>
+</div>
+</body>
+</html>
