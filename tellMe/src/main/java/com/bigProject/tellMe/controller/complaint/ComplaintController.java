@@ -39,6 +39,6 @@ public class ComplaintController {
         // 2. Repository에게 Entity를 DB안에 저장하게 함!
         Question saved = questionService.save(questionDTO);
 
-        return "";
+        return "complaint/board";
     }
 }

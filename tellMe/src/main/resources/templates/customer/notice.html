@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>공지사항</title>
-    <link rel="stylesheet" href="notice.css">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/notice.css}" />
 </head>
 <body>
 <div th:replace="layouts/navbar :: navbar"></div>
@@ -29,16 +29,29 @@
         <tr>
             <th>번호</th>
             <th>제목</th>
-            <th>첨부 파일</th>
             <th>등록일</th>
             <th>조회</th>
         </tr>
         </thead>
-        <tbody id="table-body">
-        <!-- JavaScript로 데이터 추가 -->
+<!--        <tbody id="table-body">-->
+<!--        &lt;!&ndash; JavaScript로 데이터 추가 &ndash;&gt;-->
+<!--        </tbody>-->
+        <tbody>
+            <tr th:each="notice, iterStat : ${noticeList}">
+                <td th:text="${iterStat.index + 1}"></td>
+<!--                <td th:text="${notice.id}"></td> //notice_id 출력 -->
+                <td><a th:href="@{/customer/notice/{id}(id=${notice.id})}" th:text="${notice.title}"></a></td>
+                <td th:text="*{#temporals.format(notice.createDate, 'yyyy-MM-dd HH:mm:ss')}"></td>
+                <td th:text="${notice.views}"></td>
+            </tr>
         </tbody>
     </table>
-
+    <div class="write-button-container" sec:authorize="hasRole('ROLE_MANAGER')">
+        <a class="write-button" th:href="@{/customer/write}">글쓰기</a>
+    </div>
+    <div class="delete-button-container" sec:authorize="hasRole('ROLE_MANAGER')">
+        <a class="delete-button" th:href='@{/delete}'>삭제</a>
+    </div>
     <div class="pagination" id="pagination">
         <!-- JavaScript로 페이지네이션 추가 -->
     </div>

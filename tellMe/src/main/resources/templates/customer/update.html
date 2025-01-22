@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>공지사항 작성</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/write.css}" />
+    <script src="announcementform.js" defer></script>
+</head>
+<body>
+<header>
+    <h1>공지사항 작성</h1>
+</header>
+<main>
+    <form action="/customer/update" method="post" name="noticeUpdate">
+        <input type="hidden" name="id" th:value="${noticeUpdate.id}">
+        <!-- 제목 -->
+        <div class="form-group">
+            <label for="title">제목 <span class="required">*</span></label>
+            <input type="text" id="title" name="title" placeholder="제목을 입력하세요" required th:value="${noticeUpdate.title}" />
+        </div>
+
+        <!-- 내용 -->
+        <div class="form-group">
+            <label for="content">내용 <span class="required">*</span></label>
+            <textarea id="content" name="content" rows="10" placeholder="내용을 입력하세요" required th:text="${noticeUpdate.content}"></textarea>
+        </div>
+
+        <!-- 첨부파일 -->
+        <div>
+            <label>첨부파일</label>
+            <div id="file-upload-container">
+                <!-- 기존 파일 표시 -->
+                <div th:if="${noticeUpdate.file != null}">
+                    <span th:text="${noticeUpdate.file}"></span>
+                    <a th:href="@{/files/{fileName}(fileName=${noticeUpdate.file})}" download>다운로드</a>
+                    <button type="button" class="remove-file-button" th:onclick="|deleteFile('${noticeUpdate.file}')|">X 삭제</button>
+                </div>
+
+                <!-- 새로운 파일 업로드 -->
+                <div>
+                    <input type="file" name="file" class="file-input-field" />
+                </div>
+            </div>
+        </div>
+
+        <input type="hidden" name="views" th:value="${noticeUpdate.views}">
+
+        <!-- 버튼 -->
+        <div class="form-actions">
+            <button type="submit" class="btn-primary">글수정</button>
+            <button type="button" id="view-list-button" class="btn-secondary" th:onclick="|location.href='@{/customer/notice}'|">목록</button>
+        </div>
+    </form>
+</main>
+</body>
+</html>

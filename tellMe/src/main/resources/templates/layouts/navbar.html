@@ -9,7 +9,9 @@
 <body>
 <nav class="navbar" th:fragment="navbar">
     <div class="nav-container">
-        <div class="logo">Aivle</div>
+        <div class="logo">
+            <a th:href="@{/}">Aivle</a>
+        </div>
         <div>
             <ul class="nav-menu">
                 <li><a th:href="@{/customer/service}">고객센터</a></li>
