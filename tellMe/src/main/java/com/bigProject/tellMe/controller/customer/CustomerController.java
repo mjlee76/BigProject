@@ -33,7 +33,6 @@ public class CustomerController {
 
     @PostMapping("/create")
     public String createNotice(NoticeDTO noticeDTO) {
-        System.out.println(noticeDTO.toString());
         noticeDTO.setCreateDate(LocalDateTime.now());
         noticeDTO.setViews(0);
 
