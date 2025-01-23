@@ -65,7 +65,6 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/").hasAnyRole("USER")
                         .requestMatchers("/complaint/**").hasAnyRole("USER")
-                        .requestMatchers("/complaint/**").hasAnyRole("USER")
                         .anyRequest().permitAll()
                 )
                 .formLogin(form -> form
