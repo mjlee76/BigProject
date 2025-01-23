@@ -1,42 +1,70 @@
 <!-- 민원목록 게시판 -->
-
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"></html>
 <html lang="en">
 <head th:replace="layouts/navbar::tellMe_head"/>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>문의게시판</title>
-    <link rel="stylesheet" type="text/css" th:href="@{/css/board.css}" />
-    <script src="board.js" defer></script>
+    <link rel="stylesheet" type="text/css" th:href="@{/static.css/board.css}" />
+    <script type="text/javascript" th:src="@{/static.js/board.js}"></script>
 </head>
 <body>
-<div th:replace="layouts/navbar::tellMe_header"></div>
+<div th:replace="layouts/navbar :: navbar"></div>
 <main id="inquiry-board">
     <h1>문의게시판</h1>
-    <!-- 전체 게시글 수 및 페이지 수 -->
-    <p>전체 <strong id="total-posts">0</strong> (1 / <span id="total-pages">1</span> page)</p>
+    <p>전체 <strong id="total-posts">0</strong> (1 / <span id="total-pages">1</span> 페이지)</p>
 
-    <!-- 검색 영역 -->
     <div class="search-bar">
-        <input type="text" placeholder="검색어를 입력하세요.">
-        <button>검색</button>
+        <form id="search-form">
+            <select id="search-category" name="category">
+                <option value="all">전체</option>
+                <option value="title">제목</option>
+                <option value="author">작성자</option>
+                <option value="content">내용</option>
+            </select>
+            <input type="text" placeholder="검색어를 입력하세요." id="search-input" name="query">
+            <select id="search-answer-status" name="answerStatus">
+                <option value="all">답변여부(전체)</option>
+                <option value="completed">답변완료</option>
+                <option value="transferred">이송이첩</option>
+                <option value="pending">대기중</option>
+            </select>
+            <button type="submit" id="search-button">검색</button>
+        </form>
     </div>
 
-    <!-- 게시글 목록 -->
-    <ul class="post-list">
-        <!-- 동적으로 게시글이 추가됩니다 -->
-    </ul>
+    <table class="post-table">
+        <thead>
+        <tr>
+            <th id="checkbox-header" style="display: none;">선택</th>
+            <th>번호</th>
+            <th>제목</th>
+            <th>작성자</th>
+            <th>작성일</th>
+            <th>답변여부</th>
+            <th>조회수</th>
+        </tr>
+        </thead>
+        <tbody class="post-list">
+        <!-- 게시글 목록이 동적으로 추가됩니다 -->
+        </tbody>
+    </table>
 
-    <!-- 게시글 상세 내용 영역 -->
-    <div class="content-area" style="display: none;">
-        <!-- 게시글 내용은 동적으로 생성됩니다 -->
+    <div class="action-bar">
+        <button id="delete-button">삭제</button>
+        <button id="select-delete-button" style="display: none;">선택 삭제</button>
+        <button id="cancel-button" style="display: none;">취소</button>
     </div>
 
-    <!-- 페이지네이션 -->
-    <div class="pagination"></div>
+    <div class="content-area">
+        <!-- 게시글 상세 내용이 동적으로 추가됩니다 -->
+    </div>
+
+    <div class="pagination">
+        <!-- 페이지네이션이 동적으로 추가됩니다 -->
+    </div>
 </main>
 </body>
-</html>
 </html>

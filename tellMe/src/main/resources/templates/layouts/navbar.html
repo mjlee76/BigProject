@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 <html lang="en">
-<head>
+<head th:fragment="tellMe_head">
     <link rel="stylesheet" type="text/css" th:href="@{/css/header.css}" />
     <script type="text/javascript" th:src="@{/js/common.js}"></script>
 </head>
@@ -15,7 +15,7 @@
                 <ul class="nav-menu">
                     <li><a th:href="@{/customer/service}">고객센터</a></li>
                     <li><a th:href="@{/customer/notice}">공지사항</a></li>
-                    <li><a th:href="@{/customer/board}">문의게시판</a></li>
+                    <li><a th:href="@{/complaint/board}">문의게시판</a></li>
                 </ul>
             </div>
             <div class="auth-buttons">
