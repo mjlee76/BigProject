@@ -29,8 +29,6 @@ public class UserService {
     public void save(UserDTO userDTO) {
         encodePassword(userDTO);
         User user = userMapper.userDTOToUser(userDTO);
-        System.out.println("==============================");
-        System.out.println(user.toString());
 
         userRepository.save(user);
     }

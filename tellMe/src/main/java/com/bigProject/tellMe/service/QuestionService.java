@@ -15,7 +15,6 @@ public class QuestionService {
 
     public Question save(QuestionDTO questionDTO) {
         Question question = questionMapper.quDTOToQu(questionDTO);
-        System.out.println(question.toString());
         return questionRepository.save(question);
     }
 }

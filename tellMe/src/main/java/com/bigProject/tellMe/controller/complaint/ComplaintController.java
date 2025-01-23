@@ -37,7 +37,6 @@ public class ComplaintController {
     public String createComplaint(Authentication auth, QuestionDTO questionDTO) {
         User user = userService.findByUserId(auth.getName());
 
-        System.out.println(questionDTO.toString());
         questionDTO.setUserId(user.getId());
         questionDTO.setStatus(Status.처리중);
 
