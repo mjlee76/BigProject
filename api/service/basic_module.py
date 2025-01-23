@@ -64,7 +64,6 @@ def classify_sentence(label):
     immoral_text = match.group(1).strip()
     return number, immoral_text
 
-
 #5. 순화
 class ChangeText:
     
