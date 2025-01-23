@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <html lang="en">
-<head>
+<head th:replace="layouts/navbar::tellMe_head"/>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title th:text="${notice.title}"></title> <!-- 제목을 페이지 제목으로 설정 -->
     <link rel="stylesheet" type="text/css" th:href="@{/css/notice-detail.css}" />
 </head>
 <body>
-<div th:replace="layouts/navbar :: navbar"></div>
+<div th:replace="layouts/navbar::tellMe_header"></div>
 
 <main class="content">
     <!-- 제목 -->
