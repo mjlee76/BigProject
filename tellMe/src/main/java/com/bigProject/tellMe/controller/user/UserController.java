@@ -23,11 +23,14 @@ public class UserController {
         UserDTO userDTO = new UserDTO();
         model.addAttribute("user", userDTO);
 
-        return "signUpUser";
+        return "sign_up_user";
     }
 
     @PostMapping("/save")
     public String saveUser(UserDTO userDTO, Model model) {
+        //userDTO.setRole(Role.ROLE_ADMIN);
+        //userDTO.setRole(Role.ROLE_MANAGER);
+        //userDTO.setRole(Role.ROLE_COUNSELOR);
         userDTO.setRole(Role.ROLE_USER);
         userDTO.setCount(0);
         userDTO.setCreateDate(LocalDateTime.now());
@@ -35,6 +38,16 @@ public class UserController {
         System.out.println(userDTO.toString());
         userService.save(userDTO);
         return "login";
+    }
+
+    @GetMapping("/find/id")
+    public String findId() {
+        return "find_id";
+    }
+
+    @GetMapping("/find/pw")
+    public String findPw() {
+        return "find_pw";
     }
 
 }

@@ -1,5 +1,6 @@
 package com.bigProject.tellMe.config;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,9 +17,10 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class WebSecurityConfig {
-    @Autowired
-    private CustomAuthSuccessHandler customAuthSuccessHandler;
+    private final CustomAuthSuccessHandler customAuthSuccessHandler;
+    private final CustomAuthFailureHandler customAuthFailureHandler;
 
     //사용자인증을 처리하기 위한 컴포넌트
     //AuthenticationManager : 인증을 처리하는 핵심 객체, 사용자 아이디와 비밀번호를 확인하여 인증을 처리하는 역할
@@ -70,8 +72,10 @@ public class WebSecurityConfig {
                 .formLogin(form -> form
                         .loginPage("/login")
                         .usernameParameter("userId")
-                        .permitAll()
+                        .failureHandler(customAuthFailureHandler)
                         .successHandler(customAuthSuccessHandler)
+                        .permitAll()
+
                 )
                 .logout(logout -> logout
                         .logoutSuccessUrl("/")

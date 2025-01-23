@@ -2,17 +2,16 @@ package com.bigProject.tellMe.controller.customer;
 
 import com.bigProject.tellMe.dto.NoticeDTO;
 import com.bigProject.tellMe.entity.Notice;
-import com.bigProject.tellMe.entity.Question;
 import com.bigProject.tellMe.service.NoticeService;
-import jdk.swing.interop.SwingInterOpUtils;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -59,14 +58,14 @@ public class CustomerController {
 //        return "customer/notice-detail"; // 공지사항 상세 페이지 뷰 반환
 //    }
     @GetMapping("/notice/{id}")
-    public String getNotice(@PathVariable Integer id, Model model) { // 경로 상의 데이터를 받아올때는 @PathVariable 사용
+    public String getNotice(@PathVariable Long id, Model model) { // 경로 상의 데이터를 받아올때는 @PathVariable 사용
         NoticeDTO noticeDTO = noticeService.getNotice(id); // NoticeDTO 반환
         model.addAttribute("notice", noticeDTO); // 뷰에 NoticeDTO 전달
         return "customer/notice-detail"; // 공지사항 상세 페이지 뷰 반환
     }
 
     @GetMapping("/update/{id}")
-    public String updateNotice(@PathVariable Integer id, Model model) {
+    public String updateNotice(@PathVariable Long id, Model model) {
         NoticeDTO noticeDTO = noticeService.getNotice(id);
         model.addAttribute("noticeUpdate", noticeDTO);
         return "customer/update";

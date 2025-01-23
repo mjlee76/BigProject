@@ -1,24 +1,15 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 <html lang="en">
+<head th:replace="layouts/navbar::tellMe_head"/>
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Aivle</title>
-    <link rel="stylesheet" type="text/css" th:href="@{/css/home.css}" />
-    <script src="https://code.jquery.com/jquery-3.6.3.js"
-            integrity="sha256-nQLuAZGRRcILA+6dMBOvcRh5Pe310sBpanc6+QBmyVM=" crossorigin="anonymous"></script>
-    <script>
-        $(document).ready(function() {
-           $("#logoutLink").on("click", function(e) {
-              e.preventDefault();
-              document.logoutForm.submit();
-           });
-        });
-    </script>
+    <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-<div th:replace="layouts/navbar :: navbar"></div>
+<div th:replace="layouts/navbar::tellMe_header"></div>
 <div class="content">
     <h1>민원처리 및 고충이 있다면 언제든지 게시판을 이용해 주세요.</h1>
     <p>궁금한 내용을 게시판에 물어보세요.</p>
@@ -26,5 +17,6 @@
         <a th:href="@{/complaint/new}">시작하기</a></li>
     </div>
 </div>
+<h2>하윙ㅁㄴㅇㄹ</h2>
 </body>
 </html>

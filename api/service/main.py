@@ -10,6 +10,8 @@ import pandas as pd
 import basic_module as bm
 from basic_module import TextClassifier
 from basic_module import ChangeText
+from make_report_json import LoadPdfFile
+from make_report_json import MakeReport
 
 # POST: to create data. GET: to read data. PUT: to update data. DELETE: to delete data.
 app = FastAPI()
@@ -28,6 +30,12 @@ api_key = bm.load_api_key(path)
 os.environ["OPENAI_API_KEY"] = api_key
 llm = bm.selecting_model(api_key)
 
+file_path = "./특이민원보고서_공직자응대매뉴얼.pdf"
+pdf_loader = LoadPdfFile(file_path)
+tables = pdf_loader.extract_tables_data()
+test_table = pdf_loader.make_llm_json()
+
+
 @app.get("/게시글")
 def update_item(title: str, content: str): 
     post_origin_data = {"제목": title, '내용': content} # 원문데이터 저장용
@@ -44,6 +52,10 @@ def update_item(title: str, content: str):
         changetexter = ChangeText()
         title_changed = changetexter.change_text(title)
         content_changed = changetexter.change_text(content)
+        report = MakeReport(file_path)
+        report.make_report_detail()
+        report.report_save()
+        
         return {
             "제목": {"text": title_changed, "label": title_label, "경고문": title_label_text},
             "내용": {"text": content_changed, "label": content_label, "경고문": content_label_text},

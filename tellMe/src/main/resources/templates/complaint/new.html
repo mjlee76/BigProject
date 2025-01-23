@@ -3,6 +3,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <html lang="en">
+<head th:replace="layouts/navbar::tellMe_head"/>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,7 +11,7 @@
     <link rel="stylesheet" type="text/css" th:href="@{/css/new.css}" />
 </head>
 <body>
-<div th:replace="layouts/navbar :: navbar"></div>
+<div th:replace="layouts/navbar::tellMe_header"></div>
 <main>
 <h1>민원 작성</h1>
 <!--<form th:action="@{/complaint/create}" method="post" enctype="multipart/form-data">-->
