@@ -1,10 +1,118 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>비밀번호 찾기</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.3.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+    <script type="text/javascript">
+        function checkId(form) {
+            url = "[[@{/user/check_id}]]";
+
+            userId = $("#userId").val();
+            csrfValue=$("input[name='_csrf']").val();
+
+            params={userId:userId,_csrf: csrfValue};
+
+            $.post(url, params, function (response) {
+				if (response == "실패") {
+					showModalDialog("인증실패", "아이디를 정확히 입력해주세요.")
+				} else if (response == "성공") {
+					$("#findPw").css("display", "");
+					$("#checkForm").css("display", "none");
+				}
+			}).fail(function () {
+				showModalDialog("에러", "Could not connect to the server");
+			});
+			return false;
+        }
+
+        function findPassword(form) {
+            url = "[[@{/user/check_name/find_password}]]";
+
+            userId = $("#userId").val();
+            userName = $("#userName").val();
+            phone = $("#phone").val();
+            csrfValue=$("input[name='_csrf']").val();
+
+            params={userId:userId,userName:userName,phone:phone,_csrf: csrfValue};
+
+            $.post(url, params, function (response) {
+				if (response == "noName") {
+					showModalDialog("인증실패", "일치하는 이름이 없습니다.")
+				} else if (response == "noPhone") {
+					showModalDialog("인증실패", "일치하는 핸드폰 번호가 없습니다.")
+				} else {
+					showModalDialog("인증완료", "임시 비밀번호 : " + response);
+				}
+			}).fail(function () {
+				showModalDialog("에러", "Could not connect to the server");
+			});
+			return false;
+        }
+
+        function showModalDialog(title, message) {
+			$("#modalTitle").text(title);
+			$("#modalBody").text(message);
+			$("#modalDialog").modal('show');
+		}
+    </script>
 </head>
 <body>
+<div id="checkForm">
+    <div class="title">
+        비밀번호를 찾을 아이디를 입력해주세요.
+    </div>
+    <div>
+        <form th:action="@{/login}" method="post" onsubmit="return checkId(this)">
+            <input type="text" placeholder="아이디" id="userId" name="userId" minlength="4" maxlength="20">
+            <div>
+                <input type="submit" value="다음">
+            </div>
+        </form>
+    </div>
+</div>
+<div style="display: none;" id="findPw">
+    <div class="title">
+        비밀번호 찾기
+    </div>
+    <div>
+        <form th:action="@{/login}" method="post" onsubmit="return findPassword(this)">
+            <div>
+                <label>이름</label>
+                <input type="text" id="userName" required>
+            </div>
+            <div>
+                <label>핸드폰 번호</label>
+                <input type="text" id="phone" required>
+            </div>
+            <div>
+                <input type="submit" value="비밀번호 찾기">
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="modal fade text-center" id="modalDialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="modalTitle"></h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <span id="modalBody"></span>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">닫기</button>
+                <button type="button" class="btn btn-light" data-dismiss="modal"
+                        th:onclick="|window.location.href='@{/login}'|">로그인페이지로 이동</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 </body>
 </html>
