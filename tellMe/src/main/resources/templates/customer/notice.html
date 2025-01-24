@@ -7,11 +7,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>공지사항</title>
     <link rel="stylesheet" type="text/css" th:href="@{/css/notice.css}" />
+    <script type="text/javascript" th:src="@{/js/notice.js}"></script>
 </head>
 <body>
 <div th:replace="layouts/navbar::tellMe_header"></div>
-<main class="content">
-    <h1 class="title">공지사항</h1>
+<main id="notice-board">
+
+    <h1>공지사항</h1>
+    <p>전체 <strong id="total-posts">0</strong> (1 / <span id="total-pages">1</span> 페이지)</p>
 
     <div class="tabs">
         <button class="tab" data-category="all">전체</button>
@@ -21,23 +24,20 @@
         <button class="tab" data-category="기타">기타</button>
     </div>
 
-    <div class="summary">
-        <span>전체 <strong id="total-count">0</strong></span>
-    </div>
-
-    <table class="notice-table">
+    <table class="post-table">
         <thead>
         <tr>
             <th>번호</th>
             <th>제목</th>
-            <th>등록일</th>
-            <th>조회</th>
+            <th>작성자</th>
+            <th>작성일</th>
+            <th>조회수</th>
         </tr>
         </thead>
 <!--        <tbody id="table-body">-->
 <!--        &lt;!&ndash; JavaScript로 데이터 추가 &ndash;&gt;-->
 <!--        </tbody>-->
-        <tbody>
+        <tbody class="post-list">
             <tr th:each="notice, iterStat : ${noticeList}">
                 <td th:text="${iterStat.index + 1}"></td>
 <!--                <td th:text="${notice.id}"></td> //notice_id 출력 -->
@@ -58,6 +58,5 @@
     </div>
 </main>
 
-<script src="notice.js"></script>
 </body>
 </html>

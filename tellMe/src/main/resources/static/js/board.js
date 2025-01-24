@@ -178,6 +178,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     deleteButton.addEventListener("click", () => {
         document.getElementById("checkbox-header").style.display = "table-cell";
+        const selectAllCheckbox = document.getElementById("select-all-checkbox");
+
+        // 기존 체크박스를 모두 삭제하고 새로 추가
         document.querySelectorAll(".post-table tbody tr").forEach(row => {
             const checkbox = document.createElement("input");
             checkbox.type = "checkbox";
@@ -190,6 +193,15 @@ document.addEventListener("DOMContentLoaded", () => {
         deleteButton.style.display = "none";
         selectDeleteButton.style.display = "inline-block";
         cancelButton.style.display = "inline-block";
+
+        // 전체 선택 이벤트 핸들러
+        selectAllCheckbox.checked = false; // 초기화
+        selectAllCheckbox.addEventListener("change", () => {
+            const isChecked = selectAllCheckbox.checked;
+            document.querySelectorAll(".post-checkbox").forEach(checkbox => {
+                checkbox.checked = isChecked; // 전체 선택 상태에 따라 개별 체크박스 설정
+            });
+        });
     });
 
     selectDeleteButton.addEventListener("click", () => {

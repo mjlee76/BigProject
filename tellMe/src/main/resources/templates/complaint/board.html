@@ -1,18 +1,18 @@
-<!-- 민원목록 게시판 -->
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"></html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <html lang="en">
 <head th:replace="layouts/navbar::tellMe_head"/>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>문의게시판</title>
-    <link rel="stylesheet" type="text/css" th:href="@{/static.css/board.css}" />
-    <script type="text/javascript" th:src="@{/static.js/board.js}"></script>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/board.css}" />
+    <script type="text/javascript" th:src="@{/js/board.js}"></script>
 </head>
 <body>
-<div th:replace="layouts/navbar :: navbar"></div>
+<div th:replace="layouts/navbar::tellMe_header"></div>
 <main id="inquiry-board">
+
     <h1>문의게시판</h1>
     <p>전체 <strong id="total-posts">0</strong> (1 / <span id="total-pages">1</span> 페이지)</p>
 
@@ -38,7 +38,9 @@
     <table class="post-table">
         <thead>
         <tr>
-            <th id="checkbox-header" style="display: none;">선택</th>
+            <th id="checkbox-header" style="display: none;">
+                <input type="checkbox" id="select-all-checkbox" />
+            </th>
             <th>번호</th>
             <th>제목</th>
             <th>작성자</th>
@@ -48,7 +50,9 @@
         </tr>
         </thead>
         <tbody class="post-list">
-        <!-- 게시글 목록이 동적으로 추가됩니다 -->
+        <tr>
+            <td colspan="7">게시글이 없습니다.</td>
+        </tr>
         </tbody>
     </table>
 
@@ -58,13 +62,9 @@
         <button id="cancel-button" style="display: none;">취소</button>
     </div>
 
-    <div class="content-area">
-        <!-- 게시글 상세 내용이 동적으로 추가됩니다 -->
-    </div>
-
-    <div class="pagination">
-        <!-- 페이지네이션이 동적으로 추가됩니다 -->
-    </div>
+    <div class="content-area"></div>
+    <div class="pagination"></div>
 </main>
+
 </body>
 </html>

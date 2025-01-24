@@ -1,0 +1,155 @@
+/* 기본 설정 */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f8f8f8;
+    color: #333;
+}
+
+h1 {
+    margin-bottom: 20px;
+    padding: 20px;
+    border-bottom: 1px solid black;
+}
+
+/* 메인 영역 */
+main {
+    max-width: 1000px;
+    margin: 100px auto;
+    background: white;
+    padding: 50px;
+    border-radius: 4px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+}
+
+/* 게시글 목록 */
+.post-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.post-list li {
+    padding: 15px;
+    border-bottom: 1px solid #eee;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.post-list li:hover {
+    background-color: #f0f0f0;
+}
+
+.post-title {
+    font-size: 1em;
+    font-weight: bold;
+}
+
+.post-meta {
+    color: #888;
+    font-size: 0.9em;
+    margin-top: 5px;
+}
+
+/* 페이지네이션 */
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.pagination button {
+    border: 1px solid #ddd;
+    background-color: #f9f9f9;
+    padding: 5px 10px;
+    margin: 0 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.pagination button:hover {
+    background-color: #eee;
+}
+
+.pagination button.current {
+    font-weight: bold;
+    background-color: #333;
+    color: white;
+}
+
+/* 테이블 기본 스타일 */
+.post-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.post-table th, .post-table td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: center; /* 모든 셀 중앙 정렬 */
+}
+
+/* 제목 셀만 좌측 정렬 */
+.post-table .post-title {
+    text-align: left; /* 제목은 왼쪽 정렬 */
+}
+
+.post-table th {
+    background-color: #f4f4f4;
+    font-weight: bold;
+}
+
+.post-table tbody tr:hover {
+    background-color: #f9f9f9;
+}
+
+.post-title a {
+    color: black;
+    text-decoration: none;
+}
+
+.post-title a:hover {
+    text-decoration: underline;
+}
+
+/* 공통 버튼 스타일 */
+.write-button-container, .delete-button-container {
+    display: flex;
+    justify-content: center;
+    margin: 10px 0;
+}
+
+.write-button, .delete-button {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+/* 글쓰기 버튼 스타일 */
+.write-button {
+    background-color: #4CAF50; /* 초록색 */
+    color: white;
+}
+
+.write-button:hover {
+    background-color: #45a049;
+}
+
+/* 삭제 버튼 스타일 */
+.delete-button {
+    background-color: #f44336; /* 빨간색 */
+    color: white;
+}
+
+.delete-button:hover {
+    background-color: #e53935;
+}
