@@ -1,20 +1,3 @@
-#!pip install langchain_chroma
-#!pip install python-docx
-#!pip install openai
-#!pip install langchain_openai
-#!pip install langchain
-#!pip install langchain_teddynote
-#!pip install -qU pypdf
-#!pip install langchain_community
-#!pip install -qU unstructured
-#!pip install pdfminer
-#!pip install -qU pymupdf
-#!pip install -qU rapidocr-onnxruntime
-#!pip install -qU pypdf
-#!pip install pdfminer.six==20221105
-#!pip install pillow-heif
-#!pip install pdfplumber langchain
-
 # langchain 기본 라이브러리
 
 import pandas as pd
@@ -48,6 +31,7 @@ from docx.oxml.ns import qn
 from docx.oxml import OxmlElement
 from docx.shared import Pt
 from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
+from docx.enum.table import WD_ALIGN_VERTICAL
 
 
 FILE_PATH = "./특이민원보고서_공직자응대매뉴얼.pdf"
@@ -139,31 +123,86 @@ class MakeReport:
             rFonts.set(qn("w:eastAsia"), font_name)
             rPr.append(rFonts)
             run.font.size = Pt(font_size)
+    
+    def add_title(self, text):
+        title = self.doc.add_paragraph()
+        run = title.add_run(text)
+        run.bold = True
+        run.font.size = Pt(16)
+        title.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
+        
+    def add_table(self):
+    # 표 생성 (행: 8, 열: 9)
+        table = self.doc.add_table(rows=8, cols=9)
+        table.style = 'Table Grid'
+
+        # 첫 번째 행: 발생일자, 부서, 부서장
+        hdr_cells = table.rows[0].cells
+        hdr_cells[0].text = "발생일자"
+        hdr_cells[1].text = " "
+        hdr_cells[2].text = "부서"
+        hdr_cells[3].text = " "
+        hdr_cells[4].text = "부서장"
+        hdr_cells[5].text = " "
+        hdr_cells[6].merge(hdr_cells[8])  # 빈 공간 병합
+
+        # 두 번째 행: 특이민원 상황
+        row_1_cells = table.rows[1].cells
+        row_1_cells[0].text = "특이민원 상황"
+        row_1_cells[1].text = "폭언"
+        row_1_cells[2].text = "협박"
+        row_1_cells[3].text = "폭행"
+        row_1_cells[4].text = "성희롱"
+        row_1_cells[5].text = "기물파손"
+        row_1_cells[6].text = "위험물 소지"
+        row_1_cells[7].text = "주취 소란"
+        row_1_cells[8].text = "기타"
+
+        # 세 번째 행: 특이민원 체크박스
+        row_2_cells = table.rows[2].cells
+        for i in range(9):
+            row_2_cells[i].text = " "
+
+        # 네 번째 행: 민원인
+        row_3_cells = table.rows[3].cells
+        row_3_cells[0].text = "민원인"
+        row_3_cells[1].text = " "
+        row_3_cells[2].text = "전화번호"
+        row_3_cells[3].merge(row_3_cells[8])  # 나머지 공간 병합
+
+        # 다섯 번째 행: 담당자 정보
+        row_4_cells = table.rows[4].cells
+        row_4_cells[0].text = "담당자"
+        row_4_cells[1].text = "전화번호"
+        row_4_cells[2].text = "담당업무"
+        row_4_cells[3].merge(row_4_cells[8])
+
+        # 여섯 번째 행: 특이민원 발생요지
+        row_5_cells = table.rows[5].cells
+        row_5_cells[0].merge(row_5_cells[8])
+        row_5_cells[0].text = "특이민원 발생요지"
+
+        # 일곱 번째 행: 담당자 의견
+        row_6_cells = table.rows[6].cells
+        row_6_cells[0].merge(row_6_cells[8])
+        row_6_cells[0].text = "담당자 의견"
+
+        # 여덟 번째 행: 부서장 의견
+        row_7_cells = table.rows[7].cells
+        row_7_cells[0].merge(row_7_cells[8])
+        row_7_cells[0].text = "부서장 의견"
+
+        # 빈 공간과 정렬 설정
+        for row in table.rows:
+            for cell in row.cells:
+                if not cell.text.strip():  # 빈 셀은 공백으로 설정
+                    cell.text = " "
+                cell.vertical_alignment = WD_ALIGN_VERTICAL.CENTER
+                cell.paragraphs[0].alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
             
     def make_report_detail(self):
-        title = self.doc.add_heading("특이민원 발생보고서", level=1)
-        title.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
-        table = self.doc.add_table(rows=0, cols=3, style="Table Grid")
-
-        # 첫 번째 행 추가 (헤더)
-        header_row = table.add_row().cells
-        header_row[0].text = "항목"
-        header_row[1].text = "세부 항목"
-        header_row[2].text = "내용"
-        
-        # 항목 추가
-        for key, value in self.report.items():
-            if isinstance(value, dict):  # 특이민원유형 및 담당자 정보
-                for sub_key, sub_value in value.items():
-                    row = table.add_row().cells
-                    row[0].text = key
-                    row[1].text = sub_key
-                    row[2].text = str(sub_value)
-            else:  # 일반 항목
-                row = table.add_row().cells
-                row[0].text = key
-                row[1].text = ""
-                row[2].text = str(value)
+        self.add_title("특이민원 발생보고서")
+        self.add_table()
     
     def report_save(self):
         time = datetime.now().strftime("%y%m%d_%H%M")
