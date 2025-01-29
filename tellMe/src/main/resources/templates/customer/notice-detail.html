@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title th:text="${notice.title}"></title> <!-- 제목을 페이지 제목으로 설정 -->
     <link rel="stylesheet" type="text/css" th:href="@{/css/notice-detail.css}" />
+    <script th:src="@{/js/notice-detail.js}" defer></script>
 </head>
 <body>
 <div th:replace="layouts/navbar::tellMe_header"></div>
@@ -34,24 +35,16 @@
         </ul>
     </div>
 
+    <!-- 🔹 Hidden Input Fields (자바스크립트에서 Thymeleaf 변수 사용을 위해 추가) -->
+    <input type="hidden" id="page" th:value="${page}" /> <!-- 현재 페이지 번호 -->
+    <input type="hidden" id="noticeId" th:value="${notice.id}" /> <!-- 공지사항 ID -->
+
     <!-- 버튼 -->
     <div class="buttons">
-        <button class="list-button" th:onclick="|location.href='@{/customer/notice}'|">목록보기</button>
+        <button class="list-button" th:onclick="detailListReq()">목록보기</button>
         <button class="prev-button" th:onclick="updateReq()" sec:authorize="hasRole('ROLE_MANAGER')">수정하기</button>
         <button class="prev-button" th:onclick="deleteReq()" sec:authorize="hasRole('ROLE_MANAGER')">삭제하기</button>
     </div>
 </main>
 </body>
-<script th:inline="javascript">
-    const updateReq = () => {
-        console.log("수정 요청");
-        const id = [[${notice.id}]];
-        location.href = "/tellMe/customer/update/" + id;
-    }
-    const deleteReq = () => {
-        console.log("삭제 요청")
-        const id = [[${notice.id}]];
-        //location.href = "/tellMe/customer/delete/" + id
-    }
-</script>
 </html>

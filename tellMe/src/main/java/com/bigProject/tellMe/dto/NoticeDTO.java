@@ -19,6 +19,13 @@ public class NoticeDTO {
     private String file;
     private Integer views;
 
+    public NoticeDTO(Long id, String title, LocalDateTime createDate, Integer views) {
+        this.id = id;
+        this.title = title;
+        this.createDate = createDate;
+        this.views = views;
+    }
+
     public static NoticeDTO toNoticeDTO(Notice notice) {
         NoticeDTO noticeDTO = new NoticeDTO();
         noticeDTO.setId(notice.getId());
@@ -29,4 +36,5 @@ public class NoticeDTO {
         noticeDTO.setFile(notice.getFile());
         return noticeDTO;
     }
+
 }

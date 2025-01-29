@@ -7,6 +7,10 @@ import com.bigProject.tellMe.repository.NoticeRepository;
 import com.bigProject.tellMe.repository.QuestionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.context.config.ConfigDataLocationNotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -56,4 +60,49 @@ public class NoticeService {
         }
     }
 
+    // 수정된 공지사항 데이터가 담긴 DTO를 Entity로 변환하여 데이터베이스에 저장하고, 공지사항을 다시 조회해서 반환
+    public NoticeDTO update(NoticeDTO noticeDTO) {
+        Notice notice = Notice.builder()                // DTO를 entity로 바꿔준다
+                .id(noticeDTO.getId())                  // DTO의 id를 가져와 entity id로 저장
+                .title(noticeDTO.getTitle())
+                .content(noticeDTO.getContent())
+                .createDate(noticeDTO.getCreateDate())
+                .views(noticeDTO.getViews())
+                .file(noticeDTO.getFile())
+                .build();
+        noticeRepository.save(notice); // 데이터베이스에 저장
+
+        return getNotice(noticeDTO.getId());
+    }
+
+    // 전달된 ID에 해당하는 공지사항 삭제
+    public void delete(Long id) {
+        noticeRepository.deleteById(id);
+    }
+
+    // 공지사항들 한번에 삭제: 리스트로 전달된 ID들을 하나씩 삭제
+    public void deleteNotices(List<Long> ids) {
+
+        for (Long id : ids) {
+            noticeRepository.deleteById(id);
+        }
+    }
+
+    public Page<NoticeDTO> paging(Pageable pageable) {
+        int page = pageable.getPageNumber() - 1;
+        int pageLimit = 5; // 한 페이지에 보여줄 글 갯수
+        // 한페이지당 5개씩 글을 보여주고 정렬 기준은 id 기준으로 내림차순 정렬
+        // page 위치에 있는 값은 0부터 시작
+        Page<Notice> notices =
+                noticeRepository.findAll(PageRequest.of(page, pageLimit, Sort.by(Sort.Direction.DESC, "id")));
+
+        // 목록: index, title, createDate, views
+        Page<NoticeDTO> noticeDTOS = notices.map(notice -> new NoticeDTO(
+                notice.getId(),
+                notice.getTitle(),
+                notice.getCreateDate(),
+                notice.getViews()
+        ));
+        return noticeDTOS;
+    }
 }
