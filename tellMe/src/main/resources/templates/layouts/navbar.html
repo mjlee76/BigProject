@@ -3,6 +3,7 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 <head th:fragment="tellMe_head">
     <link rel="stylesheet" type="text/css" th:href="@{/css/navbar.css}" />
+    <link rel="icon" th:href="@{/image/favicon.png}" type="image/png">
     <script src="https://code.jquery.com/jquery-3.6.3.js"></script>
     <script type="text/javascript" th:src="@{/js/common.js}"></script>
 </head>
@@ -13,22 +14,31 @@
             <div class="logo"><a th:href="@{/}">Aivle</a></div>
             <div>
                 <ul class="nav-menu">
-                    <li><a th:href="@{/customer/service}">고객센터</a></li>
+                    <li><a th:href="@{/}">홈</a></li>
                     <li><a th:href="@{/customer/notice}">공지사항</a></li>
                     <li><a th:href="@{/complaint/board}">문의게시판</a></li>
+                    <li sec:authorize="hasRole('ROLE_MANAGER')">
+                        <a th:href="@{/manager/statistics}">문의통계</a>
+                    </li>
+                    <li sec:authorize="hasRole('ROLE_MANAGER')">
+                        <a th:href="@{/manager/report}">보고서관리</a>
+                    </li>
                 </ul>
             </div>
             <div class="auth-buttons">
+                <!-- 비로그인 상태에서만 표시 -->
                 <div sec:authorize="isAnonymous()">
-                    <a th:href="@{/login}">로그인</a>
-                    <a th:href="@{/user/signUp}">회원가입</a>
+                    <a th:href="@{/login}" class="auth-link login">로그인</a>
+                    <a th:href="@{/user/signUp}" class="auth-link signup">회원가입</a>
                 </div>
+
+                <!-- 로그인 상태에서만 표시 -->
                 <div sec:authorize="isAuthenticated()">
-                    <a th:href="@{/user/mypage}">마이 페이지</a>
-                    <form th:action="@{/logout}" method="post" th:hidden="true" name="logoutForm" >
-                        <input type="submit"/>
+                    <a th:href="@{/user/mypage}" class="auth-link mypage">마이 페이지</a>
+                    <form th:action="@{/logout}" method="post" th:hidden="true" name="logoutForm">
+                        <input type="submit" hidden />
                     </form>
-                    <a class="head-a" id="logoutLink" href="">로그아웃</a>
+                    <a class="auth-link logout" id="logoutLink" href="#" onclick="document.logoutForm.submit()">로그아웃</a>
                 </div>
             </div>
         </div>
