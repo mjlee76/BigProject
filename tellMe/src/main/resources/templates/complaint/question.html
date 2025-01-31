@@ -8,8 +8,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>문의게시판</title>
-    <link rel="stylesheet" type="text/css" th:href="@{/css/board.css}" />
-    <script type="text/javascript" th:src="@{/js/board.js}"></script>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/question.css}" />
+    <script type="text/javascript" th:src="@{/js/question.js}"></script>
 </head>
 <body>
 <div th:replace="layouts/navbar::tellMe_header"></div>
@@ -60,8 +60,13 @@
         </tr>
         </thead>
         <tbody class="post-list">
-        <tr>
-            <td colspan="7">게시글이 없습니다.</td>
+        <tr th:each="question: ${questionList}">
+            <td th:text="${question.id}"></td>
+            <td><a th:href="@{|/complaint/question/${question.id}|}" th:text="${question.Title}"></a></td>
+            <td th:text="${question.userName}"></td>
+            <td th:text="*{#temporals.format(question.createDate, 'yyyy-MM-dd')}"></td>
+            <td th:text="${question.status}"></td>
+            <td th:text="${question.views}"></td>
         </tr>
         </tbody>
     </table>

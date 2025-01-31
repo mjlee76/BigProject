@@ -74,4 +74,8 @@ public class Question {
             this.category = Category.정상;  // DB에 저장되기 전에 기본값 설정
         }
     }
+
+    public void incrementViews() {
+        this.views += 1;
+    }
 }

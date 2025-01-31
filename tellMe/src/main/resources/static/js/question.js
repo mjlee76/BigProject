@@ -11,18 +11,18 @@ document.addEventListener("DOMContentLoaded", () => {
     const selectDeleteButton = document.getElementById("select-delete-button");
     const cancelButton = document.getElementById("cancel-button");
 
-    let posts = Array.from({ length: 89 }, (_, i) => ({
-        id: i + 1,
-        title: `게시글 제목 ${100 - i}`,
-        author: `작성자 ${100 - i}`,
-        views: Math.floor(Math.random() * 1000),
-        content: `게시글 내용 ${100 - i}`,
-        date: new Date(
-            new Date().setDate(new Date().getDate() - i)
-        ).toISOString().split("T")[0],
-        answerStatus: ["답변완료", "대기중", "이송이첩"][Math.floor(Math.random() * 3)],
-        attachments: []
-    }));
+//    let posts = Array.from({ length: 89 }, (_, i) => ({
+//        id: i + 1,
+//        title: `게시글 제목 ${100 - i}`,
+//        author: `작성자 ${100 - i}`,
+//        views: Math.floor(Math.random() * 1000),
+//        content: `게시글 내용 ${100 - i}`,
+//        date: new Date(
+//            new Date().setDate(new Date().getDate() - i)
+//        ).toISOString().split("T")[0],
+//        answerStatus: ["답변완료", "대기중", "이송이첩"][Math.floor(Math.random() * 3)],
+//        attachments: []
+//    }));
 
     let filteredPosts = [...posts];
 

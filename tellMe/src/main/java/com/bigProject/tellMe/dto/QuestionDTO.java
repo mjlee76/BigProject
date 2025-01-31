@@ -1,5 +1,6 @@
 package com.bigProject.tellMe.dto;
 
+import com.bigProject.tellMe.entity.Question;
 import com.bigProject.tellMe.enumClass.Category;
 import com.bigProject.tellMe.enumClass.Reveal;
 import com.bigProject.tellMe.enumClass.Status;
@@ -17,6 +18,7 @@ public class QuestionDTO {
     private String title;
     private String content;
     private Long userId;
+    private String userName;
     private LocalDateTime createDate = LocalDateTime.now();
     private Reveal reveal;
     private Status status;
@@ -25,6 +27,26 @@ public class QuestionDTO {
     private String file1 = null;
     private String file2 = null;
     private String file3 = null;
+
+    // 목록보여주기 위해 Entity를 DTO로 변환 메서드
+    public static QuestionDTO toQuestionDTO (Question question) {
+        QuestionDTO questionDTO = new QuestionDTO();
+        questionDTO.setId(question.getId());
+        questionDTO.setUserId(question.getUser().getId()); // ?
+        questionDTO.setUserName(question.getUser().getUserName()); // userName 설정
+        questionDTO.setTitle(question.getTitle());
+        questionDTO.setContent(question.getContent());
+        questionDTO.setCreateDate(question.getCreateDate());
+        questionDTO.setReveal(question.getReveal());
+        questionDTO.setStatus(question.getStatus());
+        questionDTO.setViews(question.getViews());
+        questionDTO.setCategory(question.getCategory());
+        questionDTO.setFile1(questionDTO.getFile1());
+        questionDTO.setFile2(questionDTO.getFile2());
+        questionDTO.setFile3(questionDTO.getFile3());
+
+        return questionDTO;
+    }
 
 //    public QuestionDTO(Question question) {
 //        id = question.getId();
