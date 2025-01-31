@@ -258,6 +258,17 @@ main {
 .post-table th:nth-child(1), /* 번호 */
 .post-table td:nth-child(1) {
     width: 10%; /* 첫 번째 열 너비 */
+    font-size: 13px; /* 글씨 크기 조절 */
+    /* font-weight: bold; 굵게 */
+    text-align: center; /* 중앙 정렬 */
+    padding: 10px; /* 여백 */
+    background-color: #f4f4f4; /* 배경색 (필요 시) */
+
+}
+/* 각 열의 너비 조정 */
+.post-table th:nth-child(1), /* 번호 */
+.post-table td:nth-child(1) {
+    width: 5%; /* 첫 번째 열 너비 */
 }
 
 .post-table th:nth-child(2), /* 제목 */
@@ -288,6 +299,30 @@ main {
     background-color: #f9f9f9;
 }
 
+.checkbox-header, .checkbox-column {
+    display: none;
+    width: 40px;
+    text-align: center;
+}
+
+/* 🔹 삭제 모드일 때 번호 대신 체크박스 표시 */
+body.delete-mode .checkbox-header,
+body.delete-mode .checkbox-column {
+    display: table-cell;
+}
+
+/* 🔹 삭제 모드일 때 번호 칼럼 숨김 */
+body.delete-mode .number-column,
+body.delete-mode #number-header {
+    display: none;
+}
+
+/* 🔹 체크박스 스타일 */
+.delete-checkbox {
+    transform: scale(1.2);
+    cursor: pointer;
+}
+
 .post-title a {
     color: black;
     text-decoration: none;
@@ -296,53 +331,73 @@ main {
 .post-title a:hover {
     text-decoration: underline;
 }
-/* 버튼 공통 컨테이너 스타일 */
-.button-container {
-    display: flex; /* 플렉스박스 활성화 */
-    justify-content: flex-end; /* 오른쪽 정렬 */
-    align-items: center; /* 세로 중앙 정렬 */
-    gap: 10px; /* 버튼 간격 */
-    margin: 20px 0; /* 위아래 간격 */
-    padding-right: 10%; /* 오른쪽 여백 */
+
+/* 🔹 상단 바 (글쓰기 버튼 + 삭제 버튼) */
+.top-bar {
+    display: flex;
+    justify-content: flex-end; /* 🔥 버튼들을 오른쪽 정렬 */
+    align-items: center;
+    gap: 15px; /* 버튼 간 간격 */
+    padding: 10px 10%; /* 좌우 여백 */
 }
 
-
-/* 버튼 스타일 */
-.write-button, .delete-button {
-    display: inline-block;
-    padding:4px 10px;
+/* 🔹 글쓰기 버튼 */
+.write-button {
+    background-color: #ffffff;
+    color: #1674C3;
+    padding: 6px 12px;
     font-size: 13px;
     font-weight: bold;
-    text-align: center;
-    text-decoration: none;
-    border: 1px solid #d1d1d1dd; /* 테두리 두께와 색상 */
+    border: 1px solid #1674C3;
     border-radius: 4px;
     cursor: pointer;
     transition: all 0.3s ease;
 }
 
-/* 글쓰기 버튼 스타일 */
-.write-button {
-    background-color: #ffffff;
-    color: #1674C3;
-}
-
 .write-button:hover {
     background-color: #F8FCFD;
     color: #1674C3;
-    border-color: #1674C3; /* 호버 시 테두리 색상 유지 */
 }
 
-/* 삭제 버튼 스타일 */
-.delete-button {
+/* 🔹 삭제 버튼 컨테이너 */
+.action-bar {
+    display: flex;
+    justify-content: flex-end; /* 🔥 오른쪽 정렬 */
+    gap: 10px;
+}
+
+/* 🔹 삭제 버튼 스타일 */
+#delete-button, #select-delete-button, #cancel-button {
+    padding: 6px 12px;
+    font-size: 13px;
+    font-weight: bold;
+    border-radius: 4px;
+    border: 1px solid #d1d1d1dd;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+/* 🔹 삭제 버튼 기본 스타일 */
+#delete-button {
     background-color: #1674C3;
     color: #ffffff;
+    border-color: #1674C3;
 }
 
-.delete-button:hover {
+#delete-button:hover {
     background-color: #ffffff;
     color: #1674C3;
-    border-color: #1674C3; /* 호버 시 테두리 색상 유지 */
+}
+
+/* 🔹 선택 삭제, 취소 버튼 스타일 */
+#select-delete-button, #cancel-button {
+    background-color: #f4f4f4;
+    color: #333;
+    display: none; /* 기본적으로 숨김 */
+}
+
+#select-delete-button:hover, #cancel-button:hover {
+    background-color: #dddddd;
 }
 
 /* 페이지네이션 컨테이너 */

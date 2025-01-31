@@ -20,9 +20,9 @@
 
     <div class="tabs">
         <button class="tab active" data-category="all" onclick="filterPosts('all')">전체</button>
+        <button class="tab" data-category="접수중" onclick="filterPosts('접수중')">접수중</button>
+        <button class="tab" data-category="처리중" onclick="filterPosts('처리중')">처리중</button>
         <button class="tab" data-category="답변완료" onclick="filterPosts('답변완료')">답변완료</button>
-        <button class="tab" data-category="이송이첩" onclick="filterPosts('이송이첩')">이송이첩</button>
-        <button class="tab" data-category="대기중" onclick="filterPosts('대기중')">대기중</button>
     </div>
     <div class="search-bar">
         <form id="search-form">
@@ -88,7 +88,11 @@
     <div class="content-area"></div>
     <div class="pagination">
     </div>
+
+    <div class="content-area"></div>
+    <div class="pagination"></div>
 </main>
 <div th:replace="layouts/footer::tellMe_footer"></div>
 </body>
+</html>
 </html>

@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
-<html lang="ko">
+<html lang="en">
 <head th:replace="layouts/navbar::tellMe_head"/>
 <head th:replace="layouts/footer::tellMe_foot"/>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title th:text="${notice.title}"></title>
+    <title th:text="${notice.title}"></title> <!-- 제목을 페이지 제목으로 설정 -->
     <link rel="stylesheet" type="text/css" th:href="@{/css/notice-detail.css}" />
+    <script th:src="@{/js/notice-detail.js}" defer></script>
 </head>
 <body>
 <div th:replace="layouts/navbar::tellMe_header"></div>
@@ -21,12 +22,6 @@
             <td>
                 <h1 class="title" th:text="${notice.title}"></h1>
             </td>
-        </tr>
-        <tr>
-            <th>공개여부</th>
-            <td>내용공개</td>
-            <th>작성자</th>
-            <td>고○균</td>
         </tr>
         <tr>
             <th>작성일</th>
@@ -57,27 +52,17 @@
         </tr>
     </table>
 
+    <!-- 🔹 Hidden Input Fields (자바스크립트에서 Thymeleaf 변수 사용을 위해 추가) -->
+    <input type="hidden" id="page" th:value="${page}" /> <!-- 현재 페이지 번호 -->
+    <input type="hidden" id="noticeId" th:value="${notice.id}" /> <!-- 공지사항 ID -->
+
     <!-- 버튼 -->
     <div class="buttons">
-        <button class="list-button" th:onclick="|location.href='@{/customer/notice}'|">목록보기</button>
+        <button class="list-button" th:onclick="detailListReq()">목록보기</button>
         <button class="prev-button" th:onclick="updateReq()" sec:authorize="hasRole('ROLE_MANAGER')">수정하기</button>
         <button class="prev-button" th:onclick="deleteReq()" sec:authorize="hasRole('ROLE_MANAGER')">삭제하기</button>
     </div>
 </main>
 <div th:replace="layouts/footer::tellMe_footer"></div>
 </body>
-<script th:inline="javascript">
-    const updateReq = () => {
-        console.log("수정 요청");
-        const id = [[${notice.id}]];
-        location.href = "/customer/update/" + id;
-    }
-    const deleteReq = () => {
-        console.log("삭제 요청");
-        const id = [[${notice.id}]];
-        if (confirm("정말로 삭제하시겠습니까?")) {
-            location.href = "/customer/delete/" + id;
-        }
-    }
-</script>
 </html>
