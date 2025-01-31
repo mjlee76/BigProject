@@ -23,26 +23,26 @@ public class ComplaintController {
     private final UserService userService;
     private final QuestionService questionService;
 
-    @GetMapping("/board")
-    public String complaintBoard() {
-        return "complaint/board";
-    }
-
     @GetMapping("/new")
-    public String newComplaintForm() {
-        return "complaint/new";
-    }
+    public String newComplaintForm() { return "complaint/new"; }
 
     @PostMapping("/create")
     public String createComplaint(Authentication auth, QuestionDTO questionDTO) {
         User user = userService.findByUserId(auth.getName());
 
+        questionDTO.setCreateDate(LocalDateTime.now());
+        questionDTO.setViews(0);
         questionDTO.setUserId(user.getId());
         questionDTO.setStatus(Status.처리중);
 
         // 2. Repository에게 Entity를 DB안에 저장하게 함!
         Question saved = questionService.save(questionDTO);
 
+        return "redirect:/complaint/board";
+    }
+
+    @GetMapping("/board")
+    public String complaintBoard() {
         return "complaint/board";
     }
 }

@@ -3,44 +3,45 @@
     display: flex;
     justify-content: center;
     flex-flow: column;
-  }
+}
 
-  .footer .container {
+.footer .container {
     display: flex;
     justify-content: center;
     border-top: 1px solid #eeeeee;
     padding: 40px 0;
     gap: 100px;
-  }
+    background: #f2f2f2;
+}
 
-  .footer .container .left {
-  }
+.footer .container .left {
+}
 
-  .footer .container .left h3 {
+.footer .container .left h3 {
     font-size: 16px;
     line-height: 28px;
-  }
+}
 
-  .footer .container .left h2 {
+.footer .container .left h2 {
     padding-bottom: 10px;
     font-size: 27px;
     line-height: 50px;
     font-weight: bold;
-  }
+}
 
-  .footer .container .left h2 span {
+.footer .container .left h2 span {
     font-size: 14px;
     margin-left: 8px;
     font-weight: 100;
-  }
+}
 
-  .footer .container .left .btnContent {
+.footer .container .left .btnContent {
     display: flex;
     align-items: center;
     margin-bottom: 15px;
-  }
+}
 
-  .footer .container .left .btnContent span {
+.footer .container .left .btnContent span {
     width: 110px;
     height: 40px;
     border: 1px solid #e2e2e2;
@@ -50,55 +51,102 @@
     margin-right: 12px;
     font-size: 12px;
     cursor: pointer;
-  }
+}
 
-  .footer .container .left .btnContent p {
+.footer .container .left .btnContent p {
     font-size: 12px;
     color: #a1a1a1;
     line-height: 16px;
-  }
+}
 
-  .footer .container .right .navbar {
+.footer .container .right .bar {
     display: flex;
     margin-bottom: 25px;
     gap: 25px;
     line-height: 28px;
-  }
+    list-style: none; /* 🔥 리스트 점 제거 */
+    padding: 0; /* 🔥 리스트 기본 padding 제거 */
+}
 
-  .footer .container .right .navbar li {
+.footer .container .right .bar li {
     font-size: 14px;
     cursor: pointer;
-  }
+}
 
-  .footer .container .right .notice {
+.footer .container .right .bar li a {
+    text-decoration: none; /* 하이퍼링크 밑줄 제거 */
+    color: inherit; /* 텍스트 색상을 상속 */
+}
+
+.footer .container .right .bar li a:hover {
+    text-decoration: none; /* 호버 시에도 밑줄 제거 유지 */
+    color: #5f0080; /* 강조를 위해 다른 색상 추가 (선택 사항) */
+}
+
+.footer .container .right .notice {
     font-size: 12px;
     color: #a1a1a1;
     line-height: 18px;
-  }
+}
 
-  .footer .container .right .notice span {
+.footer .container .right .notice span {
     width: 1px;
     height: 10px;
     margin: 0 5px;
     display: inline-block;
     background: #dadada;
-  }
+}
 
-  .footer .container .right .sns {
+/* SNS 아이콘 리스트 */
+.footer .container .right .sns {
     display: flex;
     margin-top: 35px;
-    gap: 10px;
-  }
+    gap: 35px; /* 아이콘 간격 */
+    list-style: none; /* 기본 마커 제거 */
+    padding: 0;
+    align-items: center;
+    justify-content: center;
+}
 
-  .footer .container .right .sns li {
+/* 개별 SNS 아이콘 */
+.footer .container .right .sns li {
     cursor: pointer;
-  }
+    position: relative; /* 상대 위치 */
+}
 
-  .footer .copy {
-    width: 100%;
+.footer .container .right .sns li::marker {
+    content: ''; /* 기본 마커 숨기기 */
+}
+
+/* 아이콘 스타일 */
+.footer .container .right .sns li a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+}
+
+.footer .container .right .sns li a i {
+    font-size: 30px; /* 아이콘 크기 */
+    color: rgb(95, 0, 128); /* 아이콘 색상 */
+    transition: transform 0.3s ease;
+    text-decoration: none; /* 하이퍼링크 밑줄 제거 */
+    color: inherit; /* 텍스트 색상을 상속 */
+}
+
+/* 호버 시 아이콘 효과 */
+.footer .container .right .sns li a i:hover {
+    transform: scale(1.2); /* 확대 효과 */
+    text-decoration: none; /* 호버 시에도 밑줄 제거 유지 */
+    color: #5f0080;
+}
+
+.copy {
+	background: #000;
+    color: #bbb;
+    font-size: 0.9rem;
+    padding: 0 0 2rem 0;
     text-align: center;
-    background-color: #eeeeee;
-    padding: 22px 0 30px;
-    font-size: 12px;
-    color: #8f8f8f;
-  }
+}
+

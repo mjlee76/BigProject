@@ -1,8 +1,6 @@
 package com.bigProject.tellMe.mapper;
 
 import com.bigProject.tellMe.dto.QuestionDTO;
-import com.bigProject.tellMe.entity.Answer;
-import com.bigProject.tellMe.entity.Origin;
 import com.bigProject.tellMe.entity.Question;
 import com.bigProject.tellMe.entity.User;
 import org.mapstruct.Mapper;

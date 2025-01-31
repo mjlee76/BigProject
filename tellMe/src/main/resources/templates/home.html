@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<html lang="en">
 <head th:replace="layouts/navbar::tellMe_head"/>
+<head th:replace="layouts/footer::tellMe_foot"/>
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -10,33 +12,65 @@
 </head>
 <body>
 <div th:replace="layouts/navbar::tellMe_header"></div>
-<!--<div class="background-container">-->
-<!--    <h1>배경 이미지 예제</h1>-->
-<!--    <p>이 영역에 배경 이미지가 설정됩니다.</p>-->
-<!--    <img th:src = "@{/image/background.png}">-->
-<!--</div>-->
-<div class="main-container">
-    <div class="left-section">
-        <div class="menu-bar">
-            <button class="menu-button" onclick="updateContent('유선 상담 내용을 여기에 표시합니다.')">유선상담</button>
-            <button class="menu-button" onclick="updateContent('채팅 상담 내용을 여기에 표시합니다.')">채팅상담</button>
-            <button class="menu-button" onclick="updateContent('기술 지원 내용을 여기에 표시합니다.')">기술지원</button>
-        </div>
-        <div class="divider"></div>
-        <div class="content">
-            <h2 id="main-text">민원처리 및 고충이 있다면 언제든지 연락주세요.</h2>
-            <p id="sub-text">원하는 상담 및 기능을 클릭해주세요.</p>
-            <div class="contact">
-                <span id="contact-icon"></span> <strong id = "contact-strong"></strong> <span id="contact-info"></span>
+<div class="background-container">
+    <img th:src="@{/image/background.png}" class="background-image">
+</div>
+<section id="one" class="wrapper style2">
+    <div class="inner">
+        <div class="grid-style">
+            <div>
+                <div class="box">
+                    <div class="image fit">
+                        <img src="image/pic01.jpg" alt="상담 이미지" width="600" height="300">
+                    </div>
+                    <div class="content">
+                        <header class="align-center">
+                            <p>민원 처리 및 고충이 있다면 언제든지 연락주세요.</p>
+                            <h1>원하는 상담 및 기능이
+                                있으신가요?</h1>
+                        </header>
+                        <div class="menu-bar">
+                            <button class="menu-button" onclick="updateContent('유선 상담을 원하시나요?')">유선상담</button>
+                            <button class="menu-button" onclick="updateContent('채팅 상담을 원하시나요?')">채팅상담</button>
+                            <button class="menu-button" onclick="updateContent('기술 지원이 필요하신가요?')">기술지원</button>
+                        </div>
+                        <div id="dynamic-area" class="dynamic-content">
+                            <h2 id="main-text"></h2> <!-- 초기 상태 비워둠 -->
+                            <p id="sub-text"></p> <!-- 초기 상태 비워둠 -->
+                            <p>
+                                <strong id="contact-strong"></strong>
+                                <span id="contact-icon"></span>
+                                <span id="contact-info"></span>
+                            </p>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <div class="box">
+                    <div class="image fit">
+                        <img src="image/pic02.jpg" alt="게시판 이미지" width="600" height="300">
+                    </div>
+                    <div class="content">
+                        <header class="align-center">
+                            <p>민원 게시판을 이용하기</p>
+                            <h1>민원 게시판을 이용하시려면 아래 시작하기 버튼을 눌러주세요.</h1>
+                        </header>
+                        <p>민원 처리는 복잡하지 않아야 합니다.
+                            고객님의 불편을 귀담아듣고 신속히 해결할 수 있도록 노력하겠습니다.
+                            지금 바로 민원 처리를 시작해보세요.
+                        </p>
+                        <footer class="align-center">
+                            <a th:href="@{/complaint/new}" class="button alt">시작하기</a>
+                        </footer>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-    <div class="right-section">
-        <h2>민원 게시판 이용하기</h2>
-        <p>민원 게시판을 이용하려면 아래 버튼을 눌러주세요.</p>
-        <div class="buttons">
-            <a th:href="@{/complaint/new}">시작하기</a>
-        </div>
-    </div>
-
+</section>
+<div th:replace="layouts/footer::tellMe_footer"></div>
+</body>
 </html>
