@@ -1,0 +1,110 @@
+/* 📌 기본 설정 */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f9f9f9;
+}
+
+/* 📌 메인 컨테이너 */
+.statistics-container {
+    max-width: 1200px;
+    margin: 50px auto;
+    padding: 20px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* 📌 제목 및 설명 */
+.title {
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.desc {
+    text-align: center;
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 30px;
+}
+
+.desc a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.desc a:hover {
+    text-decoration: underline;
+}
+
+/* 📌 차트 레이아웃 */
+.charts {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+/* 📌 차트 카드 */
+.chart-card {
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    text-align: center;
+}
+
+/* 📌 영역 차트 & 막대 차트 (왼쪽) */
+.charts-left {
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* 📌 도넛 차트 (오른쪽) */
+.charts-right {
+    flex: 1;
+}
+
+/* 📌 차트 헤더 */
+.chart-header {
+    font-size: 16px;
+    font-weight: bold;
+    color: #007bff;
+    margin-bottom: 15px;
+}
+
+/* 📌 차트 본문 */
+.chart-body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 250px;
+    position: relative;
+    height: 300px;
+}
+
+/* 📌 반응형 조정 */
+@media (max-width: 992px) {
+    .chart-body {
+        height: 250px;
+    }
+}
+
+/* 📌 반응형 조정 */
+@media (max-width: 992px) {
+    .charts {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .charts-left, .charts-right {
+        width: 100%;
+    }
+}

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<html lang="en">
+<head th:replace="layouts/navbar::tellMe_head"/>
+<head th:replace="layouts/footer::tellMe_foot"/>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>통계 게시판</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/statistics.css}" />
+    <script th:src="@{/js/statistics.js}"></script>
+</head>
+<body>
+<div th:replace="layouts/navbar::tellMe_header"></div>
+<main class="statistics-container">
+    <div class="content">
+
+        <!-- 제목 -->
+        <h1 class="title">통계 차트</h1>
+        <p class="desc">
+            Chart.js를 활용하여 데이터를 시각화합니다. <br>
+            더 많은 정보를 원하면 <a target="_blank" href="https://www.chartjs.org/docs/latest/">Chart.js 공식 문서</a>를 참고하세요.
+        </p>
+
+        <!-- 차트 영역 -->
+        <div class="charts">
+            <div class="charts-left">
+
+                <!-- 영역 차트 -->
+                <div class="chart-card">
+                    <div class="chart-header">영역 차트</div>
+                    <div class="chart-body">
+                        <canvas id="areaChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- 막대 차트 -->
+                <div class="chart-card">
+                    <div class="chart-header">막대 차트</div>
+                    <div class="chart-body">
+                        <canvas id="barChart"></canvas>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- 도넛 차트 -->
+            <div class="charts-right">
+                <div class="chart-card">
+                    <div class="chart-header">도넛 차트</div>
+                    <div class="chart-body">
+                        <canvas id="pieChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</main>
+<div th:replace="layouts/footer::tellMe_footer"></div>
+</body>
+</html>
