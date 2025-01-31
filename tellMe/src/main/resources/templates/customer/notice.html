@@ -28,17 +28,16 @@
         <span>전체 <strong id="total-count">0</strong></span>
     </div>
 
-    <table class="notice-table">
+    <table class="post-table">
         <thead>
         <tr>
-            <th class="checkbox-column" style="display: none;">선택</th>
             <th>번호</th>
             <th>제목</th>
-            <th>등록일</th>
-            <th>조회</th>
+            <th>작성일</th>
+            <th>조회수</th>
         </tr>
         </thead>
-        <tbody>
+        <tbody class="post-list">
             <tr th:each="notice, iterStat : ${noticeList}">
                 <td class="checkbox-column" style="display: none;">
                     <input type="checkbox" class="delete-checkbox" th:value="${notice.id}">
@@ -61,31 +60,53 @@
         <!-- 삭제 버튼 추가 -->
         <button id="delete-button" class="delete-button" th:onclick="deleteSelectedNotices()" style="display: none;">삭제</button>
     </div>
-</main>
+    <!-- 첫번째 페이지로 이동 -->
+    <!-- /notice/paging?page=1 -->
+    <a th:href="@{/customer/notice(page=1)}"> << </a>
+    <!-- 이전 링크 활성화 비활성화 -->
+    <!-- noticeList.getNumber() 사용자:2페이지 getNumber()=1 -->
+    <a th:href="${noticeList.first} ? '#' : @{/customer/notice(page=${noticeList.number})}"> < </a>
 
-<!-- 첫번째 페이지로 이동 -->
-<!-- /notice/paging?page=1 -->
-<a th:href="@{/customer/notice(page=1)}"> << </a>
-<!-- 이전 링크 활성화 비활성화 -->
-<!-- noticeList.getNumber() 사용자:2페이지 getNumber()=1 -->
-<a th:href="${noticeList.first} ? '#' : @{/customer/notice(page=${noticeList.number})}"> < </a>
-
-<!-- 페이지 번호 링크(현재 페이지는 숫자만)
-        for(int page=startPage; page<=endPage; page++)-->
-<span th:each="page: ${#numbers.sequence(startPage, endPage)}">
+    <!-- 페이지 번호 링크(현재 페이지는 숫자만)
+            for(int page=startPage; page<=endPage; page++)-->
+    <span th:each="page: ${#numbers.sequence(startPage, endPage)}">
 <!-- 현재페이지는 링크 없이 숫자만 -->
     <span th:if="${page == noticeList.number + 1}" th:text="${page}"></span>
-    <!-- 현재페이지 번호가 아닌 다른 페이지번호에는 링크를 보여줌 -->
+        <!-- 현재페이지 번호가 아닌 다른 페이지번호에는 링크를 보여줌 -->
     <span th:unless="${page == noticeList.number + 1}">
         <a th:href="@{/customer/notice(page=${page})}" th:text="${page}"></a>
     </span>
 </span>
+    <!-- 다음 링크 활성화 비활성화
+        사용자: 2페이지, getNumber: 1, 3페이지-->
+    <a th:href="${noticeList.last} ? '#' : @{/customer/notice(page=${noticeList.number + 2})}"> > </a>
+    <!-- 마지막 페이지로 이동 -->
+    <a th:href="@{/customer/notice(page=${noticeList.totalPages})}">>></a>
+</main>
 
-<!-- 다음 링크 활성화 비활성화
-    사용자: 2페이지, getNumber: 1, 3페이지-->
-<a th:href="${noticeList.last} ? '#' : @{/customer/notice(page=${noticeList.number + 2})}"> > </a>
-<!-- 마지막 페이지로 이동 -->
-<a th:href="@{/customer/notice(page=${noticeList.totalPages})}">>></a>
+<!--&lt;!&ndash; 첫번째 페이지로 이동 &ndash;&gt;-->
+<!--&lt;!&ndash; /notice/paging?page=1 &ndash;&gt;-->
+<!--<a th:href="@{/customer/notice(page=1)}"> << </a>-->
+<!--&lt;!&ndash; 이전 링크 활성화 비활성화 &ndash;&gt;-->
+<!--&lt;!&ndash; noticeList.getNumber() 사용자:2페이지 getNumber()=1 &ndash;&gt;-->
+<!--<a th:href="${noticeList.first} ? '#' : @{/customer/notice(page=${noticeList.number})}"> < </a>-->
+
+<!--&lt;!&ndash; 페이지 번호 링크(현재 페이지는 숫자만)-->
+<!--        for(int page=startPage; page<=endPage; page++)&ndash;&gt;-->
+<!--<span th:each="page: ${#numbers.sequence(startPage, endPage)}">-->
+<!--&lt;!&ndash; 현재페이지는 링크 없이 숫자만 &ndash;&gt;-->
+<!--    <span th:if="${page == noticeList.number + 1}" th:text="${page}"></span>-->
+<!--    &lt;!&ndash; 현재페이지 번호가 아닌 다른 페이지번호에는 링크를 보여줌 &ndash;&gt;-->
+<!--    <span th:unless="${page == noticeList.number + 1}">-->
+<!--        <a th:href="@{/customer/notice(page=${page})}" th:text="${page}"></a>-->
+<!--    </span>-->
+<!--</span>-->
+
+<!--&lt;!&ndash; 다음 링크 활성화 비활성화-->
+<!--    사용자: 2페이지, getNumber: 1, 3페이지&ndash;&gt;-->
+<!--<a th:href="${noticeList.last} ? '#' : @{/customer/notice(page=${noticeList.number + 2})}"> > </a>-->
+<!--&lt;!&ndash; 마지막 페이지로 이동 &ndash;&gt;-->
+<!--<a th:href="@{/customer/notice(page=${noticeList.totalPages})}">>></a>-->
 
 </body>
 </html>

@@ -10,7 +10,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 @Service
 @RequiredArgsConstructor
@@ -33,8 +35,8 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public User findByUserId(String name) {
-        return userRepository.findByUserId(name);
+    public User findByUserId(String userId) {
+        return userRepository.findByUserId(userId);
     }
 
 
@@ -99,5 +101,45 @@ public class UserService {
         }
 
         return true;
+    }
+
+    public String checkNameAndFindId(String userName, String phoneNum) {
+        List<User> nameList = userRepository.findByUserName(userName);
+        if(nameList.isEmpty()) {
+            return "noName";
+        }else {
+            List<User> userPhoneList = userRepository.findByUserNameAndPhone(userName, phoneNum);
+            if(userPhoneList.isEmpty()) {
+                return "noPhone";
+            }else {
+                return userPhoneList.get(0).getUserId();
+            }
+        }
+    }
+
+    public String FindPassword(String userId) {
+        User user = userRepository.findByUserId(userId);
+        UserDTO userDTO = userMapper.userToUserDTO(user);
+
+        String temporaryPassword = makeTemporaryPassword();
+
+        userDTO.setPassword(temporaryPassword);
+        encodePassword(userDTO);
+        userRepository.save(userMapper.userDTOToUser(userDTO));
+
+        return temporaryPassword;
+    }
+
+    public String makeTemporaryPassword() {
+        int length = 8;
+        String chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+        int  charsLength = chars.length();
+        Random random = new Random();
+
+        StringBuilder sb = new StringBuilder(length);
+        for (int i = 0; i < length; i++) {
+            sb.append(chars.charAt(random.nextInt(charsLength)));
+        }
+        return sb.toString();
     }
 }

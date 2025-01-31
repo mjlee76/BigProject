@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
@@ -14,18 +13,20 @@
       <p style="color: red;" class="text-danger" th:text="${session.loginErrorMessage}"></p>
     </div>
     <div>
-      <input type="text" name="userId" required>
+      <input type="text" placeholder="아이디를 입력하세요." name="userId" required>
       <label>아이디</label>
     </div>
     <div>
-      <input type="password" name="password" required>
+      <input type="password" placeholder="비밀번호를 입력하세요." name="password" required>
       <label>비밀번호</label>
     </div>
     <div>
       <input type="submit" value="Login">
     </div>
     <div>
-      회원이 아닙니까? <a th:href="@{/user/signUp}">회원가입</a>
+      <a th:href="@{/user/find/id}">아이디 찾기</a>
+      <a th:href="@{/user/find/pw}">비밀번호 찾기</a>
+      <a th:href="@{/user/signUp}">회원가입</a>
     </div>
   </form>
 </div>

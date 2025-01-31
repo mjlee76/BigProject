@@ -1,0 +1,68 @@
+/* 내비게이션 바 스타일 */
+.navbar {
+    background-color: white;
+    border-top: 8px solid #ddd;
+    border-bottom: 8px solid #ddd;
+    color: white;
+    padding: 35px 30px;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.nav-container {
+    width: 100%;
+    max-width: 1200px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-size: 3em;
+    font-weight: bold;
+    color: black;
+}
+
+.nav-menu {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.nav-menu li {
+    margin: 0 50px;
+}
+
+.nav-menu li a {
+    color: black;
+    text-decoration: none;
+    font-size: 1.2em;
+    font-weight: bold;
+    padding: 5px 10px;
+    transition: background-color 0.3s ease;
+}
+
+.nav-menu li a:hover {
+    background-color: #9f9f9f;
+    border-radius: 4px;
+}
+
+.auth-buttons button {
+    background-color: #575757;
+    color: white;
+    border: none;
+    padding: 5px 20px;
+    margin-left: 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.auth-buttons button:hover {
+    background-color: #777;
+}

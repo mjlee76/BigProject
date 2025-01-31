@@ -6,15 +6,38 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Aivle</title>
-    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" type="text/css" th:href="@{/css/home.css}" />
+    <script type="text/javascript" th:src="@{/js/home.js}"></script>
 </head>
 <body>
 <div th:replace="layouts/navbar::tellMe_header"></div>
-<div class="content">
-    <h1>민원처리 및 고충이 있다면 언제든지 게시판을 이용해 주세요.</h1>
-    <p>궁금한 내용을 게시판에 물어보세요.</p>
-    <div class="buttons">
-        <a th:href="@{/complaint/new}">시작하기</a></li>
+<!--<div class="background-container">-->
+<!--    <h1>배경 이미지 예제</h1>-->
+<!--    <p>이 영역에 배경 이미지가 설정됩니다.</p>-->
+<!--    <img th:src = "@{/image/background.png}">-->
+<!--</div>-->
+<div class="main-container">
+    <div class="left-section">
+        <div class="menu-bar">
+            <button class="menu-button" onclick="updateContent('유선 상담 내용을 여기에 표시합니다.')">유선상담</button>
+            <button class="menu-button" onclick="updateContent('채팅 상담 내용을 여기에 표시합니다.')">채팅상담</button>
+            <button class="menu-button" onclick="updateContent('기술 지원 내용을 여기에 표시합니다.')">기술지원</button>
+        </div>
+        <div class="divider"></div>
+        <div class="content">
+            <h2 id="main-text">민원처리 및 고충이 있다면 언제든지 연락주세요.</h2>
+            <p id="sub-text">원하는 상담 및 기능을 클릭해주세요.</p>
+            <div class="contact">
+                <span id="contact-icon"></span> <strong id = "contact-strong"></strong> <span id="contact-info"></span>
+            </div>
+        </div>
+    </div>
+    <div class="right-section">
+        <h2>민원 게시판 이용하기</h2>
+        <p>민원 게시판을 이용하려면 아래 버튼을 눌러주세요.</p>
+        <div class="buttons">
+            <a th:href="@{/complaint/new}">시작하기</a>
+        </div>
     </div>
 </div>
 </body>
