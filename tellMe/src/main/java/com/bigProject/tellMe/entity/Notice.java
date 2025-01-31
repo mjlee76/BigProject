@@ -1,10 +1,8 @@
 package com.bigProject.tellMe.entity;
 
+import com.bigProject.tellMe.dto.NoticeDTO;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
@@ -37,4 +35,6 @@ public class Notice {
     public void incrementViews() {
         this.views += 1;
     }
+
 }
+
