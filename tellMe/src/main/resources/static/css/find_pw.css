@@ -30,7 +30,7 @@ body {
 }
 
 h1 {
-    font-size: 1.8rem;
+    font-size: 1.1rem;
     font-weight: bold;
     color: #1f2937;
     margin-bottom: 2rem;
@@ -64,7 +64,7 @@ h1 {
 .input-group .icon {
     position: absolute;
     left: 12px;
-    top: 50%;
+    top: 40%;
     transform: translateY(-50%);
     width: 20px;
     height: 20px;
@@ -102,32 +102,6 @@ h1 {
     box-shadow: none;
 }
 
-
-/* Reset Password Styles */
-.reset-password {
-    margin-top: 1.5rem;
-    font-size: 0.9rem;
-    color: #6b7280;
-    text-align: center;
-}
-
-.reset-password a {
-    color: #3b82f6;
-    text-decoration: none;
-    font-weight: bold;
-    margin: 0 0.3rem;
-    transition: color 0.3s ease;
-}
-
-.reset-password span {
-    color: #9ca3af;
-}
-
-.reset-password a:hover {
-    color: #2563eb;
-    text-decoration: underline;
-}
-
 .back-link {
     margin-top: 20px;
 }
@@ -141,4 +115,28 @@ h1 {
 
 .back-link a:hover {
     color: #2563eb;
+}
+
+.find-id {
+    margin-top: 1.5rem;
+    font-size: 0.9rem;
+    color: #6b7280;
+    text-align: center;
+}
+
+.find-id a {
+    color: #3b82f6;
+    text-decoration: none;
+    font-weight: bold;
+    margin: 0 0.3rem;
+    transition: color 0.3s ease;
+}
+
+.find-id p {
+    font-size: 1rem;
+}
+
+.find-id a:hover {
+    color: #2563eb;
+    text-decoration: underline;
 }

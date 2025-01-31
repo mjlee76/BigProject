@@ -3,7 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-  <title>home</title>
+  <title>signup</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" th:href="@{/css/sign_up_user.css}" />
   <script src="https://code.jquery.com/jquery-3.6.3.js"></script>
   <script type="text/javascript" th:src="@{/js/common.js}"></script>
   <script type="text/javascript">
@@ -52,63 +54,82 @@
 
 </head>
 <body>
-<div>
-  <div class="title">
-    회원가입
-  </div>
   <div style="color:red;" id="toastMessage" class="toast"></div>
-  <form th:action="@{/user/save}" th:object="${user}" method="post" onsubmit="return checkNameUnique(this)">
-    <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
-    <input type="hidden" th:field="*{id}"/>
-    <div class="field">
-      <input type="text" th:field="*{userId}" minlength="4" maxlength="20" required>
-      <label>사용자ID</label>
+  <div class="main-container">
+    <!-- Left Section -->
+    <div class="left-section">
+      <img th:src = "@{/image/signup_image.jpg}">
     </div>
-    <div class="field">
-      <input type="password" th:field="*{password}" minlength="4" maxlength="20" required>
-      <label>비밀번호</label>
-    </div>
-    <div class="field">
-      <input type="email" th:field="*{email}" required>
-      <label>이메일</label>
-    </div>
-    <div class="field">
-      <input type="text" th:field="*{userName}" required>
-      <label>이름</label>
-    </div>
-    <div class="field">
-      <input type="text" th:field="*{birthDate}" placeholder="8자리" minlength="8" maxlength="8" required>
-      <label>생년월일</label>
-    </div>
-    <div class="field">
-      <input type="text" th:field="*{address}" required>
-      <label>주소</label>
-    </div>
-    <div class="field">
-      <ul>
-        <li>
-          <input type="radio" th:field="*{gender}" value="M">
-          <label>남성</label>
-        </li>
-        <li>
-          <input type="radio" th:field="*{gender}" value="W">
-          <label>여성</label>
-        </li>
-      </ul>
-    </div>
-    <div class="field">
-      <input type="text" th:field="*{phone}" required>
-      <label>전화번호</label>
-    </div>
-    <div class="field">
-      <input type="submit" value="회원가입">
-    </div>
-    <div class="content">
-      <div class="pass-link">
+
+    <!-- Right Section -->
+    <div class="right-section">
+      <form th:action="@{/user/save}" th:object="${user}" method="post" onsubmit="return checkNameUnique(this)">
+        <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
+        <input type="hidden" th:field="*{id}"/>
+        <h2>회원가입</h2>
+        <div class="form-group">
+          <span class="icon">
+            <img th:src = "@{/image/person.png}">
+          </span>
+          <input type="text" placeholder = "아이디" th:field="*{userId}" minlength="4" maxlength="20" required>
+        </div>
+        <div class="form-group">
+          <span class="icon">
+            <img th:src = "@{/image/pw1.png}">
+          </span>
+          <input type="password" placeholder="비밀번호" th:field="*{password}" minlength="4" maxlength="20" required>
+        </div>
+        <div class="form-group">
+          <span class="icon">
+            <img th:src = "@{/image/email.png}">
+          </span>
+          <input type="text" placeholder="이메일" th:field="*{email}" required>
+        </div>
+        <div class="form-group">
+          <span class="icon">
+            <img th:src = "@{/image/person.png}">
+          </span>
+          <input type="text" placeholder="이름" th:field="*{userName}" required>
+        </div>
+        <div class="form-group">
+          <span class="icon">
+            <img th:src = "@{/image/calendar1.png}">
+          </span>
+          <input type="text" th:field="*{birthDate}" placeholder="생년월일 8자리" minlength="8" maxlength="8" required>
+        </div>
+        <div class="form-group">
+          <span class="icon">
+            <img th:src = "@{/image/address.png}">
+          </span>
+          <input type="text" id="address" th:field="*{address}" placeholder="주소" required readonly>
+        </div>
+        <div class="form-group">
+          <span class="icon">
+            <img th:src = "@{/image/arrow.png}">
+          </span>
+          <input type="text_detail" placeholder="상세주소" required>
+        </div>
+        <div class="form-group gender-group">
+          <input type="radio" th:field="*{gender}" name="gender" id="male" value="M">
+          <label for="male">남성</label>
+          <input type="radio" th:field="*{gender}" name="gender" id="female" value="W">
+          <label for="female">여성</label>
+        </div>
+        <div class="form-group">
+          <span class="icon">
+            <img th:src = "@{/image/phone.png}">
+          </span>
+          <input type="text" th:field="*{phone}" placeholder="전화번호 (' - '는 생략해주세요)" required>
+        </div>
+        <button type="submit">회원가입</button>
+
+      </form>
+      <div class="link">
         <a th:href="@{/}">홈으로</a>
       </div>
     </div>
-  </form>
-</div>
+  </div>
+  <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+  <script type="text/javascript" th:src="@{/js/sign_up_user.js}"></script>
 </body>
 </html>
