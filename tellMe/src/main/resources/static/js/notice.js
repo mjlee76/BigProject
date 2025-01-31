@@ -1,19 +1,13 @@
-// 데이터 정의
-const notices = [
-    { id: 6, title: "[업데이트] 10/6 업데이트", attachment: "📄", date: "2024.09.30", views: 129, category: "업데이트" },
-    { id: 5, title: "[행사] 찬영이 생일축하 파티 행사", attachment: "📄", date: "2024.09.04", views: 1286, category: "행사" },
-    { id: 4, title: "[공고] 게시판 관리자 모집", attachment: "📄", date: "2024.08.05", views: 620, category: "공고" },
-    { id: 3, title: "[업데이트] 8/8 업데이트", attachment: "📄", date: "2024.07.19", views: 448, category: "업데이트" },
-    { id: 2, title: "[업데이트] 6/13 업데이트", attachment: "📄", date: "2024.06.01", views: 544, category: "업데이트" },
-    { id: 1, title: "[업데이트] 3/14 업데이트", attachment: "📄", date: "2024.03.07", views: 673, category: "업데이트" },
-];
-
 // 초기 상태
 let currentCategory = "all";
 let currentPage = 1;
 const itemsPerPage = 10;
+let notices = [
+    { id: 1, title: "공지사항 테스트", attachment: "-", date: "2025-01-31 10:35:30", views: 1 }
+]; // 공지사항 예제 데이터
+let isDeleteMode = false; // 🔥 삭제 모드 여부 (체크박스 표시 여부)
 
-// 테이블 업데이트 함수
+// ✅ 테이블 업데이트 함수
 function updateTable() {
     const filteredNotices = currentCategory === "all"
         ? notices
@@ -28,10 +22,9 @@ function updateTable() {
     tableBody.innerHTML = "";
 
     if (totalItems === 0) {
-        // 데이터가 없는 경우 "해당 공지사항이 없습니다." 출력
         tableBody.innerHTML = `
             <tr>
-                <td colspan="5" style="text-align: center;">해당 공지사항이 없습니다.</td>
+                <td colspan="6" style="text-align: center;">해당 공지사항이 없습니다.</td>
             </tr>
         `;
         document.getElementById("total-count").textContent = 0;
@@ -42,7 +35,11 @@ function updateTable() {
     filteredNotices.slice(start, end).forEach(notice => {
         const row = `
             <tr>
-                <td>${notice.id}</td>
+                <td>
+                    ${isDeleteMode
+                        ? `<input type="checkbox" class="delete-checkbox" data-id="${notice.id}">`
+                        : notice.id}
+                </td>
                 <td>${notice.title}</td>
                 <td>${notice.attachment}</td>
                 <td>${notice.date}</td>
@@ -56,7 +53,7 @@ function updateTable() {
     updatePagination(totalPages);
 }
 
-// 페이지네이션 업데이트 함수
+// ✅ 페이지네이션 업데이트 함수
 function updatePagination(totalPages) {
     const pagination = document.getElementById("pagination");
     pagination.innerHTML = "";
@@ -74,14 +71,60 @@ function updatePagination(totalPages) {
     }
 }
 
-// 카테고리 변경 함수
+// ✅ 카테고리 변경 이벤트
 document.querySelectorAll(".tab").forEach(tab => {
     tab.addEventListener("click", () => {
         currentCategory = tab.dataset.category;
-        currentPage = 1; // 카테고리 변경 시 첫 페이지로
+        currentPage = 1;
         updateTable();
     });
 });
 
-// 초기화
+// ✅ 삭제 버튼 이벤트 추가
+document.getElementById("delete-button").addEventListener("click", function () {
+    isDeleteMode = true; // 🔥 삭제 모드 활성화
+    updateTable(); // 🔥 테이블 다시 렌더링 (번호 -> 체크박스 변경)
+
+    document.getElementById("select-delete-button").style.display = "inline-block";
+    document.getElementById("cancel-button").style.display = "inline-block";
+    document.getElementById("delete-button").style.display = "none"; // 삭제 버튼 숨기기
+});
+
+// ✅ 선택 삭제 버튼 이벤트 추가
+document.getElementById("select-delete-button").addEventListener("click", function () {
+    const selectedNotices = Array.from(document.querySelectorAll(".delete-checkbox:checked"))
+        .map(checkbox => parseInt(checkbox.dataset.id));
+
+    if (selectedNotices.length === 0) {
+        alert("삭제할 항목을 선택해주세요.");
+        return;
+    }
+
+    // 🔥 서버 연동이 필요하면 여기에서 AJAX 요청 추가 가능
+    // 예: fetch(`/delete`, { method: "POST", body: JSON.stringify({ ids: selectedNotices }) })
+
+    // 🔥 로컬 데이터에서 삭제 (테스트용)
+    notices = notices.filter(notice => !selectedNotices.includes(notice.id));
+
+    isDeleteMode = false; // 🔥 삭제 모드 해제
+    updateTable(); // 🔥 테이블 다시 렌더링 (체크박스 제거)
+
+    // 버튼 상태 초기화
+    document.getElementById("select-delete-button").style.display = "none";
+    document.getElementById("cancel-button").style.display = "none";
+    document.getElementById("delete-button").style.display = "inline-block";
+});
+
+// ✅ 취소 버튼 이벤트 추가
+document.getElementById("cancel-button").addEventListener("click", function () {
+    isDeleteMode = false; // 🔥 삭제 모드 비활성화
+    updateTable(); // 🔥 체크박스 제거 후 번호 복구
+
+    // 버튼 상태 복구
+    document.getElementById("select-delete-button").style.display = "none";
+    document.getElementById("cancel-button").style.display = "none";
+    document.getElementById("delete-button").style.display = "inline-block";
+});
+
+// ✅ 초기 테이블 로드
 updateTable();

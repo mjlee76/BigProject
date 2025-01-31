@@ -2,6 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <html lang="en">
 <head th:replace="layouts/navbar::tellMe_head"/>
+<head th:replace="layouts/footer::tellMe_foot"/>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,9 +14,16 @@
 <div th:replace="layouts/navbar::tellMe_header"></div>
 <main id="inquiry-board">
 
-    <h1>문의게시판</h1>
-    <p>전체 <strong id="total-posts">0</strong> (1 / <span id="total-pages">1</span> 페이지)</p>
+    <div class="inquiry-header">
+        <h1>문의게시판</h1>
+    </div>
 
+    <div class="tabs">
+        <button class="tab active" data-category="all" onclick="filterPosts('all')">전체</button>
+        <button class="tab" data-category="답변완료" onclick="filterPosts('답변완료')">답변완료</button>
+        <button class="tab" data-category="이송이첩" onclick="filterPosts('이송이첩')">이송이첩</button>
+        <button class="tab" data-category="대기중" onclick="filterPosts('대기중')">대기중</button>
+    </div>
     <div class="search-bar">
         <form id="search-form">
             <select id="search-category" name="category">
@@ -25,22 +33,28 @@
                 <option value="content">내용</option>
             </select>
             <input type="text" placeholder="검색어를 입력하세요." id="search-input" name="query">
-            <select id="search-answer-status" name="answerStatus">
-                <option value="all">답변여부(전체)</option>
-                <option value="completed">답변완료</option>
-                <option value="transferred">이송이첩</option>
-                <option value="pending">대기중</option>
-            </select>
-            <button type="submit" id="search-button">검색</button>
+            <!--            <select id="search-answer-status" name="answerStatus">-->
+            <!--                <option value="all">답변여부(전체)</option>-->
+            <!--                <option value="completed">답변완료</option>-->
+            <!--                <option value="transferred">이송이첩</option>-->
+            <!--                <option value="pending">대기중</option>-->
+            <!--            </select>-->
+            <button type="submit" id="search-button">
+                <!-- 새로운 SVG 아이콘 -->
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search" viewBox="0 0 24 24">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+            </button>
         </form>
     </div>
 
     <table class="post-table">
         <thead>
         <tr>
-            <th id="checkbox-header" style="display: none;">
-                <input type="checkbox" id="select-all-checkbox" />
-            </th>
+            <!--            <th id="checkbox-header" style="display: none;">-->
+            <!--                <input type="checkbox" id="select-all-checkbox" />-->
+            <!--            </th>-->
             <th>번호</th>
             <th>제목</th>
             <th>작성자</th>
@@ -50,21 +64,31 @@
         </tr>
         </thead>
         <tbody class="post-list">
-        <tr>
-            <td colspan="7">게시글이 없습니다.</td>
-        </tr>
+            <tr>
+                <td colspan="7">게시글이 없습니다.</td>
+            </tr>
+<!--        <tr th:each="board, iterStat : ${boardList}">-->
+<!--            <td th:text="${iterStat.index + 1}"></td>-->
+<!--            <td>작성자</td>-->
+<!--            <td><a th:href="@{/customer/board/{id}(id=${board.id})}" th:text="${board.title}"></a></td>-->
+<!--            <td th:text="*{#temporals.format(board.createDate, 'yyyy-MM-dd')}"></td>-->
+<!--            <td>답변여부</td>-->
+<!--            <td th:text="${board.views}"></td>-->
+<!--        </tr>-->
         </tbody>
     </table>
+    <p>전체 <strong id="total-posts">0</strong> (1 / <span id="total-pages">1</span> 페이지)</p>
 
-    <div class="action-bar">
-        <button id="delete-button">삭제</button>
-        <button id="select-delete-button" style="display: none;">선택 삭제</button>
-        <button id="cancel-button" style="display: none;">취소</button>
-    </div>
+<!--    <div class="action-bar">-->
+<!--        <button id="delete-button">삭제</button>-->
+<!--        <button id="select-delete-button" style="display: none;">선택 삭제</button>-->
+<!--        <button id="cancel-button" style="display: none;">취소</button>-->
+<!--    </div>-->
 
     <div class="content-area"></div>
-    <div class="pagination"></div>
+    <div class="pagination">
+    </div>
 </main>
-
+<div th:replace="layouts/footer::tellMe_footer"></div>
 </body>
 </html>

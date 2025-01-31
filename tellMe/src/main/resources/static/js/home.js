@@ -1,33 +1,43 @@
+// 초기화 함수: 페이지 로드 시 기본값 설정
+function initializeContent() {
+    updateContent('유선 상담을 원하시나요?'); // 기본값: "유선 상담"
+}
+
+// 업데이트 함수: 버튼 클릭 시 호출
 function updateContent(newMainText) {
-    // main-text와 sub-text 요소를 가져옵니다.
+    // 요소 가져오기
     const mainText = document.getElementById('main-text');
     const subText = document.getElementById('sub-text');
     const contactInfo = document.getElementById('contact-info');
     const contactIcon = document.getElementById('contact-icon');
     const contactSt = document.getElementById('contact-strong');
 
-    // main-text의 내용을 업데이트합니다.
+    // main-text 업데이트
     mainText.textContent = newMainText;
 
-    // main-text 내용에 따라 sub-text의 내용을 업데이트합니다.
+    // main-text에 따라 sub-text와 기타 정보를 업데이트
     if (newMainText.includes('유선 상담')) {
         subText.textContent = '유선 상담을 통해 상세한 안내를 받을 수 있습니다.';
-        contactIcon.textContent = '📞'; // Update icon
-        contactInfo.textContent = '02)873-4466'
-        contactSt.textContent = 'Contact : '
+        contactIcon.textContent = '📞'; // 아이콘 업데이트
+        contactInfo.textContent = '02)873-4466'; // 연락처 업데이트
+        contactSt.textContent = 'Contact : ';
     } else if (newMainText.includes('채팅 상담')) {
         subText.textContent = '채팅 상담으로 실시간 도움을 받을 수 있습니다.';
-        contactIcon.textContent = '💬'; // Update icon
-        contactInfo.textContent = 'chat@example.com'
-        contactSt.textContent = 'Contact : '
+        contactIcon.textContent = '💬'; // 아이콘 업데이트
+        contactInfo.textContent = 'chat@example.com'; // 연락처 업데이트
+        contactSt.textContent = 'Contact : ';
     } else if (newMainText.includes('기술 지원')) {
         subText.textContent = '기술 지원과 관련된 문의는 이곳에서 처리됩니다.';
-        contactIcon.textContent = '🛠'; // Update icon
-        contactInfo.textContent = 'support@example.com'
-        contactSt.textContent = 'Contact : '
+        contactIcon.textContent = '🛠'; // 아이콘 업데이트
+        contactInfo.textContent = 'support@example.com'; // 연락처 업데이트
+        contactSt.textContent = 'Contact : ';
     } else {
-        subText.textContent = '궁금한 내용을 게시판에 물어보세요.';
+        subText.textContent = '유선 상담을 통해 상세한 안내를 받을 수 있습니다.';
+        contactIcon.textContent = '📞'; // 아이콘 업데이트
+        contactInfo.textContent = '02)873-4466'; // 연락처 업데이트
+        contactSt.textContent = 'Contact : ';
     }
-
-    contactInfo.textContent = newContactInfo;
 }
+
+// 페이지 로드 시 초기화 함수 호출
+window.onload = initializeContent;

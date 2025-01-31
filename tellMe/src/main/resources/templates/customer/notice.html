@@ -2,6 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <html lang="en">
 <head th:replace="layouts/navbar::tellMe_head"/>
+<head th:replace="layouts/footer::tellMe_foot"/>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,10 +13,9 @@
 <body>
 <div th:replace="layouts/navbar::tellMe_header"></div>
 <main id="notice-board">
-
-    <h1>공지사항</h1>
-    <p>전체 <strong id="total-posts">0</strong> (1 / <span id="total-pages">1</span> 페이지)</p>
-
+    <div class="notice-header">
+        <h1>공지사항</h1>
+    </div>
     <div class="tabs">
         <button class="tab" data-category="all">전체</button>
         <button class="tab" data-category="공고">공고</button>
@@ -23,39 +23,71 @@
         <button class="tab" data-category="업데이트">업데이트</button>
         <button class="tab" data-category="기타">기타</button>
     </div>
+    <div class="search-container">
+        <input type="text" class="search-input" placeholder="검색어를 입력해 주세요">
+        <!--            <select id="search-answer-status" name="answerStatus">-->
+        <!--                <option value="all">답변여부(전체)</option>-->
+        <!--                <option value="completed">답변완료</option>-->
+        <!--                <option value="transferred">이송이첩</option>-->
+        <!--                <option value="pending">대기중</option>-->
+        <!--            </select>-->
 
+        <button class="search-button">
+            <!-- 새로운 SVG 아이콘 -->
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search" viewBox="0 0 24 24">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+        </button>
+    </div>
     <table class="post-table">
         <thead>
         <tr>
+        <!--        <th id="checkbox-header" style="display: none;">-->
+        <!--            <input type="checkbox" id="select-all-checkbox" />-->
+        <!--        </th>-->
             <th>번호</th>
             <th>제목</th>
             <th>작성일</th>
             <th>조회수</th>
         </tr>
         </thead>
-<!--        <tbody id="table-body">-->
-<!--        &lt;!&ndash; JavaScript로 데이터 추가 &ndash;&gt;-->
-<!--        </tbody>-->
+        <!--        <tbody id="table-body">-->
+        <!--        &lt;!&ndash; JavaScript로 데이터 추가 &ndash;&gt;-->
+        <!--        </tbody>-->
         <tbody class="post-list">
-            <tr th:each="notice, iterStat : ${noticeList}">
-                <td th:text="${iterStat.index + 1}"></td>
-<!--                <td th:text="${notice.id}"></td> //notice_id 출력 -->
-                <td><a th:href="@{/customer/notice/{id}(id=${notice.id})}" th:text="${notice.title}"></a></td>
-                <td th:text="*{#temporals.format(notice.createDate, 'yyyy-MM-dd HH:mm:ss')}"></td>
-                <td th:text="${notice.views}"></td>
-            </tr>
+        <tr th:each="notice, iterStat : ${noticeList}">
+            <td th:text="${iterStat.index + 1}"></td>
+            <!--                <td th:text="${notice.id}"></td> //notice_id 출력 -->
+            <td class="post-title">
+                <a th:href="@{/customer/notice/{id}(id=${notice.id})}" th:text="${notice.title}"></a>
+            </td>
+            <td th:text="*{#temporals.format(notice.createDate, 'yyyy-MM-dd HH:mm:ss')}"></td>
+            <td th:text="${notice.views}"></td>
+        </tr>
         </tbody>
     </table>
-    <div class="write-button-container" sec:authorize="hasRole('ROLE_MANAGER')">
+
+    <!-- 🔹 글쓰기 + 삭제 버튼 컨테이너 -->
+    <div class="top-bar" sec:authorize="hasRole('ROLE_MANAGER')">
+        <!-- 🔹 글쓰기 버튼 -->
         <a class="write-button" th:href="@{/customer/write}">글쓰기</a>
+
+        <!-- 🔹 삭제 관련 버튼 -->
+        <div class="action-bar">
+            <button id="delete-button">삭제</button>
+            <button id="select-delete-button" style="display: none;">선택 삭제</button>
+            <button id="cancel-button" style="display: none;">취소</button>
+        </div>
     </div>
-    <div class="delete-button-container" sec:authorize="hasRole('ROLE_MANAGER')">
-        <a class="delete-button" th:href='@{/delete}'>삭제</a>
-    </div>
+
+
     <div class="pagination" id="pagination">
         <!-- JavaScript로 페이지네이션 추가 -->
     </div>
-</main>
+    <p>전체 <strong id="total-posts">0</strong> (1 / <span id="total-pages">1</span> 페이지)</p>
 
+</main>
+<div th:replace="layouts/footer::tellMe_footer"></div>
 </body>
 </html>

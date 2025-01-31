@@ -22,7 +22,7 @@ public class Notice {
     @Column(nullable=false)
     private String title;
 
-    @Column(nullable=false)
+    @Column(columnDefinition = "TEXT")
     private String content;
 
     @Column(nullable = false)
