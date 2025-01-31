@@ -43,12 +43,6 @@ public class CustomerController {
     }
 
     // 모든 공지사항 데이터를 조회하여 뷰에 전달하는 메서드.
-//    @GetMapping("/notice")
-//    public String findAll(Model model) {
-//        List<NoticeDTO> noticeDTOList = noticeService.findAll();
-//        model.addAttribute("noticeList", noticeDTOList); // "noticeList"라는 이름으로 DTO 리스트를 모델에 추가
-//        return "customer/notice";
-//    }
     @GetMapping("/notice")
     public String paging(@PageableDefault(page = 1) Pageable pageable, Model model) {
         Page<NoticeDTO> noticeList = noticeService.paging(pageable);
@@ -64,14 +58,6 @@ public class CustomerController {
     }
 
     // 공시사항 제목을 클릭하여 상세페이지 표출 메서드
-//    @GetMapping("/notice/{id}")
-//    public String getNotice(@PathVariable Long id, Model model,
-//                            @PageableDefault(page=1) Pageable pageable) { // 경로 상의 데이터를 받아올때는 @PathVariable 사용
-//        NoticeDTO noticeDTO = noticeService.getNotice(id); // NoticeDTO 반환
-//        model.addAttribute("notice", noticeDTO); // 뷰에 NoticeDTO 전달
-//        model.addAttribute("page", pageable.getPageNumber());
-//        return "customer/notice-detail"; // 공지사항 상세 페이지 뷰 반환
-//    }
     @GetMapping("/notice/{id}")
     public String getNotice(@PathVariable Long id, Model model, // 경로 상의 데이터를 받아올때는 @PathVariable 사용
                             @RequestParam(required = false, defaultValue = "1")int page) { // 요청 파라미터 'page'를 받아오며, 값이 없으면 기본값 1을 사용

@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor  // 기본생성자
 @AllArgsConstructor // 전체생성자
 @Builder
-public class Origin {
+public class filtered {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "origin_id")

@@ -1,9 +1,6 @@
 package com.bigProject.tellMe.dto;
 
-import com.bigProject.tellMe.entity.Answer;
-import com.bigProject.tellMe.entity.Origin;
-import com.bigProject.tellMe.entity.Question;
-import com.bigProject.tellMe.entity.User;
+import com.bigProject.tellMe.enumClass.Category;
 import com.bigProject.tellMe.enumClass.Reveal;
 import com.bigProject.tellMe.enumClass.Status;
 import lombok.*;
@@ -24,6 +21,7 @@ public class QuestionDTO {
     private Reveal reveal;
     private Status status;
     private Integer views = 0;
+    private Category category;
     private String file1 = null;
     private String file2 = null;
     private String file3 = null;

@@ -88,21 +88,31 @@ public class NoticeService {
         }
     }
 
+    /**
+     * 공지사항 목록을 페이지 단위로 조회하는 메서드
+     *
+     * @param pageable 페이지 정보(PageRequest) 객체 (페이지 번호, 정렬 방식 포함)
+     * @return Page<NoticeDTO> 페이징된 공지사항 목록 (id, 제목, 작성일, 조회수 포함)
+     */
     public Page<NoticeDTO> paging(Pageable pageable) {
+
+        // ✅ 현재 요청된 페이지 번호에서 1을 뺀 값 (Spring Data JPA는 페이지 인덱스를 0부터 시작함)
         int page = pageable.getPageNumber() - 1;
-        int pageLimit = 5; // 한 페이지에 보여줄 글 갯수
-        // 한페이지당 5개씩 글을 보여주고 정렬 기준은 id 기준으로 내림차순 정렬
-        // page 위치에 있는 값은 0부터 시작
+        // ✅ 한 페이지에서 보여줄 공지사항 개수
+        int pageLimit = 5;
+        // ✅ 공지사항을 ID 기준으로 내림차순 정렬하여 페이지네이션 적용된 데이터 조회
+        // PageRequest.of(페이지 번호, 페이지당 개수, 정렬 기준)
         Page<Notice> notices =
                 noticeRepository.findAll(PageRequest.of(page, pageLimit, Sort.by(Sort.Direction.DESC, "id")));
 
-        // 목록: index, title, createDate, views
+        // ✅ 조회된 데이터를 NoticeDTO 형태로 변환하여 반환
+        // Notice 엔티티의 index, title, createDate, views만 매핑하여 DTO로 변환
         Page<NoticeDTO> noticeDTOS = notices.map(notice -> new NoticeDTO(
                 notice.getId(),
                 notice.getTitle(),
                 notice.getCreateDate(),
                 notice.getViews()
         ));
-        return noticeDTOS;
+        return noticeDTOS; // 변환된 공지사항 DTO 목록 반환
     }
 }
