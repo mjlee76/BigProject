@@ -257,7 +257,7 @@ main {
 /* 각 열의 너비 조정 */
 .post-table th:nth-child(1), /* 번호 */
 .post-table td:nth-child(1) {
-    width: 10%; /* 첫 번째 열 너비 */
+    width: 5%; /* 첫 번째 열 너비 */
 }
 
 .post-table th:nth-child(2), /* 제목 */
@@ -286,6 +286,30 @@ main {
 
 .post-table tbody tr:hover {
     background-color: #f9f9f9;
+}
+
+.checkbox-header, .checkbox-column {
+    display: none;
+    width: 40px;
+    text-align: center;
+}
+
+/* 🔹 삭제 모드일 때 번호 대신 체크박스 표시 */
+body.delete-mode .checkbox-header,
+body.delete-mode .checkbox-column {
+    display: table-cell;
+}
+
+/* 🔹 삭제 모드일 때 번호 칼럼 숨김 */
+body.delete-mode .number-column,
+body.delete-mode #number-header {
+    display: none;
+}
+
+/* 🔹 체크박스 스타일 */
+.delete-checkbox {
+    transform: scale(1.2);
+    cursor: pointer;
 }
 
 .post-title a {

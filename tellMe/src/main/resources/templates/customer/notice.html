@@ -9,7 +9,7 @@
     <meta name="_csrf" th:content="${_csrf.token}">
     <meta name="_csrf_header" th:content="${_csrf.headerName}">
     <title>공지사항</title>
-    <link rel="stylesheet" type="text/css" th:href="@{/css/notice.css}" />
+    <link rel="stylesheet" type="text/css" th:href="@{/css/notice.css}"/>
     <script th:src="@{/js/notice.js}" defer></script>
 </head>
 <body>
@@ -33,7 +33,6 @@
         <!--                <option value="transferred">이송이첩</option>-->
         <!--                <option value="pending">대기중</option>-->
         <!--            </select>-->
-
         <button class="search-button">
             <!-- 새로운 SVG 아이콘 -->
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search" viewBox="0 0 24 24">
@@ -45,66 +44,74 @@
     <table class="post-table">
         <thead>
         <tr>
-        <!--        <th id="checkbox-header" style="display: none;">-->
-        <!--            <input type="checkbox" id="select-all-checkbox" />-->
-        <!--        </th>-->
-            <th>번호</th>
+            <!-- 🔹 번호 대신 체크박스로 변경될 칼럼 -->
+<!--            <th class="checkbox-header" style="display: none;">-->
+<!--                <input type="checkbox" id="select-all-checkbox">-->
+<!--            </th>-->
+            <th id="number-header" class="number-header" style="width: 5%;">번호</th>
             <th>제목</th>
             <th>작성일</th>
             <th>조회수</th>
         </tr>
         </thead>
-<!--        <tbody id="table-body">-->
-<!--        &lt;!&ndash; JavaScript로 데이터 추가 &ndash;&gt;-->
-<!--        </tbody>-->
-        <tbody class="post-list">
-            <tr th:each="notice, iterStat : ${noticeList}">
-                <td class="checkbox-column" style="display: none;">
-                    <input type="checkbox" class="delete-checkbox" th:value="${notice.id}">
-                </td>
-                <td th:text="${iterStat.index + 1}"></td>
-<!--                <td th:text="${notice.id}"></td> //notice_id 출력 |(page=${noticeList.number + 1})-->
-                <td class="post-title">
-                    <a th:href="@{/customer/notice/{id}(id=${notice.id}, page=${noticeList.number + 1})}" th:text="${notice.title}"></a>
-                </td>
-                <td th:text="*{#temporals.format(notice.createDate, 'yyyy-MM-dd HH:mm:ss')}"></td>
-                <td th:text="${notice.views}"></td>
-            </tr>
+        <tbody id="table-body">
+        <tr th:each="notice, iterStat : ${noticeList}">
+            <!-- 🔹 번호 칼럼 (삭제 모드에서 체크박스로 변경) -->
+            <td class="number-column" style="text-align: center;">
+                <input type="checkbox" class="delete-checkbox" th:value="${notice.id}" style="display: none;">
+                <span class="notice-number" th:text="${iterStat.index + 1}"></span>
+            </td>
+            <td class="post-title">
+                <a th:href="@{/customer/notice/{id}(id=${notice.id}, page=${noticeList.number + 1})}"
+                   th:text="${notice.title}"></a>
+            </td>
+            <td th:text="*{#temporals.format(notice.createDate, 'yyyy-MM-dd')}" style="text-align: center;"></td>
+            <td th:text="${notice.views}" style="text-align: center;"></td>
+        </tr>
         </tbody>
     </table>
-    <div class="write-button-container" sec:authorize="hasRole('ROLE_MANAGER')">
-        <a class="write-button" th:href="@{/customer/write}">글쓰기</a>
+    <div class="top-bar" sec:authorize="hasRole('ROLE_MANAGER')">
+        <!-- 🔹 왼쪽: 글쓰기 버튼 -->
+        <div class="write-button-container">
+            <a class="write-button" th:href="@{/customer/write}">글쓰기</a>
+        </div>
+
+        <!-- 🔹 오른쪽: 삭제 관련 버튼 -->
+        <div class="delete-button-container">
+            <!-- 🔹 삭제 버튼 (삭제 모드 활성화) -->
+            <button id="select-button" class="delete-button" th:onclick="toggleDeleteMode()">삭제</button>
+
+            <!-- 🔹 선택 삭제 버튼 (삭제 모드에서만 표시) -->
+            <button id="delete-button" class="delete-button" th:onclick="deleteSelectedNotices()" style="display: none;">선택 삭제</button>
+
+            <!-- 🔹 취소 버튼 (삭제 모드에서만 표시) -->
+            <button id="cancel-button" class="delete-button" th:onclick="toggleDeleteMode()" style="display: none;">취소</button>
+        </div>
     </div>
-    <!-- 선택 및 삭제 버튼 추가 -->
-    <div class="delete-button-container" sec:authorize="hasRole('ROLE_MANAGER')">
-        <!-- 선택 버튼에 JavaScript 이벤트 추가 -->
-        <button id="select-button" class="delete-button" th:onclick="toggleDeleteMode()">선택</button>
-        <!-- 삭제 버튼 추가 -->
-        <button id="delete-button" class="delete-button" th:onclick="deleteSelectedNotices()" style="display: none;">삭제</button>
-    </div>
+
     <!-- 첫번째 페이지로 이동 -->
     <!-- /notice/paging?page=1 -->
-    <a th:href="@{/customer/notice(page=1)}"> << </a>
-    <!-- 이전 링크 활성화 비활성화 -->
-    <!-- noticeList.getNumber() 사용자:2페이지 getNumber()=1 -->
-    <a th:href="${noticeList.first} ? '#' : @{/customer/notice(page=${noticeList.number})}"> < </a>
+    <div class="pagination">
+        <!-- 첫번째 페이지로 이동 -->
+        <a th:href="@{/customer/notice(page=1)}">«</a>
 
-    <!-- 페이지 번호 링크(현재 페이지는 숫자만)
-            for(int page=startPage; page<=endPage; page++)-->
-    <span th:each="page: ${#numbers.sequence(startPage, endPage)}">
-<!-- 현재페이지는 링크 없이 숫자만 -->
-    <span th:if="${page == noticeList.number + 1}" th:text="${page}"></span>
-        <!-- 현재페이지 번호가 아닌 다른 페이지번호에는 링크를 보여줌 -->
-    <span th:unless="${page == noticeList.number + 1}">
-        <a th:href="@{/customer/notice(page=${page})}" th:text="${page}"></a>
-    </span>
-</span>
-    <!-- 다음 링크 활성화 비활성화
-        사용자: 2페이지, getNumber: 1, 3페이지-->
-    <a th:href="${noticeList.last} ? '#' : @{/customer/notice(page=${noticeList.number + 2})}"> > </a>
-    <!-- 마지막 페이지로 이동 -->
-    <a th:href="@{/customer/notice(page=${noticeList.totalPages})}">>></a>
+        <!-- 이전 링크 -->
+        <a th:href="${noticeList.first} ? '#' : @{/customer/notice(page=${noticeList.number})}">‹</a>
+
+        <!-- 페이지 번호 -->
+        <span th:each="page: ${#numbers.sequence(startPage, endPage)}">
+            <span th:if="${page == noticeList.number + 1}" th:text="${page}"></span>
+            <a th:unless="${page == noticeList.number + 1}" th:href="@{/customer/notice(page=${page})}" th:text="${page}"></a>
+        </span>
+
+        <!-- 다음 링크 -->
+        <a th:href="${noticeList.last} ? '#' : @{/customer/notice(page=${noticeList.number + 2})}">›</a>
+
+        <!-- 마지막 페이지로 이동 -->
+        <a th:href="@{/customer/notice(page=${noticeList.totalPages})}">»</a>
+    </div>
+
 </main>
-
+<div th:replace="layouts/footer::tellMe_footer"></div>
 </body>
 </html>
