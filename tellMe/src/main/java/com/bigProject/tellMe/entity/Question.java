@@ -1,12 +1,13 @@
 package com.bigProject.tellMe.entity;
 
+import com.bigProject.tellMe.enumClass.Category;
 import com.bigProject.tellMe.enumClass.Reveal;
 import com.bigProject.tellMe.enumClass.Status;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 @Entity
@@ -37,8 +38,8 @@ public class Question {
     private Answer answer;
 
     @OneToOne
-    @JoinColumn(name = "origin_id")
-    private filtered origin;
+    @JoinColumn(name = "filtered_id")
+    private Filtered filtered;
 
     @CreatedDate
     private LocalDateTime createDate;

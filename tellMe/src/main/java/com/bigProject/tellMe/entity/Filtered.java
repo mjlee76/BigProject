@@ -14,10 +14,10 @@ import java.time.LocalDateTime;
 @AllArgsConstructor // 전체생성자
 @Builder
 @EntityListeners(AuditingEntityListener.class)
-public class filtered {
+public class Filtered {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "origin_id")
+    @Column(name = "filtered_id")
     private Long id;
 
     @Column(nullable = false)
