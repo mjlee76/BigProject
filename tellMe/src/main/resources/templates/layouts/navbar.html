@@ -24,7 +24,7 @@
                     <a th:href="@{/user/signUp}">회원가입</a>
                 </div>
                 <div sec:authorize="isAuthenticated()">
-                    <a th:href="@{/user/mypage}">마이 페이지</a>
+                    <a th:href="@{/myPage/editInfo}">마이 페이지</a>
                     <form th:action="@{/logout}" method="post" th:hidden="true" name="logoutForm" >
                         <input type="submit"/>
                     </form>

@@ -1,10 +1,13 @@
 package com.bigProject.tellMe.entity;
 
+import com.bigProject.tellMe.enumClass.Category;
 import com.bigProject.tellMe.enumClass.Reveal;
+import com.bigProject.tellMe.enumClass.Role;
 import com.bigProject.tellMe.enumClass.Status;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -15,6 +18,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor // 전체생성자
 @Builder
 @ToString
+@EntityListeners(AuditingEntityListener.class)
 public class Question {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -53,6 +57,10 @@ public class Question {
     @Column(nullable = false)
     private Integer views;
 
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Category category;
+
     @Column
     private String file1;
 
@@ -62,5 +70,10 @@ public class Question {
     @Column
     private String file3;
 
-
+    @PrePersist
+    public void setDefaultValues() {
+        if(this.category == null) {
+            this.category = Category.정상;  // DB에 저장되기 전에 기본값 설정
+        }
+    }
 }
