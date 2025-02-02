@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head th:replace="layouts/navbar::tellMe_head"/>
+<head th:replace="layouts/footer::tellMe_foot"/>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>공지사항 작성</title>
     <link rel="stylesheet" type="text/css" th:href="@{/css/write.css}" />
-    <script src="announcementform.js" defer></script>
+    <script th:src="@{/js/write.js}" defer></script>
 </head>
 <body>
 <div th:replace="layouts/navbar::tellMe_header"></div>
@@ -35,16 +36,15 @@
                     <button type="button" class="remove-file-button">X 취소</button>
                 </div>
             </div>
-            <button type="button" id="add-file-button">+ 파일 추가</button>
         </div>
 
         <!-- 버튼 -->
         <div class="form-actions">
-            <button type="submit" class="btn-primary">등록</button>
-            <button type="button" id="view-list-button" class="btn-secondary">목록</button>
-            <button type="button" id="save-draft-button" class="btn-secondary">임시저장</button>
+            <button type="submit" class="btn-primary">등록하기</button>
+            <button type="button" id="view-list-button" class="btn-secondary" th:onclick="writeListReq()">목록보기</button>
         </div>
     </form>
 </main>
+<div th:replace="layouts/footer::tellMe_footer"></div>
 </body>
 </html>

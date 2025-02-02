@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<html lang="ko">
+<head th:replace="layouts/navbar::tellMe_head"/>
+<head th:replace="layouts/footer::tellMe_foot"/>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title th:text="${board.title}"></title>
+<link rel="stylesheet" type="text/css" th:href="@{/css/board-detail.css}" />
+</head>
+<body>
+<div th:replace="layouts/navbar::tellMe_header"></div>
+
+<main class="content">
+    <h1>게시글 상세보기</h1>
+    <table>
+        <tr>
+            <th>번호</th>
+            <td>327859</td>
+            <th>제목</th>
+            <td>
+                <h1 class="title" th:text="${board.title}"></h1>
+            </td>
+        </tr>
+        <tr>
+            <th>공개여부</th>
+            <td>내용공개</td>
+            <th>작성자</th>
+            <td>고○균</td>
+        </tr>
+        <tr>
+            <th>작성일</th>
+            <td>
+                <span th:text="${#temporals.format(board.createDate, 'yyyy-MM-dd')}">2025-01-17 18:00:00</span>
+            </td>
+            <th>조회수</th>
+            <td>
+                <span th:text="${board.views}">0</span>
+            </td>
+        </tr>
+        <tr>
+            <th>첨부파일</th>
+            <td colspan="3">
+                <span th:if="${board.file != null}">
+                    <a th:href="@{/files/{fileName}(fileName=${board.file})}" title="첨부파일 다운로드">
+                        <img th:src = "@{/image/attachment.jpg}" alt="첨부파일 아이콘" style="width: 16px; height: 16px; vertical-align: middle; margin-right: 5px;">
+                        <span th:text="${board.file}"></span>
+                    </a>
+                </span>
+                <span th:if="${board.file == null}">없음</span>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="4">
+                <pre th:text="${board.content}">게시글 내용을 불러오는 중...</pre>
+            </td>
+        </tr>
+    </table>
+
+    <!-- 버튼 -->
+    <div class="buttons">
+        <button class="list-button" th:onclick="|location.href='@{/customer/notice}'|">목록보기</button>
+<!--        <button class="prev-button" th:onclick="updateReq()" sec:authorize="hasRole('ROLE_MANAGER')">수정하기</button>-->
+<!--        <button class="prev-button" th:onclick="deleteReq()" sec:authorize="hasRole('ROLE_MANAGER')">삭제하기</button>-->
+    </div>
+</main>
+<div th:replace="layouts/footer::tellMe_footer"></div>
+</body>
+<script th:inline="javascript">
+    const updateReq = () => {
+        console.log("수정 요청");
+        const id = [[${board.id}]];
+        location.href = "/customer/update/" + id;
+    }
+    const deleteReq = () => {
+        console.log("삭제 요청");
+        const id = [[${board.id}]];
+        if (confirm("정말로 삭제하시겠습니까?")) {
+            location.href = "/customer/delete/" + id;
+        }
+    }
+</script>
+</html>

@@ -1,69 +1,143 @@
-body {
-    font-family: Arial, sans-serif;
+* {
+    box-sizing: border-box;
     margin: 0;
     padding: 0;
+}
+
+/* General Styles */
+body {
+    margin: 0;
+    font-family: 'Noto Sans KR', Arial, sans-serif;
+    background-color: #f3f4f6;
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background-color: #f4f4f9;
+    color: #333;
 }
 
-form {
+/* Card Styles */
+.login-card {
+    background-color: white;
+    padding: 2.5rem 2rem;
+    border-radius: 16px;
+    box-shadow: 0px 10px 25px rgba(0, 0, 0, 0.1);
     width: 100%;
-    max-width: 400px;
-    padding: 20px;
-    border: 1px solid #ccc;
-    border-radius: 10px;
-    background: #ffffff;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    /* max-width: 380px; */
+    width: 400px;
+    text-align: center;
 }
 
-form div {
-    margin-bottom: 15px;
+h1 {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #1f2937;
+    margin-bottom: 2rem;
 }
 
-form input[type="text"],
-form input[type="password"],
-form input[type="submit"] {
+/* Input Styles */
+.input-group {
+    position: relative;
+    margin-bottom: 1.5rem;
+}
+
+
+.input-group input {
+    width: 100%; /* Ensures full width */
+    padding: 12px 14px 12px 40px; /* Adjust left padding for icon */
+    font-size: 1rem;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    outline: none;
+    background-color: #f9fafb;
+    transition: all 0.3s ease;
+    height: 44px; /* Ensure consistent height */
+}
+
+.input-group input:focus {
+    border-color: #3b82f6;
+    background-color: white;
+    box-shadow: 0px 4px 8px rgba(59, 130, 246, 0.1);
+}
+
+.input-group .icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 20px;
+    height: 20px;
+}
+
+.input-group .icon img {
     width: 100%;
-    padding: 10px;
-    margin-top: 5px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    font-size: 16px;
-    box-sizing: border-box;
+    height: 100%;
 }
 
-form input[type="submit"] {
-    background-color: #007bff;
+/* Button Styles */
+.btn {
+    width: 100%; /* Ensures full width */
+    padding: 12px;
+    font-size: 1rem;
+    font-weight: bold;
     color: white;
-    cursor: pointer;
+    background-color: #3b82f6;
     border: none;
-    transition: background-color 0.3s ease;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0px 4px 8px rgba(59, 130, 246, 0.2);
+    height: 44px; /* Same height as input fields */
 }
 
-form input[type="submit"]:hover {
-    background-color: #0056b3;
+.btn:hover {
+    background-color: #2563eb;
+    box-shadow: 0px 6px 12px rgba(37, 99, 235, 0.3);
 }
 
-form label {
-    font-size: 14px;
-    color: #555;
+.btn:disabled {
+    background-color: gray;
+    cursor: pointer;
+    box-shadow: none;
 }
 
-form a {
-    color: #007bff;
+
+/* Reset Password Styles */
+.reset-password {
+    margin-top: 1.5rem;
+    font-size: 0.9rem;
+    color: #6b7280;
+    text-align: center;
+}
+
+.reset-password a {
+    color: #3b82f6;
     text-decoration: none;
-    font-size: 14px;
+    font-weight: bold;
+    margin: 0 0.3rem;
+    transition: color 0.3s ease;
 }
 
-form a:hover {
+.reset-password span {
+    color: #9ca3af;
+}
+
+.reset-password a:hover {
+    color: #2563eb;
     text-decoration: underline;
 }
 
-.text-danger {
+.back-link {
+    margin-top: 20px;
+}
+
+.back-link a {
     font-size: 14px;
-    color: red;
-    margin-bottom: 10px;
+    color: #3b82f6;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.back-link a:hover {
+    color: #2563eb;
 }

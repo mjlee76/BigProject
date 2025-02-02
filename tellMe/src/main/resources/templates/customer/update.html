@@ -1,19 +1,19 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
-<head th:replace="layouts/navbar::tellMe_head"/>
+<head th:replace="~{layouts/navbar::tellMe_head}"/>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>공지사항 작성</title>
     <link rel="stylesheet" type="text/css" th:href="@{/css/write.css}" />
-    <script src="announcementform.js" defer></script>
+    <script th:src="@{/js/update.js}" defer></script>
 </head>
 <body>
-<div th:replace="layouts/navbar::tellMe_header"></div>
+<div th:replace="~{layouts/navbar::tellMe_head}"></div>
 <header>
     <h1>공지사항 작성</h1>
 </header>
 <main>
-    <form action="/customer/update" method="post" name="noticeUpdate">
+    <form th:action="@{/customer/update}" method="post" name="noticeUpdate">
         <input type="hidden" name="id" th:value="${noticeUpdate.id}">
         <!-- 제목 -->
         <div class="form-group">
@@ -35,7 +35,7 @@
                 <div th:if="${noticeUpdate.file != null}">
                     <span th:text="${noticeUpdate.file}"></span>
                     <a th:href="@{/files/{fileName}(fileName=${noticeUpdate.file})}" download>다운로드</a>
-                    <button type="button" class="remove-file-button" th:onclick="|deleteFile('${noticeUpdate.file}')|">X 삭제</button>
+<!--                    <button type="button" class="remove-file-button" th:onclick="|deleteFile('${noticeUpdate.file}')|">X 삭제</button>-->
                 </div>
 
                 <!-- 새로운 파일 업로드 -->
@@ -44,13 +44,17 @@
                 </div>
             </div>
         </div>
-
+        <input type="hidden" name="createDate" th:value="${noticeUpdate.createDate}">
         <input type="hidden" name="views" th:value="${noticeUpdate.views}">
+
+        <!-- 🔹 추가: 숨겨진 필드에 `page` 값 저장 -->
+        <input type="hidden" id="page" th:value="${page}" />
 
         <!-- 버튼 -->
         <div class="form-actions">
-            <button type="submit" class="btn-primary">글수정</button>
-            <button type="button" id="view-list-button" class="btn-secondary" th:onclick="|location.href='@{/customer/notice}'|">목록</button>
+            <button type="submit" class="btn-primary">수정하기</button>
+<!--            <button type="button" id="view-list-button" class="btn-secondary" th:onclick="|location.href='@{/customer/notice}'|">목록보기</button>-->
+            <button type="button" id="view-list-button" class="btn-secondary" th:onclick="updateListReq()">목록보기</button>
         </div>
     </form>
 </main>
