@@ -7,6 +7,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 
@@ -22,7 +24,7 @@ public class Report {
     private Long id;
 
     @Column(nullable = false)
-    private String report; //파일 경로를 여기에 저장
+    private String report;
 
     @Enumerated(EnumType.STRING) // ✅ ENUM을 문자열로 저장
     @Column(nullable = false)

@@ -1,5 +1,6 @@
 package com.bigProject.tellMe.controller.customer;
 
+import com.bigProject.tellMe.config.FileUpLoadUtil;
 import com.bigProject.tellMe.dto.NoticeDTO;
 import com.bigProject.tellMe.entity.Notice;
 import com.bigProject.tellMe.service.NoticeService;
@@ -10,8 +11,11 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -29,16 +33,27 @@ public class CustomerController {
     }
 
     @GetMapping("/write")
-    public String newNoticeForm() {
-        return "customer/write";
+    public String newNoticeForm(Model model) {
+        NoticeDTO noticeDTO = new NoticeDTO();
+        model.addAttribute("notice", noticeDTO);
+        return "manager/notice_write";
     }
 
     @PostMapping("/create")
-    public String createNotice(NoticeDTO noticeDTO) {
-        noticeDTO.setCreateDate(LocalDateTime.now());
-        noticeDTO.setViews(0);
+    public String createNotice(NoticeDTO noticeDTO, @RequestParam("image") MultipartFile multipartFile) throws IOException {
+        System.out.println("=============="+multipartFile.toString());
+        if(!multipartFile.isEmpty()) {
+            String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
+            noticeDTO.setFile(fileName);
+            Notice notice = noticeService.save(noticeDTO);
 
-        Notice saved = noticeService.save(noticeDTO);
+            String uploadDir = "tellMe/tellMe-image/notice/" + notice.getId();
+            FileUpLoadUtil.saveFile(uploadDir, fileName, multipartFile);
+        }else {
+            noticeDTO.setFile(null);
+            noticeService.save(noticeDTO);
+        }
+
         return "redirect:/customer/notice";
     }
 

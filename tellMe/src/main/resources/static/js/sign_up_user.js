@@ -1,13 +1,10 @@
 document.getElementById("address").addEventListener("click", function () {
     new daum.Postcode({
-        oncomplete: function (data) {
-            const address = data.roadAddress || data.jibunAddress; // 도로명주소 또는 지번주소
-            document.getElementById("address").value = address;
-
-            // 상세주소 입력 필드 초기화 후 포커스 이동
-            document.getElementById("detailAddress").value = "";
-            document.getElementById("detailAddress").focus();
-        }
+      oncomplete: function (data) {
+        // 주소 선택 후 입력
+        const address = data.roadAddress || data.jibunAddress; // 도로명주소 또는 지번주소
+        document.getElementById("address").value = address;
+      },
     }).open();
 });
 

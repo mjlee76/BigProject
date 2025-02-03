@@ -1,6 +1,7 @@
 package com.bigProject.tellMe.controller.complaint;
 
 import com.bigProject.tellMe.dto.QuestionDTO;
+import com.bigProject.tellMe.dto.UserDTO;
 import com.bigProject.tellMe.entity.Question;
 import com.bigProject.tellMe.entity.User;
 import com.bigProject.tellMe.enumClass.Status;
@@ -28,7 +29,7 @@ public class ComplaintController {
 
     @PostMapping("/create")
     public String createComplaint(Authentication auth, QuestionDTO questionDTO) {
-        User user = userService.findByUserId(auth.getName());
+        UserDTO user = userService.findByUserId(auth.getName());
 
         questionDTO.setCreateDate(LocalDateTime.now());
         questionDTO.setViews(0);

@@ -3,7 +3,6 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 <head th:fragment="tellMe_head">
     <link rel="stylesheet" type="text/css" th:href="@{/css/navbar.css}" />
-    <link rel="icon" th:href="@{/image/favicon.png}" type="image/png">
     <script src="https://code.jquery.com/jquery-3.6.3.js"></script>
     <script type="text/javascript" th:src="@{/js/common.js}"></script>
 </head>
@@ -34,11 +33,11 @@
 
                 <!-- 로그인 상태에서만 표시 -->
                 <div sec:authorize="isAuthenticated()">
-                    <a th:href="@{/user/mypage}" class="auth-link mypage">마이 페이지</a>
-                    <form th:action="@{/logout}" method="post" th:hidden="true" name="logoutForm">
-                        <input type="submit" hidden />
+                    <a th:href="@{/myPage/editInfo}" class="auth-link mypage">마이 페이지</a>
+                    <form th:action="@{/logout}" method="post" th:hidden="true" name="logoutForm" >
+                        <input type="submit"/>
                     </form>
-                    <a class="auth-link logout" id="logoutLink" href="#" onclick="document.logoutForm.submit()">로그아웃</a>
+                    <a class="auth-link logout" id="logoutLink" href="">로그아웃</a>
                 </div>
             </div>
         </div>
