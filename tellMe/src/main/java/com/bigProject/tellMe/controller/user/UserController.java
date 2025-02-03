@@ -28,9 +28,10 @@ public class UserController {
 
     @PostMapping("/save")
     public String saveUser(UserDTO userDTO, Model model) {
-        //userDTO.setRole(Role.ROLE_ADMIN);
-        //userDTO.setRole(Role.ROLE_MANAGER);
-        //userDTO.setRole(Role.ROLE_COUNSELOR);
+//        userDTO.setRole(Role.ROLE_ADMIN);
+//        userDTO.setRole(Role.ROLE_MANAGER);
+//        userDTO.setRole(Role.ROLE_COUNSELOR);
+        userDTO.setRole(Role.ROLE_USER);
 
         userService.save(userDTO);
         return "login";
