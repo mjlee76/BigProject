@@ -84,7 +84,6 @@
 
     <!-- Content Wrapper -->
     <div id="content-wrapper">
-
         <!-- 일별 민원 통계 -->
         <div id="daily-complaints-content" style="display: none;">
             <h2 class="text-center">일별 민원 통계</h2>
@@ -120,46 +119,23 @@
         <!-- 악성민원 성별, 연령별 통계 -->
         <div id="malicious-gender-content" style="display: none;">
             <div class="half_box left">
-                <div class="gender">
-                    <h1><strong>성별</strong> " 현황 "</h1>
-                    <div class="chart-col">
-                        <div class="card">
-                            <div class="card-header">
-                                <h6 class="text-primary">성별 통계</h6>
-                            </div>
-                            <div class="card-body">
-                                <div class="chart-box">
-                                    <canvas id="genderPieChart"></canvas>
-                                </div>
-                                <div class="mt-4 text-center small">
-                                    <span><i class="fas fa-circle text-primary"></i> 남성</span>
-                                    <span><i class="fas fa-circle text-success"></i> 여성</span>
-                                </div>
-                            </div>
-                        </div>
+                <div class="info type1">
+                    <h1>성별 현황</h1>
+                </div>
+                <div class="half_con">
+                    <div class="chart-box">
+                        <canvas id="genderPieChart"></canvas>
                     </div>
                 </div>
             </div>
 
             <div class="half_box right">
-                <div class="age">
-                    <h1><strong>연령별</strong> " 현황 "</h1>
-                    <div class="chart-col">
-                        <div class="card">
-                            <div class="card-header">
-                                <h6 class="text-primary">연령별 통계</h6>
-                            </div>
-                            <div class="card-body">
-                                <div class="chart-box">
-                                    <canvas id="agePieChart"></canvas>
-                                </div>
-                                <div class="mt-4 text-center small">
-                                    <span><i class="fas fa-circle text-primary"></i> 10대</span>
-                                    <span><i class="fas fa-circle text-success"></i> 20대</span>
-                                    <span><i class="fas fa-circle text-info"></i> 30대 이상</span>
-                                </div>
-                            </div>
-                        </div>
+                <div class="info type1">
+                    <h1>연령별 현황</h1>
+                </div>
+                <div class="half_con">
+                    <div class="chart-box">
+                        <canvas id="agePieChart"></canvas>
                     </div>
                 </div>
             </div>
@@ -171,3 +147,5 @@
 <div th:replace="layouts/footer::tellMe_footer"></div>
 </body>
 </html>
+
+
