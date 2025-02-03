@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+</head>
+<body>
+<ul th:fragment="TellMe_side_mypage">
+  <li><a th:href="@{/mypage/editInfo}"><i class=""></i>내 정보 보기 및 수정</a></li>
+  <li><a th:href="@{/mypage/editPassword}"><i class=""></i>비밀번호 수정</a></li>
+  <li><a th:href="@{/mypage/myComplaint}"><i class=""></i>내 민원 조회</a></li>
+</ul>
+</body>
+</html>

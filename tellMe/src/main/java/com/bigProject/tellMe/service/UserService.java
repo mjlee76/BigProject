@@ -7,11 +7,8 @@ import com.bigProject.tellMe.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 
 @Service
@@ -35,72 +32,28 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public User findByUserId(String userId) {
-        return userRepository.findByUserId(userId);
-    }
-
-
-    public boolean isuserIdUnique(Long id, String userId) {
+    public UserDTO findByUserId(String userId) {
         User user = userRepository.findByUserId(userId);
-        if(user == null) {
-            return true;
-        }
+        return userMapper.userToUserDTO(user);
 
-        boolean isCreatingNew = (id == null);
-
-        if(isCreatingNew) {
-            if (user != null) {
-                return false;
-            }
-        }else {
-            if(user.getId() != id) {
-                return false;
-            }
-        }
-
-        return true;
     }
 
-    public boolean isphoneUnique(Long id, String phoneNum) {
-        User user = userRepository.findByPhone(phoneNum);
-        if(user == null) {
-            return true;
-        }
+    public String checkUnique(String userId, String password, String phoneNum, String eMail) {
+        List<User> listUsers = userRepository.findAll();
 
-        boolean isCreatingNew = (id == null);
-
-        if(isCreatingNew) {
-            if (user != null) {
-                return false;
-            }
-        }else {
-            if(user.getId() != id) {
-                return false;
+        for(User listUser : listUsers) {
+            if(userRepository.findByUserId(userId) != null) {
+                return "아이디중복";
+            }else if(passwordEncoder.matches(password, listUser.getPassword())) {
+                return "비밀번호중복";
+            }else if(userRepository.findByPhone(phoneNum) != null) {
+                return "핸드폰중복";
+            }else if(userRepository.findByEmail(eMail) != null) {
+                return "이메일중복";
             }
         }
 
-        return true;
-    }
-
-    public boolean isemailUnique(Long id, String eMail) {
-        User user = userRepository.findByEmail(eMail);
-        if(user == null) {
-            return true;
-        }
-
-        boolean isCreatingNew = (id == null);
-
-        if(isCreatingNew) {
-            if (user != null) {
-                return false;
-            }
-        }else {
-            if(user.getId() != id) {
-                return false;
-            }
-        }
-
-        return true;
+        return "중복없음";
     }
 
     public String checkNameAndFindId(String userName, String phoneNum) {
@@ -141,5 +94,35 @@ public class UserService {
             sb.append(chars.charAt(random.nextInt(charsLength)));
         }
         return sb.toString();
+    }
+
+    public boolean checkPassword(String userId, String password) {
+        User user = userRepository.findByUserId(userId);
+        if (user != null) {
+            // 저장된 암호화된 비밀번호와 입력된 비밀번호 비교
+            return passwordEncoder.matches(password, user.getPassword());
+        }
+        return false;
+    }
+
+    public boolean updateUserName(String userId, String newName) {
+        User user = userRepository.findByUserId(userId);
+        if(user != null) {
+            UserDTO userDTO = userMapper.userToUserDTO(user);
+            userDTO.setUserName(newName);
+            user = userMapper.userDTOToUser(userDTO);
+            userRepository.save(user);
+            return true;
+        }
+        return false;
+    }
+
+
+    public boolean updatePhone(String userId, String newPhone) {
+        return true;
+    }
+
+    public boolean updateEmail(String userId, String newEmail) {
+        return true;
     }
 }
