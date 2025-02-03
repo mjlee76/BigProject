@@ -36,7 +36,7 @@ public class CustomerController {
     public String newNoticeForm(Model model) {
         NoticeDTO noticeDTO = new NoticeDTO();
         model.addAttribute("notice", noticeDTO);
-        return "customer/notice_write";
+        return "manager/notice_write";
     }
 
     @PostMapping("/create")
