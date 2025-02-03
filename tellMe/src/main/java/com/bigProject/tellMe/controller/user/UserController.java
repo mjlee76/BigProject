@@ -29,9 +29,13 @@ public class UserController {
     @PostMapping("/save")
     public String saveUser(UserDTO userDTO, Model model) {
         //userDTO.setRole(Role.ROLE_ADMIN);
-        //userDTO.setRole(Role.ROLE_MANAGER);
+        userDTO.setRole(Role.ROLE_MANAGER);
         //userDTO.setRole(Role.ROLE_COUNSELOR);
-
+//        userDTO.setRole(Role.ROLE_USER);
+        userDTO.setCount(0);
+        userDTO.setCreateDate(LocalDateTime.now());
+        System.out.println("======================================");
+        System.out.println(userDTO.toString());
         userService.save(userDTO);
         return "login";
     }
@@ -45,4 +49,5 @@ public class UserController {
     public String findPw() {
         return "find_pw";
     }
+
 }
