@@ -3,7 +3,7 @@
 import pandas as pd
 import openai
 import os
-import pillow_heif
+# import pillow_heif
 import re
 import json
 from datetime import datetime

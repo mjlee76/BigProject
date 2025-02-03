@@ -13,25 +13,25 @@
       url = "[[@{/user/check/unique}]]";
       console.log(url);
 
-      id=$("#id").val();
       userId=$("#userId").val();
+      password=$("#password").val();
       phone=$("#phone").val();
       email=$("#email").val();
       csrfValue=$("input[name='_csrf']").val();
 
-      params={id:id,userId:userId,phone:phone,email:email,_csrf: csrfValue};
+      params={userId:userId,password:password,phone:phone,email:email,_csrf: csrfValue};
 
       $.post(url,params,function(response){
-          if(response == "OK"){
+          if(response == "중복없음"){
               form.submit();
-          }else if(response == "IdDuplicated"){
-              showToast("Warning","User ID is alread exist!!");
-          }else if(response == "PhoneDuplicated"){
-              showToast("Warning","Phone is alread exist!!");
-          }else if(response == "EmailDuplicated"){
-               showToast("Warning","email is alread exist!!");
-           }else if(response == "Duplicated"){
-              showToast("Warning","User ID and Phone and email is alread exist!!");
+          }else if(response == "아이디중복"){
+              showToast("Warning","아이디가 이미 존재합니다. 다른 아이디를 입력하세요!");
+          }else if(response == "비밀번호중복"){
+              showToast("Warning","비밀번호가 이미 존재합니다. 다른 비밀번호를 입력하세요!");
+          }else if(response == "핸드폰중복"){
+              showToast("Warning","핸드폰 번호가 이미 존재합니다. 다른 핸드폰 번호를 입력하세요!");
+          }else if(response == "이메일중복"){
+               showToast("Warning","이메일이 이미 존재합니다. 다른 이메일을 입력하세요!");
           }else{
               showToast("Error","Unknown response from server");
           }
