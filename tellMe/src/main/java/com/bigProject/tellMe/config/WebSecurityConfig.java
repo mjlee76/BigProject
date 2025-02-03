@@ -67,7 +67,8 @@ public class WebSecurityConfig {
                 .csrf(Customizer.withDefaults())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/updateName").authenticated()
-                        .requestMatchers("/", "/complaint/new", "/mypage/**").hasAnyRole("USER")
+                        .requestMatchers("/manager/**").hasAnyRole("MANAGER")
+                        .requestMatchers("/complaint/new", "/mypage/**").hasAnyRole("USER")
                         .anyRequest().permitAll()
                 )
                 .formLogin(form -> form

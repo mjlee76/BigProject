@@ -1,6 +1,7 @@
 package com.bigProject.tellMe.dto;
 
 import com.bigProject.tellMe.entity.Notice;
+import jakarta.persistence.Transient;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -35,6 +36,14 @@ public class NoticeDTO {
         noticeDTO.setViews(notice.getViews());
         noticeDTO.setFile(notice.getFile());
         return noticeDTO;
+    }
+
+    @Transient
+    public String getPhotosImagePath() {
+        if(id == null || file == null) {
+            return "/image/file_img.png";
+        }
+        return "/tellMe-image/notice/" + this.id + "/" + this.file;
     }
 
 }
