@@ -45,21 +45,36 @@ def update_item(title: str, content: str):
     # 분류
     title_label = classifier.classify_text(title)
     content_label = classifier.classify_text(content)
+    changetexter = ChangeText()
     
     if title_label != '정상' or content_label != '정상':
-        changetexter = ChangeText()
-        title_changed = changetexter.change_text(title)
-        content_changed = changetexter.change_text(content)
+        if title_label != '정상' and content_label != '정상':
+            title_changed = changetexter.change_text(title)
+            content_changed = changetexter.change_text(content)
+            return {
+                "제목": {"text": title_changed, "label": title_label, "경고문": f"{title_label}감지"},
+                "내용": {"text": content_changed, "label": content_label, "경고문": f"{content_label}감지"},
+                "원문데이터" : post_origin_data
+            }
+
+        elif title_label != '정상':
+            title_changed = changetexter.change_text(title)
+            return {
+                "제목" : {"text": title_changed, "label": title_label, "경고문": f"{title_label}감지"},
+                "원문데이터" : post_origin_data
+            }
+
+        elif content_label != '정상':
+            content_changed = changetexter.change_text(content)
+            return {
+                "내용" : {"text": content_changed, "label": content_label, "경고문": f"{content_label}감지"},
+                "원문데이터" : post_origin_data
+            }
+        
         report = MakeReport(file_path)
         report.make_report_detail()
         report.report_save()
         
-        return {
-            "제목": {"text": title_changed, "label": title_label, "경고문": f"{title_label}" + "감지"},
-            "내용": {"text": content_changed, "label": content_label, "경고문": f"{content_label}" + "감지"},
-            "원문데이터" : post_origin_data
-        }
-    
     # 결과 반환
     else:
         return {

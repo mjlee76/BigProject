@@ -43,7 +43,6 @@ public class NoticeService {
     }
 
 
-
     public NoticeDTO getNotice(Long id) {
         Optional<Notice> optionalNotice = noticeRepository.findById(id);
 
