@@ -31,11 +31,21 @@ public class ManagerController {
 
     // ✅ 보고서 목록 조회 (Thymeleaf 페이지 렌더링)
     @GetMapping("/report")
-    public String reportBoard(Model model) {
-        List<ReportDTO> reports = reportService.findAll();
+    public String reportBoard(@RequestParam(value = "query", required = false) String query,
+                              @RequestParam(value = "status", required = false, defaultValue = "all") String status,
+                              Model model) {
+        List<ReportDTO> reports;
+
+        if ((query == null || query.isEmpty()) && (status == null || status.equals("all"))) {
+            reports = reportService.findAll(); // 전체 조회
+        } else {
+            reports = reportService.searchReports(query, status);
+        }
+
         model.addAttribute("reports", reports);
         return "manager/report"; // Thymeleaf 템플릿 경로
     }
+
 
     // ✅ 특정 보고서 웹뷰어에서 열기
     @GetMapping("report/view/{id}")
