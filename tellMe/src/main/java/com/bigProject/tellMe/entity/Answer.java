@@ -19,7 +19,7 @@ public class Answer {
     @Column(name = "answer_id")
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String content;
 
     @ManyToOne
@@ -30,5 +30,5 @@ public class Answer {
     private LocalDateTime createDate;
 
     @Column
-    private String file1;
+    private String file;
 }
