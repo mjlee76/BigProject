@@ -14,61 +14,52 @@
 <body>
 <div th:replace="layouts/navbar::tellMe_header"></div>
 <main>
-<h1>민원 작성</h1>
+    <div class="complaint-header">
+        <h1>민원 작성</h1>
+    </div>
 <!--<form th:action="@{/complaint/create}" method="post" enctype="multipart/form-data">-->
 <form th:action="@{/complaint/create}" method="post">
     <!-- 제목 -->
-    <div>
-        <label for="title">제목</label>
-        <input type="text" id="title" name="title" required />
-    </div>
+    <table class="form-table">
+        <tr>
+            <th><label for="title">제목</label></th>
+            <td><input type="text" id="title" name="title" required /></td>
+        </tr>
 
-    <!-- 공개 여부 -->
-    <div>
-        <span>공개 여부</span>
-        <input type="radio" id="public" name="reveal" value="공개" checked />
-        <label for="public">공개</label>
-        <input type="radio" id="private" name="reveal" value="비공개" />
-        <label for="private">비공개</label>
-    </div>
+        <tr>
+            <th>공개 여부</th>
+            <td>
+                <input type="radio" id="public" name="reveal" value="공개" checked />
+                <label for="public">공개</label>
+                <input type="radio" id="private" name="reveal" value="비공개" />
+                <label for="private">비공개</label>
+            </td>
+        </tr>
 
-<!--    &lt;!&ndash; 휴대폰 번호 &ndash;&gt;-->
-<!--    <div>-->
-<!--        <label for="phone">휴대폰 번호</label>-->
-<!--        <input type="text" id="phone" name="phone" placeholder="'-'를 제외하고 입력해 주세요" />-->
-<!--    </div>-->
+        <tr>
+            <th><label for="content">내용</label></th>
+            <td><textarea id="content" name="content" rows="6" required></textarea></td>
+        </tr>
 
-<!--    &lt;!&ndash; 주소 &ndash;&gt;-->
-<!--    <div>-->
-<!--        <label for="address">주소</label>-->
-<!--        <div>-->
-<!--            <input type="text" id="address" name="address" placeholder="주소를 입력하세요" />-->
-<!--            <button type="button">주소 검색</button>-->
-<!--        </div>-->
-<!--    </div>-->
+        <tr>
+            <th>첨부파일</th>
+            <td>
+                <div class="file-upload">
+                    <input type="file" name="file1" />
+                    <button type="button">X 취소</button>
+                </div>
+                <div class="file-upload">
+                    <input type="file" name="file2" />
+                    <button type="button">X 취소</button>
+                </div>
+                <div class="file-upload">
+                    <input type="file" name="file3" />
+                    <button type="button">X 취소</button>
+                </div>
+            </td>
+        </tr>
+    </table>
 
-    <!-- 내용 -->
-    <div>
-        <label for="content">내용</label>
-        <textarea id="content" name="content" rows="6" required></textarea>
-    </div>
-
-    <!-- 첨부파일 -->
-    <div>
-        <label>첨부파일</label>
-        <div>
-            <input type="file" name="file1" />
-            <button type="button">X 취소</button>
-        </div>
-        <div>
-            <input type="file" name="file2" />
-            <button type="button">X 취소</button>
-        </div>
-        <div>
-            <input type="file" name="file3" />
-            <button type="button">X 취소</button>
-        </div>
-    </div>
 
     <!-- 개인정보 수집 동의 -->
     <div>

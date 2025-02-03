@@ -13,13 +13,14 @@
       url = "[[@{/user/check/unique}]]";
       console.log(url);
 
+      id=$("#id").val();
       userId=$("#userId").val();
       password=$("#password").val();
       phone=$("#phone").val();
       email=$("#email").val();
       csrfValue=$("input[name='_csrf']").val();
 
-      params={userId:userId,password:password,phone:phone,email:email,_csrf: csrfValue};
+      params={id:id,userId:userId,phone:phone,email:email,_csrf: csrfValue};
 
       $.post(url,params,function(response){
           if(response == "중복없음"){
@@ -54,20 +55,20 @@
 
 </head>
 <body>
-  <div style="color:red;" id="toastMessage" class="toast"></div>
-  <div class="main-container">
-    <!-- Left Section -->
-    <div class="left-section">
-      <img th:src = "@{/image/signup_image.jpg}">
-    </div>
+<div style="color:red;" id="toastMessage" class="toast"></div>
+<div class="main-container">
+  <!-- Left Section -->
+  <div class="left-section">
+    <img th:src = "@{/image/signup_image.jpg}">
+  </div>
 
-    <!-- Right Section -->
-    <div class="right-section">
-      <form th:action="@{/user/save}" th:object="${user}" method="post" onsubmit="return checkNameUnique(this)">
-        <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
-        <input type="hidden" th:field="*{id}"/>
-        <h2>회원가입</h2>
-        <div class="form-group">
+  <!-- Right Section -->
+  <div class="right-section">
+    <form th:action="@{/user/save}" th:object="${user}" method="post" onsubmit="return checkNameUnique(this)">
+      <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
+      <input type="hidden" th:field="*{id}"/>
+      <h2>회원가입</h2>
+      <div class="form-group">
           <span class="icon">
             <img th:src = "@{/image/person.png}">
           </span>
@@ -107,7 +108,7 @@
           <span class="icon">
             <img th:src = "@{/image/arrow.png}">
           </span>
-          <input type="text_detail" placeholder="상세주소" required>
+            <input type="text" id="detailAddress" placeholder="상세주소" required>
         </div>
         <div class="form-group gender-group">
           <input type="radio" th:field="*{gender}" name="gender" id="male" value="M">
