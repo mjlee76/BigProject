@@ -1,7 +1,9 @@
 import os
 import re
+import torch
 from langchain_openai import ChatOpenAI
 from langchain.schema import HumanMessage
+from transformers import AutoTokenizer, AutoModelForSequenceClassification
 
 #1. api 키 불러오기 및 설정정
 def load_api_key(file_path):
@@ -11,58 +13,65 @@ def load_api_key(file_path):
 #2. 모델 설정
 def selecting_model(api_key):
     os.environ["OPENAI_API_KEY"] = api_key
-    llm = ChatOpenAI(temperature=0, model_name="gpt-4o")
+    llm = ChatOpenAI(temperature=0, model_name="gpt-4")
     return llm
 
 #3. 모델 프롬프트 출력
 class TextClassifier:
 
     def __init__(self):
-        """
-        TextClassifier 초기화.
-        Args:
-            model (str): 사용할 OpenAI 모델 (기본값: gpt-4).
-            api_key (str): OpenAI API 키 (기본값: None). 
-        """
-        file_path = os.path.join(os.getcwd(), "api_key.txt")
-        api_key = load_api_key(file_path)
-        self.llm = selecting_model(api_key)
-        self.categories = [
-            "폭언X(0)", "폭언(1)", "단순욕설(2)", "외모(3)", 
-            "학력(4)", "장애인(5)", "인종(6)", 
-            "종교(7)", "지역(8)", "성차별(9)", "나이(10)",
-            "협박(11)", "성희롱(12)"
-        ]
+        model_path = "./fine_tuned_klue_bert_v3"
+        self.model = AutoModelForSequenceClassification.from_pretrained(model_path)
+        self.tokenizer = AutoTokenizer.from_pretrained("klue/bert-base")
 
-    def generate_prompt(self, text):
-        return (
-            f"다음 문장을 읽고, 해당 문장이 아래 카테고리 중 어떤 것에 해당하는지 판별하세요:\n"
-            f"문장: {text}\n\n"
-            f"카테고리: {', '.join(self.categories)}\n\n"
-            f"답변 형식: 카테고리 번호와 이름으로만 답변하세요. 예: '폭언X(0) 감지'"
-        )
+    def split_text(self, text, max_length):
+        """텍스트를 토큰 길이를 기준으로 나눔"""
+        tokens = self.tokenizer(text, truncation=False, padding=False)
+        input_ids = tokens["input_ids"]
+        chunks = [input_ids[i:i + max_length] for i in range(0, len(input_ids), max_length)]
+        # 토큰 ID를 다시 텍스트로 디코딩
+        return [self.tokenizer.decode(chunk, skip_special_tokens=True) for chunk in chunks if len(chunk) > 0]
 
     def classify_text(self, text):
-        prompt = self.generate_prompt(text)
-        try:
-            # LLM을 사용하여 분류 수행
-            response = self.llm([HumanMessage(content=prompt)])
-            return response.content.strip()  # LLM 응답 반환
-        except Exception as e:
-            return f"Error: {str(e)}"
+        max_length = 512
+        chunks = self.split_text(text, max_length - 2)
+        results = [] 
+        for chunk in chunks:
+            try:
+                inputs = self.tokenizer(chunk, truncation=True, padding="max_length", max_length=max_length, return_tensors="pt")
+                with torch.no_grad():
+                    outputs = self.model(**inputs)
+                    logits = outputs.logits
+                    probabilities = torch.sigmoid(logits).squeeze()  # Sigmoid로 확률 계산
+                    results.append(probabilities)
+            except Exception as e:
+                print(f"Error processing chunk: {chunk}")
+                print(f"Error details: {e}")
+
+        if results:
+            final_probabilities = torch.mean(torch.stack(results), dim=0)  # 평균 확률
+            threshold = 0.5
+            predicted_labels = (final_probabilities > threshold).nonzero(as_tuple=True)[0].tolist()
+
+            # 라벨 매핑
+            label_mapping = {
+                0: "정상", 1: "악성", 2: "욕설",
+                3: "외모", 4: "장애인", 5: "인종",
+                6: "종교", 7: "지역", 8: "성차별",
+                9: "나이", 10: "협박", 11: "성희롱",
+            }
+
+            # 결과 출력
+            predicted_labels_text = [label_mapping[label] for label in predicted_labels]
+            return predicted_labels_text
+        else:
+            print("텍스트 조각 처리 중 문제가 발생하여 결과를 생성할 수 없습니다.")
 
 #4. 분류
-def extract_number(text):
-    match = re.search(r"\((\d+)\)", text)
-    if match:
-        return int(match.group(1))
-    return None 
-
-def classify_sentence(label):
-    number = extract_number(label)
-    match = re.match(r"([^\(]+)\(", label)
-    immoral_text = match.group(1).strip()
-    return number, immoral_text
+def extract_label(text):
+    if isinstance(text, list) and len(text) == 1:
+        return text[0]
+    return text
 
 #5. 순화
 class ChangeText:
