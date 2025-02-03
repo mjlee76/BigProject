@@ -85,4 +85,10 @@ public class Question {
         this.status = Status.처리중;
     }
 
+
+    public void markAsAnswered(Answer answer) {
+        this.answer = answer;
+        this.status = Status.답변완료;
+    }
+
 }

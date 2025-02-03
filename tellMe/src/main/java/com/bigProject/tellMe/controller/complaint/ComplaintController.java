@@ -8,6 +8,7 @@ import com.bigProject.tellMe.entity.Question;
 import com.bigProject.tellMe.entity.User;
 import com.bigProject.tellMe.enumClass.Role;
 import com.bigProject.tellMe.enumClass.Status;
+import com.bigProject.tellMe.service.AnswerService;
 import com.bigProject.tellMe.service.QuestionService;
 import com.bigProject.tellMe.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +33,7 @@ import java.util.List;
 public class ComplaintController {
     private final UserService userService;
     private final QuestionService questionService;
+    private final AnswerService answerService;
 
     @GetMapping("/new")
     public String newComplaintForm() { return "complaint/new"; }
@@ -101,11 +103,12 @@ public class ComplaintController {
         return "redirect:/complaint/question/" + id + "?page=" + page;  // 상세 페이지로 리다이렉트
     }
 
-//    @PostMapping("/answer")
-//    public String submitAnswer(@ModelAttribute AnswerDTO answerDTO) {
-//
-//        answerService.saveAnswer(answerDTO);
-//        return "redirect:/complaint/question/" + answerDTO.getQuestionId();
-//    }
+    @PostMapping("/answer")
+    public String submitAnswer(@ModelAttribute AnswerDTO answerDTO,
+                               Authentication auth) {
+
+        answerService.saveAnswer(answerDTO, auth);
+        return "redirect:/complaint/question/" + answerDTO.getQuestionId();
+    }
 
 }

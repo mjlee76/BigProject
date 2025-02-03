@@ -80,9 +80,19 @@
         </tr>
     </table>
 
-    <!-- 답변박스 -->
-    <div>
-        <form th:action="@{/complaint/answer}" method="post" sec:authorize="hasRole('ROLE_MANAGER')">
+    <!-- 답변 표시 섹션 -->
+    <div th:if="${question.answer != null}">
+        <h3>답변</h3>
+        <div class="answer-box">
+            <p th:text="${question.answer.content}"></p>
+            <p>답변자: <span th:text="${question.answer.userName}"></span></p>
+            <p>답변일: <span th:text="${#temporals.format(question.answer.createDate, 'yyyy-MM-dd')}"></span></p>
+        </div>
+    </div>
+
+    <!-- 답변박스 (매니저만 보임) -->
+    <div sec:authorize="hasRole('ROLE_MANAGER')" th:unless="${question.answer}">
+        <form th:action="@{/complaint/answer}" method="post">
             <input type="hidden" name="questionId" th:value="${question.id}" />
             <textarea name="content" rows="4" cols="50" placeholder="답변을 입력하세요"></textarea>
             <button type="submit">답변 등록</button>

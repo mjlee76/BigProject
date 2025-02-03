@@ -27,6 +27,7 @@ public class QuestionDTO {
     private String file1 = null;
     private String file2 = null;
     private String file3 = null;
+    private AnswerDTO answer;
 
     public QuestionDTO(Long id, String title, LocalDateTime createDate, Integer views, String userName, Status status) {
         this.id = id;
@@ -53,6 +54,10 @@ public class QuestionDTO {
         questionDTO.setFile1(questionDTO.getFile1());
         questionDTO.setFile2(questionDTO.getFile2());
         questionDTO.setFile3(questionDTO.getFile3());
+
+        if (question.getAnswer() != null) {
+            questionDTO.setAnswer(AnswerDTO.toAnswerDTO(question.getAnswer()));
+        }
 
         return questionDTO;
     }
