@@ -17,7 +17,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-@EntityListeners(AuditingEntityListener.class)
 public class Report {
 
     @Id @GeneratedValue(strategy= GenerationType.IDENTITY)
@@ -27,15 +26,15 @@ public class Report {
     @Column(nullable = false)
     private String report;
 
+    @Enumerated(EnumType.STRING) // ✅ ENUM을 문자열로 저장
     @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private Category category;
+    private Category category;//보고서 유형
 
+    @Enumerated(EnumType.STRING) // ✅ ENUM을 문자열로 저장
     @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
     private ReportStatus reportStatus;
 
-    @CreatedDate
+    @Column(nullable = false)
     private LocalDateTime createDate;
 
 }
