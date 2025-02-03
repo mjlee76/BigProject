@@ -75,7 +75,14 @@ public class Question {
         }
     }
 
+
     public void incrementViews() {
         this.views += 1;
     }
+
+
+    public void changeStatusToProcessing() {
+        this.status = Status.처리중;
+    }
+
 }

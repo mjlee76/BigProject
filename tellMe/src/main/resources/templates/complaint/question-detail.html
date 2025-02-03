@@ -7,6 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title th:text="${question.title}"></title>
 <link rel="stylesheet" type="text/css" th:href="@{/css/question-detail.css}" />
+<script th:src="@{/js/question-detail.js}" defer></script>
 </head>
 <body>
 <div th:replace="layouts/navbar::tellMe_header"></div>
@@ -24,9 +25,11 @@
         </tr>
         <tr>
             <th>공개여부</th>
-            <td th:text="${question.status}"></td>
+            <td th:text="${question.reveal}"></td>
             <th>작성자</th>
             <td th:text="${question.userName}"></td>
+            <th>답변여부</th>
+            <td th:text="${question.status}"></td>
         </tr>
         <tr>
             <th>작성일</th>
@@ -77,27 +80,27 @@
         </tr>
     </table>
 
+    <!-- 답변박스 -->
+    <div>
+        <form th:action="@{/complaint/answer}" method="post" sec:authorize="hasRole('ROLE_MANAGER')">
+            <input type="hidden" name="questionId" th:value="${question.id}" />
+            <textarea name="content" rows="4" cols="50" placeholder="답변을 입력하세요"></textarea>
+            <button type="submit">답변 등록</button>
+        </form>
+    </div>
+
+    <input type="hidden" id="page" th:value="${page}" /> <!-- 현재 페이지 번호 -->
+    <input type="hidden" id="questionId" th:value="${question.id}" /> <!-- 문의 ID -->
+
     <!-- 버튼 -->
     <div class="buttons">
-        <button class="list-button" th:onclick="|location.href='@{/customer/notice}'|">목록보기</button>
-        <!--        <button class="prev-button" th:onclick="updateReq()" sec:authorize="hasRole('ROLE_MANAGER')">수정하기</button>-->
-        <!--        <button class="prev-button" th:onclick="deleteReq()" sec:authorize="hasRole('ROLE_MANAGER')">삭제하기</button>-->
+        <button class="list-button" th:onclick="detailListReq()">목록보기</button>
+        <form th:action="@{/complaint/question/{id}/status(id=${question.id})}" method="post">
+            <button th:onclick="updateQuestionStatus()" sec:authorize="hasRole('ROLE_MANAGER')">처리중으로 변경</button>
+        </form>
+
     </div>
 </main>
 <div th:replace="layouts/footer::tellMe_footer"></div>
 </body>
-<script th:inline="javascript">
-    const updateReq = () => {
-        console.log("수정 요청");
-        const id = [[${question.id}]];
-        location.href = "/customer/update/" + id;
-    }
-    const deleteReq = () => {
-        console.log("삭제 요청");
-        const id = [[${question.id}]];
-        if (confirm("정말로 삭제하시겠습니까?")) {
-            location.href = "/customer/delete/" + id;
-        }
-    }
-</script>
 </html>

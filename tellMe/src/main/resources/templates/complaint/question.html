@@ -4,6 +4,7 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <html lang="en">
 <head th:replace="layouts/navbar::tellMe_head"/>
+<head th:replace="layouts/footer::tellMe_foot"/>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,9 +16,9 @@
 <div th:replace="layouts/navbar::tellMe_header"></div>
 <main id="inquiry-board">
 
-    <h1>문의게시판</h1>
-
-    <p>전체 <strong id="total-posts">0</strong> (1 / <span id="total-pages">1</span> 페이지)</p>
+    <div class="inquiry-header">
+        <h1>문의게시판</h1>
+    </div>
 
     <div class="tabs">
         <button class="tab active" data-category="all" onclick="filterPosts('all')">전체</button>
@@ -48,10 +49,7 @@
     <table class="post-table">
         <thead>
         <tr>
-            <th id="checkbox-header" style="display: none;">
-                <input type="checkbox" id="select-all-checkbox" />
-            </th>
-            <th>번호</th>
+            <th>목록번호</th>
             <th>제목</th>
             <th>작성자</th>
             <th>작성일</th>
@@ -61,24 +59,43 @@
         </thead>
         <tbody class="post-list">
         <tr th:each="question: ${questionList}">
-            <td th:text="${question.id}"></td>
-            <td><a th:href="@{|/complaint/question/${question.id}|}" th:text="${question.Title}"></a></td>
-            <td th:text="${question.userName}"></td>
-            <td th:text="*{#temporals.format(question.createDate, 'yyyy-MM-dd')}"></td>
-            <td th:text="${question.status}"></td>
-            <td th:text="${question.views}"></td>
+                <td th:text="${question.id}"></td>
+                <td><a th:href="@{/complaint/question/{id}(id=${question.id}, page=${questionList.number + 1})}" th:text="${question.Title}"></a></td>
+                <td th:text="${question.userName}"></td>
+                <td th:text="*{#temporals.format(question.createDate, 'yyyy-MM-dd')}"></td>
+                <td th:text="${question.status}"></td>
+                <td th:text="${question.views}"></td>
         </tr>
         </tbody>
     </table>
-    <div class="action-bar">
-        <button id="delete-button">삭제</button>
-        <button id="select-delete-button" style="display: none;">선택 삭제</button>
-        <button id="cancel-button" style="display: none;">취소</button>
-    </div>
+    <p>전체 <strong id="total-posts">0</strong> (1 / <span id="total-pages">1</span> 페이지)</p>
 
     <div class="content-area"></div>
-    <div class="pagination"></div>
+    <div class="pagination">
+        <!-- 첫번째 페이지로 이동 -->
+        <!-- /notice/paging?page=1 -->
+        <div class="pagination">
+            <!-- 첫번째 페이지로 이동 -->
+            <a th:href="@{/complaint/question(page=1)}">«</a>
+
+            <!-- 이전 링크 -->
+            <a th:href="${questionList.first} ? '#' : @{/complaint/question(page=${questionList.number})}">‹</a>
+
+            <!-- 페이지 번호 -->
+            <span th:each="page: ${#numbers.sequence(startPage, endPage)}">
+            <span th:if="${page == questionList.number + 1}" th:text="${page}"></span>
+            <a th:unless="${page == questionList.number + 1}" th:href="@{/complaint/question(page=${page})}" th:text="${page}"></a>
+        </span>
+
+            <!-- 다음 링크 -->
+            <a th:href="${questionList.last} ? '#' : @{/complaint/question(page=${questionList.number + 2})}">›</a>
+
+            <!-- 마지막 페이지로 이동 -->
+            <a th:href="@{/complaint/question(page=${questionList.totalPages})}">»</a>
+        </div>
+    </div>
 </main>
+<div th:replace="layouts/footer::tellMe_footer"></div>
 </body>
 </html>
 </html>

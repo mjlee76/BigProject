@@ -28,6 +28,15 @@ public class QuestionDTO {
     private String file2 = null;
     private String file3 = null;
 
+    public QuestionDTO(Long id, String title, LocalDateTime createDate, Integer views, String userName, Status status) {
+        this.id = id;
+        this.title = title;
+        this.createDate = createDate;
+        this.views = views;
+        this.userName = userName;
+        this.status = status;
+    }
+
     // 목록보여주기 위해 Entity를 DTO로 변환 메서드
     public static QuestionDTO toQuestionDTO (Question question) {
         QuestionDTO questionDTO = new QuestionDTO();

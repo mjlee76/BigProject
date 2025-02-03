@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 public class filtered {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "origin_id")
+    @Column(name = "filtered_id")
     private Long id;
 
     @Column(nullable = false)

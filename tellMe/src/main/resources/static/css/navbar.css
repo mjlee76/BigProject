@@ -25,6 +25,20 @@
     font-size: 3em;
     font-weight: bold;
     color: black;
+    text-decoration: none;
+}
+
+.logo a {
+    text-decoration: none; /* 밑줄 제거 */
+    color: inherit; /* 부모 색상 상속 */
+    outline: none; /* 클릭 시 하이라이트 제거 */
+}
+
+.logo a:hover,
+.logo a:focus,
+.logo a:active {
+    text-decoration: none; /* 호버, 포커스, 클릭 상태에서도 밑줄 제거 */
+    color: inherit; /* 색상 유지 */
 }
 
 .nav-menu {
@@ -45,6 +59,7 @@
     font-weight: bold;
     padding: 5px 10px;
     transition: background-color 0.3s ease;
+    white-space: nowrap;
 }
 
 .nav-menu li a:hover {
@@ -52,17 +67,70 @@
     border-radius: 4px;
 }
 
-.auth-buttons button {
-    background-color: #575757;
-    color: white;
-    border: none;
-    padding: 5px 20px;
-    margin-left: 10px;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+/* 로그인/회원가입 버튼 스타일 */
+.auth-buttons {
+    display: flex; /* 버튼을 가로로 정렬 */
+    gap: 15px; /* 버튼 간 간격 */
+    align-items: center; /* 세로 가운데 정렬 */
+    flex-wrap: nowrap; /* 줄바꿈 방지 */
 }
 
-.auth-buttons button:hover {
-    background-color: #777;
+.auth-buttons div {
+    display: flex; /* 내부 버튼 정렬 */
+    gap: 10px; /* 내부 버튼 간 간격 */
+    align-items: center; /* 세로 가운데 정렬 */
+}
+
+.auth-link {
+    color: black;
+    text-decoration: none;
+    font-size: 1.2em;
+    font-weight: bold;
+    padding: 8px 15px;
+    border-radius: 4px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    white-space: nowrap; /* 버튼 텍스트 줄바꿈 방지 */
+}
+
+/* 로그인 버튼 */
+.auth-link.login {
+    background-color: white;
+    border: 1px solid #ddd;
+}
+
+.auth-link.login:hover {
+    background-color: #f0f0f0;
+}
+
+/* 회원가입 버튼 */
+.auth-link.signup {
+    background-color: black;
+    color: white;
+    border: 1px solid black;
+}
+
+.auth-link.signup:hover {
+    background-color: #444;
+}
+
+/* 마이페이지 버튼 */
+.auth-link.mypage {
+    background-color: #ddd;
+    color: black;
+    border: 1px solid #bbb;
+}
+
+.auth-link.mypage:hover {
+    background-color: #bbb;
+}
+
+/* 로그아웃 버튼 */
+.auth-link.logout {
+    background-color: transparent;
+    color: black;
+    border: 1px solid transparent;
+}
+
+.auth-link.logout:hover {
+    text-decoration: underline;
 }

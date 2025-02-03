@@ -2,6 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <html lang="en">
 <head th:replace="layouts/navbar::tellMe_head"/>
+<head th:replace="layouts/footer::tellMe_foot"/>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title th:text="${notice.title}"></title> <!-- 제목을 페이지 제목으로 설정 -->
@@ -12,28 +13,44 @@
 <div th:replace="layouts/navbar::tellMe_header"></div>
 
 <main class="content">
-    <!-- 제목 -->
-    <h1 class="title" th:text="${notice.title}"></h1>
-
-    <!-- 공지사항 내용 -->
-    <div class="notice-body">
-        <p th:text="${notice.content}"></p>
-    </div>
-
-    <!-- 추가 정보 -->
-    <div class="notice-meta">
-        <ul>
-            <li><strong>작성일:</strong> <span th:text="${#temporals.format(notice.createDate, 'yyyy-MM-dd HH:mm:ss')}">2025-01-17 18:00:00</span></li>
-            <li><strong>조회수:</strong> <span th:text="${notice.views}">0</span></li>
-            <li>
-                <strong>첨부파일:</strong>
+    <h1>게시글 상세보기</h1>
+    <table>
+        <tr>
+            <th>번호</th>
+            <td>327859</td>
+            <th>제목</th>
+            <td>
+                <h1 class="title" th:text="${notice.title}"></h1>
+            </td>
+        </tr>
+        <tr>
+            <th>작성일</th>
+            <td>
+                <span th:text="${#temporals.format(notice.createDate, 'yyyy-MM-dd')}">2025-01-17 18:00:00</span>
+            </td>
+            <th>조회수</th>
+            <td>
+                <span th:text="${notice.views}">0</span>
+            </td>
+        </tr>
+        <tr>
+            <th>첨부파일</th>
+            <td colspan="3">
                 <span th:if="${notice.file != null}">
-                    <a th:href="@{/files/{fileName}(fileName=${notice.file})}" th:text="${notice.file}">첨부파일 다운로드</a>
+                    <a th:href="@{/files/{fileName}(fileName=${notice.file})}" title="첨부파일 다운로드">
+                        <img th:src = "@{/image/attachment.jpg}" alt="첨부파일 아이콘" style="width: 16px; height: 16px; vertical-align: middle; margin-right: 5px;">
+                        <span th:text="${notice.file}"></span>
+                    </a>
                 </span>
                 <span th:if="${notice.file == null}">없음</span>
-            </li>
-        </ul>
-    </div>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="4">
+                <pre th:text="${notice.content}">게시글 내용을 불러오는 중...</pre>
+            </td>
+        </tr>
+    </table>
 
     <!-- 🔹 Hidden Input Fields (자바스크립트에서 Thymeleaf 변수 사용을 위해 추가) -->
     <input type="hidden" id="page" th:value="${page}" /> <!-- 현재 페이지 번호 -->
@@ -46,5 +63,6 @@
         <button class="prev-button" th:onclick="deleteReq()" sec:authorize="hasRole('ROLE_MANAGER')">삭제하기</button>
     </div>
 </main>
+<div th:replace="layouts/footer::tellMe_footer"></div>
 </body>
 </html>
