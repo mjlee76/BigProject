@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
         content: `게시글 내용 ${100 - i}`,
         date: new Date(new Date().setDate(new Date().getDate() - i))
             .toISOString().split("T")[0],
-        answerStatus: ["답변완료", "대기중", "이송이첩"][Math.floor(Math.random() * 3)],
+        answerStatus: ["답변완료", "처리중", "접수중"][Math.floor(Math.random() * 3)],
         attachments: []
     }));
 

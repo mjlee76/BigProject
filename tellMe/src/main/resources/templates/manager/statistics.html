@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml" lang="en">
+<head th:replace="layouts/navbar::tellMe_head"/>
+<head th:replace="layouts/footer::tellMe_foot"/>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>통계 게시판</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/statistics.css}" />
+    <link rel="stylesheet" type="text/css" th:href="@{/css/sidebar.css}" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script th:src="@{/js/statistics.js}"></script>
+</head>
+<body>
+<div th:replace="layouts/navbar::tellMe_header"></div>
+<!-- ✅ 사이드바 -->
+<div id="wrapper">
+    <!-- Sidebar -->
+    <ul class="sidebar bg-primary sidebar-dark" id="sidebar">
+        <div class="sidebar-brand d-flex align-items-center justify-content-center">
+            <div class="brand-text">Aivle Manager</div>
+        </div>
+        <hr class="divider">
+
+        <li class="menu-item active" data-target="inquiry-stats">
+            <i class="fas fa-home"></i>
+            <span>문의 통계</span>
+        </li>
+
+        <hr class="divider">
+
+        <div class="sidebar-heading">정보 관리</div>
+
+        <li class="menu-item" data-target="user-management">
+            <i class="fas fa-users"></i>
+            <span>회원 관리</span>
+        </li>
+        <li class="menu-item" data-target="inquiry-management">
+            <i class="fas fa-comments"></i>
+            <span>문의 관리</span>
+        </li>
+
+        <hr class="divider">
+
+        <div class="sidebar-heading">민원 통계</div>
+
+        <li class="menu-item" data-target="daily-complaints">
+            <i class="fas fa-chart-line"></i>
+            <span>일별 민원 통계</span>
+        </li>
+
+        <li class="menu-item" data-target="monthly-complaints">
+            <i class="fas fa-chart-bar"></i>
+            <span>월별 민원 통계</span>
+        </li>
+
+        <li class="menu-item" data-target="yearly-complaints">
+            <i class="fas fa-calendar-alt"></i>
+            <span>연도별 민원 통계</span>
+        </li>
+
+        <hr class="divider">
+
+        <div class="sidebar-heading">유형 통계</div>
+
+        <li class="menu-item" data-target="malicious-type">
+            <i class="fas fa-exclamation-triangle"></i>
+            <span>악성민원 유형 통계</span>
+        </li>
+
+        <li class="menu-item" data-target="malicious-gender">
+            <i class="fas fa-venus-mars"></i>
+            <span>악성민원 성별, 연령별통계</span>
+        </li>
+
+        <hr class="divider d-none d-md-block">
+
+        <div class="text-center d-none d-md-inline">
+            <button class="btn-toggle" id="toggleSidebar"></button>
+        </div>
+    </ul>
+    <!-- End of Sidebar -->
+
+    <!-- Content Wrapper -->
+    <div id="content-wrapper">
+
+        <!-- 일별 민원 통계 -->
+        <div id="daily-complaints-content" style="display: none;">
+            <h2 class="text-center">일별 민원 통계</h2>
+            <div class="chart-wrapper">
+                <canvas id="dailyAreaChart"></canvas>
+            </div>
+        </div>
+
+        <!-- 월별 민원 통계 -->
+        <div id="monthly-complaints-content" style="display: none;">
+            <h2 class="text-center">월별 민원 통계</h2>
+            <div class="chart-wrapper">
+                <canvas id="monthlyAreaChart"></canvas>
+            </div>
+        </div>
+
+        <!-- 연도별 민원 통계 -->
+        <div id="yearly-complaints-content" style="display: none;">
+            <h2 class="text-center">연도별 민원 통계</h2>
+            <div class="chart-wrapper">
+                <canvas id="yearlyPieChart"></canvas>
+            </div>
+        </div>
+
+        <!-- 악성민원 유형 통계 -->
+        <div id="malicious-type-content" style="display: none;">
+            <h2 class="text-center">악성민원 유형 통계</h2>
+            <div class="chart-wrapper">
+                <canvas id="maliciousTypeChart"></canvas>
+            </div>
+        </div>
+
+        <!-- 악성민원 성별, 연령별 통계 -->
+        <div id="malicious-gender-content" style="display: none;">
+            <div class="half_box left">
+                <div class="gender">
+                    <h1><strong>성별</strong> " 현황 "</h1>
+                    <div class="chart-col">
+                        <div class="card">
+                            <div class="card-header">
+                                <h6 class="text-primary">성별 통계</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="chart-box">
+                                    <canvas id="genderPieChart"></canvas>
+                                </div>
+                                <div class="mt-4 text-center small">
+                                    <span><i class="fas fa-circle text-primary"></i> 남성</span>
+                                    <span><i class="fas fa-circle text-success"></i> 여성</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="half_box right">
+                <div class="age">
+                    <h1><strong>연령별</strong> " 현황 "</h1>
+                    <div class="chart-col">
+                        <div class="card">
+                            <div class="card-header">
+                                <h6 class="text-primary">연령별 통계</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="chart-box">
+                                    <canvas id="agePieChart"></canvas>
+                                </div>
+                                <div class="mt-4 text-center small">
+                                    <span><i class="fas fa-circle text-primary"></i> 10대</span>
+                                    <span><i class="fas fa-circle text-success"></i> 20대</span>
+                                    <span><i class="fas fa-circle text-info"></i> 30대 이상</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+<div th:replace="layouts/footer::tellMe_footer"></div>
+</body>
+</html>

@@ -39,11 +39,11 @@ public class ComplaintController {
         // 2. Repository에게 Entity를 DB안에 저장하게 함!
         Question saved = questionService.save(questionDTO);
 
-        return "redirect:/complaint/board";
+        return "redirect:/complaint/question";
     }
 
-    @GetMapping("/board")
+    @GetMapping("/question")
     public String complaintBoard() {
-        return "complaint/board";
+        return "complaint/question";
     }
 }
