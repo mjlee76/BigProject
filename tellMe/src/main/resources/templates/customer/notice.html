@@ -93,22 +93,22 @@
     <!-- /notice/paging?page=1 -->
     <div class="pagination">
         <!-- 첫번째 페이지로 이동 -->
-<!--        <a th:href="@{/customer/notice(page=1)}">«</a>-->
+        <a th:href="@{/customer/notice(page=1)}">«</a>
 
-<!--        &lt;!&ndash; 이전 링크 &ndash;&gt;-->
-<!--        <a th:href="${noticeList.first} ? '#' : @{/customer/notice(page=${noticeList.number})}">‹</a>-->
+        <!-- 이전 링크 -->
+        <a th:href="${noticeList.first} ? '#' : @{/customer/notice(page=${noticeList.number})}">‹</a>
 
-<!--        &lt;!&ndash; 페이지 번호 &ndash;&gt;-->
-<!--        <span th:each="page: ${#numbers.sequence(startPage, endPage)}">-->
-<!--            <span th:if="${page == noticeList.number + 1}" th:text="${page}"></span>-->
-<!--            <a th:unless="${page == noticeList.number + 1}" th:href="@{/customer/notice(page=${page})}" th:text="${page}"></a>-->
-<!--        </span>-->
+        <!-- 페이지 번호 -->
+        <span th:each="page: ${#numbers.sequence(startPage, endPage)}">
+            <span th:if="${page == noticeList.number + 1}" th:text="${page}"></span>
+            <a th:unless="${page == noticeList.number + 1}" th:href="@{/customer/notice(page=${page})}" th:text="${page}"></a>
+        </span>
 
-<!--        &lt;!&ndash; 다음 링크 &ndash;&gt;-->
-<!--        <a th:href="${noticeList.last} ? '#' : @{/customer/notice(page=${noticeList.number + 2})}">›</a>-->
+        <!-- 다음 링크 -->
+        <a th:href="${noticeList.last} ? '#' : @{/customer/notice(page=${noticeList.number + 2})}">›</a>
 
-<!--        &lt;!&ndash; 마지막 페이지로 이동 &ndash;&gt;-->
-<!--        <a th:href="@{/customer/notice(page=${noticeList.totalPages})}">»</a>-->
+        <!-- 마지막 페이지로 이동 -->
+        <a th:href="@{/customer/notice(page=${noticeList.totalPages})}">»</a>
     </div>
 
 </main>
