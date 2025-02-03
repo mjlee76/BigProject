@@ -20,7 +20,7 @@ def selecting_model(api_key):
 class TextClassifier:
 
     def __init__(self):
-        model_path = "./fine_tuned_klue_bert_v3"
+        model_path = "./20250202 klue-bert 파인튜닝(최종본)"
         self.model = AutoModelForSequenceClassification.from_pretrained(model_path)
         self.tokenizer = AutoTokenizer.from_pretrained("klue/bert-base")
 
