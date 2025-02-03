@@ -26,7 +26,7 @@ public class Question {
     @Column(nullable = false)
     private String title;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String content;
 
     @ManyToOne
@@ -74,4 +74,21 @@ public class Question {
             this.category = Category.정상;  // DB에 저장되기 전에 기본값 설정
         }
     }
+
+
+    public void incrementViews() {
+        this.views += 1;
+    }
+
+
+    public void changeStatusToProcessing() {
+        this.status = Status.처리중;
+    }
+
+
+    public void markAsAnswered(Answer answer) {
+        this.answer = answer;
+        this.status = Status.답변완료;
+    }
+
 }

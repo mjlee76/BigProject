@@ -36,7 +36,7 @@ public class CustomerController {
     public String newNoticeForm(Model model) {
         NoticeDTO noticeDTO = new NoticeDTO();
         model.addAttribute("notice", noticeDTO);
-        return "customer/notice_write";
+        return "manager/notice_write";
     }
 
     @PostMapping("/create")
@@ -54,7 +54,7 @@ public class CustomerController {
             noticeService.save(noticeDTO);
         }
 
-        return "customer/notice";
+        return "redirect:/customer/notice";
     }
 
     // 모든 공지사항 데이터를 조회하여 뷰에 전달하는 메서드.

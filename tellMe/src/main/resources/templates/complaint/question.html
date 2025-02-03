@@ -1,3 +1,5 @@
+<!-- 민원목록 게시판 -->
+
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <html lang="en">
@@ -7,8 +9,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>문의게시판</title>
-    <link rel="stylesheet" type="text/css" th:href="@{/css/board.css}" />
-    <script type="text/javascript" th:src="@{/js/board.js}"></script>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/question.css}" />
+    <script type="text/javascript" th:src="@{/js/question.js}"></script>
 </head>
 <body>
 <div th:replace="layouts/navbar::tellMe_header"></div>
@@ -33,12 +35,7 @@
                 <option value="content">내용</option>
             </select>
             <input type="text" placeholder="검색어를 입력하세요." id="search-input" name="query">
-            <!--            <select id="search-answer-status" name="answerStatus">-->
-            <!--                <option value="all">답변여부(전체)</option>-->
-            <!--                <option value="completed">답변완료</option>-->
-            <!--                <option value="transferred">이송이첩</option>-->
-            <!--                <option value="pending">대기중</option>-->
-            <!--            </select>-->
+
             <button type="submit" id="search-button">
                 <!-- 새로운 SVG 아이콘 -->
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search" viewBox="0 0 24 24">
@@ -52,10 +49,7 @@
     <table class="post-table">
         <thead>
         <tr>
-            <!--            <th id="checkbox-header" style="display: none;">-->
-            <!--                <input type="checkbox" id="select-all-checkbox" />-->
-            <!--            </th>-->
-            <th>번호</th>
+            <th>목록번호</th>
             <th>제목</th>
             <th>작성자</th>
             <th>작성일</th>
@@ -64,33 +58,42 @@
         </tr>
         </thead>
         <tbody class="post-list">
-            <tr>
-                <td colspan="7">게시글이 없습니다.</td>
-            </tr>
-<!--        <tr th:each="board, iterStat : ${boardList}">-->
-<!--            <td th:text="${iterStat.index + 1}"></td>-->
-<!--            <td>작성자</td>-->
-<!--            <td><a th:href="@{/customer/board/{id}(id=${board.id})}" th:text="${board.title}"></a></td>-->
-<!--            <td th:text="*{#temporals.format(board.createDate, 'yyyy-MM-dd')}"></td>-->
-<!--            <td>답변여부</td>-->
-<!--            <td th:text="${board.views}"></td>-->
-<!--        </tr>-->
+        <tr th:each="question: ${questionList}">
+                <td th:text="${question.id}"></td>
+                <td><a th:href="@{/complaint/question/{id}(id=${question.id}, page=${questionList.number + 1})}" th:text="${question.Title}"></a></td>
+                <td th:text="${question.userName}"></td>
+                <td th:text="*{#temporals.format(question.createDate, 'yyyy-MM-dd')}"></td>
+                <td th:text="${question.status}"></td>
+                <td th:text="${question.views}"></td>
+        </tr>
         </tbody>
     </table>
     <p>전체 <strong id="total-posts">0</strong> (1 / <span id="total-pages">1</span> 페이지)</p>
 
-<!--    <div class="action-bar">-->
-<!--        <button id="delete-button">삭제</button>-->
-<!--        <button id="select-delete-button" style="display: none;">선택 삭제</button>-->
-<!--        <button id="cancel-button" style="display: none;">취소</button>-->
-<!--    </div>-->
-
     <div class="content-area"></div>
     <div class="pagination">
-    </div>
+        <!-- 첫번째 페이지로 이동 -->
+        <!-- /notice/paging?page=1 -->
+        <div class="pagination">
+            <!-- 첫번째 페이지로 이동 -->
+            <a th:href="@{/complaint/question(page=1)}">«</a>
 
-    <div class="content-area"></div>
-    <div class="pagination"></div>
+            <!-- 이전 링크 -->
+            <a th:href="${questionList.first} ? '#' : @{/complaint/question(page=${questionList.number})}">‹</a>
+
+            <!-- 페이지 번호 -->
+            <span th:each="page: ${#numbers.sequence(startPage, endPage)}">
+            <span th:if="${page == questionList.number + 1}" th:text="${page}"></span>
+            <a th:unless="${page == questionList.number + 1}" th:href="@{/complaint/question(page=${page})}" th:text="${page}"></a>
+        </span>
+
+            <!-- 다음 링크 -->
+            <a th:href="${questionList.last} ? '#' : @{/complaint/question(page=${questionList.number + 2})}">›</a>
+
+            <!-- 마지막 페이지로 이동 -->
+            <a th:href="@{/complaint/question(page=${questionList.totalPages})}">»</a>
+        </div>
+    </div>
 </main>
 <div th:replace="layouts/footer::tellMe_footer"></div>
 </body>
