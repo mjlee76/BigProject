@@ -25,13 +25,10 @@
                 </ul>
             </div>
             <div class="auth-buttons">
-                <!-- 비로그인 상태에서만 표시 -->
                 <div sec:authorize="isAnonymous()">
                     <a th:href="@{/login}" class="auth-link login">로그인</a>
                     <a th:href="@{/user/signUp}" class="auth-link signup">회원가입</a>
                 </div>
-
-                <!-- 로그인 상태에서만 표시 -->
                 <div sec:authorize="isAuthenticated()">
                     <a th:href="@{/myPage/editInfo}" class="auth-link mypage">마이 페이지</a>
                     <form th:action="@{/logout}" method="post" th:hidden="true" name="logoutForm" >
