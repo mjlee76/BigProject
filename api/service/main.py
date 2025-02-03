@@ -30,7 +30,7 @@ api_key = bm.load_api_key(path)
 os.environ["OPENAI_API_KEY"] = api_key
 llm = bm.selecting_model(api_key)
 
-model_path = "./fine_tuned_klue_bert_v3"
+model_path = "./20250202 klue-bert 파인튜닝(최종본)"
 
 file_path = "./특이민원보고서_공직자응대매뉴얼.pdf"
 pdf_loader = LoadPdfFile(file_path)
