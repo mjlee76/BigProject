@@ -1,5 +1,7 @@
 package com.bigProject.tellMe.entity;
 
+import com.bigProject.tellMe.enumClass.Category;
+import com.bigProject.tellMe.enumClass.ReportStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,35 +18,24 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Getter
 @EntityListeners(AuditingEntityListener.class)
-public class Notice {
+public class Report {
 
     @Id @GeneratedValue(strategy= GenerationType.IDENTITY)
-    @Column(name="notice_id")
+    @Column(name = "report_id")
     private Long id;
 
-    @Column(nullable=false)
-    private String title;
+    @Column(nullable = false)
+    private String report;
 
-    @Column(nullable=false, columnDefinition = "TEXT")
-    private String content;
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Category category;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private ReportStatus reportStatus;
 
     @CreatedDate
     private LocalDateTime createDate;
 
-    @Column(nullable=false)
-    private Integer views;
-
-    @Column
-    private String file;
-
-    @PrePersist
-    public void setDefaultValues() {
-        if(this.views == null) {
-            this.views = 0;  // DB에 저장되기 전에 기본값 설정
-        }
-    }
-
-    public void incrementViews() {
-        this.views += 1;
-    }
 }

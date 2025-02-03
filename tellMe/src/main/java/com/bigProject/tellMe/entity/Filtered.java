@@ -23,13 +23,9 @@ public class Filtered {
     @Column(nullable = false)
     private String title;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String content;
 
     @CreatedDate
     private LocalDateTime createDate;
-
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private Category category;
 }
