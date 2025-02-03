@@ -1,19 +1,17 @@
-/* ✅ 통계 페이지의 스타일을 #content-wrapper 내부에서만 적용하도록 범위 제한 */
-
-/* 📌 전체 레이아웃 설정 */
+/* ✅ 전체 레이아웃 설정 */
 #wrapper {
     display: flex;
     min-height: 100vh;
 }
 
-/* 📌 사이드바 설정 */
+/* ✅ 사이드바 설정 */
 .sidebar {
     width: 250px;
     min-height: 100vh;
     transition: width 0.3s ease-in-out;
 }
 
-/* 📌 메인 컨텐츠 레이아웃 */
+/* ✅ 메인 컨텐츠 레이아웃 */
 #content-wrapper {
     flex-grow: 1;
     display: flex;
@@ -22,22 +20,22 @@
     align-items: center; /* 중앙 정렬 */
 }
 
-/* 📌 컨텐츠 내부 설정 */
+/* ✅ 컨텐츠 내부 설정 */
 #content {
     display: flex;
     flex-wrap: wrap;
-    justify-content: center; /* 차트를 중앙 정렬 */
+    justify-content: center;
     padding: 1rem;
     width: 100%;
 }
 
-/* 📌 통계 페이지 내부 컨텐츠 크기 설정 */
+/* ✅ 통계 페이지 내부 컨텐츠 크기 설정 */
 #content-wrapper .container {
     flex-grow: 1;
     max-width: 1200px;
 }
 
-/* 📌 카드 스타일 (차트 포함) */
+/* ✅ 카드 스타일 (차트 포함) */
 #content-wrapper .card {
     background: #fff;
     border-radius: 8px;
@@ -48,7 +46,7 @@
     margin-bottom: 20px;
 }
 
-/* 📌 카드 헤더 스타일 */
+/* ✅ 카드 헤더 스타일 */
 #content-wrapper .card-header {
     display: flex;
     justify-content: space-between;
@@ -59,41 +57,148 @@
     font-weight: bold;
 }
 
-/* 📌 차트 컨테이너 중앙 정렬 */
+/* ✅ 차트 컨테이너 중앙 정렬 */
 #content-wrapper .chart-wrapper {
     display: flex;
-    justify-content: center; /* 가로 중앙 정렬 */
-    align-items: center; /* 세로 중앙 정렬 */
+    justify-content: center;
+    align-items: center;
     width: 100%;
     margin-top: 1rem;
 }
 
-/* 📌 차트 크기 설정 */
+/* ✅ 차트 크기 설정 */
 #content-wrapper .chart-container {
-    width: 60%;  /* 차트 크기 조정 */
-    max-width: 800px; /* 최대 크기 설정 */
+    width: 50%;
+    max-width: 350px;
     height: auto;
     display: flex;
     justify-content: center;
 }
 
-/* 📌 차트 영역 설정 */
+/* ✅ 차트 영역 설정 */
 #content-wrapper .chart-box {
     position: relative;
     width: 100%;
-    height: 10rem;
+    height: 8rem;
+}
+
+/* 📌 🔹 악성민원 성별/연령별 통계 컨테이너 */
+#malicious-gender-content {
+    display: flex; /* ✅ 좌우 정렬 */
+    justify-content: space-between; /* ✅ 좌우 공간 균등 분배 */
+    align-items: center;
+    gap: 20px; /* ✅ 좌우 간격 조정 */
+    padding: 20px;
+    width: 100%;
+}
+
+/* 📌 🔹 성별 / 연령별 개별 항목 */
+.half_box {
+    flex: 1; /* ✅ 좌우 균등 배치 */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+/* 📌 🔹 카드 스타일 */
+.half_box .card {
+    width: 100%;
+    max-width: 450px;
+    padding: 20px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* 📌 🔹 차트 박스 스타일 */
+.half_box .chart-box {
+    position: relative;
+    width: 100%;
+    max-width: 400px;
+    height: 300px;
+}
+
+/* ✅ 반응형 - 모바일(태블릿 이하)에서는 상하 배치 */
+@media (max-width: 768px) {
+    #malicious-gender-content {
+        flex-direction: column; /* ✅ 세로 정렬 */
+        align-items: center;
+    }
+
+    .half_box {
+        width: 100%;
+        margin-bottom: 20px;
+    }
+}
+
+/* ✅ 통계 페이지 공통 차트 설정 */
+.chart-col {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+/* ✅ 카드 공통 스타일 */
+.card {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    width: 100%;
+    max-width: 500px;
+    margin: auto;
+}
+
+/* ✅ 카드 헤더 */
+.card-header {
+    font-size: 1.2rem;
+    font-weight: bold;
+    padding: 1rem;
+    text-align: center;
+}
+
+/* ✅ 반응형 디자인 */
+@media (max-width: 992px) {
+    #content-wrapper {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .half_box {
+        width: 100%;
+        margin: 0 0 20px 0;
+    }
+}
+
+/* ✅ 반응형 설정 (태블릿 이하) */
+@media (max-width: 768px) {
+    .half_box {
+        padding: 15px;
+    }
+
+    .card {
+        max-width: 90%;
+    }
+}
+
+/* ✅ 캔버스 크기 조절 */
+canvas {
+    max-width: 450px !important;
+    max-height: 350px !important;
 }
 
 @media (min-width: 768px) {
     #content-wrapper .chart-box {
-        height: 20rem;
+        height: 15rem;
     }
 }
 
-/* 📌 반응형 설정 */
+/* ✅ 반응형 설정 */
 @media (max-width: 992px) {
     #content-wrapper .chart-container {
-        width: 80%;
+        width: 70%;
     }
 }
 
@@ -103,10 +208,16 @@
     }
 
     #content-wrapper .chart-container {
-        width: 100%;
+        width: 90%;
     }
 
     #content-wrapper .card {
         max-width: 100%;
     }
+}
+
+/* ✅ 차트 크기 조절 */
+canvas {
+    max-width: 500px !important;
+    max-height: 400px !important;
 }
