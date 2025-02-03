@@ -26,7 +26,7 @@ public class Question {
     @Column(nullable = false)
     private String title;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String content;
 
     @ManyToOne
@@ -38,8 +38,8 @@ public class Question {
     private Answer answer;
 
     @OneToOne
-    @JoinColumn(name = "origin_id")
-    private filtered origin;
+    @JoinColumn(name = "filtered_id")
+    private Filtered filtered;
 
     @CreatedDate
     private LocalDateTime createDate;
@@ -55,6 +55,10 @@ public class Question {
     @Column(nullable = false)
     private Integer views;
 
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Category category;
+
     @Column
     private String file1;
 
@@ -63,10 +67,6 @@ public class Question {
 
     @Column
     private String file3;
-
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private Category category;
 
     @PrePersist
     public void setDefaultValues() {

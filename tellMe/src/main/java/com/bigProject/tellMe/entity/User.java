@@ -4,6 +4,7 @@ import com.bigProject.tellMe.enumClass.Role;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 
@@ -13,6 +14,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor //전체 생성자
 @Getter
 @ToString
+@EntityListeners(AuditingEntityListener.class) // TellMeApplication 에 EnableJpaAuditing 를 활용해서 Auditing 기능을 활성화 해줬지만 EntityListeners를 활용해서 이 클래스에서 활성화한다고 명시적으로 지정을 해줘야 한다.
 public class User {
 
     @Id @GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -52,4 +54,14 @@ public class User {
 
     @Column(nullable = false)
     private Integer count;
+
+    @PrePersist
+    public void setDefaultValues() {
+        if(this.count == null) {
+            this.count = 0;  // DB에 저장되기 전에 기본값 설정
+        }
+        if(this.role == null) {
+            this.role = Role.ROLE_USER;
+        }
+    }
 }

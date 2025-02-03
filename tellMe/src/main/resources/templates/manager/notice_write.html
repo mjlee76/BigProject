@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layouts/navbar::tellMe_head"/>
+<head th:replace="layouts/footer::tellMe_foot"/>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>공지사항 작성</title>
+<!--    <link rel="stylesheet" type="text/css" th:href="@{/css/write.css}" />-->
+    <script th:src="@{/js/write.js}"></script>
+    <script src="https://code.jquery.com/jquery-3.6.3.js"></script>
+</head>
+<body>
+<div th:replace="layouts/navbar::tellMe_header"></div>
+<header>
+    <h1>공지사항 작성</h1>
+</header>
+<main>
+    <form th:action="@{/customer/create}" th:object="${notice}" method="post" id="announcement-form" enctype="multipart/form-data">
+        <input type="hidden" th:field="${notice.id}">
+        <!-- 제목 -->
+        <div class="form-group">
+            <label>제목 </label>
+            <input type="text" id="title" th:field="*{title}" placeholder="제목을 입력하세요" required />
+        </div>
+
+        <!-- 내용 -->
+        <div class="form-group">
+            <label>내용 </label>
+            <textarea id="content" th:field="*{content}" rows="6" placeholder="내용을 입력하세요" required></textarea>
+        </div>
+
+        <!-- 첨부파일 -->
+        <div>
+            <label>첨부파일</label>
+            <div id="file-upload-container">
+                <div class="file-input">
+                    <input type="hidden" th:field="*{file}" />
+                    <input type="file" name="image" id="fileImage" accept="image/png, image/jpeg, image/jpg, application/pdf, application/hwp, application/vnd.openxmlformats-officedocument.wordprocessingml.document, text/plain" class="file-input-field"/>
+                    <br>
+<!--                    <img id="thumbnail" th:src="@{${notice.photosImagePath}}" class="img-fluid" />-->
+<!--                    <input type="file" name="file" class="file-input-field" />-->
+                    <button type="button" class="remove-file-button" onclick="resetFileInput()">취소</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 버튼 -->
+        <div class="form-actions">
+            <button type="submit" class="btn-primary">등록하기</button>
+            <button type="button" id="view-list-button" class="btn-secondary" th:href="@{/customer/notice?page=1}">목록보기</button>
+        </div>
+    </form>
+</main>
+<div th:replace="layouts/footer::tellMe_footer"></div>
+</body>
+</html>

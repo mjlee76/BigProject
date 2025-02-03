@@ -25,16 +25,17 @@ def read_root():
     return {"Hello": "World"}
 
 # Setting environment
-path = "C:/Users/User/Desktop/빅프로젝트/api_key.txt"
+path = "./api_key.txt"
 api_key = bm.load_api_key(path)
 os.environ["OPENAI_API_KEY"] = api_key
 llm = bm.selecting_model(api_key)
+
+model_path = "./fine_tuned_klue_bert_v3"
 
 file_path = "./특이민원보고서_공직자응대매뉴얼.pdf"
 pdf_loader = LoadPdfFile(file_path)
 tables = pdf_loader.extract_tables_data()
 test_table = pdf_loader.make_llm_json()
-
 
 @app.get("/게시글")
 def update_item(title: str, content: str): 
@@ -45,10 +46,7 @@ def update_item(title: str, content: str):
     title_label = classifier.classify_text(title)
     content_label = classifier.classify_text(content)
     
-    #분류하고 나서 데이터터
-    title_number, title_label_text = bm.classify_sentence(content_label)
-    content_number, content_label_text = bm.classify_sentence(content_label)
-    if title_number != 0 | content_number != 0:
+    if title_label != '정상' or content_label != '정상':
         changetexter = ChangeText()
         title_changed = changetexter.change_text(title)
         content_changed = changetexter.change_text(content)
@@ -57,10 +55,11 @@ def update_item(title: str, content: str):
         report.report_save()
         
         return {
-            "제목": {"text": title_changed, "label": title_label, "경고문": title_label_text},
-            "내용": {"text": content_changed, "label": content_label, "경고문": content_label_text},
+            "제목": {"text": title_changed, "label": title_label, "경고문": f"{title_label}" + "감지"},
+            "내용": {"text": content_changed, "label": content_label, "경고문": f"{content_label}" + "감지"},
             "원문데이터" : post_origin_data
         }
+    
     # 결과 반환
     else:
         return {

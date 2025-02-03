@@ -3,6 +3,7 @@ package com.bigProject.tellMe.controller.complaint;
 import com.bigProject.tellMe.dto.AnswerDTO;
 import com.bigProject.tellMe.dto.NoticeDTO;
 import com.bigProject.tellMe.dto.QuestionDTO;
+import com.bigProject.tellMe.dto.UserDTO;
 import com.bigProject.tellMe.entity.Question;
 import com.bigProject.tellMe.entity.User;
 import com.bigProject.tellMe.enumClass.Role;
@@ -37,7 +38,7 @@ public class ComplaintController {
 
     @PostMapping("/create")
     public String createComplaint(Authentication auth, QuestionDTO questionDTO) {
-        User user = userService.findByUserId(auth.getName());
+        UserDTO user = userService.findByUserId(auth.getName());
 
         questionDTO.setCreateDate(LocalDateTime.now());
         questionDTO.setViews(0);
@@ -65,8 +66,10 @@ public class ComplaintController {
                                  Authentication auth,
                                  Model model) {
 
-        User user = userService.findByUserId(auth.getName());
+        UserDTO user = userService.findByUserId(auth.getName());
         String role = String.valueOf(user.getRole());
+
+        System.out.println(role);
 
         Page<QuestionDTO> questionList = questionService.paging(pageable, role);
 
