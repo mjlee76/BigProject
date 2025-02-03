@@ -1,11 +1,6 @@
 from fastapi import FastAPI, File, UploadFile, HTTPException
-from fastapi.responses import FileResponse
-from PIL import Image
-from io import BytesIO
-
 import nsfw_detection as nd
 import shutil
-import glob
 import os
 
 app = FastAPI()
@@ -28,25 +23,21 @@ async def upload_image(file: UploadFile = File(...)):
     if not file.content_type.startswith("image/"):
         raise HTTPException(status_code=400, detail="유효한 이미지 파일이 아닙니다.")
     
-    # 이미지가 손상되었는지 체크(다른방법 필요, 오류발생함)
-    '''try: 
-        file_bytes = await file.read()  
-        bytes_io = BytesIO(file_bytes)
-        # 이미지 열기
-        image = Image.open(bytes_io)
-        image.verify()  
-        bytes_io.seek(0)  
-    except Exception as e:
-        raise HTTPException(status_code=400, detail="이미지 파일이 손상되었거나 유효하지 않습니다.")'''
-    
     try:
         file_location = f"{UPLOAD_DIR}/{file.filename}"
         
         with open(file_location, "wb") as buffer:
             shutil.copyfileobj(file.file, buffer)
         image = nd.load_image(UPLOAD_DIR)
+        
+        # 이미지가 손상되었는지 체크
+        try : 
+            image.verify()
+            
+        except Exception as e:
+            raise HTTPException(status_code=400, detail="이미지 파일이 손상되었거나 유효하지 않습니다.")
+        
         result = classifier(image)
-
         nsfw_score = None
         for item in result:
             if item.get("label") == "nsfw":
