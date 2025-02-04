@@ -28,12 +28,26 @@ public class ReportService {
                 .collect(Collectors.toList());
     }
 
-    // ✅ 특정 보고서 조회
+
+    // ✅ 보고서 기본 경로 (환경변수 없이 하드코딩)
+    private static final String REPORT_BASE_PATH = "C:/Users/User/BigProject/tellMe/tellMe-reports/";
+
+    // ✅ 특정 보고서 조회 (경로 변경 반영)
     public ReportDTO getReport(Long id) {
         Report report = reportRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 보고서를 찾을 수 없습니다."));
-        return reportMapper.toDto(report);
+
+        // ✅ 올바른 파일 경로 설정
+        String fullPath = REPORT_BASE_PATH + report.getReport();
+        report.setReport(fullPath);
+
+        // ✅ 변경된 값이 적용된 DTO 반환
+        ReportDTO reportDTO = reportMapper.toDto(report);
+        reportDTO.setReport(fullPath); // DTO에도 반영
+
+        return reportDTO;
     }
+
 
     // ✅ 보고서 목록을 페이지 단위로 조회
     public Page<ReportDTO> paging(Pageable pageable) {
