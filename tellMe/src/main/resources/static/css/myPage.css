@@ -5,18 +5,9 @@
     --text-color: #333;
     --sidebar-bg: #fff;
     --content-bg: #fff;
-    --button-bg: #007bff;
-    --button-hover: #0056b3;
+    --button-bg: #3b82f6;
+    --button-hover: #2563eb;
     --border-radius: 8px;
-}
-
-.dark-mode {
-    --bg-color: #181818;
-    --text-color: #fff;
-    --sidebar-bg: #252525;
-    --content-bg: #333;
-    --button-bg: #ffc107;
-    --button-hover: #d39e00;
 }
 
 body {

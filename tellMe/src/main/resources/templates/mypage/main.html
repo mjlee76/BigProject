@@ -66,10 +66,10 @@
         <form th:action="@{/user/save}" th:object="${user}" method="post" onsubmit="return checkNameUnique(this)">
           <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
           <input type="hidden" th:field="*{id}"/>
-          <p><strong>이름:</strong> <span class="user-name" th:text="*{userName}"></span> <button type="button" onclick="changeName()">실명수정</button></p>
-          <p><strong>전화번호:</strong> <span class="user-phone" th:text="*{phone}"></span> <button type="button" onclick="changePhone()">핸드폰 수정</button></p>
-          <p><strong>이메일:</strong> <span class="user-email" th:text="*{email}"></span> <button type="button" onclick="changeEmail()">이메일 수정</button></p>
-          <p><strong>주소:</strong> <span class="user-address" th:text="*{address}"></span> <button type="button" onclick="changeAddress()">주소 수정</button></p>
+          <p><strong>이름:</strong> <span class="user-name" th:text="*{userName}"></span> <button type="button" class="edit-btn" onclick="changeName()">실명수정</button></p>
+          <p><strong>전화번호:</strong> <span class="user-phone" th:text="*{phone}"></span> <button type="button" class="edit-btn" onclick="changePhone()">핸드폰 수정</button></p>
+          <p><strong>이메일:</strong> <span class="user-email" th:text="*{email}"></span> <button type="button" class="edit-btn" onclick="changeEmail()">이메일 수정</button></p>
+          <p><strong>주소:</strong> <span class="user-address" th:text="*{address}"></span> <button type="button" class="edit-btn" onclick="changeAddress()">주소 수정</button></p>
         </form>
       </div>
     </section>
