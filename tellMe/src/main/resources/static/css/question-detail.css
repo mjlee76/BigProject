@@ -30,7 +30,7 @@ th {
 }
 
 td {
-    width: 40%; /* 기본 너비 설정 */
+    width: 30%; /* 기본 너비 설정 */
 }
 
 td pre {
@@ -54,7 +54,7 @@ h1 {
 
 /* 본문 내용 스타일 */
 .content {
-    width: 60%; /* 테이블 너비를 60%로 조정 */
+    width: 80%; /* 테이블 너비를 60%로 조정 */
     border-collapse: collapse;
     margin: 20px auto;
     padding: 15px;

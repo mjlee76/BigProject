@@ -25,11 +25,17 @@
         </tr>
         <tr>
             <th>공개여부</th>
-            <td th:text="${question.reveal}"></td>
+            <td colspan="2">
+                <span th:text="${question.reveal}"></span>
+            </td>
             <th>작성자</th>
-            <td th:text="${question.userName}"></td>
+            <td colspan="2">
+                <span th:text="${question.userName}"></span>
+            </td>
             <th>답변여부</th>
-            <td th:text="${question.status}"></td>
+            <td colspan="2">
+                <span th:text="${question.status}"></span>
+            </td>
         </tr>
         <tr>
             <th>작성일</th>

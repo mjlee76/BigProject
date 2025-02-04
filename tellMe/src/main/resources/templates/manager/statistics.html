@@ -83,17 +83,79 @@
 
         <!-- 📌 일별 민원 통계 -->
         <div id="daily-complaints-content" style="display: none;">
-            <h2 class="text-center">일별 민원 통계</h2>
-            <div class="chart-wrapper">
-                <canvas id="dailyAreaChart"></canvas>
+            <div class="half_box left">
+                <div class="info type1">
+                    <h1>
+                        <span class="bold-text">일별 민원</span> <span class="normal-text">통계</span>
+                    </h1>
+                    <!-- ✅ 날짜 선택 및 검색 기능 추가 -->
+                    <div class="date-filter">
+                        <label for="daily-date-picker">날짜 선택:</label>
+                        <input type="date" id="daily-date-picker">
+                        <button id="daily-search-btn">검색</button>
+                    </div>
+                    <p id="daily-current-date" class="date-text"></p>
+                    <div class="chart-box">
+                        <canvas id="dailyAreaChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="half_box right">
+                <div class="info type1">
+                    <h1>
+                        <span class="bold-text">일별 악성 민원</span> <span class="normal-text">통계</span>
+                    </h1>
+                    <!-- ✅ 날짜 선택 및 검색 기능 추가 -->
+                    <div class="date-filter">
+                        <label for="malicious-daily-date-picker">날짜 선택:</label>
+                        <input type="date" id="malicious-daily-date-picker">
+                        <button id="malicious-daily-search-btn">검색</button>
+                    </div>
+                    <p id="malicious-daily-current-date" class="date-text"></p>
+                    <div class="chart-box">
+                        <canvas id="dailyMaliciousChart"></canvas>
+                    </div>
+                </div>
             </div>
         </div>
 
         <!-- 📌 월별 민원 통계 -->
         <div id="monthly-complaints-content" style="display: none;">
-            <h2 class="text-center">월별 민원 통계</h2>
-            <div class="chart-wrapper">
-                <canvas id="monthlyAreaChart"></canvas>
+            <div class="half_box left">
+                <div class="info type1">
+                    <h1>
+                        <span class="bold-text">월별 민원</span> <span class="normal-text">통계</span>
+                    </h1>
+                    <!-- ✅ 날짜 선택 및 검색 기능 추가 -->
+                    <div class="date-filter">
+                        <label for="monthly-date-picker">날짜 선택:</label>
+                        <input type="month" id="monthly-date-picker">
+                        <button id="monthly-search-btn">검색</button>
+                    </div>
+                    <p id="monthly-current-date" class="date-text"></p>
+                    <div class="chart-box">
+                        <canvas id="monthlyAreaChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="half_box right">
+                <div class="info type1">
+                    <h1>
+                        <span class="bold-text">월별 악성 민원</span> <span class="normal-text">통계</span>
+                    </h1>
+                    <!-- ✅ 날짜 선택 및 검색 기능 추가 -->
+                    <div class="date-filter">
+                        <label for="malicious-monthly-date-picker">날짜 선택:</label>
+                        <input type="month" id="malicious-monthly-date-picker">
+                        <button id="malicious-monthly-search-btn">검색</button>
+                    </div>
+                    <p id="malicious-monthly-current-date" class="date-text"></p>
+                    <div class="chart-box">
+                        <canvas id="monthlyMaliciousChart"></canvas>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -117,9 +179,9 @@
         <div id="malicious-gender-content" style="display: none;">
             <div class="half_box left">
                 <div class="info type1">
-                    <h1>성별 현황</h1>
-                </div>
-                <div class="half_con">
+                    <h1>
+                        <span class="bold-text">성별 민원</span> <span class="normal-text">통계</span>
+                    </h1>
                     <div class="chart-box">
                         <canvas id="genderPieChart"></canvas>
                     </div>
@@ -128,14 +190,15 @@
 
             <div class="half_box right">
                 <div class="info type1">
-                    <h1>연령별 현황</h1>
-                </div>
-                <div class="half_con">
+                    <h1>
+                        <span class="bold-text">연령별 민원</span> <span class="normal-text">통계</span>
+                    </h1>
                     <div class="chart-box">
-                        <canvas id="agePieChart"></canvas>
+                        <canvas id="ageBarChart"></canvas>
                     </div>
                 </div>
             </div>
+
         </div>
 
     </div>

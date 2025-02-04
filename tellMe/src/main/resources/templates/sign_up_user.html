@@ -8,6 +8,7 @@
   <link rel="stylesheet" type="text/css" th:href="@{/css/sign_up_user.css}" />
   <script src="https://code.jquery.com/jquery-3.6.3.js"></script>
   <script type="text/javascript" th:src="@{/js/common.js}"></script>
+  <script type="text/javascript" th:src="@{/js/sign_up_user.js}"></script>
   <script type="text/javascript">
     function checkNameUnique(form){
       url = "[[@{/user/check/unique}]]";
@@ -108,7 +109,7 @@
           <span class="icon">
             <img th:src = "@{/image/arrow.png}">
           </span>
-            <input type="text" id="detailAddress" placeholder="상세주소" required>
+            <input type="text" placeholder="상세주소" required>
         </div>
         <div class="form-group gender-group">
           <input type="radio" th:field="*{gender}" name="gender" id="male" value="M">
