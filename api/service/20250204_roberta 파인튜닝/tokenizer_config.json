@@ -1,22 +1,6 @@
 {
   "added_tokens_decoder": {
     "0": {
-      "content": "[PAD]",
-      "lstrip": false,
-      "normalized": false,
-      "rstrip": false,
-      "single_word": false,
-      "special": true
-    },
-    "1": {
-      "content": "[UNK]",
-      "lstrip": false,
-      "normalized": false,
-      "rstrip": false,
-      "single_word": false,
-      "special": true
-    },
-    "2": {
       "content": "[CLS]",
       "lstrip": false,
       "normalized": false,
@@ -24,8 +8,24 @@
       "single_word": false,
       "special": true
     },
-    "3": {
+    "1": {
+      "content": "[PAD]",
+      "lstrip": false,
+      "normalized": false,
+      "rstrip": false,
+      "single_word": false,
+      "special": true
+    },
+    "2": {
       "content": "[SEP]",
+      "lstrip": false,
+      "normalized": false,
+      "rstrip": false,
+      "single_word": false,
+      "special": true
+    },
+    "3": {
+      "content": "[UNK]",
       "lstrip": false,
       "normalized": false,
       "rstrip": false,
@@ -41,10 +41,12 @@
       "special": true
     }
   },
+  "bos_token": "[CLS]",
   "clean_up_tokenization_spaces": false,
   "cls_token": "[CLS]",
   "do_basic_tokenize": true,
   "do_lower_case": false,
+  "eos_token": "[SEP]",
   "extra_special_tokens": {},
   "mask_token": "[MASK]",
   "model_max_length": 512,
