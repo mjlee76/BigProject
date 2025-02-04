@@ -13,20 +13,26 @@
 
 /* ✅ 메인 컨텐츠 레이아웃 */
 #content-wrapper {
-    position: relative;
-    box-sizing: border-box;
-    height: 100%;
+    flex-grow: 1; /* 사이드바를 제외한 나머지 공간을 모두 차지 */
     padding: 42px 3% 22px;
+    width: calc(100% - 250px); /* 사이드바 250px 제외한 나머지 영역 */
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
 }
+
 
 /* ✅ 컨텐츠 내부 설정 */
 #content {
     display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    padding: 1rem;
+    flex-wrap: nowrap; /* ✅ 줄 바꿈 방지 */
+    justify-content: flex-start; /* ✅ 왼쪽 정렬 */
+    align-items: flex-start;
     width: 100%;
+    min-height: 100%;
 }
+
 
 /* ✅ 통계 페이지 내부 컨텐츠 크기 설정 */
 #content-wrapper .container {
@@ -84,26 +90,25 @@
 /* 📌 🔹 악성민원 성별/연령별 통계 컨테이너 */
 #malicious-gender-content {
     display: flex;
-    flex-direction: row; /* ✅ 가로 정렬 강제 */
-    justify-content: space-between; /* ✅ 좌우 균등 배치 */
-    align-items: flex-start;
+    flex-direction: row; /* ✅ 가로 정렬 유지 */
+    justify-content: space-between; /* ✅ 좌우 정렬 */
+    align-items: stretch;
     flex-wrap: nowrap; /* ✅ 줄바꿈 방지 */
     gap: 20px;
     padding: 20px;
     width: 100%;
     max-width: 1200px; /* ✅ 최대 너비 설정 */
-    align-self: stretch;
 }
-
 
 /* 📌 🔹 성별 / 연령별 개별 항목 */
 .half_box {
     flex: 1; /* ✅ 동일한 비율로 공간 차지 */
-    min-width: 45%; /* ✅ 최소 너비 설정 */
-    display: table-cell;
+    display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: flex-start;
     text-align: center;
+    min-width: 45%;
 }
 
 .half_box.right {
@@ -122,8 +127,8 @@ half_con {
 .half_box .chart-box {
     position: relative;
     width: 100%;
-    max-width: 400px;
-    height: 300px;
+    max-width: 450px; /* ✅ 차트 크기 조정 */
+    height: 350px;
 }
 
 /* ✅ 반응형 - 모바일(태블릿 이하)에서는 상하 배치 */
@@ -136,6 +141,10 @@ half_con {
     .half_box {
         width: 100%;
         margin-bottom: 20px;
+    }
+
+    .half_box .chart-box {
+        max-width: 90%;
     }
 }
 

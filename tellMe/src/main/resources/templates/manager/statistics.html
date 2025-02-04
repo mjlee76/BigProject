@@ -1,22 +1,31 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml" lang="en">
-<head th:replace="layouts/navbar::tellMe_head"/>
-<head th:replace="layouts/footer::tellMe_foot"/>
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>통계 게시판</title>
+
+    <!-- ✅ 외부 스타일 시트 및 스크립트 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" type="text/css" th:href="@{/css/statistics.css}" />
     <link rel="stylesheet" type="text/css" th:href="@{/css/sidebar.css}" />
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script th:src="@{/js/statistics.js}"></script>
+
+    <!-- ✅ Thymeleaf를 활용한 공통 레이아웃 포함 -->
+    <head th:replace="layouts/navbar::tellMe_head"/>
+    <head th:replace="layouts/footer::tellMe_foot"/>
 </head>
+
 <body>
+<!-- ✅ 네비게이션 바 -->
 <div th:replace="layouts/navbar::tellMe_header"></div>
-<!-- ✅ 사이드바 -->
+
+<!-- ✅ 전체 래퍼 -->
 <div id="wrapper">
-    <!-- Sidebar -->
+
+    <!-- ✅ 사이드바 -->
     <ul class="sidebar bg-primary sidebar-dark" id="sidebar">
         <div class="sidebar-brand d-flex align-items-center justify-content-center">
             <div class="brand-text">Aivle Manager</div>
@@ -27,11 +36,9 @@
             <i class="fas fa-home"></i>
             <span>문의 통계</span>
         </li>
-
         <hr class="divider">
 
         <div class="sidebar-heading">정보 관리</div>
-
         <li class="menu-item" data-target="user-management">
             <i class="fas fa-users"></i>
             <span>회원 관리</span>
@@ -40,51 +47,41 @@
             <i class="fas fa-comments"></i>
             <span>문의 관리</span>
         </li>
-
         <hr class="divider">
 
         <div class="sidebar-heading">민원 통계</div>
-
         <li class="menu-item" data-target="daily-complaints">
             <i class="fas fa-chart-line"></i>
             <span>일별 민원 통계</span>
         </li>
-
         <li class="menu-item" data-target="monthly-complaints">
             <i class="fas fa-chart-bar"></i>
             <span>월별 민원 통계</span>
         </li>
-
         <li class="menu-item" data-target="yearly-complaints">
             <i class="fas fa-calendar-alt"></i>
             <span>연도별 민원 통계</span>
         </li>
-
         <hr class="divider">
 
         <div class="sidebar-heading">유형 통계</div>
-
         <li class="menu-item" data-target="malicious-type">
             <i class="fas fa-exclamation-triangle"></i>
             <span>악성민원 유형 통계</span>
         </li>
-
         <li class="menu-item" data-target="malicious-gender">
             <i class="fas fa-venus-mars"></i>
             <span>악성민원 성별, 연령별통계</span>
         </li>
 
         <hr class="divider d-none d-md-block">
-
-        <div class="text-center d-none d-md-inline">
-            <button class="btn-toggle" id="toggleSidebar"></button>
-        </div>
     </ul>
-    <!-- End of Sidebar -->
+    <!-- ✅ 사이드바 끝 -->
 
-    <!-- Content Wrapper -->
+    <!-- ✅ 메인 콘텐츠 영역 -->
     <div id="content-wrapper">
-        <!-- 일별 민원 통계 -->
+
+        <!-- 📌 일별 민원 통계 -->
         <div id="daily-complaints-content" style="display: none;">
             <h2 class="text-center">일별 민원 통계</h2>
             <div class="chart-wrapper">
@@ -92,7 +89,7 @@
             </div>
         </div>
 
-        <!-- 월별 민원 통계 -->
+        <!-- 📌 월별 민원 통계 -->
         <div id="monthly-complaints-content" style="display: none;">
             <h2 class="text-center">월별 민원 통계</h2>
             <div class="chart-wrapper">
@@ -100,7 +97,7 @@
             </div>
         </div>
 
-        <!-- 연도별 민원 통계 -->
+        <!-- 📌 연도별 민원 통계 -->
         <div id="yearly-complaints-content" style="display: none;">
             <h2 class="text-center">연도별 민원 통계</h2>
             <div class="chart-wrapper">
@@ -108,7 +105,7 @@
             </div>
         </div>
 
-        <!-- 악성민원 유형 통계 -->
+        <!-- 📌 악성민원 유형 통계 -->
         <div id="malicious-type-content" style="display: none;">
             <h2 class="text-center">악성민원 유형 통계</h2>
             <div class="chart-wrapper">
@@ -116,7 +113,7 @@
             </div>
         </div>
 
-        <!-- 악성민원 성별, 연령별 통계 -->
+        <!-- 📌 악성민원 성별, 연령별 통계 -->
         <div id="malicious-gender-content" style="display: none;">
             <div class="half_box left">
                 <div class="info type1">
@@ -142,10 +139,13 @@
         </div>
 
     </div>
+    <!-- ✅ 콘텐츠 영역 끝 -->
 
 </div>
+<!-- ✅ 전체 래퍼 끝 -->
+
+<!-- ✅ Footer -->
 <div th:replace="layouts/footer::tellMe_footer"></div>
+
 </body>
 </html>
-
-
