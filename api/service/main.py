@@ -11,8 +11,7 @@ import basic_module as bm
 
 from basic_module import TextClassifier
 from basic_module import ChangeText
-from make_report_json import LoadPdfFile
-from make_report_json import MakeReport
+from insert_report import MakeReport
 
 # POST: to create data. GET: to read data. PUT: to update data. DELETE: to delete data.
 app = FastAPI()
@@ -27,13 +26,11 @@ api_key = bm.load_api_key(path)
 os.environ["OPENAI_API_KEY"] = api_key
 llm = bm.selecting_model(api_key)
 
-model_path = "./20250202 klue-bert 파인튜닝(최종본)"
+model_path = "./20250204_roberta 파인튜닝"
 
 file_path = "./특이민원보고서_공직자응대매뉴얼.pdf"
-pdf_loader = LoadPdfFile(file_path)
-tables = pdf_loader.extract_tables_data()
-test_table = pdf_loader.make_llm_json()
 
+#게시글 작성자 정보
 class UserInfo(BaseModel):
     user_id : str
     user_name: str
@@ -46,11 +43,13 @@ class UserInfo(BaseModel):
     create_date : str
     count : int
 
+# 게시글 정보
 class PostBody(BaseModel):
     title: str
     content: str
     user: UserInfo
 
+#DB로 넘길 report 정보
 class ReportBody(BaseModel):
     category : str
     report_path : str
@@ -87,7 +86,7 @@ def update_item(post_data: PostBody, report_req: ReportBody):
         
         if content_label != '정상':
             content_changed = changetexter.change_text(content)
-            post_data.title =  content_changed
+            post_data.content =  content_changed
             report_req.category = content_label
             
             result["내용"] = {
@@ -101,8 +100,9 @@ def update_item(post_data: PostBody, report_req: ReportBody):
         
         result["원문데이터"] = post_origin_data
         # 보고서 생성
-        report = MakeReport(file_path)
-        report.make_report_detail()
+        report = MakeReport()
+        report.report_prompt(post_data)
+        report.cell_fill(post_data, report_req)
         
         time, output_file = report.report_save()
         report_req.create_date = time
