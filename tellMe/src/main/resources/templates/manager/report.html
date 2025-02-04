@@ -19,19 +19,22 @@
     <!-- 탭 -->
     <div class="tabs">
         <button class="tab active" data-filter="all" onclick="filterPosts('all')">전체</button>
-        <button class="tab" data-filter="checked" onclick="filterPosts('확인 완료')">확인 완료</button>
-        <button class="tab" data-filter="unchecked" onclick="filterPosts('미확인')">미확인</button>
+        <button class="tab" data-filter="확인완료" onclick="filterPosts('확인완료')">확인 완료</button>
+        <button class="tab" data-filter="미확인" onclick="filterPosts('미확인')">미확인</button>
     </div>
 
     <!-- 검색창 -->
-    <div class="search-container">
-        <input type="text" class="search-input" placeholder="검색어를 입력해 주세요">
-        <button class="search-button">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search" viewBox="0 0 24 24">
-                <circle cx="11" cy="11" r="8"></circle>
-                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-            </svg>
-        </button>
+    <div class="search-bar">
+        <form id="search-form">
+            <input type="text" placeholder="검색어를 입력하세요." id="search-input" name="query">
+            <button type="submit" class="search-button">
+                <!-- 새로운 SVG 아이콘 -->
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search" viewBox="0 0 24 24">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+            </button>
+        </form>
     </div>
 
     <!-- 보고서 목록 -->
@@ -64,7 +67,7 @@
             <td th:text="${report.category}"></td>
             <td th:text="${report.reportStatus}" th:classappend="${report.reportStatus == '미확인' ? 'unchecked' : 'checked'}"></td>
             <td>
-                <a th:href="@{/download/{id}(id=${report.id})}" class="download-link">
+                <a th:href="@{/manager/report/view/{id}(id=${report.id})}" class="download-link">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-download" viewBox="0 0 24 24">
                         <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                         <polyline points="7 10 12 15 17 10"></polyline>

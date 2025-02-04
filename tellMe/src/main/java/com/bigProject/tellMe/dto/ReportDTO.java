@@ -19,15 +19,4 @@ public class ReportDTO {
     private Category category;
     private ReportStatus reportStatus;
     private LocalDateTime createDate;
-
-    // Entity → DTO 변환 메서드
-    public static ReportDTO toReportDTO(Report report) {
-        return ReportDTO.builder()
-                .id(report.getId())
-                .report(report.getReport())
-                .category(report.getCategory())
-                .reportStatus(report.getReportStatus())
-                .createDate(report.getCreateDate())
-                .build();
-    }
 }

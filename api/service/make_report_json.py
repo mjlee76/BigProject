@@ -209,3 +209,4 @@ class MakeReport:
         output_file = f"특이민원_보고서_{time}.docx"
         self.doc.save(output_file)
         print(f"문서가 {output_file}에 저장되었습니다.")
+        return time, output_file
