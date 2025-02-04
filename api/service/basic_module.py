@@ -20,9 +20,9 @@ def selecting_model(api_key):
 class TextClassifier:
 
     def __init__(self):
-        model_path = "./20250202 klue-bert 파인튜닝(최종본)"
+        model_path = "./20250204_roberta 파인튜닝"
         self.model = AutoModelForSequenceClassification.from_pretrained(model_path)
-        self.tokenizer = AutoTokenizer.from_pretrained("klue/bert-base")
+        self.tokenizer = AutoTokenizer.from_pretrained("klue/roberta-base")
 
     def split_text(self, text, max_length):
         """텍스트를 토큰 길이를 기준으로 나눔"""
@@ -84,8 +84,8 @@ class ChangeText:
     
     def change_generate_prompt(self, text):
         return (
-            f"다음 문장을 읽고, 해당 문장에 대한 내용을 순화해주세요:\n"
-            f"문장: {text}\n\n"
+            f"다음 텍스트를 읽고, 정상이 아닌 텍스트를 정중하고 부드러운 표현으로 순화해주세요:\n"
+            f"{text}\n\n"
         )
     
     def change_text(self, text):

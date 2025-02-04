@@ -27,7 +27,7 @@ api_key = bm.load_api_key(path)
 os.environ["OPENAI_API_KEY"] = api_key
 llm = bm.selecting_model(api_key)
 
-model_path = "./20250202 klue-bert 파인튜닝(최종본)"
+model_path = "./20250204_roberta 파인튜닝"
 
 file_path = "./특이민원보고서_공직자응대매뉴얼.pdf"
 pdf_loader = LoadPdfFile(file_path)
@@ -87,7 +87,7 @@ def update_item(post_data: PostBody, report_req: ReportBody):
         
         if content_label != '정상':
             content_changed = changetexter.change_text(content)
-            post_data.title =  content_changed
+            post_data.content =  content_changed
             report_req.category = content_label
             
             result["내용"] = {
