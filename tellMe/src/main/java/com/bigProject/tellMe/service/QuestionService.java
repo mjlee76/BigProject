@@ -1,11 +1,22 @@
 package com.bigProject.tellMe.service;
 
+import com.bigProject.tellMe.client.api.FastApiClient;
 import com.bigProject.tellMe.dto.QuestionDTO;
 import com.bigProject.tellMe.entity.Question;
+import com.bigProject.tellMe.enumClass.Reveal;
 import com.bigProject.tellMe.mapper.QuestionMapper;
 import com.bigProject.tellMe.repository.QuestionRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor

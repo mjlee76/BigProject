@@ -1,5 +1,6 @@
 package com.bigProject.tellMe.dto;
 
+import com.bigProject.tellMe.entity.Question;
 import com.bigProject.tellMe.enumClass.Category;
 import com.bigProject.tellMe.enumClass.Reveal;
 import com.bigProject.tellMe.enumClass.Status;

@@ -1,21 +1,32 @@
 package com.bigProject.tellMe.controller.complaint;
 
+import com.bigProject.tellMe.config.FileUpLoadUtil;
+import com.bigProject.tellMe.dto.AnswerDTO;
 import com.bigProject.tellMe.dto.QuestionDTO;
 import com.bigProject.tellMe.dto.UserDTO;
 import com.bigProject.tellMe.entity.Question;
 import com.bigProject.tellMe.entity.User;
+import com.bigProject.tellMe.enumClass.Reveal;
 import com.bigProject.tellMe.enumClass.Status;
+import com.bigProject.tellMe.mapper.QuestionMapper;
+import com.bigProject.tellMe.service.AnswerService;
 import com.bigProject.tellMe.service.QuestionService;
 import com.bigProject.tellMe.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Controller
 @RequestMapping("/complaint")
