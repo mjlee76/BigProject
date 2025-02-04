@@ -117,8 +117,34 @@
         </tr>
         </thead>
         <tbody class="post-list">
-        <tr>
-          <td colspan="7">게시글이 없습니다.</td>
+        <tr th:each="question : ${questions}" th:if="${questions.size() > 0}">
+          <td th:text="${question.id}"></td>
+          <td class="post-title">
+            <a th:href="@{/complaint/question/{id}(id=${question.id})}"
+               th:text="${question.title}"></a>
+          </td>
+          <td th:text="${#temporals.format(question.createDate, 'yyyy-MM-dd')}"></td>
+          <td class="answer-status"
+              th:classappend="${question.status == '답변완료'} ? 'completed' : 'pending'">
+            <span th:text="${question.status}"></span>
+            <div th:if="${question.answer != null}">
+              <p th:text="${question.answer.content}"></p>
+                <a th:if="${question.answer.file1 != null}"
+                   th:href="@{/download/{filename}(filename=${question.answer.file})}">
+                  첨부파일 다운로드
+                </a>
+            </div>
+          </td>
+          <td th:text="${question.views}"></td>
+          <td>
+            <button th:if="${question.status == '처리중'}"
+                    th:onclick="editQuestion(${question.id})">수정</button>
+            <button th:if="${question.status == '처리중'}"
+                    th:onclick="deleteQuestion(${question.id})">삭제</button>
+          </td>
+        </tr>
+        <tr th:if="${questions.size() == 0}">
+          <td colspan="6">등록된 문의가 없습니다</td>
         </tr>
         </tbody>
       </table>
@@ -202,7 +228,33 @@
   var saveNameUrl = [[@{/user/updateName}]];
   var savePhoneUrl = [[@{/user/updatePhone}]];
   var saveEmailUrl = [[@{/user/updateEmail}]];
+  // 문의 수정
+  function editQuestion(id) {
+      window.location.href = `/question/edit/${id}`;
+  }
+
+  // 문의 삭제
+  async function deleteQuestion(id) {
+      if (confirm("정말 삭제하시겠습니까?")) {
+          try {
+              const response = await fetch(`/question/delete/${id}`, {
+                  method: "POST",
+                  headers: {
+                      "Content-Type": "application/json",
+                      "X-CSRF-TOKEN": document.querySelector("[name='_csrf']").value
+                  }
+              });
+              if (response.ok) {
+                  location.reload();
+              }
+          } catch (error) {
+              console.error("삭제 실패:", error);
+          }
+      }
+  }
 </script>
 <div th:replace="layouts/footer::tellMe_footer"></div>
 </body>
 </html>
+message.txt
+12KB

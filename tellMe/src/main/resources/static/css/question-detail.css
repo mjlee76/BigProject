@@ -1,10 +1,10 @@
 /* 공통 스타일 */
 body {
     font-family: Arial, sans-serif;
-    line-height: 1.6;
-    margin: 20px;
-    background-color: #f9f9f9; /* 배경색 통일 */
-    color: #333; /* 기본 글자 색상 */
+    margin: 0;
+    padding: 0;
+    background-color: #ffffff;
+    color: #333;
 }
 
 /* 테이블 스타일 */
@@ -26,12 +26,14 @@ th, td {
 th {
     background-color: #f4f4f4; /* 테이블 헤더 배경색 통일 */
     font-weight: bold;
-    width: 10%; /* 기본 너비 설정 */
 }
 
-td {
-    width: 30%; /* 기본 너비 설정 */
-}
+table tr th:nth-child(1), table tr td:nth-child(1) { width: 10%; }
+table tr th:nth-child(2), table tr td:nth-child(2) { width: 10%; }
+table tr th:nth-child(3), table tr td:nth-child(3) { width: 10%; }
+table tr th:nth-child(4), table tr td:nth-child(4) { width: 10%; }
+table tr th:nth-child(5), table tr td:nth-child(5) { width: 10%; }
+table tr th:nth-child(6), table tr td:nth-child(6) { width: 10%; }
 
 td pre {
     font-weight: 550; /* 글씨 굵기 */

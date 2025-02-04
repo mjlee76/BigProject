@@ -453,6 +453,3 @@ body.delete-mode #number-header {
     height: 2px;
     background-color: black;
 }
-p {
-    display: none; /* <p> 태그 전체를 숨김 */
-}
