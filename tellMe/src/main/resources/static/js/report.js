@@ -1,8 +1,8 @@
 document.addEventListener("DOMContentLoaded", function () {
-    const searchInput = document.getElementById("search");
-    const searchBtn = document.getElementById("search-btn");
+    const searchInput = document.getElementById("search-input");
+    const searchForm = document.getElementById("search-form");
     const tabs = document.querySelectorAll(".tab");
-    const reportRows = document.querySelectorAll(".post-list tr");
+    const reportRows = document.querySelectorAll(".post-table tbody tr");
     const prevBtn = document.querySelector(".prev");
     const nextBtn = document.querySelector(".next");
     const pageNum = document.querySelector(".page-num");
@@ -10,36 +10,40 @@ document.addEventListener("DOMContentLoaded", function () {
     let currentPage = 1;
     const rowsPerPage = 10;
 
+    // ✅ 상태 필터링 함수
     function filterReports(filter) {
         reportRows.forEach(row => {
-            const statusCell = row.querySelector(".status");
-            if (filter === "all" || (statusCell && statusCell.classList.contains(filter))) {
-                row.style.display = "";
-            } else {
-                row.style.display = "none";
-            }
+            const statusCell = row.querySelector("td:nth-child(5)").textContent.trim();
+            row.style.display = (filter === "all" || statusCell === filter) ? "" : "none";
         });
     }
 
-    function searchReports() {
+    // ✅ 검색 기능 개선 (제목, 유형, 상태 검색 가능)
+    function searchReports(event) {
+        event.preventDefault(); // 폼 제출 방지
         const query = searchInput.value.toLowerCase();
+
         reportRows.forEach(row => {
-            const title = row.querySelector(".post-title a").textContent.toLowerCase();
-            const author = row.cells[2].textContent.toLowerCase();
-            row.style.display = title.includes(query) || author.includes(query) ? "" : "none";
+            const title = row.querySelector("td:nth-child(2) a").textContent.toLowerCase();
+            const category = row.querySelector("td:nth-child(4)").textContent.toLowerCase();
+            const status = row.querySelector("td:nth-child(5)").textContent.toLowerCase();
+
+            row.style.display = title.includes(query) || category.includes(query) || status.includes(query) ? "" : "none";
         });
     }
 
+    // ✅ 페이지네이션 기능
     function paginateReports() {
         let totalRows = reportRows.length;
         let totalPages = Math.ceil(totalRows / rowsPerPage);
-        pageNum.textContent = currentPage;
+        if (pageNum) pageNum.textContent = currentPage;
 
         reportRows.forEach((row, index) => {
             row.style.display = (index >= (currentPage - 1) * rowsPerPage && index < currentPage * rowsPerPage) ? "" : "none";
         });
     }
 
+    // ✅ 탭 클릭 이벤트 (필터링)
     tabs.forEach(tab => {
         tab.addEventListener("click", function () {
             tabs.forEach(t => t.classList.remove("active"));
@@ -48,25 +52,30 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
-    searchBtn.addEventListener("click", searchReports);
-    searchInput.addEventListener("keypress", function (e) {
-        if (e.key === "Enter") searchReports();
-    });
+    // ✅ 검색 이벤트 등록
+    if (searchForm) {
+        searchForm.addEventListener("submit", searchReports);
+    }
 
-    prevBtn.addEventListener("click", function () {
-        if (currentPage > 1) {
-            currentPage--;
-            paginateReports();
-        }
-    });
+    // ✅ 페이지네이션 버튼 이벤트 (예외 처리 추가)
+    if (prevBtn) {
+        prevBtn.addEventListener("click", function () {
+            if (currentPage > 1) {
+                currentPage--;
+                paginateReports();
+            }
+        });
+    }
 
-    nextBtn.addEventListener("click", function () {
-        let totalPages = Math.ceil(reportRows.length / rowsPerPage);
-        if (currentPage < totalPages) {
-            currentPage++;
-            paginateReports();
-        }
-    });
+    if (nextBtn) {
+        nextBtn.addEventListener("click", function () {
+            let totalPages = Math.ceil(reportRows.length / rowsPerPage);
+            if (currentPage < totalPages) {
+                currentPage++;
+                paginateReports();
+            }
+        });
+    }
 
-    paginateReports();
+    paginateReports(); // 초기 로딩 시 적용
 });

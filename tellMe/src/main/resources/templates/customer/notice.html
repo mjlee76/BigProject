@@ -25,21 +25,24 @@
         <button class="tab" data-category="업데이트">업데이트</button>
         <button class="tab" data-category="기타">기타</button>
     </div>
-    <div class="search-container">
-        <input type="text" class="search-input" placeholder="검색어를 입력해 주세요">
+
+    <div class="search-bar">
+        <form id="search-form">
+            <input type="text" placeholder="검색어를 입력하세요." id="search-input" name="query">
         <!--            <select id="search-answer-status" name="answerStatus">-->
         <!--                <option value="all">답변여부(전체)</option>-->
         <!--                <option value="completed">답변완료</option>-->
         <!--                <option value="transferred">이송이첩</option>-->
         <!--                <option value="pending">대기중</option>-->
         <!--            </select>-->
-        <button class="search-button">
+            <button type="submit" class="search-button">
             <!-- 새로운 SVG 아이콘 -->
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search" viewBox="0 0 24 24">
-                <circle cx="11" cy="11" r="8"></circle>
-                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-            </svg>
-        </button>
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search" viewBox="0 0 24 24">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+            </button>
+        </form>
     </div>
     <table class="post-table">
         <thead>

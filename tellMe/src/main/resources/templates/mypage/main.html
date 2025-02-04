@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 <head th:replace="layouts/navbar::tellMe_head"/>
+<head th:replace="layouts/footer::tellMe_foot"/>
 <head>
   <meta charset="UTF-8">
   <title>마이페이지</title>
   <script src="https://code.jquery.com/jquery-3.6.3.js"></script>
   <script type="text/javascript" th:src="@{/js/myPageEditInfo.js}"></script>
+  <script type="text/javascript" th:src="@{/js/myPage.js}"></script>
+  <link rel="stylesheet" type="text/css" th:href="@{/css/myPage.css}" />
   <style>
     /* 모달 배경 */
     .edit-form {
@@ -36,52 +39,143 @@
 </head>
 <body>
 <div th:replace="layouts/navbar::tellMe_header"></div>
-<div>
-  <div class="sidebar">
-    <ul th:replace="layouts/sidebar_mypage::TellMe_side_mypage">
-
+<div class="container">
+  <aside class="sidebar">
+    <div class="profile-header">
+      <label for="profile-upload" class="profile-img">
+        <input type="file" id="profile-upload" accept="image/*">
+        <img id="profile-pic" th:src="@{/image/profile.png}" alt="프로필 사진">
+      </label>
+      <form th:action="@{/user/save}" th:object="${user}" method="post" onsubmit="return checkNameUnique(this)">
+        <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
+        <input type="hidden" th:field="*{id}"/>
+        <div class="user-name" th:text="*{userName}"></div>
+      </form>
+    </div>
+    <ul class="menu">
+      <li class="menu-item active" data-target="profile">내 프로필</li>
+      <li class="menu-item" data-target="security">비밀번호 설정</li>
+      <li class="menu-item" data-target="history">내 민원 조회</li>
     </ul>
-  </div>
-  <div>
-    <div>
-      <div>
-        <h2>기본 정보</h2>
+  </aside>
+
+  <main class="content">
+    <section id="profile" class="content-section active">
+      <h2 class="section-title">내 프로필</h2>
+      <div class="profile-card">
         <form th:action="@{/user/save}" th:object="${user}" method="post" onsubmit="return checkNameUnique(this)">
           <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
           <input type="hidden" th:field="*{id}"/>
-          <ul>
-            <li>
-              <div>
-                <div>
-                  <div class="user-name" th:text="*{userName}"></div>
-                  <button type="button" onclick="changeName()">실명수정</button>
-                </div>
-              </div>
-            </li>
-            <li>
-              <div>
-                <div class="user-phone" th:text="*{phone}"></div>
-                <button type="button" onclick="changePhone()">핸드폰 수정</button>
-              </div>
-            </li>
-            <li>
-              <div>
-                <div class="user-email" th:text="*{email}"></div>
-                <button type="button" onclick="changeEmail()">이메일 수정</button>
-              </div>
-            </li>
-            <li>
-              <div>
-                <div class="user-address" th:text="*{address}"></div>
-                <button type="button" onclick="changeAddress()">주소 수정</button>
-              </div>
-            </li>
-          </ul>
+          <p><strong>이름:</strong> <span class="user-name" th:text="*{userName}"></span> <button type="button" onclick="changeName()">실명수정</button></p>
+          <p><strong>전화번호:</strong> <span class="user-phone" th:text="*{phone}"></span> <button type="button" onclick="changePhone()">핸드폰 수정</button></p>
+          <p><strong>이메일:</strong> <span class="user-email" th:text="*{email}"></span> <button type="button" onclick="changeEmail()">이메일 수정</button></p>
+          <p><strong>주소:</strong> <span class="user-address" th:text="*{address}"></span> <button type="button" onclick="changeAddress()">주소 수정</button></p>
         </form>
       </div>
-    </div>
-  </div>
+    </section>
+
+    <section id="security" class="content-section">
+      <h2 class="section-title">비밀번호 설정</h2>
+      <div class="security-card">
+        <p><strong>비밀번호:</strong> ●●●●●●●● <button class="edit-btn">수정</button></p>
+      </div>
+    </section>
+    <section id="history" class="content-section">
+      <h2 class="section-title">내 민원 조회</h2>
+      <div class="tabs">
+        <button class="tab active" data-category="all" onclick="filterPosts('all')">전체</button>
+        <button class="tab" data-category="접수중" onclick="filterPosts('접수중')">접수중</button>
+        <button class="tab" data-category="처리중" onclick="filterPosts('처리중')">처리중</button>
+        <button class="tab" data-category="답변완료" onclick="filterPosts('답변완료')">답변완료</button>
+      </div>
+      <div class="search-bar">
+        <form id="search-form">
+          <select id="search-category" name="category">
+            <option value="all">전체</option>
+            <option value="title">제목</option>
+            <option value="content">내용</option>
+          </select>
+          <input type="text" placeholder="검색어를 입력하세요." id="search-input" name="query">
+          <button type="submit" id="search-button">
+            <!-- 새로운 SVG 아이콘 -->
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search" viewBox="0 0 24 24">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+          </button>
+        </form>
+      </div>
+
+      <table class="post-table">
+        <thead>
+        <tr>
+          <th>번호</th>
+          <th>제목</th>
+          <th>작성일</th>
+          <th>답변여부</th>
+          <th>조회수</th>
+        </tr>
+        </thead>
+        <tbody class="post-list">
+        <tr>
+          <td colspan="7">게시글이 없습니다.</td>
+        </tr>
+        </tbody>
+      </table>
+      <p>전체 <strong id="total-posts">0</strong> (1 / <span id="total-pages">1</span> 페이지)</p>
+      <div class="content-area"></div>
+      <div class="pagination"></div>
+    </section>
+  </main>
 </div>
+
+<!--<div th:replace="layouts/navbar::tellMe_header"></div>-->
+<!--<div>-->
+<!--  <div class="sidebar">-->
+<!--    <ul th:replace="layouts/sidebar_mypage::TellMe_side_mypage">-->
+
+<!--    </ul>-->
+<!--  </div>-->
+<!--  <div>-->
+<!--    <div>-->
+<!--      <div>-->
+<!--        <h2>기본 정보</h2>-->
+<!--        <form th:action="@{/user/save}" th:object="${user}" method="post" onsubmit="return checkNameUnique(this)">-->
+<!--          <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>-->
+<!--          <input type="hidden" th:field="*{id}"/>-->
+<!--          <ul>-->
+<!--            <li>-->
+<!--              <div>-->
+<!--                <div>-->
+<!--                  <div class="user-name" th:text="*{userName}"></div>-->
+<!--                  <button type="button" onclick="changeName()">실명수정</button>-->
+<!--                </div>-->
+<!--              </div>-->
+<!--            </li>-->
+<!--            <li>-->
+<!--              <div>-->
+<!--                <div class="user-phone" th:text="*{phone}"></div>-->
+<!--                <button type="button" onclick="changePhone()">핸드폰 수정</button>-->
+<!--              </div>-->
+<!--            </li>-->
+<!--            <li>-->
+<!--              <div>-->
+<!--                <div class="user-email" th:text="*{email}"></div>-->
+<!--                <button type="button" onclick="changeEmail()">이메일 수정</button>-->
+<!--              </div>-->
+<!--            </li>-->
+<!--            <li>-->
+<!--              <div>-->
+<!--                <div class="user-address" th:text="*{address}"></div>-->
+<!--                <button type="button" onclick="changeAddress()">주소 수정</button>-->
+<!--              </div>-->
+<!--            </li>-->
+<!--          </ul>-->
+<!--        </form>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--</div>-->
 <div class="modal-backdrop" id="modalBackdrop" onclick="cancelEdit()"></div>
 <div id="editModal" class="edit-form">
   <input type="password" id="password" minlength="4" maxlength="20" placeholder="비밀번호로 인증을 해주세요." required>
@@ -109,5 +203,6 @@
   var savePhoneUrl = [[@{/user/updatePhone}]];
   var saveEmailUrl = [[@{/user/updateEmail}]];
 </script>
+<div th:replace="layouts/footer::tellMe_footer"></div>
 </body>
 </html>
