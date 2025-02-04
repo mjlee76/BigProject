@@ -84,7 +84,11 @@ class ChangeText:
     
     def change_generate_prompt(self, text):
         return (
+<<<<<<< HEAD
             f"다음 텍스트를 읽고, 정상이 아닌 텍스트는 정중하고 부드러운 표현으로 순화해주세요:\n"
+=======
+            f"다음 텍스트를 읽고, 정상이 아닌 텍스트를 정중하고 부드러운 표현으로 순화해주세요:\n"
+>>>>>>> aafa6e78de4705f83ce5f5a8414176653aeb7884
             f"{text}\n\n"
         )
     
