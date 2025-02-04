@@ -68,10 +68,12 @@ public class ComplaintController {
                                  Authentication auth,
                                  Model model) {
 
-        UserDTO user = userService.findByUserId(auth.getName());
-        String role = String.valueOf(user.getRole());
+        String role = "ROLE_USER";
 
-        System.out.println(role);
+        if (auth != null && auth.isAuthenticated()) {
+            UserDTO user = userService.findByUserId(auth.getName());
+            role = String.valueOf(user.getRole());
+        }
 
         Page<QuestionDTO> questionList = questionService.paging(pageable, role);
 

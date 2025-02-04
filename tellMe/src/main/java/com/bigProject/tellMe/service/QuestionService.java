@@ -76,13 +76,14 @@ public class QuestionService {
         // ✅ 공지사항을 ID 기준으로 내림차순 정렬하여 페이지네이션 적용된 데이터 조회
         // PageRequest.of(페이지 번호, 페이지당 개수, 정렬 기준)
         Page<Question> questions;
+
         if ("ROLE_MANAGER".equals(role)) {
             // ✅ 매니저는 모든 게시글을 조회
             questions = questionRepository.findAll(
                     PageRequest.of(page, pageLimit, Sort.by(Sort.Direction.DESC, "id"))
             );
         } else {
-            // ✅ 일반 사용자는 공개된 게시글만 조회
+            // ✅ 일반 사용자 또는 비로그인 사용자인 경우 공개 글만 조회
             questions = questionRepository.findByReveal(
                     Reveal.공개,
                     PageRequest.of(page, pageLimit, Sort.by(Sort.Direction.DESC, "id"))
