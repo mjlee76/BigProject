@@ -2,12 +2,23 @@ from docx import Document
 from docx.shared import Pt
 import basic_module as bm
 import os
+import requests
 
 doc = Document("C:/Users/User/Desktop/빅프로젝트/BigProject/api/service/특이민원_발생보고서.docx")
-path = "./api_key.txt"
+'''path = "./api_key.txt"
 api_key = bm.load_api_key(path)
 os.environ["OPENAI_API_KEY"] = api_key
-llm = bm.selecting_model(api_key)
+llm = bm.selecting_model(api_key)'''
+
+def get_post_result(title: str, content: str):
+    url = "http://localhost:8000/게시글"  # FastAPI 서버 주소
+    params = {"title": title, "content": content}
+    response = requests.get(url, params=params)
+    if response.ok:
+        return response.json()
+    else:
+        return {"error": response.text}
+get_post_result()
 
 #db에서 받아올 정보
 department = "민원복지과"
@@ -46,4 +57,4 @@ paragraph = cell.paragraphs[0]
 run = paragraph.add_run("○")
 run.font.size = Pt(22)
 
-doc.save("output.docx")
+doc.save("./made_reported/output.docx")

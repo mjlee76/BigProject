@@ -39,7 +39,7 @@ test_table = pdf_loader.make_llm_json()
 
 @app.get("/게시글")
 def update_item(title: str, content: str): 
-    post_origin_data = {"제목": title, '내용': content} # 원문데이터 저장용
+    post_origin_data = {"제목": title, "내용": content} # 원문데이터 저장용
     
     classifier = TextClassifier()
     # 분류
@@ -47,38 +47,39 @@ def update_item(title: str, content: str):
     content_label = classifier.classify_text(content)
     changetexter = ChangeText()
     
-    if title_label != '정상' or content_label != '정상':
-        if title_label != '정상' and content_label != '정상':
-            title_changed = changetexter.change_text(title)
-            content_changed = changetexter.change_text(content)
-            return {
-                "제목": {"text": title_changed, "label": title_label, "경고문": f"{title_label}감지"},
-                "내용": {"text": content_changed, "label": content_label, "경고문": f"{content_label}감지"},
-                "원문데이터" : post_origin_data
-            }
+    result = {}
 
-        elif title_label != '정상':
+    if title_label != ['정상'] or content_label != ['정상']:
+        if title_label != ['정상']:
             title_changed = changetexter.change_text(title)
-            return {
-                "제목" : {"text": title_changed, "label": title_label, "경고문": f"{title_label}감지"},
-                "원문데이터" : post_origin_data
+            result["제목"] = {
+                "text": f"{title_changed}",
+                "label": title_label,
+                "경고문": f"{title_label} 감지"
             }
-
-        elif content_label != '정상':
-            content_changed = changetexter.change_text(content)
-            return {
-                "내용" : {"text": content_changed, "label": content_label, "경고문": f"{content_label}감지"},
-                "원문데이터" : post_origin_data
+        else:
+            result["제목"] = {
+                "text": title
             }
         
+        if content_label != ['정상']:
+            content_changed = changetexter.change_text(content)
+            result["내용"] = {
+                "text": f"{content_changed}",
+                "label": content_label,
+                "경고문": f"{content_label} 감지"
+            }
+        else:
+            result["내용"] = {
+                "text": content
+            }
+        
+        result["원문데이터"] = post_origin_data
         report = MakeReport(file_path)
         report.make_report_detail()
         report.report_save()
+        return result
         
-    # 결과 반환
-    else:
-        return {
-            "제목": {"text": title},
-            "내용": {"text": content}
-        }
+    else: return {"제목": title, "내용": content}
+    
 
