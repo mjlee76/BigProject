@@ -1,19 +1,31 @@
 import os
 import re
 import torch
+import asyncio
+import aiofiles
+import datetime
+from docx import Document
+from docx.shared import Pt
+from docx.oxml.ns import qn
+from docx.oxml import OxmlElement
+from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
+from docx.enum.table import WD_ALIGN_VERTICAL
+from langchain.schema import HumanMessage
+
+from pydantic import BaseModel
 from langchain_openai import ChatOpenAI
 from langchain.schema import HumanMessage
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
 
 #1. api 키 불러오기 및 설정정
-def load_api_key(file_path):
-    with open(file_path, 'r') as file:
-        return file.read().strip()
+async def load_api_key(file_path):
+    async with aiofiles.open(file_path, 'r') as file:
+        return (await file.read()).strip()
 
 #2. 모델 설정
-def selecting_model(api_key):
+async def selecting_model(api_key):
     os.environ["OPENAI_API_KEY"] = api_key
-    llm = ChatOpenAI(temperature=0, model_name="gpt-4")
+    llm = await asyncio.to_thread(ChatOpenAI, temperature=0, model_name="gpt-4")
     return llm
 
 #3. 모델 프롬프트 출력
@@ -78,25 +90,24 @@ def extract_label(text):
 class ChangeText:
     
     def __init__(self):
+        self.llm = None  # 나중에 async 초기화에서 설정할 llm
+
+    async def init(self):
         file_path = os.path.join(os.getcwd(), "api_key.txt")
-        api_key = load_api_key(file_path)
-        self.llm = selecting_model(api_key)
+        api_key = await load_api_key(file_path)
+        self.llm = await selecting_model(api_key)
     
     def change_generate_prompt(self, text):
         return (
-<<<<<<< HEAD
-            f"다음 텍스트를 읽고, 정상이 아닌 텍스트는 정중하고 부드러운 표현으로 순화해주세요:\n"
-=======
             f"다음 텍스트를 읽고, 정상이 아닌 텍스트를 정중하고 부드러운 표현으로 순화해주세요:\n"
->>>>>>> aafa6e78de4705f83ce5f5a8414176653aeb7884
             f"{text}\n\n"
         )
     
-    def change_text(self, text):
+    async def change_text(self, text):
         prompt = self.change_generate_prompt(text)
         try:
             # LLM을 사용하여 분류 수행
-            response = self.llm([HumanMessage(content=prompt)])
+            response = await asyncio.to_thread(lambda: self.llm([HumanMessage(content=prompt)]))
             return response.content.strip()  # LLM 응답 반환
         except Exception as e:
             return f"Error: {str(e)}"
@@ -105,6 +116,111 @@ class ChangeText:
 def laws_caution(label):
     print()
 
+class UserInfo(BaseModel):
+    user_id : str
+    user_name: str
+    gender : str
+    role : str
+    birth_date : str
+    telephone : str
+    address : str
+    email: str
+    create_date : str
+    count : int
+    
+class PostBody(BaseModel):
+    title: str
+    content: str
+    user: UserInfo
+    
+class ReportBody(BaseModel):
+    category_title : str
+    category_content : str
+    report_path : str
+    create_date : object
+
+department = "민원복지과"
+department_supervisior = "홍길동"
+label = '성희롱'
+customer = "김태환"
+customer_Telephone = "010-1234-4567"
+manager = "김영희"
+manager_telephone = "02-873-4466"
+manager_task = "복지민원 담당"
+
+class MakeReport():
+    def __init__(self):
+        self.doc = Document("C:/Users/User/Desktop/빅프로젝트/BigProject/api/service/특이민원_발생보고서.docx")
+        self.llm = None
+
+    async def init(self):
+        # 비동기 초기화 메서드: API 키 로드와 모델 초기화
+        file_path = os.path.join(os.getcwd(), "api_key.txt")
+        api_key = await load_api_key(file_path)
+        self.llm = await selecting_model(api_key)
+    
+    def set_font(paragraph, font_name="맑은 고딕", font_size=12):
+        for run in paragraph.runs:
+            rPr = run._element.get_or_add_rPr()
+            rFonts = OxmlElement("w:rFonts")
+            rFonts.set(qn("w:eastAsia"), font_name)
+            rPr.append(rFonts)
+            run.font.size = Pt(font_size)
+
+    def report_prompt(self, post_body : PostBody):
+        title = post_body.title
+        content = post_body.content
+        full_text = f"제목 : {title}" + " " + f"내용 : {content}"
+        prompt = (
+            "당신은 민원에 대한 처리를 하는 상담사입니다. 특이민원이 발생하여 이에 대한 보고서를 작성해야합니다."
+            "다음 문장을 보고 특이민원 발생요지에 대해서 6하원칙에 따라 핵심내용 위주만 간략하게 작성해주세요"
+            f"판단할 내용 : {full_text}"
+            )
+        try:
+            # LLM을 사용하여 분류 수행
+            response = self.llm([HumanMessage(content=prompt)])
+            return response.content.strip()  # LLM 응답 반환
+        except Exception as e:
+            print(f"Error: {str(e)}")
+            return "오류 발생"
+
+    # 표 검색 후 특정 셀 찾기
+    def cell_fill(self, post_body : PostBody, report_body : ReportBody):
+        table = self.doc.tables[0]
+        table.cell(0, 1).text = "2025-01-01"  # 예: 발생일자
+        table.cell(0, 4).text = f"{department}"
+        table.cell(0, 7).text =  f"{department_supervisior}"
+        table.cell(4, 1).text = f"{customer}"
+        table.cell(4, 4).text = f"{customer_Telephone}"
+        table.cell(5, 1).text = f"{manager}"
+        table.cell(5, 4).text = f"{manager_telephone}"
+        table.cell(5, 7).text = f"{manager_task}"
+        
+        label_title = report_body.category_title
+        label_content = report_body.category_content
+        
+        if '성희롱' in label_title or '성희롱' in label_content:
+            cell_label = table.cell(2, 4)
+        elif '협박' in label_title or '협박' in label_content:
+            cell_label = table.cell(2, 2)
+        elif '악성' in label_title or '악성' in label_content: 
+            cell_label = table.cell(2, 1)
+        else:
+            cell_label = table.cell(2, 8)
+        paragraph = cell_label.paragraphs[0]
+        run = paragraph.add_run("○")
+        run.font.size = Pt(22)
+        
+        prompt = self.report_prompt(post_body)
+        table.cell(6, 1).text = prompt
+        
+    def report_save(self):
+        time = datetime.datetime.now().strftime("%y%m%d_%H%M%S")
+        output_file = f"특이민원_보고서_{time}.docx"
+        report_file_path = "C:/Users/User/Desktop/빅프로젝트/BigProject/tellMe/tellMe-reports/"
+        self.doc.save(report_file_path + output_file)
+        print(f"문서가 {output_file}에 저장되었습니다.")
+        return time, output_file
 
         
 
