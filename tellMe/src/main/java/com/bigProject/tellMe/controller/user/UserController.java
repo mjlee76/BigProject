@@ -31,11 +31,19 @@ public class UserController {
         //userDTO.setRole(Role.ROLE_ADMIN);
         userDTO.setRole(Role.ROLE_MANAGER);
         //userDTO.setRole(Role.ROLE_COUNSELOR);
+<<<<<<< HEAD
 //        userDTO.setRole(Role.ROLE_USER);
         userDTO.setCount(0);
         userDTO.setCreateDate(LocalDateTime.now());
         System.out.println("======================================");
         System.out.println(userDTO.toString());
+=======
+        //userDTO.setRole(Role.ROLE_USER);
+//        userDTO.setCount(0);
+//        userDTO.setCreateDate(LocalDateTime.now());
+//        System.out.println("======================================");
+        //System.out.println(userDTO.toString());
+>>>>>>> e1cf1c9 (내 페이지 수정.)
         userService.save(userDTO);
         return "login";
     }

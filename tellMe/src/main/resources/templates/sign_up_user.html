@@ -7,14 +7,19 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" type="text/css" th:href="@{/css/sign_up_user.css}" />
   <script src="https://code.jquery.com/jquery-3.6.3.js"></script>
+  <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
   <script type="text/javascript" th:src="@{/js/common.js}"></script>
   <script type="text/javascript" th:src="@{/js/sign_up_user.js}"></script>
+<<<<<<< HEAD
   <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+=======
+>>>>>>> e1cf1c9 (내 페이지 수정.)
   <script type="text/javascript">
     function checkNameUnique(form){
-      url = "[[@{/user/check/unique}]]";
-      console.log(url);
+      var url = /*[[@{/user/check/unique}]]*/;
+      console.log("요청 URL:", url);
 
+<<<<<<< HEAD
       userId=$("#userId").val();
       password=$("#password").val();
       phone=$("#phone").val();
@@ -22,6 +27,21 @@
       csrfValue=$("input[name='_csrf']").val();
 
       params={userId:userId,password:password,phone:phone,email:email,_csrf: csrfValue};
+=======
+      var userId = $("#userId").val();
+      var password = $("#password").val();
+      var phone = $("#phone").val();
+      var email = $("#email").val();
+      var csrfValue = $("input[name='_csrf']").val();
+
+      var params = {
+          userId: userId,
+          password: password, // 비밀번호도 서버에 전송해야 하는지 확인!
+          phone: phone,
+          email: email,
+          _csrf: csrfValue
+      };
+>>>>>>> e1cf1c9 (내 페이지 수정.)
 
       $.post(url,params,function(response){
           if(response == "중복없음"){
@@ -130,6 +150,9 @@
       <a th:href="@{/}">홈으로</a>
     </div>
   </div>
+<<<<<<< HEAD
 </div>
+=======
+>>>>>>> e1cf1c9 (내 페이지 수정.)
 </body>
 </html>
