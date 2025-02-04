@@ -34,10 +34,17 @@ pdf_loader = LoadPdfFile(file_path)
 tables = pdf_loader.extract_tables_data()
 test_table = pdf_loader.make_llm_json()
 
-
 class UserInfo(BaseModel):
-    name: str
+    user_id : str
+    user_name: str
+    gender : str
+    role : str
+    birth_date : str
+    telephone : str
+    address : str
     email: str
+    create_date : str
+    count : int
 
 class PostBody(BaseModel):
     title: str
@@ -47,10 +54,10 @@ class PostBody(BaseModel):
 class ReportBody(BaseModel):
     category : str
     report_path : str
-    create_date : datetime
+    create_date : object
 
 @app.post("/게시글")
-def update_item(post_data: PostBody): 
+def update_item(post_data: PostBody, report_req: ReportBody): 
     title = post_data.title
     content = post_data.content
     post_origin_data = {"제목": title, "내용": content} # 원문데이터 저장용
@@ -60,15 +67,17 @@ def update_item(post_data: PostBody):
     title_label = classifier.classify_text(title)
     content_label = classifier.classify_text(content)
     changetexter = ChangeText()
-    
     result = {}
 
-    if title_label != ['정상'] or content_label != ['정상']:
-        if title_label != ['정상']:
+    if title_label != '정상' or content_label != '정상':
+        if title_label != '정상':
             title_changed = changetexter.change_text(title)
+            post_data.title =  title_changed
+            report_req.category = title_label
+            
+            # 팝업 날릴거
             result["제목"] = {
                 "text": f"{title_changed}",
-                "label": title_label,
                 "경고문": f"{title_label} 감지"
             }
         else:
@@ -76,11 +85,13 @@ def update_item(post_data: PostBody):
                 "text": title
             }
         
-        if content_label != ['정상']:
+        if content_label != '정상':
             content_changed = changetexter.change_text(content)
+            post_data.title =  content_changed
+            report_req.category = content_label
+            
             result["내용"] = {
                 "text": f"{content_changed}",
-                "label": content_label,
                 "경고문": f"{content_label} 감지"
             }
         else:
@@ -89,27 +100,28 @@ def update_item(post_data: PostBody):
             }
         
         result["원문데이터"] = post_origin_data
+        # 보고서 생성
         report = MakeReport(file_path)
         report.make_report_detail()
-        report.report_save()
-        return result
         
-    else: return {"제목": title, "내용": content}
+        time, output_file = report.report_save()
+        report_req.create_date = time
+        report_req.report_path = output_file
+        
+        return post_data, report_req, result
+        
+    else: 
+        post_data.title = title
+        post_data.content = content
+        return post_data, report_req
     
 @app.post("/make_report")
 def make_report(report_req: ReportBody):
-    def send_report_to_spring(category, path):
-        url = "http://my-spring-server:8080/spring-endpoint"
-        data = {
-            "category": category,
-            "report_path": path,
-            "create_date": datetime.now().isoformat()
-        }
+    def send_report_to_spring():
+        url = "http://localhost:8080/spring-endpoint"
+        data = report_req
         response = requests.post(url, json=data)
         return response.json()
     
-    # ... 보고서 생성 작업 ...
-    category = "민원"
-    path = "C:/reports/민원보고서.docx"
-    result = send_report_to_spring(category, path)
-    return {"status": "ok", "spring_response": result}
+    result = send_report_to_spring()
+    return report_req , {"status": "ok", "spring_response": result}
