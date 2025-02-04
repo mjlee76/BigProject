@@ -73,5 +73,11 @@ public class Question {
         if(this.category == null) {
             this.category = Category.정상;  // DB에 저장되기 전에 기본값 설정
         }
+        if(this.views == null) {
+            this.views = 0;  // DB에 저장되기 전에 기본값 설정
+        }
+        if(this.status == null) {
+            this.status = Status.처리중;  // DB에 저장되기 전에 기본값 설정
+        }
     }
 }

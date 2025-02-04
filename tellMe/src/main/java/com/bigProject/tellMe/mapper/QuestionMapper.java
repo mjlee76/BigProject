@@ -8,6 +8,8 @@ import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface QuestionMapper {
+    @Mapping(target = "userId", source = "question.user.id")
+    QuestionDTO quToQuDTO(Question question);
 
     @Mapping(target = "user", source = "questionDTO.userId") // user 필드 매핑
     Question quDTOToQu(QuestionDTO questionDTO);

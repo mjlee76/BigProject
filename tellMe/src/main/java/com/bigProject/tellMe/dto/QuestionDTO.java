@@ -17,7 +17,7 @@ public class QuestionDTO {
     private String title;
     private String content;
     private Long userId;
-    private LocalDateTime createDate = LocalDateTime.now();
+    private LocalDateTime createDate;
     private Reveal reveal;
     private Status status;
     private Integer views = 0;

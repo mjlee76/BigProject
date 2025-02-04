@@ -47,7 +47,7 @@ public class CustomerController {
             noticeDTO.setFile(fileName);
             Notice notice = noticeService.save(noticeDTO);
 
-            String uploadDir = "tellMe/tellMe-image/notice/" + notice.getId();
+            String uploadDir = "tellMe/tellMe-uploadFile/notice/" + notice.getId();
             FileUpLoadUtil.saveFile(uploadDir, fileName, multipartFile);
         }else {
             noticeDTO.setFile(null);

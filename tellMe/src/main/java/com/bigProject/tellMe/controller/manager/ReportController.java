@@ -27,6 +27,4 @@ public class ReportController {
 
     @GetMapping("/statistics")
     public String statisticsBoard() {return "manager/statistics"; }
-
-
 }
