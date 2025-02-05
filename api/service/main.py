@@ -1,5 +1,5 @@
 from typing import Union, List
-from fastapi import FastAPI, File, UploadFile, HTTPException, Body
+from fastapi import FastAPI, File, UploadFile, HTTPException, Body, logger
 from pydantic import BaseModel
 from langchain_chroma import Chroma
 from langchain_openai import OpenAIEmbeddings
@@ -83,56 +83,72 @@ class CombinedModel(BaseModel):
 
 @app.post("/filtered_module")
 async def update_item(data: CombinedModel):
-    post_data = data.post_data
-    report_req = data.report_req
-    
-    title = post_data.title
-    content = post_data.content
-    post_origin_data = {"제목": title, "내용": content} # 원문데이터 저장용
-    report_req.post_origin_data = post_origin_data
-    
-    classifier = TextClassifier()
-    # 분류
-    title_label = classifier.classify_text(title)
-    content_label = classifier.classify_text(content)
-    changetexter = ChangeText()
-    await changetexter.init()
-    result = {}
+    try:
+        post_data = data.post_data
+        report_req = data.report_req
+        
+        title = post_data.title
+        content = post_data.content
+        post_origin_data = {"제목": title, "내용": content} # 원문데이터 저장용
+        report_req.post_origin_data = post_origin_data
+        
+        classifier = TextClassifier()
+        # 분류
+        title_label = classifier.classify_text(title)
+        content_label = classifier.classify_text(content)
+        changetexter = ChangeText()
+        await changetexter.init()
+        result = {}
 
-    if title_label != '정상' or content_label != '정상':
-        if title_label != '정상':
-            title_changed = await changetexter.change_text(title)
-            post_data.title =  title_changed
-            report_req.category.title = title_label
-        
-            # 팝업 날릴거
-            result["제목"] = {"text": f"{title_changed}","경고문": f"{title_label} 감지"}
-        else:
-            result["제목"] = {"text": title}
-        
-        if content_label != '정상':
-            content_changed = await changetexter.change_text(content)
-            post_data.content =  content_changed
-            report_req.category.content = content_label
+        if title_label != '정상' or content_label != '정상':
+            if title_label != '정상':
+                title_changed = await changetexter.change_text(title)
+                post_data.title =  title_changed
+                report_req.category.title = title_label
+
+                # 팝업 날릴거
+                result["제목"] = {"text": f"{title_changed}","경고문": f"{title_label} 감지"}
+            else:
+                result["제목"] = {"text": title}
             
-            result["내용"] = {"text": f"{content_changed}","경고문": f"{content_label} 감지"}
-        else:
-            result["내용"] = {"text": content}
-        
-        # 보고서 생성
-        return post_data, report_req
-        
-    else: 
-        post_data.title = title
-        post_data.content = content
-        return post_data, report_req
+            if content_label != '정상':
+                content_changed = await changetexter.change_text(content)
+                post_data.content =  content_changed
+                report_req.category.content = content_label
+                
+                result["내용"] = {"text": f"{content_changed}","경고문": f"{content_label} 감지"}
+            else:
+                result["내용"] = {"text": content}
+            
+            # 보고서 생성
+            return {
+                "valid": True,
+                "message": "데이터 수신 및 처리 완료",
+                "post_data": post_data.model_dump_json(),
+                "report_req": report_req.model_dump_json()
+            }
+            '''post_data, report_req'''
+            
+        else: 
+            '''post_data.title = title
+            post_data.content = content
+            return post_data, report_req'''
+            return    {
+                "valid": True,
+                "message": "데이터 수신 및 처리 완료",
+                "post_data": post_data.model_dump_json(),
+                "report_req": report_req.model_dump_json()
+            }
+    except Exception as e:
+        logger.error(f"처리 실패: {str(e)}")
+        raise HTTPException(500, "서버 내부 오류")
     
 @app.post("/make_report")
 def make_report(data: CombinedModel):
     post_data = data.post_data
     report_req = data.report_req
     
-    if report_req.category_title != '정상' or report_req.category_content != '정상':
+    if report_req.category.title != '정상' or report_req.category.content != '정상':
         report = MakeReport()
         report.report_prompt(post_data)
         report.cell_fill(post_data, report_req)
@@ -141,14 +157,18 @@ def make_report(data: CombinedModel):
         report_req.create_date = formatted_time
         report_req.report_path = output_file
     
-    def send_report_to_spring():
+    '''def send_report_to_spring():
         url = "http://localhost:8000/"
         data = report_req.model_dump_json()
         response = requests.post(url, json=data)
         return response.json()
     
-    result = send_report_to_spring()
-    return report_req , {"status": "ok", "spring_response": result}
+    result = send_report_to_spring()'''
+    return {
+            "valid": True,
+            "report_req": report_req.dict()
+    }
+'''report_req , {"status": "ok", "spring_response": result}'''
 
 #이미지 탐지
 @app.post("/upload/")
