@@ -18,6 +18,8 @@ import asyncio
 from basic_module import TextClassifier
 from basic_module import ChangeText
 from basic_module import MakeReport
+from basic_module import LoadDocumentFile
+from spam_detect import SpamDetector
 
 # POST: to create data. GET: to read data. PUT: to update data. DELETE: to delete data.
 app = FastAPI()
