@@ -39,7 +39,7 @@
 <main class="content">
     <h1>게시글 상세보기</h1>
     <table>
-        <tr>
+        <tr class="border-top">
             <th>번호</th>
             <td th:text="${notice.id}"></td>
             <th>제목</th>
@@ -71,7 +71,7 @@
         </tr>
         <tr>
             <td colspan="4">
-                <pre th:text="${notice.content}">게시글 내용을 불러오는 중...</pre>
+                <span th:text="${notice.content}" class="content-text">게시글 내용을 불러오는 중...</span>
             </td>
         </tr>
     </table>
