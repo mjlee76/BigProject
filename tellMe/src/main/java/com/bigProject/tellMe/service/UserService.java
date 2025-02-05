@@ -4,11 +4,13 @@ import com.bigProject.tellMe.dto.UserDTO;
 import com.bigProject.tellMe.entity.User;
 import com.bigProject.tellMe.mapper.UserMapper;
 import com.bigProject.tellMe.repository.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
 @Service
@@ -124,5 +126,10 @@ public class UserService {
 
     public boolean updateEmail(String userId, String newEmail) {
         return true;
+    }
+
+    public UserDTO findById(Long id) {
+        User user = userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("User not found"));
+        return userMapper.userToUserDTO(user);
     }
 }

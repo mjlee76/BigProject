@@ -61,7 +61,7 @@ class ReportBody(BaseModel):
     category_content : str
     post_origin_data : str
     report_path : str
-    create_date : object
+    create_date : str
     
 class CombinedModel(BaseModel):
     post_data: PostBody
@@ -79,7 +79,7 @@ async def update_item(data: CombinedModel):
     
     classifier = TextClassifier()
     # 분류
-    title_label = classifier.classify_text(title)
+    title_label = classifier.classify_text(title)   
     content_label = classifier.classify_text(content)
     changetexter = ChangeText()
     await changetexter.init()
@@ -108,12 +108,19 @@ async def update_item(data: CombinedModel):
             result["내용"] = {"text": content}
         
         # 보고서 생성
-        return post_data, report_req
-        
+        return {
+            "valid": True,
+            "message": "데이터 수신 및 처리 완료",
+            "post_data": post_data.dict(),
+            "report_req": report_req.dict()
+        }
     else: 
-        post_data.title = title
-        post_data.content = content
-        return post_data, report_req
+        # Return a JSON object with "valid": True
+        return {
+            "valid": True,
+            "post_data": post_data.dict(),
+            "report_req": report_req.dict()
+        }
     
 @app.post("/make_report")
 def make_report(post_data:PostBody ,report_req: ReportBody):

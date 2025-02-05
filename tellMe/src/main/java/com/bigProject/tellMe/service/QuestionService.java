@@ -2,21 +2,24 @@ package com.bigProject.tellMe.service;
 
 import com.bigProject.tellMe.client.api.FastApiClient;
 import com.bigProject.tellMe.dto.QuestionDTO;
+import com.bigProject.tellMe.dto.UserDTO;
 import com.bigProject.tellMe.entity.Question;
 import com.bigProject.tellMe.enumClass.Reveal;
 import com.bigProject.tellMe.mapper.QuestionMapper;
 import com.bigProject.tellMe.repository.QuestionRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -31,14 +34,60 @@ public class QuestionService {
         return questionRepository.save(question);
     }
 
-    public String checkApi(String title, String content) {
-        Map<String, Map<String, String>> requestBody = fastApiClient.getFilter(title, content);
+    public Map<String, Object> checkApi(Map<String, String> request, UserDTO userDTO) {
+        String title = request.get("title");
+        String content = request.get("content");
 
-        if(requestBody!=null) {
-            return "성공";
-        }else {
-            return "실패";
+        Map<String, Object> requestBody = new HashMap<>();
+        Map<String, Object> postBody = new HashMap<>();
+        Map<String, Object> reportBody = new HashMap<>();
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+        ObjectNode userNode = objectMapper.createObjectNode();
+        userNode.put("user_id", userDTO.getUserId());
+        userNode.put("user_name", userDTO.getUserName());
+        userNode.put("gender", userDTO.getGender());
+        userNode.put("role", userDTO.getRole().toString());
+        userNode.put("birth_date", userDTO.getBirthDate());
+        userNode.put("phone", userDTO.getPhone());
+        userNode.put("address", userDTO.getAddress());
+        userNode.put("email", userDTO.getEmail());
+        userNode.put("create_date", userDTO.getCreateDate().toString());
+        userNode.put("count", userDTO.getCount());
+
+        //ObjectNode를 `Map<String, Object>`로 변환
+        Map<String, Object> userMap = objectMapper.convertValue(userNode, Map.class);
+
+        System.out.println("================" + title);
+        System.out.println("================" + content);
+        System.out.println("================" + userMap.toString());
+
+        postBody.put("title", title);
+        postBody.put("content", content);
+        postBody.put("user", userMap);
+
+        reportBody.put("category_title", "");
+        reportBody.put("category_content", "");
+        reportBody.put("post_origin_data", "");
+        reportBody.put("report_path", "");
+        reportBody.put("create_date", "");
+
+        requestBody.put("post_data", postBody);
+        requestBody.put("report_req", reportBody);
+        System.out.println("================" + requestBody);
+        Map<String, Object> responseBody = fastApiClient.getFilter(requestBody);
+        System.out.println("================" + responseBody);
+        Map<String, Object> response = new HashMap<>();
+        if (responseBody != null && Boolean.TRUE.equals(responseBody.get("valid"))) {
+            response.put("valid", true);
+            response.put("message", "성공적으로 검증되었습니다.");
+        } else {
+            response.put("valid", false);
+            response.put("message", "검증 실패: 유효하지 않은 요청입니다.");
         }
+
+        return response;
     }
 
     // 반복문을 통해 Entity를 DTO로 변환하고

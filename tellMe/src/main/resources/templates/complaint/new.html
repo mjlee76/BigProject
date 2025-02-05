@@ -18,12 +18,13 @@
     <div class="complaint-header">
         <h1>민원 작성</h1>
     </div>
-<form th:action="@{/complaint/create}" th:object="${question}" method="post" enctype="multipart/form-data" onsubmit="return filterAPI(this)">
-    <input type="hidden" th:field="*{userId}"/>
+<form th:action="@{/complaint/create}" th:object="${question}" method="post" enctype="multipart/form-data" onsubmit="return filterAPI(event)">
+    <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
+    <input type="hidden" th:field="*{userId}" id="userId"/>
     <table class="form-table">
         <tr><!-- 제목 -->
-            <label>제목</label>
-            <input type="text" th:field="*{title}" required />
+            <th><label for="title">제목</label></th>
+            <td><input type="text" id="title" th:field="*{title}" required /></td>
         </tr>
         <tr><!-- 공개 여부 -->
             <th>공개 여부</th>
