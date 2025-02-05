@@ -19,6 +19,7 @@ from basic_module import TextClassifier
 from basic_module import ChangeText
 from basic_module import MakeReport
 from basic_module import LoadDocumentFile
+from spam_detect import SpamDetector
 
 # POST: to create data. GET: to read data. PUT: to update data. DELETE: to delete data.
 app = FastAPI()
@@ -44,6 +45,7 @@ os.makedirs(UPLOAD_DIR, exist_ok=True)
 
 load_directory = "./nsfw_model"
 image_model, processor, image_classifier = nd.load_model(load_directory)
+spam_detector = SpamDetector(model_name="snunlp/KR-SBERT-V40K-klueNLI-augSTS", threshold=0.8)
 
 #게시글 작성자 정보
 class UserInfo(BaseModel):
@@ -64,20 +66,23 @@ class PostBody(BaseModel):
     content: str
     user: UserInfo
 
+class Category(BaseModel):
+    title: str
+    content: str
+
 #DB로 넘길 report 정보
 class ReportBody(BaseModel):
-    category_title : str
-    category_content : str
+    category : Category
     post_origin_data : str
     report_path : str
-    create_date : object
+    create_date : str
     
 class CombinedModel(BaseModel):
     post_data: PostBody
     report_req: ReportBody
 
 @app.post("/filtered_module")
-async def update_item(data: CombinedModel): 
+async def update_item(data: CombinedModel):
     post_data = data.post_data
     report_req = data.report_req
     
@@ -98,8 +103,7 @@ async def update_item(data: CombinedModel):
         if title_label != '정상':
             title_changed = await changetexter.change_text(title)
             post_data.title =  title_changed
-            report_req.category_title = title_label
-            report_req.category_content = "정상"
+            report_req.category.title = title_label
         
             # 팝업 날릴거
             result["제목"] = {"text": f"{title_changed}","경고문": f"{title_label} 감지"}
@@ -109,8 +113,7 @@ async def update_item(data: CombinedModel):
         if content_label != '정상':
             content_changed = await changetexter.change_text(content)
             post_data.content =  content_changed
-            report_req.category_title = "정상"
-            report_req.category_content = content_label
+            report_req.category.content = content_label
             
             result["내용"] = {"text": f"{content_changed}","경고문": f"{content_label} 감지"}
         else:
@@ -146,6 +149,22 @@ def make_report(data: CombinedModel):
     
     result = send_report_to_spring()
     return report_req , {"status": "ok", "spring_response": result}
+
+@app.post("/post")
+def create_post(post_data: PostBody):
+    """
+    게시글을 받아서 스팸 감지 후 저장 여부를 결정하는 API
+    """
+    post_id = spam_detector.check_spam_and_store(
+        title=post_data.title,
+        content=post_data.content,
+        user_id=post_data.user.user_id
+    )
+
+    if post_id == -1:
+        return {"message": "도배 감지됨: 게시글이 차단되었습니다.", "status": "blocked"}
+    
+    return {"message": "게시글 등록 성공", "post_id": post_id, "status": "success"}
 
 #이미지 탐지
 @app.post("/upload/")

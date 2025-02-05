@@ -133,22 +133,32 @@ class UserInfo(BaseModel):
     gender : str
     role : str
     birth_date : str
-    telephone : str
+    phone : str
     address : str
     email: str
     create_date : str
     count : int
-    
+
+# 게시글 정보
 class PostBody(BaseModel):
     title: str
     content: str
     user: UserInfo
-    
+
+class Category(BaseModel):
+    title: str
+    content: str
+
+#DB로 넘길 report 정보
 class ReportBody(BaseModel):
-    category_title : str
-    category_content : str
+    category : Category
+    post_origin_data : str
     report_path : str
-    create_date : object
+    create_date : str
+    
+class CombinedModel(BaseModel):
+    post_data: PostBody
+    report_req: ReportBody
 
 department = "민원복지과"
 department_supervisior = "홍길동"
@@ -207,8 +217,8 @@ class MakeReport():
         table.cell(5, 4).text = f"{manager_telephone}"
         table.cell(5, 7).text = f"{manager_task}"
         
-        label_title = report_body.category_title
-        label_content = report_body.category_content
+        label_title = report_body.category.title
+        label_content = report_body.category.content
         
         if '성희롱' in label_title or '성희롱' in label_content:
             cell_label = table.cell(2, 4)
