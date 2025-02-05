@@ -69,6 +69,7 @@
             <td th:text="${(currentPage - 1) * 10 + stat.index + 1}"></td>  <!-- 순번 계산 -->
             <td>
                 <!-- 보고서 제목 클릭 시 웹뷰어에서 열기 -->
+
                 <a th:href="@{/manager/report/view/{id}(id=${report.id})}" target="_blank">
                     <span th:text="${report.report}"></span>
                 </a>
@@ -77,7 +78,7 @@
             <td th:text="${report.category}"></td>
             <td th:text="${report.reportStatus}" th:classappend="${report.reportStatus == '미확인' ? 'unchecked' : 'checked'}"></td>
             <td>
-                <a th:href="@{/manager/report/view/{id}(id=${report.id})}" class="download-link">
+                <a th:href="@{/manager/report/view/{id}(id=${report.id})}" class="download-link" data-report-id="${report.id}">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-download" viewBox="0 0 24 24">
                         <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                         <polyline points="7 10 12 15 17 10"></polyline>

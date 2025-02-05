@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -68,6 +69,9 @@ public class ManagerController {
     // ✅ 특정 보고서 열기
     @GetMapping("report/view/{id}")
     public String viewReport(@PathVariable Long id) throws UnsupportedEncodingException {
+        // 보고서 상태를 확인 완료로 변경
+        reportService.updateReportStatus(id, ReportStatus.확인완료);
+
         ReportDTO report = reportService.getReport(id);
 
         if (report == null || report.getReport() == null) {
@@ -114,4 +118,18 @@ public class ManagerController {
     public String statisticsBoard() {
         return "manager/statistics";
     }
+
+    @PostMapping("/report/update-status/{id}")
+    public ResponseEntity<?> updateStatus(@PathVariable Long id) {
+        try {
+            // 상태를 '확인완료'로 변경
+            reportService.updateReportStatus(id, ReportStatus.확인완료);
+            return ResponseEntity.ok().body("{\"success\": true}");
+        } catch (Exception e) {
+            // 에러 발생 시 500 상태 코드와 함께 실패 응답
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("{\"success\": false}");
+        }
+    }
+
+
 }
