@@ -12,9 +12,20 @@ from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
 from docx.enum.table import WD_ALIGN_VERTICAL
 from langchain.schema import HumanMessage
 
-from pydantic import BaseModel
+#Loader 불러오기
+from langchain_community.document_loaders.parsers.pdf import PDFPlumberParser
+from langchain_teddynote.document_loaders import HWPLoader
+from langchain_community.document_loaders import (
+PyPDFLoader, Docx2txtLoader, TextLoader, DirectoryLoader, UnstructuredPDFLoader, 
+UnstructuredPDFLoader, PDFMinerPDFasHTMLLoader, PDFMinerLoader)
+
 from langchain_openai import ChatOpenAI
 from langchain.schema import HumanMessage
+from langchain_chroma import Chroma
+from langchain.prompts import PromptTemplate
+from langchain.chains import LLMChain
+
+from pydantic import BaseModel
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
 
 #1. api 키 불러오기 및 설정정
@@ -221,6 +232,70 @@ class MakeReport():
         self.doc.save(report_file_path + output_file)
         print(f"문서가 {output_file}에 저장되었습니다.")
         return time, output_file
+
+class LoadDocumentFile:
+    def __init__(self):
+        self.llm = None
+
+    async def init(self):
+        file_path = os.path.join(os.getcwd(), "api_key.txt")
+        api_key = await load_api_key(file_path)
+        self.llm = await self.selecting_model(api_key)
+    
+    async def selecting_model(self, api_key):
+        os.environ["OPENAI_API_KEY"] = api_key
+        llm = await asyncio.to_thread(ChatOpenAI, temperature=0, model_name="gpt-4")
+        return llm
+    
+    #loader로 data 저장하기
+    async def select_loader(self, docu_file_path):
+        if os.path.isdir(docu_file_path):
+            filenames = os.listdir(docu_file_path)
+            if not filenames:
+                raise ValueError(f"디렉터리 '{docu_file_path}'에 파일이 없습니다.")
+        # 예시로 첫 번째 파일을 사용
+            docu_path = os.path.join(docu_file_path, filenames[0])
+        else:
+        # 단일 파일 경로인 경우 그대로 사용
+            docu_path = docu_file_path
+        ext = os.path.splitext(docu_path)[1].lower()
+        # 조건문을 사용하여 확장자에 따라 loader 선택
+        if ext == ".pdf":
+            loader = PyPDFLoader(docu_path)
+        elif ext in [".hwp", ".hwpx"]:
+            loader = HWPLoader(docu_path)
+        elif ext in [".doc", ".docx"]:
+            loader = Docx2txtLoader(docu_path)
+        elif ext == ".txt":
+            text_loader_kwargs = {"autodetect_encoding": True}
+            loader = DirectoryLoader(docu_file_path, loader_cls=TextLoader, loader_kwargs=text_loader_kwargs)
+        else: 
+            raise ValueError(f"지원되지 않는 파일 형식: {ext}")
+        data = loader.load()
+        return data
+    
+    async def make_prompt(self):
+        prompt = """
+        주어진 텍스트에서 주요 항목을 추출한 뒤,
+        JSON 형태로 만들어 주세요.
+        
+        텍스트:
+        {text}
+        """
+        return PromptTemplate(input_variables=["text"], template=prompt)
+        
+    async def make_llm_text(self, data):
+        # LLM 초기화 및 체인 생성
+        prompt = await self.make_prompt()
+        llm_chain = LLMChain(llm=self.llm, prompt=prompt)
+        tasks = []
+        for doc in data:
+            task = asyncio.to_thread(llm_chain.run, {"text": doc.page_content})
+            tasks.append(task)
+        results = await asyncio.gather(*tasks)
+        # 결과 후처리: 개행, 공백 정리 등
+        cleaned_results = [re.sub(r"\s+", " ", r.replace("\n", " ")).strip() for r in results]
+        return cleaned_results
 
         
 

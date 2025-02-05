@@ -1,6 +1,8 @@
 from typing import Union, List
 from fastapi import FastAPI, File, UploadFile, HTTPException, Body
 from pydantic import BaseModel
+from langchain_chroma import Chroma
+from langchain_openai import OpenAIEmbeddings
 
 import shutil
 import os
@@ -10,11 +12,13 @@ import pandas as pd
 import datetime
 import basic_module as bm
 import nsfw_detection as nd
+import aiofiles
 import asyncio
 
 from basic_module import TextClassifier
 from basic_module import ChangeText
 from basic_module import MakeReport
+from basic_module import LoadDocumentFile
 
 # POST: to create data. GET: to read data. PUT: to update data. DELETE: to delete data.
 app = FastAPI()
@@ -31,10 +35,15 @@ async def startup_event():
     api_key = await bm.load_api_key(path)
     os.environ["OPENAI_API_KEY"] = api_key
     llm = await bm.selecting_model(api_key)
-
+    
 model_path = "./20250204_roberta 파인튜닝"
-
 file_path = "./특이민원보고서_공직자응대매뉴얼.pdf"
+UPLOAD_DIR = "./uploaded_images"
+FILE_PATH = "./uploaded_documents"
+os.makedirs(UPLOAD_DIR, exist_ok=True)
+
+load_directory = "./nsfw_model"
+image_model, processor, image_classifier = nd.load_model(load_directory)
 
 #게시글 작성자 정보
 class UserInfo(BaseModel):
@@ -116,7 +125,9 @@ async def update_item(data: CombinedModel):
         return post_data, report_req
     
 @app.post("/make_report")
-def make_report(post_data:PostBody ,report_req: ReportBody):
+def make_report(data: CombinedModel):
+    post_data = data.post_data
+    report_req = data.report_req
     
     if report_req.category_title != '정상' or report_req.category_content != '정상':
         report = MakeReport()
@@ -137,51 +148,53 @@ def make_report(post_data:PostBody ,report_req: ReportBody):
     return report_req , {"status": "ok", "spring_response": result}
 
 #이미지 탐지
-UPLOAD_DIR = "./uploaded_images"
-os.makedirs(UPLOAD_DIR, exist_ok=True)
-
-load_directory = "./nsfw_model"
-image_model, processor, image_classifier = nd.load_model(load_directory)
-
 @app.post("/upload/")
 async def upload_image(file: UploadFile = File(...)):
     
-    # 이미지 타입 검사
-    if not file.filename.lower().endswith((".jpg", ".jpeg", ".png", ".gif", ".bmp")):
-        raise HTTPException(status_code=400, detail="이미지 파일만 업로드할 수 있습니다.")
-    
-    # MIME 타입 추가 검사
-    if not file.content_type.startswith("image/"):
-        raise HTTPException(status_code=400, detail="유효한 이미지 파일이 아닙니다.")
-    
-    try:
+    if file.filename.lower().endswith((".jpg", ".jpeg", ".png", ".gif", ".bmp")):
+        if not file.content_type.startswith("image/"):
+            raise HTTPException(status_code=400, detail="유효한 이미지 파일이 아닙니다.")
         file_location = f"{UPLOAD_DIR}/{file.filename}"
-        with open(file_location, "wb") as buffer:
-            shutil.copyfileobj(file.file, buffer)
-        image = nd.load_image(UPLOAD_DIR)
-        
-        # 이미지가 손상되었는지 체크
-        try : 
-            image.verify()
-            
-        except Exception as e:
-            raise HTTPException(status_code=400, detail="이미지 파일이 손상되었거나 유효하지 않습니다.")
-        
-        result = image_classifier(image)
         nsfw_score = None
-        for item in result:
-            if item.get("label") == "nsfw":
-                nsfw_score = item.get("score")
-                break
-        if nsfw_score is not None and nsfw_score > 0.7:
-            os.remove(file_location)
-            raise HTTPException(status_code=400, detail="NSFW 이미지로 판단되어 업로드가 차단되었습니다.")
+        try:
+            async with aiofiles.open(file_location, "wb") as buffer:
+                content = await file.read()
+                await buffer.write(content)
+            image = nd.load_image(UPLOAD_DIR)
+            
+            # 이미지가 손상되었는지 체크
+            try : 
+                image.verify()
+                
+            except Exception as e:
+                raise HTTPException(status_code=400, detail="이미지 파일이 손상되었거나 유효하지 않습니다.")
+            
+            result = image_classifier(image)
+            for item in result:
+                if item.get("label") == "nsfw":
+                    nsfw_score = item.get("score")
+                    break
+            if nsfw_score is not None and nsfw_score > 0.7:
+                os.remove(file_location)
+                raise HTTPException(status_code=400, detail="NSFW 이미지로 판단되어 업로드가 차단되었습니다.")
 
-        return {"message": "Success", "result": result}
+            return {"message": "Success", "result": result}
 
-    except Exception as e: 
-        return {"error": str(e)}
+        except Exception as e: 
+            return {"error": str(e)}
+        
+        finally : 
+            if nsfw_score is not None and nsfw_score < 0.7 :
+                os.remove(file_location)
     
-    finally : 
-        if nsfw_score is not None and nsfw_score < 0.7 :
-            os.remove(file_location)
+    else:
+        file_location = f"{UPLOAD_DIR}/{file.filename}"
+        async with aiofiles.open(file_location, "wb") as buffer:
+            content = await file.read()
+            await buffer.write(content)
+        docu_loader = LoadDocumentFile()
+        chroma = Chroma("fewshot_chat", OpenAIEmbeddings())
+        data = await docu_loader.select_loader(file_location)
+        await docu_loader.init()
+        llm_chain = await docu_loader.make_llm_text(data)
+        return llm_chain
