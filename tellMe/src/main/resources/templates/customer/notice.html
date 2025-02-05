@@ -86,10 +86,10 @@
             <button id="select-button" class="delete-button" th:onclick="toggleDeleteMode()">삭제</button>
 
             <!-- 🔹 선택 삭제 버튼 (삭제 모드에서만 표시) -->
-            <button id="delete-button" class="delete-button" th:onclick="deleteSelectedNotices()" style="display: none;">선택 삭제</button>
+            <button id="delete-button" class="delete-button" th:onclick="deleteSelectedNotices()">선택 삭제</button>
 
             <!-- 🔹 취소 버튼 (삭제 모드에서만 표시) -->
-            <button id="cancel-button" class="delete-button" th:onclick="toggleDeleteMode()" style="display: none;">취소</button>
+            <button id="cancel-button" class="delete-button" th:onclick="toggleDeleteMode()">취소</button>
         </div>
     </div>
 

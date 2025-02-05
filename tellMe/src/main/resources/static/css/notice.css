@@ -381,6 +381,18 @@ body.delete-mode #number-header {
     transition: background-color 0.3s ease, color 0.3s ease;
 }
 
+#select-delete-button, #cancel-button {
+    display:none;
+    padding: 10px 20px;
+    border: 1px solid #ccc; /* 버튼 테두리 색상 */
+    background-color: #f4f4f4; /* 버튼 배경색 통일 */
+    color: #333; /* 버튼 글자 색상 */
+    cursor: pointer;
+    font-size: 14px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
 #delete-button:hover {
     background-color: #ffffff;
     color: #1674C3;
@@ -397,8 +409,6 @@ body.delete-mode #number-header {
 
 /* 페이지네이션 버튼 스타일 */
 .pagination a, .pagination button {
-    border: 1px solid #ddd;
-    background-color: #f9f9f9;
     padding: 5px 10px;
     margin: 0 5px;
     cursor: pointer;
@@ -416,14 +426,12 @@ body.delete-mode #number-header {
 
 /* 현재 페이지 스타일 */
 .pagination .current {
-    border: 1px solid #ddd;
-    background-color: #333;
     padding: 5px 10px;
     margin: 0 5px;
     transition: background-color 0.3s ease;
     text-decoration: none;
     font-size: 14px;
-    color: white;
+    color: blue;
     border-radius: 4px;;
 }
 
@@ -435,4 +443,3 @@ body.delete-mode #number-header {
     cursor: not-allowed;
     border: 1px solid #ddd;
 }
-
