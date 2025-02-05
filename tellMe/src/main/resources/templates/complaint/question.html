@@ -21,10 +21,10 @@
     </div>
 
     <div class="tabs">
-        <button class="tab active" data-category="all" onclick="filterPosts('all')">전체</button>
-        <button class="tab" data-category="접수중" onclick="filterPosts('접수중')">접수중</button>
-        <button class="tab" data-category="처리중" onclick="filterPosts('처리중')">처리중</button>
-        <button class="tab" data-category="답변완료" onclick="filterPosts('답변완료')">답변완료</button>
+        <button class="tab active" data-status="all" onclick="filterPosts('all')">전체</button>
+        <button class="tab" data-status="접수중" onclick="filterPosts('접수중')">접수중</button>
+        <button class="tab" data-status="처리중" onclick="filterPosts('처리중')">처리중</button>
+        <button class="tab" data-status="답변완료" onclick="filterPosts('답변완료')">답변완료</button>
     </div>
     <div class="search-bar">
         <form id="search-form">
@@ -67,6 +67,12 @@
                 <td th:text="${question.views}"></td>
         </tr>
         </tbody>
+        <!-- 모든 데이터를 JSON으로 저장 -->
+        <script th:inline="javascript">
+            /*<![CDATA[*/
+            const allQuestions = /*[[${allQuestions}]]*/ [];
+            /*]]>*/
+        </script>
     </table>
     <p>전체 <strong id="total-posts">0</strong> (1 / <span id="total-pages">1</span> 페이지)</p>
 

@@ -2,6 +2,7 @@ package com.bigProject.tellMe.service;
 
 import com.bigProject.tellMe.dto.NoticeDTO;
 import com.bigProject.tellMe.dto.QuestionDTO;
+import com.bigProject.tellMe.dto.UserDTO;
 import com.bigProject.tellMe.entity.Answer;
 import com.bigProject.tellMe.entity.Notice;
 import com.bigProject.tellMe.entity.Question;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -116,4 +118,23 @@ public class QuestionService {
         }
     }
 
+
+    public List<QuestionDTO> findQuestionsByUser(User user) {
+        List<Question> questions = questionRepository.findByUser(user);
+        return questions.stream()
+                .map(QuestionDTO::toQuestionDTO)
+                .collect(Collectors.toList());
+    }
+
+    public void deleteQuestion(Long id) {
+        questionRepository.deleteById(id);
+    }
+
+    public void updateQuestion(QuestionDTO dto) {
+        Question question = questionRepository.findById(dto.getId())
+                .orElseThrow(() -> new IllegalArgumentException("Invalid question ID"));
+
+        dto.updateEntity(question);
+        questionRepository.save(question);
+    }
 }

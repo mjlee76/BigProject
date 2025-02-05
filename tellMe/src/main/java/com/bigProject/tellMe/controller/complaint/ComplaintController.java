@@ -69,13 +69,19 @@ public class ComplaintController {
                                  Model model) {
 
         String role = "ROLE_USER";
+        // 완벽필터링 추가
+        UserDTO user = null;
 
         if (auth != null && auth.isAuthenticated()) {
-            UserDTO user = userService.findByUserId(auth.getName());
+            user = userService.findByUserId(auth.getName());
             role = String.valueOf(user.getRole());
         }
 
         Page<QuestionDTO> questionList = questionService.paging(pageable, role);
+
+        // 모든 데이터를 모델에 추가
+        List<QuestionDTO> allQuestions = questionService.findAll();
+        model.addAttribute("allQuestions", allQuestions);
 
         int blockLimit = 5; // 화면에 보여지는 페이지 갯수
         int startPage = (((int)(Math.ceil((double)pageable.getPageNumber() / blockLimit))) - 1) * blockLimit + 1;  // 1, 6, 11, ~
@@ -90,8 +96,9 @@ public class ComplaintController {
 
     // 문의 제목을 클릭하여 상세페이지 표출 메서드
     @GetMapping("/question/{id}")
-    public String getQuestion(@PathVariable Long id, Model model,
-                              @RequestParam(required = false, defaultValue = "1")int page) {
+    public String getQuestion(@PathVariable Long id,
+                              @RequestParam(required = false, defaultValue = "1")int page,
+                              Model model) {
         QuestionDTO questionDTO = questionService.getQuestion(id);
         model.addAttribute("question", questionDTO);
         model.addAttribute("page", page);
@@ -111,6 +118,26 @@ public class ComplaintController {
 
         answerService.saveAnswer(answerDTO, auth);
         return "redirect:/complaint/question/" + answerDTO.getQuestionId();
+    }
+
+
+    @GetMapping("/edit/{id}")
+    public String editForm(@PathVariable Long id, Model model) {
+        QuestionDTO dto = questionService.getQuestion(id);
+        model.addAttribute("question", dto);
+        return "question/edit-form";
+    }
+
+    @PostMapping("/update")
+    public String update(@ModelAttribute QuestionDTO dto) {
+        questionService.updateQuestion(dto);
+        return "redirect:/myPage/editInfo";
+    }
+
+    @PostMapping("/delete/{id}")
+    public String delete(@PathVariable Long id) {
+        questionService.deleteQuestion(id);
+        return "redirect:/myPage/editInfo";
     }
 
 }

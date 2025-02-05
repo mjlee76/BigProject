@@ -106,39 +106,6 @@ document.addEventListener("DOMContentLoaded", () => {
         renderPagination(page, totalPages); // 페이지네이션 업데이트
     }
 
-    // ✅ 페이지네이션 렌더링
-    function renderPagination(currentPage, totalPages) {
-        pagination.innerHTML = ""; // 기존 페이지네이션 초기화
-
-        if (totalPages <= 1) return; // 1페이지 이하일 경우 페이지네이션 숨김
-
-        const prevButton = document.createElement("button");
-        prevButton.textContent = "‹";
-        prevButton.disabled = currentPage === 1;
-        prevButton.addEventListener("click", () => renderPosts(currentPage - 1));
-        pagination.appendChild(prevButton);
-
-        for (let i = 1; i <= totalPages; i++) {
-            const pageButton = document.createElement("button");
-            pageButton.textContent = i;
-            if (i === currentPage) {
-                pageButton.classList.add("current");
-            } else {
-                pageButton.addEventListener("click", () => renderPosts(i));
-            }
-            pagination.appendChild(pageButton);
-        }
-
-        const nextButton = document.createElement("button");
-        nextButton.textContent = "›";
-        nextButton.disabled = currentPage === totalPages;
-        nextButton.addEventListener("click", () => renderPosts(currentPage + 1));
-        pagination.appendChild(nextButton);
-    }
-
-    // ✅ 초기 리스트 렌더링
-    renderPosts(1);
-
     // ✅ 이벤트 리스너 추가
     selectButton.addEventListener("click", toggleDeleteMode);
     deleteButton.addEventListener("click", deleteSelectedNotices);
