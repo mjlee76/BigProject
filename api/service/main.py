@@ -60,7 +60,7 @@ class ReportBody(BaseModel):
     report_path : str
     create_date : object
 
-@app.post("/filtered_post")
+@app.post("/filtered_module")
 async def update_item(post_data: PostBody, report_req: ReportBody): 
     title = post_data.title
     content = post_data.content
@@ -79,30 +79,20 @@ async def update_item(post_data: PostBody, report_req: ReportBody):
             title_changed = await changetexter.change_text(title)
             post_data.title =  title_changed
             report_req.category_title = title_label
-            
+        
             # 팝업 날릴거
-            result["제목"] = {
-                "text": f"{title_changed}",
-                "경고문": f"{title_label} 감지"
-            }
+            result["제목"] = {"text": f"{title_changed}","경고문": f"{title_label} 감지"}
         else:
-            result["제목"] = {
-                "text": title
-            }
+            result["제목"] = {"text": title}
         
         if content_label != '정상':
             content_changed = await changetexter.change_text(content)
             post_data.content =  content_changed
             report_req.category_content = content_label
             
-            result["내용"] = {
-                "text": f"{content_changed}",
-                "경고문": f"{content_label} 감지"
-            }
+            result["내용"] = {"text": f"{content_changed}","경고문": f"{content_label} 감지"}
         else:
-            result["내용"] = {
-                "text": content
-            }
+            result["내용"] = {"text": content}
         
         result["원문데이터"] = post_origin_data
         # 보고서 생성
