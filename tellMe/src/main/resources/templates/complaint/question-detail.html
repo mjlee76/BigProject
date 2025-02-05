@@ -13,37 +13,43 @@
 <div th:replace="layouts/navbar::tellMe_header"></div>
 
 <main class="content">
-    <h1>게시글 상세보기</h1>
+    <h1>공지사항</h1>
     <table>
-        <tr>
+        <tr class="border-top">
             <th>번호</th>
             <td th:text="${question.id}"></td>
             <th>제목</th>
-            <td>
-                <h1 class="title" th:text="${question.title}"></h1>
+            <td colspan="3">
+                <span th:text="${question.title}"></span>
             </td>
         </tr>
         <tr>
             <th>공개여부</th>
-            <td th:text="${question.reveal}"></td>
+            <td>
+                <span th:text="${question.reveal}"></span>
+            </td>
             <th>작성자</th>
-            <td th:text="${question.userName}"></td>
+            <td>
+                <span th:text="${question.userName}"></span>
+            </td>
             <th>답변여부</th>
-            <td th:text="${question.status}"></td>
+            <td>
+                <span th:text="${question.status}"></span>
+            </td>
         </tr>
         <tr>
             <th>작성일</th>
-            <td>
+            <td colspan="2">
                 <span th:text="${#temporals.format(question.createDate, 'yyyy-MM-dd')}">2025-01-17 18:00:00</span>
             </td>
             <th>조회수</th>
-            <td>
+            <td colspan="2">
                 <span th:text="${question.views}">0</span>
             </td>
         </tr>
         <tr>
             <th>첨부파일1</th>
-            <td colspan="3">
+            <td>
                 <span th:if="${question.file1 != null}">
                     <a th:href="@{/files/{fileName}(fileName=${question.file})}" title="첨부파일 다운로드">
                         <img th:src = "@{/image/attachment.jpg}" alt="첨부파일 아이콘" style="width: 16px; height: 16px; vertical-align: middle; margin-right: 5px;">
@@ -53,7 +59,7 @@
                 <span th:if="${question.file1 == null}">없음</span>
             </td>
             <th>첨부파일2</th>
-            <td colspan="3">
+            <td>
                 <span th:if="${question.file2 != null}">
                     <a th:href="@{/files/{fileName}(fileName=${question.file})}" title="첨부파일 다운로드">
                         <img th:src = "@{/image/attachment.jpg}" alt="첨부파일 아이콘" style="width: 16px; height: 16px; vertical-align: middle; margin-right: 5px;">
@@ -63,7 +69,7 @@
                 <span th:if="${question.file2 == null}">없음</span>
             </td>
             <th>첨부파일3</th>
-            <td colspan="3">
+            <td>
                 <span th:if="${question.file3 != null}">
                     <a th:href="@{/files/{fileName}(fileName=${question.file})}" title="첨부파일 다운로드">
                         <img th:src = "@{/image/attachment.jpg}" alt="첨부파일 아이콘" style="width: 16px; height: 16px; vertical-align: middle; margin-right: 5px;">
@@ -74,28 +80,44 @@
             </td>
         </tr>
         <tr>
-            <td colspan="4">
-                <pre th:text="${question.content}">게시글 내용을 불러오는 중...</pre>
+            <td colspan="6">
+                <span th:text="${question.content}" class="content-text">게시글 내용을 불러오는 중...</span>
             </td>
         </tr>
     </table>
 
     <!-- 답변 표시 섹션 -->
     <div th:if="${question.answer != null}">
-        <h3>답변</h3>
-        <div class="answer-box">
-            <p th:text="${question.answer.content}"></p>
-            <p>답변자: <span th:text="${question.answer.userName}"></span></p>
-            <p>답변일: <span th:text="${#temporals.format(question.answer.createDate, 'yyyy-MM-dd')}"></span></p>
-        </div>
+        <h1>답변</h1>
+        <table>
+            <tr class="border-top">
+                <th>답변자</th>
+                <td>
+                    <span th:text="${question.answer.userName}">답변자 이름</span>
+                </td>
+                <th>답변일</th>
+                <td>
+                    <span th:text="${#temporals.format(question.answer.createDate, 'yyyy-MM-dd')}">2025-01-17</span>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="6">
+                    <span th:text="${question.answer.content}" class="content-text">답변 내용</span>
+                </td>
+            </tr>
+        </table>
     </div>
 
     <!-- 답변박스 (매니저만 보임) -->
-    <div sec:authorize="hasRole('ROLE_MANAGER')" th:unless="${question.answer}">
-        <form th:action="@{/complaint/answer}" method="post">
-            <input type="hidden" name="questionId" th:value="${question.id}" />
-            <textarea name="content" rows="4" cols="50" placeholder="답변을 입력하세요"></textarea>
-            <button type="submit">답변 등록</button>
+    <div sec:authorize="hasRole('ROLE_MANAGER')" th:unless="${question.answer}" class="answer-box">
+        <form th:action="@{/complaint/answer}" method="post" class="answer-form">
+            <div class="textarea-wrapper">
+                <input type="hidden" name="questionId" th:value="${question.id}" />
+                <textarea name="content" placeholder="답변을 입력하세요"></textarea>
+            </div>
+            <div class="button-wrapper">
+                <button type="submit">답변 등록</button>
+            </div>
         </form>
     </div>
 

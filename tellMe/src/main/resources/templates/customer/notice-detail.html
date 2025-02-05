@@ -1,49 +1,27 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<html lang="ko">
 <head th:replace="layouts/navbar::tellMe_head"/>
 <head th:replace="layouts/footer::tellMe_foot"/>
-<head>
-    <title>공지사항</title> <!-- 제목을 페이지 제목으로 설정 -->
-    <link rel="stylesheet" type="text/css" th:href="@{/css/notice-detail.css}" />
-    <script th:src="@{/js/notice-detail.js}"></script>
-
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            document.querySelectorAll(".download-link").forEach(function (element) {
-                element.addEventListener("click", function (event) {
-                    event.preventDefault(); // 기본 동작 막기
-                    let filePath = this.getAttribute("data-filepath");
-                    downloadFile(filePath);
-                });
-            });
-        });
-
-        function downloadFile(filePath) {
-            if (!filePath) {
-                alert("파일 경로가 존재하지 않습니다.");
-                return;
-            }
-
-            const link = document.createElement("a");
-            link.href = filePath;
-            link.download = filePath.split("/").pop(); // 파일명 추출
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        }
-    </script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title th:text="${notice.title}"></title>
+<link rel="stylesheet" type="text/css" th:href="@{/css/notice-detail.css}" />
+<script th:src="@{/js/notice-detail.js}" defer></script>
 </head>
 <body>
 <div th:replace="layouts/navbar::tellMe_header"></div>
 
 <main class="content">
-    <h1>게시글 상세보기</h1>
+    <h1>민원 게시판</h1>
     <table>
-        <tr>
+        <tr class="border-top">
             <th>번호</th>
-            <td th:text="${notice.id}"></td>
-            <th>제목</th>
             <td>
+                <span th:text="${notice.id}"></span>
+            </td>
+            <th>제목</th>
+            <td colspan="3">
                 <span th:text="${notice.title}"></span>
             </td>
         </tr>
@@ -53,13 +31,13 @@
                 <span th:text="${#temporals.format(notice.createDate, 'yyyy-MM-dd')}">2025-01-17 18:00:00</span>
             </td>
             <th>조회수</th>
-            <td>
+            <td colspan="3">
                 <span th:text="${notice.views}">0</span>
             </td>
         </tr>
         <tr>
             <th>첨부파일</th>
-            <td colspan="3">
+            <td colspan="5">
                 <span th:if="${notice.file != null}">
                     <a href="" class="download-link" th:data-filepath="@{'/tellMe/tellMe-image/notice/' + ${notice.id} + '/' + ${notice.file}}" title="첨부파일 다운로드">
                         <img th:src = "@{/image/attachment.jpg}" alt="첨부파일 아이콘" style="width: 16px; height: 16px; vertical-align: middle; margin-right: 5px;">
@@ -70,8 +48,8 @@
             </td>
         </tr>
         <tr>
-            <td colspan="4">
-                <pre th:text="${notice.content}">게시글 내용을 불러오는 중...</pre>
+            <td colspan="6">
+                <span th:text="${notice.content}" class="content-text">게시글 내용을 불러오는 중...</span>
             </td>
         </tr>
     </table>
