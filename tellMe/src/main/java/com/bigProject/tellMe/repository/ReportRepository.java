@@ -8,7 +8,7 @@ import org.springframework.data.domain.Pageable;
 
 public interface ReportRepository extends JpaRepository<Report, Long> {
     Page<Report> findByReportContaining(String query, Pageable pageable);
-    Page<Report> findByReportStatus(String status, Pageable pageable);
-    Page<Report> findByReportContainingAndReportStatus(String query, String status, Pageable pageable);
-//    Page<Report> findByReportStatus(ReportStatus status, Pageable pageable);
+    Page<Report> findByReportStatus(ReportStatus  status, Pageable pageable);
+    Page<Report> findByReportContainingAndReportStatus(String query, ReportStatus status, Pageable pageable); // ENUM 타입으로 변경
+
 }

@@ -12,9 +12,10 @@ document.addEventListener("DOMContentLoaded", function () {
     // ✅ 필터 변경 시 기존 검색어 유지하고 URL 변경
     function filterReports(filter) {
         const query = getQueryParam("query");  // 기존 검색어 유지
-        window.location.href = `/manager/report?query=${encodeURIComponent(query)}&status=${encodeURIComponent(filter)}&page=1`;
+        const baseUrl = window.location.origin + "/tellMe/manager/report";  // 절대 경로로 변경
+        const url = `${baseUrl}?query=${encodeURIComponent(query)}&status=${encodeURIComponent(filter)}&page=1`;
+        window.location.href = url;  // URL 변경
     }
-
 
     // ✅ 검색 실행 (기본 HTML form action 사용)
     function searchReports(event) {
@@ -29,6 +30,7 @@ document.addEventListener("DOMContentLoaded", function () {
             filterReports(this.dataset.filter);
         });
     });
+
 
     // ✅ 검색 이벤트 (form submit)
     if (searchForm) {

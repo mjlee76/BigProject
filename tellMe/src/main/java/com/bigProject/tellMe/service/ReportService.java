@@ -43,17 +43,17 @@ public class ReportService {
 
     // ✅ 검색 + 상태 필터 적용된 보고서 조회 (페이지네이션 포함)
     public Page<ReportDTO> searchReportsPaged(String query, String status, Pageable pageable) {
-//        // status 값이 "all"이면 null로 설정, 아니면 ReportStatus 열거형으로 변환
-//        ReportStatus reportStatus = (status != null && !status.equals("all")) ? ReportStatus.valueOf(status) : null;
-
         Page<Report> reports;
 
+
         if (query != null && !query.isEmpty() && status != null && !status.equals("all")) {
-            reports = reportRepository.findByReportContainingAndReportStatus(query, status, pageable);
+            ReportStatus reportStatus = ReportStatus.valueOf(status); // String → ENUM 변환
+            reports = reportRepository.findByReportContainingAndReportStatus(query, reportStatus, pageable);
         } else if (query != null && !query.isEmpty()) {
             reports = reportRepository.findByReportContaining(query, pageable);
         } else if (status != null && !status.equals("all")) {
-            reports = reportRepository.findByReportStatus(status, pageable);
+            ReportStatus reportStatus = ReportStatus.valueOf(status); // String → ENUM 변환
+            reports = reportRepository.findByReportStatus(reportStatus, pageable);
         } else {
             reports = reportRepository.findAll(pageable);
         }

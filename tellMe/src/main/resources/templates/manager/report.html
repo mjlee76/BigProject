@@ -16,16 +16,17 @@
     <div class="report-header">
         <h1>보고서 관리</h1>
     </div>
-<!--    &lt;!&ndash; 탭 &ndash;&gt;-->
-<!--    <div class="tabs">-->
-<!--        &lt;!&ndash; 기존 탭 클릭 시 status 값 전달 &ndash;&gt;-->
-<!--        <a class="tab" th:href="@{/manager/report(query=${query}, status='all', page=1)}"-->
-<!--           th:classappend="${status == 'all'} ? 'active' : ''" data-filter="all">전체</a>-->
-<!--        <a class="tab" th:href="@{/manager/report(query=${query}, status='확인완료', page=1)}"-->
-<!--           th:classappend="${status == '확인완료'} ? 'active' : ''" data-filter="확인완료">확인 완료</a>-->
-<!--        <a class="tab" th:href="@{/manager/report(query=${query}, status='미확인', page=1)}"-->
-<!--           th:classappend="${status == '미확인'} ? 'active' : ''" data-filter="미확인">미확인</a>-->
-<!--    </div>-->
+    <!-- 탭 -->
+    <div class="tabs">
+        <!-- 기존 탭 클릭 시 status 값 전달 -->
+
+        <a class="tab" th:href="@{/manager/report(query=${query}, status='all', page=1)}"
+           th:classappend="${status == 'all'} ? 'active' : ''" data-filter="all">전체</a>
+        <a class="tab" th:href="@{/manager/report(query=${query}, status='확인완료', page=1)}"
+           th:classappend="${status == '확인완료'} ? 'active' : ''" data-filter="확인완료">확인 완료</a>
+        <a class="tab" th:href="@{/manager/report(query=${query}, status='미확인', page=1)}"
+           th:classappend="${status == '미확인'} ? 'active' : ''" data-filter="미확인">미확인</a>
+    </div>
 
 
 
