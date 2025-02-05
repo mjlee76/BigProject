@@ -17,6 +17,10 @@ body {
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
 } */
 
+a:-webkit-any-link {
+    text-decoration: none;  /* 기본 밑줄 제거 */
+}
+
 .inquiry-header {
     text-align: left; /* 중앙 정렬 */
     margin-bottom: 30px; /* 아래 간격 */
@@ -200,21 +204,10 @@ body {
 
 /* 활성화된 탭 스타일 */
 .tab.active {
-    background-color: #ffffff;
-    color: #3b82f6;
-    bottom: -1px; /* tabs의 border-bottom과 겹치는 위치 */
+    color: #22A9FD;
     font-weight: bold;
-    border-bottom: 1.7px solid #22A9FD;
-}
-
-.tab.active::after {
-    content: ''; /* 비어 있는 가상 요소 생성 */
-    position: absolute;
-    bottom: -1px; /* tabs의 border-bottom과 겹치는 위치 */
-    left: 0;
-    width: 100%;
-    height: 1.7px; /* 활성화된 탭의 밑줄 두께 */
-    background-color: #22A9FD; /* 밑줄 색상 */
+    bottom: -1px; /* 같은 위치에서 밑줄 생성 */
+    border-bottom: 1px solid #22A9FD;
 }
 
 /* 탭 호버 효과 */
@@ -222,7 +215,8 @@ body {
     color: #22A9FD;
 }
 
-/* 탭 호버 가상환경경 */
+/* 탭 호버 가상환경 */
+.tab.active::after,
 .tab:hover::after {
     content: ''; /* 비어 있는 가상 요소 생성 */
     position: absolute;

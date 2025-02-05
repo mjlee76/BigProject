@@ -202,8 +202,6 @@ a:-webkit-any-link {
     color: inherit;  /* 기본 글자 색상 상속 */
 }
 
-
-
 /* 테이블 기본 스타일 */
 .post-table {
     width: 80%;

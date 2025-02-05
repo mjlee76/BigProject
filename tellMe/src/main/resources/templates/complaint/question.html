@@ -19,21 +19,27 @@
     </div>
 
     <div class="tabs">
-        <button class="tab active" data-category="all" onclick="filterPosts('all')">전체</button>
-        <button class="tab" data-category="접수중" onclick="filterPosts('접수중')">접수중</button>
-        <button class="tab" data-category="처리중" onclick="filterPosts('처리중')">처리중</button>
-        <button class="tab" data-category="답변완료" onclick="filterPosts('답변완료')">답변완료</button>
+<!--        <button class="tab active" data-status="all" onclick="filterPosts('all')">전체</button>-->
+<!--        <button class="tab" data-status="접수중" onclick="filterPosts('접수중')">접수중</button>-->
+<!--        <button class="tab" data-status="처리중" onclick="filterPosts('처리중')">처리중</button>-->
+<!--        <button class="tab" data-status="답변완료" onclick="filterPosts('답변완료')">답변완료</button>-->
+        <a class="tab" data-status="all" th:href="@{/complaint/question(query=${query}, category=${category}, status=null, page=1, size=10)}" th:classappend="${status == 'all'} ? 'active' : ''">전체</a>
+        <a class="tab" data-status="접수중" th:href="@{/complaint/question(query=${query}, category=${category}, status='접수중', page=1, size=${questionList.size})}" th:classappend="${status == '접수중'} ? 'active' : ''">접수중</a>
+        <a class="tab" data-status="처리중" th:href="@{/complaint/question(query=${query}, category=${category}, status='처리중', page=1, size=${questionList.size})}" th:classappend="${status == '처리중'} ? 'active' : ''">처리중</a>
+        <a class="tab" data-status="답변완료" th:href="@{/complaint/question(query=${query}, category=${category}, status='답변완료', page=1, size=${questionList.size})}" th:classappend="${status == '답변완료'} ? 'active' : ''">답변완료</a>
     </div>
     <div class="search-bar">
-        <form id="search-form">
+        <form id="search-form" th:action="@{/complaint/question}" method="get">
             <select id="search-category" name="category">
                 <option value="all">전체</option>
                 <option value="title">제목</option>
                 <option value="author">작성자</option>
                 <option value="content">내용</option>
             </select>
-            <input type="text" placeholder="검색어를 입력하세요." id="search-input" name="query">
-
+            <input type="text" name="query" th:value="${query}" placeholder="검색어를 입력하세요." id="search-input">
+            <input type="hidden" name="page" th:value="${currentPage}">
+<!--            <input type="hidden" name="size" th:value="${questionList.size}">-->
+            <input type="hidden" name="size" value="10">
             <button type="submit" id="search-button">
                 <!-- 새로운 SVG 아이콘 -->
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search" viewBox="0 0 24 24">
@@ -65,31 +71,55 @@
                 <td th:text="${question.views}"></td>
         </tr>
         </tbody>
+        <!-- 모든 데이터를 JSON으로 저장 -->
+        <script th:inline="javascript">
+            /*<![CDATA[*/
+            const allQuestions = /*[[${allQuestions}]]*/ [];
+            /*]]>*/
+        </script>
     </table>
     <p>전체 <strong id="total-posts">0</strong> (1 / <span id="total-pages">1</span> 페이지)</p>
 
     <div class="content-area"></div>
     <div class="pagination">
-        <!-- 첫번째 페이지로 이동 -->
-        <!-- /notice/paging?page=1 -->
         <div class="pagination">
-            <!-- 첫번째 페이지로 이동 -->
-            <a th:href="@{/complaint/question(page=1)}">«</a>
+            <!-- 첫 번째 페이지로 이동 버튼 (<<) -->
+            <a th:href="@{/complaint/question(query=${query}, category=${category}, status=${status}, page=1, size=10)}"
+               th:classappend="${currentPage == 1} ? 'disabled' : ''">«</a>
 
-            <!-- 이전 링크 -->
-            <a th:href="${questionList.first} ? '#' : @{/complaint/question(page=${questionList.number})}">‹</a>
+            <!-- 이전 페이지 이동 버튼 (<) -->
+            <a th:href="@{/complaint/question(
+                query=${query},
+                category=${category},
+                status=${status},
+                page=${T(java.lang.Math).max(1, currentPage - 1)},
+                size=10)}"
+               th:classappend="${currentPage == 1} ? 'disabled' : ''">‹</a>
 
             <!-- 페이지 번호 -->
-            <span th:each="page: ${#numbers.sequence(startPage, endPage)}">
-                <span th:if="${page == questionList.number + 1}" class="current" th:text="${page}"></span>
-                <a th:unless="${page == questionList.number + 1}" th:href="@{/complaint/question(page=${page})}" th:text="${page}"></a>
+<!--            <span th:each="page: ${#numbers.sequence(startPage, endPage)}">-->
+<!--                <span th:if="${page == questionList.number + 1}" class="current" th:text="${page}"></span>-->
+<!--                <a th:unless="${page == questionList.number + 1}" th:href="@{/complaint/question(page=${page})}" th:text="${page}"></a>-->
+<!--            </span>-->
+            <span th:each="pageNum : ${#numbers.sequence(startPage, endPage)}">
+            <a th:if="${pageNum != currentPage}"
+               th:href="@{/complaint/question(query=${query}, category=${category}, status=${status}, page=${pageNum}, size=10)}"
+               th:text="${pageNum}"></a>
+            <span th:unless="${pageNum != currentPage}" th:text="${pageNum}" class="current"></span>
             </span>
 
-            <!-- 다음 링크 -->
-            <a th:href="${questionList.last} ? '#' : @{/complaint/question(page=${questionList.number + 2})}">›</a>
+            <!-- 다음 페이지 이동 버튼 (>) -->
+            <a th:href="@{/complaint/question(
+                query=${query},
+                category=${category},
+                status=${status},
+                page=${T(java.lang.Math).min(totalPages, currentPage + 1)},
+                size=10)}"
+               th:classappend="${currentPage == totalPages} ? 'disabled' : ''">›</a>
 
-            <!-- 마지막 페이지로 이동 -->
-            <a th:href="@{/complaint/question(page=${questionList.totalPages})}">»</a>
+            <!-- 마지막 페이지로 이동 버튼 (>>) -->
+            <a th:href="@{/complaint/question(query=${query}, category=${category}, status=${status}, page=${totalPages}, size=10)}"
+               th:classappend="${currentPage == totalPages} ? 'disabled' : ''">»</a>
         </div>
     </div>
 </main>

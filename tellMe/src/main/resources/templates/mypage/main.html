@@ -90,11 +90,11 @@
       </div>
       <div class="search-bar">
         <form id="search-form">
-          <select id="search-category" name="category">
-            <option value="all">전체</option>
-            <option value="title">제목</option>
-            <option value="content">내용</option>
-          </select>
+<!--          <select id="search-category" name="category">-->
+<!--            <option value="all">전체</option>-->
+<!--            <option value="title">제목</option>-->
+<!--            <option value="content">내용</option>-->
+<!--          </select>-->
           <input type="text" placeholder="검색어를 입력하세요." id="search-input" name="query">
           <button type="submit" id="search-button">
             <!-- 새로운 SVG 아이콘 -->
@@ -129,19 +129,19 @@
             <span th:text="${question.status}"></span>
             <div th:if="${question.answer != null}">
               <p th:text="${question.answer.content}"></p>
-                <a th:if="${question.answer.file1 != null}"
-                   th:href="@{/download/{filename}(filename=${question.answer.file})}">
-                  첨부파일 다운로드
-                </a>
+              <a th:if="${question.answer.file1 != null}"
+                 th:href="@{/download/{filename}(filename=${question.answer.file})}">
+                첨부파일 다운로드
+              </a>
             </div>
           </td>
           <td th:text="${question.views}"></td>
-          <td>
-            <button th:if="${question.status == '처리중'}"
-                    th:onclick="editQuestion(${question.id})">수정</button>
-            <button th:if="${question.status == '처리중'}"
-                    th:onclick="deleteQuestion(${question.id})">삭제</button>
-          </td>
+<!--          <td>-->
+<!--            <button th:if="${question.status == '처리중'}"-->
+<!--                    th:onclick="editQuestion(${question.id})">수정</button>-->
+<!--            <button th:if="${question.status == '처리중'}"-->
+<!--                    th:onclick="deleteQuestion(${question.id})">삭제</button>-->
+<!--          </td>-->
         </tr>
         <tr th:if="${questions.size() == 0}">
           <td colspan="6">등록된 문의가 없습니다</td>
@@ -256,5 +256,3 @@
 <div th:replace="layouts/footer::tellMe_footer"></div>
 </body>
 </html>
-message.txt
-12KB
