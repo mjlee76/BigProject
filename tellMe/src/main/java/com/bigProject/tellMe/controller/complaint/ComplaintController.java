@@ -14,7 +14,9 @@ import com.bigProject.tellMe.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -64,32 +66,41 @@ public class ComplaintController {
 
     // 모든 문의 데이터를 조회하여 뷰에 전달하는 메서드.
     @GetMapping("/question")
-    public String complaintBoard(@PageableDefault(page = 1) Pageable pageable,
+    public String complaintBoard(@RequestParam(required = false) String query,       // 검색어
+                                 @RequestParam(required = false) Status status,      // 상태 필터 (접수중, 처리중, 답변완료)
+                                 @RequestParam(defaultValue = "1") int page,         // 페이지 번호 (기본값: 1)
+                                 @RequestParam(defaultValue = "10") int size,        // 페이지 크기 (기본값: 10)
+                                 @RequestParam(required = false) String category,    // 검색 카테고리 (제목, 작성자, 내용 등)
                                  Authentication auth,
                                  Model model) {
 
+        // 현재 사용자의 역할 확인
         String role = "ROLE_USER";
-        // 완벽필터링 추가
-        UserDTO user = null;
-
         if (auth != null && auth.isAuthenticated()) {
-            user = userService.findByUserId(auth.getName());
+            UserDTO user = userService.findByUserId(auth.getName());
             role = String.valueOf(user.getRole());
         }
 
-        Page<QuestionDTO> questionList = questionService.paging(pageable, role);
+        // Pageable 객체 생성
+        Pageable pageable = PageRequest.of(page - 1, size, Sort.by(Sort.Direction.DESC, "id"));
 
-        // 모든 데이터를 모델에 추가
-        List<QuestionDTO> allQuestions = questionService.findAll();
-        model.addAttribute("allQuestions", allQuestions);
+        // 검색 및 필터링 결과 조회
+        Page<QuestionDTO> questionList = questionService.searchAndFilter(query, status, category, role, pageable);
 
-        int blockLimit = 5; // 화면에 보여지는 페이지 갯수
-        int startPage = (((int)(Math.ceil((double)pageable.getPageNumber() / blockLimit))) - 1) * blockLimit + 1;  // 1, 6, 11, ~
-        int endPage = ((startPage + blockLimit - 1) < questionList.getTotalPages()) ? startPage + blockLimit - 1 : questionList.getTotalPages();
+        // 페이징 정보 계산
+        int blockLimit = 10; // 화면에 보여질 페이지 번호 개수
+        int startPage = (((int)(Math.ceil((double)page / blockLimit))) - 1) * blockLimit + 1;
+        int endPage = Math.min(startPage + blockLimit - 1, questionList.getTotalPages());
 
+        // 모델에 데이터 추가
         model.addAttribute("questionList", questionList);
         model.addAttribute("startPage", startPage);
         model.addAttribute("endPage", endPage);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", questionList.getTotalPages());
+        model.addAttribute("query", query);
+        model.addAttribute("status", status);
+        model.addAttribute("category", category);
 
         return "complaint/question";
     }
