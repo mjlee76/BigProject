@@ -42,11 +42,9 @@ table tr th:nth-child(4), table tr td:nth-child(4) { width: 10%; }
 table tr th:nth-child(5), table tr td:nth-child(5) { width: 10%; }
 table tr th:nth-child(6), table tr td:nth-child(6) { width: 10%; }
 
-/* .pre-wrap-cell에 대한 white-space 설정 */
-.pre-wrap-cell {
-    white-space: pre-wrap; /* 공백 보존 및 줄 바꿈 처리 */
-    word-wrap: break-word; /* 긴 단어가 넘어가지 않도록 처리 */
-    padding-left: 20px;
+.content-text {
+    white-space: pre-wrap; /* 줄바꿈 유지 */
+    word-wrap: break-word;
 }
 
 h1 {

@@ -13,7 +13,7 @@
 <div th:replace="layouts/navbar::tellMe_header"></div>
 
 <main class="content">
-    <h1>게시글 상세보기</h1>
+    <h1>민원 게시판</h1>
     <table>
         <tr class="border-top">
             <th>번호</th>
@@ -81,7 +81,7 @@
         </tr>
         <tr>
             <td colspan="6">
-                <span th:text="${question.content}">게시글 내용을 불러오는 중...</span>
+                <span th:text="${question.content}" class="content-text">게시글 내용을 불러오는 중...</span>
             </td>
         </tr>
     </table>
@@ -102,7 +102,7 @@
             </tr>
             <tr>
                 <td colspan="6">
-                    <span th:text="${question.answer.content}">답변 내용</span>
+                    <span th:text="${question.answer.content}" class="content-text">답변 내용</span>
                 </td>
             </tr>
         </table>

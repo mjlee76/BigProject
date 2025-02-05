@@ -51,7 +51,8 @@
 <!--            <th class="checkbox-header" style="display: none;">-->
 <!--                <input type="checkbox" id="select-all-checkbox">-->
 <!--            </th>-->
-            <th id="number-header" class="number-header" style="width: 5%;">번호</th>
+<!--            <th id="number-header" class="number-header" style="width: 5%;">번호</th>-->
+            <th>번호</th>
             <th>제목</th>
             <th>작성일</th>
             <th>조회수</th>
@@ -104,7 +105,7 @@
 
             <!-- 페이지 번호 -->
             <span th:each="page: ${#numbers.sequence(startPage, endPage)}">
-                <span th:if="${page == noticeList.number + 1}" th:text="${page}"></span>
+                <span th:if="${page == noticeList.number + 1}" class="current" th:text="${page}"></span>
                 <a th:unless="${page == noticeList.number + 1}" th:href="@{/customer/notice(page=${page})}" th:text="${page}"></a>
             </span>
 
