@@ -1,13 +1,15 @@
 from typing import Union, List
-from fastapi import FastAPI, Path, Query
+from fastapi import FastAPI, File, UploadFile, HTTPException, Body
 from pydantic import BaseModel
 
+import shutil
 import os
 import requests
 import xml.etree.ElementTree as ET
 import pandas as pd
 import datetime
 import basic_module as bm
+import nsfw_detection as nd
 import asyncio
 
 from basic_module import TextClassifier
@@ -41,7 +43,7 @@ class UserInfo(BaseModel):
     gender : str
     role : str
     birth_date : str
-    telephone : str
+    phone : str
     address : str
     email: str
     create_date : str
@@ -57,14 +59,23 @@ class PostBody(BaseModel):
 class ReportBody(BaseModel):
     category_title : str
     category_content : str
+    post_origin_data : str
     report_path : str
     create_date : object
+    
+class CombinedModel(BaseModel):
+    post_data: PostBody
+    report_req: ReportBody
 
 @app.post("/filtered_module")
-async def update_item(post_data: PostBody, report_req: ReportBody): 
+async def update_item(data: CombinedModel): 
+    post_data = data.post_data
+    report_req = data.report_req
+    
     title = post_data.title
     content = post_data.content
     post_origin_data = {"제목": title, "내용": content} # 원문데이터 저장용
+    report_req.post_origin_data = post_origin_data
     
     classifier = TextClassifier()
     # 분류
@@ -79,6 +90,7 @@ async def update_item(post_data: PostBody, report_req: ReportBody):
             title_changed = await changetexter.change_text(title)
             post_data.title =  title_changed
             report_req.category_title = title_label
+            report_req.category_content = "정상"
         
             # 팝업 날릴거
             result["제목"] = {"text": f"{title_changed}","경고문": f"{title_label} 감지"}
@@ -88,15 +100,15 @@ async def update_item(post_data: PostBody, report_req: ReportBody):
         if content_label != '정상':
             content_changed = await changetexter.change_text(content)
             post_data.content =  content_changed
+            report_req.category_title = "정상"
             report_req.category_content = content_label
             
             result["내용"] = {"text": f"{content_changed}","경고문": f"{content_label} 감지"}
         else:
             result["내용"] = {"text": content}
         
-        result["원문데이터"] = post_origin_data
         # 보고서 생성
-        return post_data, report_req, result
+        return post_data, report_req
         
     else: 
         post_data.title = title
@@ -123,3 +135,53 @@ def make_report(post_data:PostBody ,report_req: ReportBody):
     
     result = send_report_to_spring()
     return report_req , {"status": "ok", "spring_response": result}
+
+#이미지 탐지
+UPLOAD_DIR = "./uploaded_images"
+os.makedirs(UPLOAD_DIR, exist_ok=True)
+
+load_directory = "./nsfw_model"
+image_model, processor, image_classifier = nd.load_model(load_directory)
+
+@app.post("/upload/")
+async def upload_image(file: UploadFile = File(...)):
+    
+    # 이미지 타입 검사
+    if not file.filename.lower().endswith((".jpg", ".jpeg", ".png", ".gif", ".bmp")):
+        raise HTTPException(status_code=400, detail="이미지 파일만 업로드할 수 있습니다.")
+    
+    # MIME 타입 추가 검사
+    if not file.content_type.startswith("image/"):
+        raise HTTPException(status_code=400, detail="유효한 이미지 파일이 아닙니다.")
+    
+    try:
+        file_location = f"{UPLOAD_DIR}/{file.filename}"
+        with open(file_location, "wb") as buffer:
+            shutil.copyfileobj(file.file, buffer)
+        image = nd.load_image(UPLOAD_DIR)
+        
+        # 이미지가 손상되었는지 체크
+        try : 
+            image.verify()
+            
+        except Exception as e:
+            raise HTTPException(status_code=400, detail="이미지 파일이 손상되었거나 유효하지 않습니다.")
+        
+        result = image_classifier(image)
+        nsfw_score = None
+        for item in result:
+            if item.get("label") == "nsfw":
+                nsfw_score = item.get("score")
+                break
+        if nsfw_score is not None and nsfw_score > 0.7:
+            os.remove(file_location)
+            raise HTTPException(status_code=400, detail="NSFW 이미지로 판단되어 업로드가 차단되었습니다.")
+
+        return {"message": "Success", "result": result}
+
+    except Exception as e: 
+        return {"error": str(e)}
+    
+    finally : 
+        if nsfw_score is not None and nsfw_score < 0.7 :
+            os.remove(file_location)

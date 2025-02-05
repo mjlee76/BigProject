@@ -2,9 +2,12 @@
 import pandas as pd
 import openai
 import os
-# import pillow_heif
+import asyncio
+import aiofiles
 import re
 import json
+import glob
+
 from datetime import datetime
 from langchain_openai import ChatOpenAI
 from langchain_openai import OpenAIEmbeddings
@@ -27,70 +30,59 @@ from langchain.prompts import PromptTemplate
 from langchain.chains import LLMChain
 
 FILE_PATH = "./api/service/uploaded_documents"
-file_path = os.path.join(os.getcwd(), "api_key.txt")
+file_path = os.path.join(os.getcwd(), "service/api_key.txt")
 
 # 1. API 키 읽기 및 설정
-def load_api_key(file_path):
-    with open(file_path, 'r') as file:
-        return file.read().strip()
-    
-def selecting_model(api_key):
-    os.environ["OPENAI_API_KEY"] = api_key
-    llm = ChatOpenAI(temperature=0, model_name="gpt-4o")
-    return llm
+async def load_api_key(file_path):
+    async with aiofiles.open(file_path, 'r') as file:
+        return (await file.read()).strip()
 
-api_key = load_api_key("api_key.txt")
-llm = selecting_model(api_key)
-chroma = Chroma("fewshot_chat", OpenAIEmbeddings())
+#2. 모델 설정
+async def selecting_model(api_key):
+    os.environ["OPENAI_API_KEY"] = api_key
+    llm = await asyncio.to_thread(ChatOpenAI, temperature=0, model_name="gpt-4")
+    return llm
 
 # Load the PDF file
 class LoadDocumentFile:
-    def __init__(self, file_path):
+    def __init__(self):
         self.file_path = file_path
-        self.data = self.load_pdf_file()
-        self.llm = selecting_model(api_key)
+        self.llm = None
+
+    async def init(self):
+        api_key = await load_api_key(file_path)
+        self.llm = await selecting_model(api_key)
     
     #loader로 data 저장하기
-    def load_pdf_file(self):
-        loader = PDFMinerLoader(self.file_path)
+    def select_loader(self, docu_file_path):
+        for filename in os.listdir(docu_file_path):
+            docu_path = os.path.join(docu_file_path, filename)
+        ext = os.path.splitext(docu_path)[1].lower()
+        print(ext)
+        # 조건문을 사용하여 확장자에 따라 loader 선택
+        if ext == ".pdf":
+            loader = PDFMinerLoader(docu_path)
+        elif ext in [".hwp", ".hwpx"]:
+            loader = HWPLoader(docu_path)
+        elif ext in [".doc", ".docx"]:
+            loader = Docx2txtLoader(docu_path)
+        elif ext == ".txt":
+            loader = TextLoader(docu_path)
+        else: 
+            raise ValueError(f"지원되지 않는 파일 형식: {ext}")
         data = loader.load()
         return data
-    
-    def load_hwp_file(self):
-        loader = HWPLoader(self.file_path)
-        data = loader.load()
-        return data
-    
-    def load_word_file(self):
-        loader = Docx2txtLoader(self.file_path)
-        data = loader.load()
-        return data
-    
-    def load_word_file(self):
-        loader = TextLoader(self.file_path)
-        data = loader.load()
-        return data
-
-
-    def extract_tables_data(self):
-        all_tables = []
-        for doc in self.data:
-            text_content = doc.page_content  # 페이지 내용
-            tables = self.extract_tables_from_text(text_content)
-            all_tables.extend(tables)
-        return all_tables
     
     def make_prompt(self):
-        table_extraction_prompt = """
-        Extract all tables from the following text and format them as JSON:
-        {text}
+        prompt = """
+        Extract  the following text and format them as JSON:
         """
-        return PromptTemplate(input_variables=["text"], template=table_extraction_prompt)
+        return PromptTemplate(input_variables=["text"], template=prompt)
         
-    def make_llm_json(self):
+    def make_llm_json(self, data):
         # LLM 초기화 및 체인 생성
         llm_chain = LLMChain(llm=self.llm, prompt=self.make_prompt())
-        for doc in self.data:
+        for doc in data:
             result_text = llm_chain.run({"text": doc.page_content})
             
             try:
@@ -98,9 +90,8 @@ class LoadDocumentFile:
                 if json_match:
                     json_text = json_match.group(1).strip()
                     result = json.loads(json_text)  # JSON 변환
-                    report = result.get("특이민원 발생보고서", {})
                     # JSON 데이터에서 "특이민원 발생보고서" 추출
-                    return report
+                    return result
                 else: print("JSON 형식을 감지하지 못했습니다. LLM 출력:", result_text)
             except json.JSONDecodeError as e:
                 print("JSON 변환 중 오류 발생:", e)
