@@ -13,6 +13,7 @@
 </head>
 <body>
 <div th:replace="layouts/navbar::tellMe_header"></div>
+<<<<<<< HEAD
 
 <div id="home" class="section">
     <div class="slider">
@@ -86,6 +87,37 @@
                         <a th:href="@{/complaint/new}" class="btn">
                             <span>시작하기</span>
                         </a>
+=======
+<div class="wrapper">
+    <div class="background-container">
+        <img th:src="@{/image/background.png}" class="background-image">
+    </div>
+    <div class="grid-style">
+        <div class="box left">
+            <div class="image fit">
+                <img src="image/home_inquiry.png" alt="상담 이미지" width="600" height="300">
+            </div>
+            <div class="content">
+                <div class="inner">
+                    <header class="align-center">
+                        <p>민원 처리 및 고충이 있다면 언제든지 연락주세요.</p>
+                        <h1>원하는 상담 및 기능이
+                            있으신가요?</h1>
+                    </header>
+                    <div class="menu-bar">
+                        <button class="menu-button" onclick="updateContent('유선 상담을 원하시나요?')">유선상담</button>
+                        <button class="menu-button" onclick="updateContent('채팅 상담을 원하시나요?')">채팅상담</button>
+                        <button class="menu-button" onclick="updateContent('기술 지원이 필요하신가요?')">기술지원</button>
+                    </div>
+                    <div id="dynamic-area" class="dynamic-content">
+                        <h2 id="main-text"></h2> <!-- 초기 상태 비워둠 -->
+                        <p id="sub-text"></p> <!-- 초기 상태 비워둠 -->
+                        <p>
+                            <strong id="contact-strong"></strong>
+                            <span id="contact-icon"></span>
+                            <span id="contact-info"></span>
+                        </p>
+>>>>>>> a18053f (내 페이지 수정.)
                     </div>
                 </div>
                 <div class="area right">
@@ -109,7 +141,29 @@
                 </div>
             </div>
         </div>
+
+        <div class="box right">
+            <div class="image fit">
+                <img src="image/homebackground2.jpg" alt="게시판 이미지" width="600" height="300">
+            </div>
+            <div class="content">
+                <div class="inner">
+                    <header class="align-center">
+                        <p>민원 게시판을 이용하기</p>
+                        <h1>민원 게시판을 이용하시려면 아래 시작하기 버튼을 눌러주세요.</h1>
+                    </header>
+                    <p>민원 처리는 복잡하지 않아야 합니다.
+                        고객님의 불편을 귀담아듣고 신속히 해결할 수 있도록 노력하겠습니다.
+                        지금 바로 민원 처리를 시작해보세요.
+                    </p>
+                    <footer class="align-center">
+                        <a th:href="@{/complaint/new}" class="button alt">시작하기</a>
+                    </footer>
+                </div>
+            </div>
+        </div>
     </div>
+<<<<<<< HEAD
     <div class="controls">
         <button class="control-button" onclick="goToSlide(0)"></button>
         <button class="control-button" onclick="goToSlide(1)"></button>
@@ -206,6 +260,9 @@
 <!--    </div>-->
 <!--</div>-->
 
+=======
+</div>
+>>>>>>> a18053f (내 페이지 수정.)
 <div th:replace="layouts/footer::tellMe_footer"></div>
 </body>
 </html>

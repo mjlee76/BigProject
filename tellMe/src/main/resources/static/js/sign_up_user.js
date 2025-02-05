@@ -18,6 +18,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 =======
   });
+<<<<<<< HEAD
 
 //// 상세주소 입력 시 주소 필드 업데이트
 //document.getElementById("detailAddress").addEventListener("input", function () {
@@ -31,3 +32,5 @@ document.addEventListener("DOMContentLoaded", function () {
 //    document.getElementById("address").value = detail ? `${baseAddress} ${detail}` : baseAddress;
 //});
 >>>>>>> e1cf1c9 (내 페이지 수정.)
+=======
+>>>>>>> a18053f (내 페이지 수정.)

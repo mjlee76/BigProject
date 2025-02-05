@@ -32,6 +32,7 @@ public class UserController {
         userDTO.setRole(Role.ROLE_MANAGER);
         //userDTO.setRole(Role.ROLE_COUNSELOR);
 <<<<<<< HEAD
+<<<<<<< HEAD
 //        userDTO.setRole(Role.ROLE_USER);
         userDTO.setCount(0);
         userDTO.setCreateDate(LocalDateTime.now());
@@ -39,6 +40,9 @@ public class UserController {
         System.out.println(userDTO.toString());
 =======
         //userDTO.setRole(Role.ROLE_USER);
+=======
+        userDTO.setRole(Role.ROLE_USER);
+>>>>>>> a18053f (내 페이지 수정.)
 //        userDTO.setCount(0);
 //        userDTO.setCreateDate(LocalDateTime.now());
 //        System.out.println("======================================");
@@ -58,4 +62,8 @@ public class UserController {
         return "find_pw";
     }
 
+    @GetMapping("/terms")
+    public String terms() {
+        return "terms";
+    }
 }

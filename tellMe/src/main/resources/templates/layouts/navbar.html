@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!-- 상단 내비게이션 바 -->
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
@@ -13,6 +14,21 @@
         <div class="nav-container">
             <div class="logo"><a th:href="@{/}">Aivle</a></div>
             <div>
+=======
+    <!-- 상단 내비게이션 바 -->
+    <!DOCTYPE html>
+    <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+    <head th:fragment="tellMe_head">
+        <link rel="stylesheet" type="text/css" th:href="@{/css/navbar.css}" />
+        <script src="https://code.jquery.com/jquery-3.6.3.js"></script>
+        <script type="text/javascript" th:src="@{/js/common.js}"></script>
+    </head>
+    <body>
+    <header th:fragment="tellMe_header">
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="logo"><a th:href="@{/}">Aivle</a></div>
+>>>>>>> a18053f (내 페이지 수정.)
                 <ul class="nav-menu">
                     <li><a th:href="@{/}">홈</a></li>
                     <li><a th:href="@{/customer/notice}">공지사항</a></li>
@@ -24,6 +40,7 @@
                         <a th:href="@{/manager/report}">보고서관리</a>
                     </li>
                 </ul>
+<<<<<<< HEAD
             </div>
 <!--            <div id="notification-icon" class="notification-bell" th:data-userid="${#authentication.name}">-->
 <!--                🔔 <span id="notification-count" class="badge">0</span>-->
@@ -43,12 +60,25 @@
                         <input type="submit"/>
                     </form>
                     <a class="auth-link logout" id="logoutLink" href="">로그아웃</a>
+=======
+                <div class="auth-buttons">
+                    <div sec:authorize="isAnonymous()">
+                        <a th:href="@{/login}" class="auth-link login">로그인</a>
+                        <a th:href="@{/user/signUp}" class="auth-link signup">회원가입</a>
+                    </div>
+                    <div sec:authorize="isAuthenticated()">
+                        <a th:href="@{/myPage/editInfo}" class="auth-link mypage">마이 페이지</a>
+                        <form th:action="@{/logout}" method="post" th:hidden="true" name="logoutForm" >
+                            <input type="submit"/>
+                        </form>
+                        <a class="auth-link logout" id="logoutLink" href="">로그아웃</a>
+                    </div>
+>>>>>>> a18053f (내 페이지 수정.)
                 </div>
             </div>
-        </div>
-    </nav>
-</header>
+        </nav>
+    </header>
 
-</body>
-</html>
-</html>
+    </body>
+    </html>
+    </html>

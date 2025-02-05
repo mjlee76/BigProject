@@ -1,10 +1,16 @@
+```css
 /* 공통 스타일 */
 body {
+<<<<<<< HEAD
     font-family: 'SUIT', sans-serif;
+=======
+    font-family: Arial, sans-serif;
+>>>>>>> a18053f (내 페이지 수정.)
     margin: 0;
     padding: 0;
     background-color: #ffffff;
     color: #333;
+<<<<<<< HEAD
 }
 
 * {
@@ -13,6 +19,8 @@ body {
 
 a:-webkit-any-link {
     text-decoration: none;  /* 기본 밑줄 제거 */
+=======
+>>>>>>> a18053f (내 페이지 수정.)
 }
 
 /* 테이블 스타일 */
@@ -113,6 +121,7 @@ button.delete-button {
 button.delete-button:hover {
     background-color: #f4a3a2; /* 삭제 버튼 hover 색상 */
 }
+<<<<<<< HEAD
 
 /* 답변 폼을 감싸는 div 스타일 */
 .answer-box {
@@ -158,3 +167,6 @@ button.delete-button:hover {
     background-color: #e6e6e6;
     color: #000;
 }
+=======
+```
+>>>>>>> a18053f (내 페이지 수정.)
