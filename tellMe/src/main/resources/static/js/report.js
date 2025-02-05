@@ -1,72 +1,39 @@
 document.addEventListener("DOMContentLoaded", function () {
-    const searchInput = document.getElementById("search");
-    const searchBtn = document.getElementById("search-btn");
+    const searchInput = document.getElementById("search-input");
+    const searchForm = document.getElementById("search-form");
     const tabs = document.querySelectorAll(".tab");
-    const reportRows = document.querySelectorAll(".post-list tr");
-    const prevBtn = document.querySelector(".prev");
-    const nextBtn = document.querySelector(".next");
-    const pageNum = document.querySelector(".page-num");
 
-    let currentPage = 1;
-    const rowsPerPage = 10;
+    // ✅ 현재 URL에서 파라미터 값을 가져오는 함수
+    function getQueryParam(param) {
+        const queryParams = new URLSearchParams(window.location.search);
+        return queryParams.get(param) || "";
+    }
 
+    // ✅ 필터 변경 시 기존 검색어 유지하고 URL 변경
     function filterReports(filter) {
-        reportRows.forEach(row => {
-            const statusCell = row.querySelector(".status");
-            if (filter === "all" || (statusCell && statusCell.classList.contains(filter))) {
-                row.style.display = "";
-            } else {
-                row.style.display = "none";
-            }
-        });
+        const query = getQueryParam("query");  // 기존 검색어 유지
+        const baseUrl = window.location.origin + "/tellMe/manager/report";  // 절대 경로로 변경
+        const url = `${baseUrl}?query=${encodeURIComponent(query)}&status=${encodeURIComponent(filter)}&page=1`;
+        window.location.href = url;  // URL 변경
     }
 
-    function searchReports() {
-        const query = searchInput.value.toLowerCase();
-        reportRows.forEach(row => {
-            const title = row.querySelector(".post-title a").textContent.toLowerCase();
-            const author = row.cells[2].textContent.toLowerCase();
-            row.style.display = title.includes(query) || author.includes(query) ? "" : "none";
-        });
+    // ✅ 검색 실행 (기본 HTML form action 사용)
+    function searchReports(event) {
+        event.preventDefault();
+        searchForm.submit();  // Thymeleaf에서 action을 처리
     }
 
-    function paginateReports() {
-        let totalRows = reportRows.length;
-        let totalPages = Math.ceil(totalRows / rowsPerPage);
-        pageNum.textContent = currentPage;
-
-        reportRows.forEach((row, index) => {
-            row.style.display = (index >= (currentPage - 1) * rowsPerPage && index < currentPage * rowsPerPage) ? "" : "none";
-        });
-    }
-
+    // ✅ 탭 클릭 이벤트 (URL 변경)
     tabs.forEach(tab => {
-        tab.addEventListener("click", function () {
-            tabs.forEach(t => t.classList.remove("active"));
-            this.classList.add("active");
+        tab.addEventListener("click", function (event) {
+            event.preventDefault();
             filterReports(this.dataset.filter);
         });
     });
 
-    searchBtn.addEventListener("click", searchReports);
-    searchInput.addEventListener("keypress", function (e) {
-        if (e.key === "Enter") searchReports();
-    });
 
-    prevBtn.addEventListener("click", function () {
-        if (currentPage > 1) {
-            currentPage--;
-            paginateReports();
-        }
-    });
-
-    nextBtn.addEventListener("click", function () {
-        let totalPages = Math.ceil(reportRows.length / rowsPerPage);
-        if (currentPage < totalPages) {
-            currentPage++;
-            paginateReports();
-        }
-    });
-
-    paginateReports();
+    // ✅ 검색 이벤트 (form submit)
+    if (searchForm) {
+        searchForm.addEventListener("submit", searchReports);
+    }
 });

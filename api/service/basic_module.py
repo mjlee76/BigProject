@@ -62,7 +62,8 @@ class TextClassifier:
             }
 
             # 결과 출력
-            predicted_labels_text = [label_mapping[label] for label in predicted_labels]
+            predicted_labels = [label_mapping[label] for label in predicted_labels]
+            predicted_labels_text = ', '.join(f'{label}' for label in predicted_labels)
             return predicted_labels_text
         else:
             print("텍스트 조각 처리 중 문제가 발생하여 결과를 생성할 수 없습니다.")

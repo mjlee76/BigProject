@@ -2,17 +2,14 @@ package com.bigProject.tellMe.service;
 
 import com.bigProject.tellMe.dto.ReportDTO;
 import com.bigProject.tellMe.entity.Report;
+import com.bigProject.tellMe.enumClass.ReportStatus;
 import com.bigProject.tellMe.mapper.ReportMapper;
 import com.bigProject.tellMe.repository.ReportRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -20,37 +17,47 @@ public class ReportService {
     private final ReportMapper reportMapper;
     private final ReportRepository reportRepository;
 
-    // ✅ 모든 보고서 조회 (Entity → DTO 변환)
-    public List<ReportDTO> findAll() {
-        return reportRepository.findAll()
-                .stream()
-                .map(reportMapper::toDto)
-                .collect(Collectors.toList());
+    // ✅ 모든 보고서 조회 (페이지네이션 적용)
+    public Page<ReportDTO> findAllPaged(Pageable pageable) {
+        return reportRepository.findAll(pageable).map(reportMapper::toDto);
     }
 
-    // ✅ 특정 보고서 조회
+    // ✅ 보고서 기본 경로 (환경변수 없이 하드코딩)
+    private static final String REPORT_BASE_PATH = "C:/Users/User/BigProject/tellMe/tellMe-reports/";
+
+    // ✅ 특정 보고서 조회 (경로 변경 반영)
     public ReportDTO getReport(Long id) {
         Report report = reportRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 보고서를 찾을 수 없습니다."));
-        return reportMapper.toDto(report);
+
+        // ✅ 올바른 파일 경로 설정
+        String fullPath = REPORT_BASE_PATH + report.getReport();
+        report.setReport(fullPath);
+
+        // ✅ 변경된 값이 적용된 DTO 반환
+        ReportDTO reportDTO = reportMapper.toDto(report);
+        reportDTO.setReport(fullPath);
+
+        return reportDTO;
     }
 
-    // ✅ 보고서 목록을 페이지 단위로 조회
-    public Page<ReportDTO> paging(Pageable pageable) {
-        int page = pageable.getPageNumber();
+    // ✅ 검색 + 상태 필터 적용된 보고서 조회 (페이지네이션 포함)
+    public Page<ReportDTO> searchReportsPaged(String query, String status, Pageable pageable) {
+        Page<Report> reports;
 
-        // 페이지 번호가 0보다 작으면 기본값 0으로 설정
-        if (page < 0) {
-            page = 0;
+
+        if (query != null && !query.isEmpty() && status != null && !status.equals("all")) {
+            ReportStatus reportStatus = ReportStatus.valueOf(status); // String → ENUM 변환
+            reports = reportRepository.findByReportContainingAndReportStatus(query, reportStatus, pageable);
+        } else if (query != null && !query.isEmpty()) {
+            reports = reportRepository.findByReportContaining(query, pageable);
+        } else if (status != null && !status.equals("all")) {
+            ReportStatus reportStatus = ReportStatus.valueOf(status); // String → ENUM 변환
+            reports = reportRepository.findByReportStatus(reportStatus, pageable);
+        } else {
+            reports = reportRepository.findAll(pageable);
         }
-
-        int pageLimit = 10; // 한 페이지에 10개 표시
-
-        Page<Report> reports =
-                reportRepository.findAll(PageRequest.of(page, pageLimit, Sort.by(Sort.Direction.DESC, "id")));
 
         return reports.map(reportMapper::toDto);
     }
-
-
 }
