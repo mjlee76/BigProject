@@ -15,6 +15,7 @@ import asyncio
 from basic_module import TextClassifier
 from basic_module import ChangeText
 from basic_module import MakeReport
+from spam_detect import SpamDetector
 
 # POST: to create data. GET: to read data. PUT: to update data. DELETE: to delete data.
 app = FastAPI()
@@ -135,6 +136,24 @@ def make_report(post_data:PostBody ,report_req: ReportBody):
     
     result = send_report_to_spring()
     return report_req , {"status": "ok", "spring_response": result}
+
+spam_detector = SpamDetector(model_name="snunlp/KR-SBERT-V40K-klueNLI-augSTS", threshold=0.8)
+
+@app.post("/post")
+def create_post(post_data: PostBody):
+    """
+    게시글을 받아서 스팸 감지 후 저장 여부를 결정하는 API
+    """
+    post_id = spam_detector.check_spam_and_store(
+        title=post_data.title,
+        content=post_data.content,
+        user_id=post_data.user.user_id
+    )
+
+    if post_id == -1:
+        return {"message": "도배 감지됨: 게시글이 차단되었습니다.", "status": "blocked"}
+    
+    return {"message": "게시글 등록 성공", "post_id": post_id, "status": "success"}
 
 #이미지 탐지
 UPLOAD_DIR = "./uploaded_images"
