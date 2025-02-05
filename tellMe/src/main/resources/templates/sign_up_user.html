@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
@@ -59,9 +59,9 @@
 <div style="color:red;" id="toastMessage" class="toast"></div>
 <div class="main-container">
   <!-- Left Section -->
-  <div class="left-section">
-    <img th:src = "@{/image/signup_image.jpg}">
-  </div>
+<!--  <div class="left-section">-->
+<!--    <img th:src = "@{/image/signup_image.jpg}">-->
+<!--  </div>-->
 
   <!-- Right Section -->
   <div class="right-section">
@@ -122,6 +122,12 @@
             <img th:src = "@{/image/phone.png}">
           </span>
         <input type="text" th:field="*{phone}" placeholder="전화번호 (' - '는 생략해주세요)" required>
+      </div>
+      <div class="terms-agreement">
+        <input type="checkbox" id="agree" name="agree" required>
+        <p class="terms">
+          서비스 이용약관 및 <a th:href="@{/user/terms}" target="_blank">개인정보 처리방침</a>에 동의합니다.
+        </p>
       </div>
       <button type="submit">회원가입</button>
 

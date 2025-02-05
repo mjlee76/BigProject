@@ -31,7 +31,7 @@ public class UserController {
         //userDTO.setRole(Role.ROLE_ADMIN);
 //        userDTO.setRole(Role.ROLE_MANAGER);
         //userDTO.setRole(Role.ROLE_COUNSELOR);
-        //userDTO.setRole(Role.ROLE_USER);
+        userDTO.setRole(Role.ROLE_USER);
 //        userDTO.setCount(0);
 //        userDTO.setCreateDate(LocalDateTime.now());
 //        System.out.println("======================================");
@@ -50,4 +50,8 @@ public class UserController {
         return "find_pw";
     }
 
+    @GetMapping("/terms")
+    public String terms() {
+        return "terms";
+    }
 }

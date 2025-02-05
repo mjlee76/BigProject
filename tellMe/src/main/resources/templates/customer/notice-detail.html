@@ -7,31 +7,31 @@
     <link rel="stylesheet" type="text/css" th:href="@{/css/notice-detail.css}" />
     <script th:src="@{/js/notice-detail.js}"></script>
 
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        document.querySelectorAll(".download-link").forEach(function (element) {
-            element.addEventListener("click", function (event) {
-                event.preventDefault(); // 기본 동작 막기
-                let filePath = this.getAttribute("data-filepath");
-                downloadFile(filePath);
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            document.querySelectorAll(".download-link").forEach(function (element) {
+                element.addEventListener("click", function (event) {
+                    event.preventDefault(); // 기본 동작 막기
+                    let filePath = this.getAttribute("data-filepath");
+                    downloadFile(filePath);
+                });
             });
         });
-    });
 
-    function downloadFile(filePath) {
-        if (!filePath) {
-            alert("파일 경로가 존재하지 않습니다.");
-            return;
+        function downloadFile(filePath) {
+            if (!filePath) {
+                alert("파일 경로가 존재하지 않습니다.");
+                return;
+            }
+
+            const link = document.createElement("a");
+            link.href = filePath;
+            link.download = filePath.split("/").pop(); // 파일명 추출
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
         }
-
-        const link = document.createElement("a");
-        link.href = filePath;
-        link.download = filePath.split("/").pop(); // 파일명 추출
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-    }
-</script>
+    </script>
 </head>
 <body>
 <div th:replace="layouts/navbar::tellMe_header"></div>
@@ -41,10 +41,10 @@
     <table>
         <tr>
             <th>번호</th>
-            <td>327859</td>
+            <td th:text="${notice.id}"></td>
             <th>제목</th>
             <td>
-                <h1 class="title" th:text="${notice.title}"></h1>
+                <span th:text="${notice.title}"></span>
             </td>
         </tr>
         <tr>
