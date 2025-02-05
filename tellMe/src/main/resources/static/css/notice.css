@@ -409,8 +409,8 @@ body.delete-mode #number-header {
 
 /* 페이지네이션 버튼 스타일 */
 .pagination a, .pagination button {
-    padding: 5px 10px;
-    margin: 0 5px;
+    padding: 5px 5px;
+    margin: 0 3px;
     cursor: pointer;
     transition: background-color 0.3s ease;
     text-decoration: none;
@@ -426,8 +426,8 @@ body.delete-mode #number-header {
 
 /* 현재 페이지 스타일 */
 .pagination .current {
-    padding: 5px 10px;
-    margin: 0 5px;
+    padding: 5px 5px;
+    margin: 0 3px;
     transition: background-color 0.3s ease;
     text-decoration: none;
     font-size: 14px;
