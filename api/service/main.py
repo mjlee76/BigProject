@@ -1,9 +1,10 @@
 from typing import Union, List
-from fastapi import FastAPI, File, UploadFile, HTTPException, Body, logger
+from fastapi import FastAPI, File, UploadFile, HTTPException, Body, Depends
 from pydantic import BaseModel
 from langchain_chroma import Chroma
 from langchain_openai import OpenAIEmbeddings
 
+import json
 import shutil
 import os
 import requests
@@ -14,6 +15,7 @@ import basic_module as bm
 import nsfw_detection as nd
 import aiofiles
 import asyncio
+import logging
 
 from basic_module import TextClassifier
 from basic_module import ChangeText
@@ -46,6 +48,12 @@ os.makedirs(UPLOAD_DIR, exist_ok=True)
 load_directory = "./nsfw_model"
 image_model, processor, image_classifier = nd.load_model(load_directory)
 spam_detector = SpamDetector(model_name="snunlp/KR-SBERT-V40K-klueNLI-augSTS", threshold=0.8)
+classifier = TextClassifier()
+changetexter = ChangeText()
+report = MakeReport()
+
+docu_loader = LoadDocumentFile()
+logger = logging.getLogger("my_logger")
 
 #게시글 작성자 정보
 class UserInfo(BaseModel):
@@ -92,33 +100,38 @@ async def update_item(data: CombinedModel):
         post_origin_data = {"제목": title, "내용": content} # 원문데이터 저장용
         report_req.post_origin_data = post_origin_data
         
-        classifier = TextClassifier()
         # 분류
         title_label = classifier.classify_text(title)
         content_label = classifier.classify_text(content)
-        changetexter = ChangeText()
         await changetexter.init()
         result = {}
 
         if title_label != '정상' or content_label != '정상':
-            if title_label != '정상':
+            if title_label != '정상' and content_label == '정상':
                 title_changed = await changetexter.change_text(title)
                 post_data.title =  title_changed
                 report_req.category.title = title_label
-
+                
                 # 팝업 날릴거
                 result["제목"] = {"text": f"{title_changed}","경고문": f"{title_label} 감지"}
-            else:
-                result["제목"] = {"text": title}
+                result["내용"] = {"text": content}
             
-            if content_label != '정상':
+            elif title_label == '정상' and content_label != '정상':
                 content_changed = await changetexter.change_text(content)
                 post_data.content =  content_changed
                 report_req.category.content = content_label
                 
+                result["제목"] = {"text": title}
                 result["내용"] = {"text": f"{content_changed}","경고문": f"{content_label} 감지"}
             else:
-                result["내용"] = {"text": content}
+                title_changed = await changetexter.change_text(title)
+                post_data.title =  title_changed
+                content_changed = await changetexter.change_text(content)
+                post_data.content =  content_changed
+                report_req.category.title = title_label
+                report_req.category.content = content_label
+                result["제목"] = {"text": f"{title_changed}","경고문": f"{title_label} 감지"}
+                result["내용"] = {"text": f"{content_changed}","경고문": f"{content_label} 감지"}
             
             # 보고서 생성
             return {
@@ -127,48 +140,38 @@ async def update_item(data: CombinedModel):
                 "post_data": post_data.model_dump_json(),
                 "report_req": report_req.model_dump_json()
             }
-            '''post_data, report_req'''
-            
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               
         else: 
-            '''post_data.title = title
-            post_data.content = content
-            return post_data, report_req'''
+            report_req.category.title = title_label
+            report_req.category.content = content_label
             return    {
                 "valid": True,
                 "message": "데이터 수신 및 처리 완료",
                 "post_data": post_data.model_dump_json(),
                 "report_req": report_req.model_dump_json()
             }
+            
     except Exception as e:
         logger.error(f"처리 실패: {str(e)}")
         raise HTTPException(500, "서버 내부 오류")
     
 @app.post("/make_report")
-def make_report(data: CombinedModel):
+async def make_report(data: CombinedModel):
     post_data = data.post_data
     report_req = data.report_req
-    
     if report_req.category.title != '정상' or report_req.category.content != '정상':
-        report = MakeReport()
+        await report.init()
         report.report_prompt(post_data)
         report.cell_fill(post_data, report_req)
         time, output_file = report.report_save()
-        formatted_time = time.strftime("%Y-%m-%d %H:%M:%S")
-        report_req.create_date = formatted_time
+        # formatted_time = time.strftime("%Y-%m-%d %H:%M:%S")
+        report_req.create_date = time
         report_req.report_path = output_file
     
-    '''def send_report_to_spring():
-        url = "http://localhost:8000/"
-        data = report_req.model_dump_json()
-        response = requests.post(url, json=data)
-        return response.json()
-    
-    result = send_report_to_spring()'''
     return {
             "valid": True,
-            "report_req": report_req.dict()
+            "report_req": report_req.model_dump_json()
     }
-'''report_req , {"status": "ok", "spring_response": result}'''
 
 @app.post("/post")
 def create_post(post_data: PostBody):
@@ -214,6 +217,7 @@ async def upload_image(file: UploadFile = File(...)):
                     nsfw_score = item.get("score")
                     break
             if nsfw_score is not None and nsfw_score > 0.7:
+                print(nsfw_score)
                 os.remove(file_location)
                 raise HTTPException(status_code=400, detail="NSFW 이미지로 판단되어 업로드가 차단되었습니다.")
 
@@ -231,7 +235,7 @@ async def upload_image(file: UploadFile = File(...)):
         async with aiofiles.open(file_location, "wb") as buffer:
             content = await file.read()
             await buffer.write(content)
-        docu_loader = LoadDocumentFile()
+        
         chroma = Chroma("fewshot_chat", OpenAIEmbeddings())
         data = await docu_loader.select_loader(file_location)
         await docu_loader.init()

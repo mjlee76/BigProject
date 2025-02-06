@@ -41,7 +41,6 @@ async def selecting_model(api_key):
 
 #3. 모델 프롬프트 출력
 class TextClassifier:
-
     def __init__(self):
         model_path = "./20250204_roberta 파인튜닝"
         self.model = AutoModelForSequenceClassification.from_pretrained(model_path)
@@ -78,10 +77,10 @@ class TextClassifier:
 
             # 라벨 매핑
             label_mapping = {
-                0: "정상", 1: "악성", 2: "욕설",
-                3: "외모", 4: "장애인", 5: "인종",
-                6: "종교", 7: "지역", 8: "성차별",
-                9: "나이", 10: "협박", 11: "성희롱",
+                0: "정상", 1: "모욕", 2: "욕설",
+                3: "외모차별", 4: "장애인차별", 5: "인종차별",
+                6: "종교차별", 7: "지역차별", 8: "성차별",
+                9: "나이차별", 10: "협박", 11: "성희롱",
             }
 
             # 결과 출력
@@ -90,6 +89,8 @@ class TextClassifier:
             return predicted_labels_text
         else:
             print("텍스트 조각 처리 중 문제가 발생하여 결과를 생성할 수 없습니다.")
+            predicted_labels_text = ''
+            return predicted_labels_text
 
 #4. 분류
 def extract_label(text):
@@ -238,7 +239,7 @@ class MakeReport():
     def report_save(self):
         time = datetime.datetime.now().strftime("%y%m%d_%H%M%S")
         output_file = f"특이민원_보고서_{time}.docx"
-        report_file_path = "C:/Users/User/Desktop/빅프로젝트/BigProject/tellMe/tellMe-reports/"
+        report_file_path = os.path.join("C:/Users/User/Desktop/빅프로젝트/BigProject/", "tellMe/tellMe-reports/")
         self.doc.save(report_file_path + output_file)
         print(f"문서가 {output_file}에 저장되었습니다.")
         return time, output_file
