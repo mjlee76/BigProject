@@ -1,5 +1,7 @@
-function filterAPI(event) {
+function spamAPI(event) {
     event.preventDefault();
+
+//    여기 팝업창 기능
 
     const title = document.getElementById("title").value;
     const content = document.getElementById("content").value;
@@ -13,7 +15,7 @@ function filterAPI(event) {
         csrfToken: csrfToken
     };
 
-    fetch("/tellMe/api/check", {
+    fetch("/tellMe/api/spam", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",

@@ -19,6 +19,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
@@ -49,33 +50,23 @@ public class ComplaintController {
     }
 
     @PostMapping("/create")
+    @Transactional
     public String createComplaint(QuestionDTO questionDTO, @RequestParam("files") List<MultipartFile> multipartFiles) throws IOException {
         Question question = questionService.save(questionDTO);
+        questionDTO = questionMapper.quToQuDTO(question);
+        Long questionId = questionDTO.getId();
+        System.out.println("================="+questionDTO.toString());
         if(!multipartFiles.isEmpty()) {
-            questionDTO = questionMapper.quToQuDTO(question);
-            String uploadDir = "tellMe/tellMe-uploadFile/question/" + questionDTO.getId();
+            String uploadDir = "tellMe/tellMe-uploadFile/question/" + questionId;
+            List<String> savedFiles = FileUpLoadUtil.saveFiles(uploadDir, multipartFiles);
 
-            for (int i = 0; i < multipartFiles.size(); i++) {
-                MultipartFile multipartFile = multipartFiles.get(i);
-                String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
+            if (savedFiles.size() > 0) questionDTO.setFile1(savedFiles.get(0));
+            if (savedFiles.size() > 1) questionDTO.setFile2(savedFiles.get(1));
+            if (savedFiles.size() > 2) questionDTO.setFile3(savedFiles.get(2));
 
-                FileUpLoadUtil.saveFile(uploadDir, fileName, multipartFile);
-
-                switch (i) {
-                    case 0:
-                        questionDTO.setFile1(fileName);
-                        break;
-                    case 1:
-                        questionDTO.setFile2(fileName);
-                        break;
-                    case 2:
-                        questionDTO.setFile3(fileName);
-                        break;
-                }
-            }
+            System.out.println("============"+questionDTO.toString());
             questionService.save(questionDTO);
         }
-
 
         return "redirect:/complaint/question";
     }

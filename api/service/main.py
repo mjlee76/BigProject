@@ -83,6 +83,7 @@ class CombinedModel(BaseModel):
 
 @app.post("/filtered_module")
 async def update_item(data: CombinedModel):
+    print("===============================")
     post_data = data.post_data
     report_req = data.report_req
     
@@ -123,15 +124,15 @@ async def update_item(data: CombinedModel):
         return {
             "valid": True,
             "message": "데이터 수신 및 처리 완료",
-            "post_data": post_data.dict(),
-            "report_req": report_req.dict()
+            "post_data": post_data.model_dump_json(),
+            "report_req": report_req.model_dump_json()
         }
     else: 
         # Return a JSON object with "valid": True
         return {
             "valid": True,
-            "post_data": post_data.dict(),
-            "report_req": report_req.dict()
+            "post_data": post_data.model_dump_json(),
+            "report_req": report_req.model_dump_json()
         }
     
 @app.post("/make_report")

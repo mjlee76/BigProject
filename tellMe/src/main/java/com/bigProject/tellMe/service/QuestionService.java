@@ -1,6 +1,7 @@
 package com.bigProject.tellMe.service;
 
 import com.bigProject.tellMe.client.api.FastApiClient;
+import com.bigProject.tellMe.client.dto.QuestionApiDTO;
 import com.bigProject.tellMe.dto.QuestionDTO;
 import com.bigProject.tellMe.dto.UserDTO;
 import com.bigProject.tellMe.entity.Question;
@@ -16,12 +17,15 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class QuestionService {
     private final FastApiClient fastApiClient;
@@ -32,6 +36,48 @@ public class QuestionService {
     public Question save(QuestionDTO questionDTO) {
         Question question = questionMapper.quDTOToQu(questionDTO);
         return questionRepository.save(question);
+    }
+
+    public Map<String, Object> spamCheck(Map<String, String> request) {
+        Map<String, Object> postBody = new HashMap<>();
+        String title = request.get("title");
+        String content = request.get("content");
+        postBody.put("title", title);
+        postBody.put("content", content);
+
+        Map<String, Object> questionBody = new HashMap<>();
+        Long id = Long.parseLong(request.get("userId"));
+        List<QuestionApiDTO> questionDTO = questionRepository.findByUserId(id)
+                .stream()
+                .map(questionMapper::quToQuDTO)
+                .map(dto -> new QuestionApiDTO(dto.getId(), dto.getTitle(), dto.getContent()))
+                .collect(Collectors.toList());
+//        List<Long> ids = questionDTO.stream().map(QuestionDTO::getId).collect(Collectors.toList());
+//        List<String> titles = questionDTO.stream().map(QuestionDTO::getTitle).collect(Collectors.toList());
+//        List<String> contents = questionDTO.stream().map(QuestionDTO::getContent).collect(Collectors.toList());
+//        questionBody.put("id", ids);
+//        questionBody.put("title", titles);
+//        questionBody.put("content", contents);
+        questionBody.put("question", questionDTO);
+
+        Map<String, Object> requestBody = new HashMap<>();
+        requestBody.put("post_data", postBody);
+        requestBody.put("question_data", questionBody);
+
+        System.out.println("========================REQUESTBODY"+requestBody);
+
+        Map<String, Object> responseBody = fastApiClient.getSpam(requestBody);
+        Map<String, Object> response = new HashMap<>();
+
+        if (responseBody != null && Boolean.TRUE.equals(responseBody.get("valid"))) {
+            response.put("valid", true);
+            response.put("message", "성공적으로 검증되었습니다.");
+        } else {
+            response.put("valid", false);
+            response.put("message", "검증 실패: 유효하지 않은 요청입니다.");
+        }
+
+        return response;
     }
 
     public Map<String, Object> checkApi(Map<String, String> request, UserDTO userDTO) {
@@ -67,8 +113,10 @@ public class QuestionService {
         postBody.put("content", content);
         postBody.put("user", userMap);
 
-        reportBody.put("category_title", "");
-        reportBody.put("category_content", "");
+        Map<String, Object> category = new HashMap<>();
+        category.put("title", "");
+        category.put("content", "");
+        reportBody.put("category", category);
         reportBody.put("post_origin_data", "");
         reportBody.put("report_path", "");
         reportBody.put("create_date", "");

@@ -1,5 +1,7 @@
 package com.bigProject.tellMe.config;
 
+import org.apache.commons.io.FilenameUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -8,21 +10,30 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
+import java.util.List;
 
 public class FileUpLoadUtil {
-    public static void saveFile(String uploadDir, String fileName, MultipartFile multipartFile) throws IOException {
+    public static List<String> saveFiles(String uploadDir, List<MultipartFile    > multipartFiles) throws IOException {
+        List<String> savedFileNames = new ArrayList<>();
         Path uploadPath = Paths.get(uploadDir);
 
         if(!Files.exists(uploadPath)) {
             Files.createDirectories(uploadPath);
         }
-
-        try(InputStream inputStream = multipartFile.getInputStream()){
+        for (MultipartFile multipartFile : multipartFiles) {
+            if(multipartFile.isEmpty()) continue;
+            String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
             Path filePath = uploadPath.resolve(fileName);
-            Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
-        }catch(IOException ex) {
-            throw new IOException("Could not save file : " + fileName, ex);
+
+            try(InputStream inputStream = multipartFile.getInputStream()){
+                Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
+                savedFileNames.add(fileName);
+            }catch(IOException ex) {
+                throw new IOException("Could not save file : " + fileName, ex);
+            }
         }
+        return savedFileNames;
     }
 
     public static void cleanFile(String uploadDir) {

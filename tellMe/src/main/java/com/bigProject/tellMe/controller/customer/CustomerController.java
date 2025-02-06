@@ -3,6 +3,8 @@ package com.bigProject.tellMe.controller.customer;
 import com.bigProject.tellMe.config.FileUpLoadUtil;
 import com.bigProject.tellMe.dto.NoticeDTO;
 import com.bigProject.tellMe.entity.Notice;
+import com.bigProject.tellMe.entity.Question;
+import com.bigProject.tellMe.mapper.NoticeMapper;
 import com.bigProject.tellMe.service.NoticeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -24,7 +26,7 @@ import java.util.Map;
 @RequestMapping("/customer")
 @RequiredArgsConstructor
 public class CustomerController {
-
+    private final NoticeMapper noticeMapper;
     private final NoticeService noticeService;
 
     @GetMapping("/service")
@@ -40,20 +42,19 @@ public class CustomerController {
     }
 
     @PostMapping("/create")
-    public String createNotice(NoticeDTO noticeDTO, @RequestParam("image") MultipartFile multipartFile) throws IOException {
+    public String createNotice(NoticeDTO noticeDTO, @RequestParam("image") List<MultipartFile> multipartFile) throws IOException {
+        Notice notice = noticeService.save(noticeDTO);
+        noticeDTO = noticeMapper.noTONoDTO(notice);
+        Long noticeId = noticeDTO.getId();
         System.out.println("=============="+multipartFile.toString());
         if(!multipartFile.isEmpty()) {
-            String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
-            noticeDTO.setFile(fileName);
-            Notice notice = noticeService.save(noticeDTO);
+            String uploadDir = "tellMe/tellMe-uploadFile/notice/" + noticeId;
+            List<String> savedFiles = FileUpLoadUtil.saveFiles(uploadDir, multipartFile);
 
-            String uploadDir = "tellMe/tellMe-uploadFile/notice/" + notice.getId();
-            FileUpLoadUtil.saveFile(uploadDir, fileName, multipartFile);
-        }else {
-            noticeDTO.setFile(null);
+            String fileName = savedFiles.get(0);
+            noticeDTO.setFile(fileName);
             noticeService.save(noticeDTO);
         }
-
         return "redirect:/customer/notice";
     }
 
