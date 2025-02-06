@@ -147,4 +147,9 @@ public class QuestionService {
         dto.updateEntity(question);
         questionRepository.save(question);
     }
+
+    // 민원 상태별 카운트
+    public long countByStatus(Status status) {
+        return questionRepository.countByStatus(status);
+    }
 }

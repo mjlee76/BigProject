@@ -1,8 +1,11 @@
 package com.bigProject.tellMe.controller.manager;
 
 import com.bigProject.tellMe.dto.ReportDTO;
+import com.bigProject.tellMe.dto.StatisticsDTO;
 import com.bigProject.tellMe.enumClass.ReportStatus;
+import com.bigProject.tellMe.enumClass.Status;
 import com.bigProject.tellMe.service.ReportService;
+import com.bigProject.tellMe.service.StatisticsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
@@ -132,10 +135,7 @@ public class ManagerController {
                 .body(resource);
     }
 
-    @GetMapping("/statistics")
-    public String statisticsBoard() {
-        return "manager/statistics";
-    }
+
 
     @PostMapping("/report/update-status/{id}")
     public ResponseEntity<?> updateStatus(@PathVariable Long id) {
@@ -147,6 +147,16 @@ public class ManagerController {
             // 에러 발생 시 500 상태 코드와 함께 실패 응답
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("{\"success\": false}");
         }
+    }
+
+    private final StatisticsService statisticsService;
+
+    @GetMapping("/statistics")
+    public String statisticsBoard(Model model) {
+        // 통계 데이터를 가져와서 뷰로 전달
+        StatisticsDTO statisticsDTO = statisticsService.getStatistics();
+        model.addAttribute("statistics", statisticsDTO);
+        return "manager/statistics";  // 통계 페이지
     }
 
 

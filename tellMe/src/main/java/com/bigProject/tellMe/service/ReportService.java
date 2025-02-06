@@ -71,4 +71,9 @@ public class ReportService {
         reportRepository.save(report); // 상태 업데이트
     }
 
+    // 보고서 상태별 카운트
+    public long countReportsByStatus(ReportStatus reportStatus) {
+        return reportRepository.countByReportStatus(reportStatus);
+    }
+
 }
