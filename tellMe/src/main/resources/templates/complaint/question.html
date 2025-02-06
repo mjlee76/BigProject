@@ -113,13 +113,18 @@
                 size=10)}"
                th:classappend="${currentPage == 1} ? 'disabled' : ''">‹</a>
 
+
             <!-- 페이지 번호 -->
             <span th:each="pageNum : ${#numbers.sequence(startPage, T(java.lang.Math).min(endPage, startPage + 4))}">
-            <a th:if="${pageNum != currentPage}"
-               th:href="@{/complaint/question(query=${query}, category=${category}, status=${status}, page=${pageNum}, size=10)}"
-               th:text="${pageNum}"></a>
-            <span th:unless="${pageNum != currentPage}" th:text="${pageNum}" class="current-page"></span>
+                <a th:if="${pageNum != currentPage}"
+                   th:href="@{/complaint/question(query=${query}, category=${category}, status=${status}, page=${pageNum}, size=10)}"
+                   th:text="${pageNum}"></a>
+
+                <a th:unless="${pageNum != currentPage}"
+                   th:text="${pageNum}"
+                   class="current-page"></a>
             </span>
+
 
             <!-- 다음 페이지 이동 버튼 (>) -->
             <a th:href="@{/complaint/question(
