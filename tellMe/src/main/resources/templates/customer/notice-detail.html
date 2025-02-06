@@ -8,18 +8,21 @@
 <title th:text="${notice.title}"></title>
 <link rel="stylesheet" type="text/css" th:href="@{/css/notice-detail.css}" />
 <script th:src="@{/js/notice-detail.js}" defer></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${notice.title}"></title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/notice-detail.css}" />
+    <script th:src="@{/js/notice-detail.js}" defer></script>
 </head>
 <body>
 <div th:replace="layouts/navbar::tellMe_header"></div>
 
 <main class="content">
-    <h1>민원 게시판</h1>
+    <h1>공지사항</h1>
     <table>
         <tr class="border-top">
             <th>번호</th>
-            <td>
-                <span th:text="${notice.id}"></span>
-            </td>
+            <td th:text="${notice.id}"></td>
             <th>제목</th>
             <td colspan="3">
                 <span th:text="${notice.title}"></span>
@@ -27,11 +30,11 @@
         </tr>
         <tr>
             <th>작성일</th>
-            <td>
+            <td colspan="2">
                 <span th:text="${#temporals.format(notice.createDate, 'yyyy-MM-dd')}">2025-01-17 18:00:00</span>
             </td>
             <th>조회수</th>
-            <td colspan="3">
+            <td colspan="2">
                 <span th:text="${notice.views}">0</span>
             </td>
         </tr>

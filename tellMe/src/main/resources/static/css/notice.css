@@ -342,6 +342,24 @@ body.delete-mode #number-header {
     text-decoration: underline;
 }
 
+/* 🔹 글쓰기 버튼 */
+.write-button {
+    text-decoration: none;  /* 밑줄 제거 */
+    padding: 10px 20px;
+    border: 1px solid #ccc; /* 버튼 테두리 색상 */
+    background-color: #f4f4f4; /* 버튼 배경색 통일 */
+    color: #333; /* 버튼 글자 색상 */
+    cursor: pointer;
+    font-size: 14px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.write-button:hover {
+    background-color: #e6e6e6; /* 버튼 hover 배경색 */
+    color: #000; /* 버튼 hover 글자색 */
+}
+
 /* 🔹 상단 바 (글쓰기 버튼 + 삭제 버튼) */
 .top-bar {
     display: flex;
@@ -351,63 +369,33 @@ body.delete-mode #number-header {
     padding: 10px 10%; /* 좌우 여백 */
 }
 
-/* 🔹 글쓰기 버튼 */
-.write-button {
-    background-color: #ffffff;
-    color: #1674C3;
-    padding: 6px 12px;
-    font-size: 13px;
-    font-weight: bold;
-    border: 1px solid #1674C3;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.write-button:hover {
-    background-color: #F8FCFD;
-    color: #1674C3;
-}
-
-/* 🔹 삭제 버튼 컨테이너 */
-.action-bar {
-    display: flex;
-    justify-content: flex-end; /* 🔥 오른쪽 정렬 */
-    gap: 10px;
-}
-
 /* 🔹 삭제 버튼 스타일 */
 #delete-button, #select-delete-button, #cancel-button {
-    padding: 6px 12px;
-    font-size: 13px;
-    font-weight: bold;
-    border-radius: 4px;
-    border: 1px solid #d1d1d1dd;
+    padding: 10px 20px;
+    border: 1px solid #ccc; /* 버튼 테두리 색상 */
+    background-color: #f4f4f4; /* 버튼 배경색 통일 */
+    color: #333; /* 버튼 글자 색상 */
     cursor: pointer;
-    transition: all 0.3s ease;
+    font-size: 14px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* 🔹 삭제 버튼 기본 스타일 */
-#delete-button {
-    background-color: #1674C3;
-    color: #ffffff;
-    border-color: #1674C3;
+#select-delete-button, #cancel-button {
+    display:none;
+    padding: 10px 20px;
+    border: 1px solid #ccc; /* 버튼 테두리 색상 */
+    background-color: #f4f4f4; /* 버튼 배경색 통일 */
+    color: #333; /* 버튼 글자 색상 */
+    cursor: pointer;
+    font-size: 14px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 #delete-button:hover {
     background-color: #ffffff;
     color: #1674C3;
-}
-
-/* 🔹 선택 삭제, 취소 버튼 스타일 */
-#select-delete-button, #cancel-button {
-    background-color: #f4f4f4;
-    color: #333;
-    display: none; /* 기본적으로 숨김 */
-}
-
-#select-delete-button:hover, #cancel-button:hover {
-    background-color: #dddddd;
 }
 
 /* 페이지네이션 컨테이너 */
@@ -421,10 +409,8 @@ body.delete-mode #number-header {
 
 /* 페이지네이션 버튼 스타일 */
 .pagination a, .pagination button {
-    border: 1px solid #ddd;
-    background-color: #f9f9f9;
-    padding: 5px 10px;
-    margin: 0 5px;
+    padding: 5px 5px;
+    margin: 0 3px;
     cursor: pointer;
     transition: background-color 0.3s ease;
     text-decoration: none;
@@ -440,14 +426,12 @@ body.delete-mode #number-header {
 
 /* 현재 페이지 스타일 */
 .pagination .current {
-    border: 1px solid #ddd;
-    background-color: #333;
-    padding: 5px 10px;
-    margin: 0 5px;
+    padding: 5px 5px;
+    margin: 0 3px;
     transition: background-color 0.3s ease;
     text-decoration: none;
     font-size: 14px;
-    color: white;
+    color: blue;
     border-radius: 4px;;
 }
 
@@ -459,4 +443,3 @@ body.delete-mode #number-header {
     cursor: not-allowed;
     border: 1px solid #ddd;
 }
-

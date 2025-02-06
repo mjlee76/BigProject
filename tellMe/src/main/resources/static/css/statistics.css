@@ -1,3 +1,11 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #ffffff;
+    color: #333;
+}
+
 /* ✅ 전체 레이아웃 설정 */
 #wrapper {
     display: flex;
@@ -13,20 +21,26 @@
 
 /* ✅ 메인 컨텐츠 레이아웃 */
 #content-wrapper {
-    position: relative;
-    box-sizing: border-box;
-    height: 100%;
+    flex-grow: 1; /* 사이드바를 제외한 나머지 공간을 모두 차지 */
     padding: 42px 3% 22px;
+    width: calc(100% - 250px); /* 사이드바 250px 제외한 나머지 영역 */
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column; /* ✅ 기본적으로 세로 정렬 */
+    justify-content: flex-start;
 }
+
 
 /* ✅ 컨텐츠 내부 설정 */
 #content {
     display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    padding: 1rem;
+    flex-wrap: nowrap; /* ✅ 줄 바꿈 방지 */
+    justify-content: flex-start; /* ✅ 왼쪽 정렬 */
+    align-items: flex-start;
     width: 100%;
+    min-height: 100%;
 }
+
 
 /* ✅ 통계 페이지 내부 컨텐츠 크기 설정 */
 #content-wrapper .container {
@@ -53,7 +67,6 @@
     padding: 1rem;
     border-bottom: 1px solid #ddd;
     font-size: 1.2rem;
-    font-weight: bold;
 }
 
 /* ✅ 차트 컨테이너 중앙 정렬 */
@@ -82,48 +95,71 @@
 }
 
 /* 📌 🔹 악성민원 성별/연령별 통계 컨테이너 */
+#daily-complaints-content,
+#monthly-complaints-content,
 #malicious-gender-content {
     display: flex;
-    flex-direction: row; /* ✅ 가로 정렬 강제 */
-    justify-content: space-between; /* ✅ 좌우 균등 배치 */
-    align-items: flex-start;
+    flex-direction: row !important; /* ✅ 가로 정렬 */
+    justify-content: space-between; /* ✅ 좌우 정렬 */
+    align-items: stretch;
     flex-wrap: nowrap; /* ✅ 줄바꿈 방지 */
-    gap: 20px;
+    gap: 20px; /* ✅ 좌우 간격 조정 */
     padding: 20px;
-    width: 100%;
+    width: 100%; /* ✅ 너비 100%로 설정 */
     max-width: 1200px; /* ✅ 최대 너비 설정 */
-    align-self: stretch;
+    margin: 0 auto; /* ✅ 중앙 정렬 */
 }
-
 
 /* 📌 🔹 성별 / 연령별 개별 항목 */
 .half_box {
     flex: 1; /* ✅ 동일한 비율로 공간 차지 */
-    min-width: 45%; /* ✅ 최소 너비 설정 */
-    display: table-cell;
+    display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: flex-start;
     text-align: center;
+    min-width: 45%; /* ✅ 최소 너비 설정 */
+    background: #fff; /* ✅ 배경색 추가 */
+    border-radius: 8px; /* ✅ 둥근 모서리 */
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1); /* ✅ 그림자 효과 */
+    padding: 20px; /* ✅ 내부 여백 추가 */
 }
 
 .half_box.right {
-    background: #f9fafc;
+    background: #f9fafc; /* ✅ 오른쪽 박스 배경색 */
 }
 
 .half_box .info.type1 {
     padding: 10px 2% 10px 4%;
+    font-size: 1.2rem; /* ✅ 제목 크기 조정 */
 }
 
-half_con {
+.info h1 {
+    font-size: 24px; /* ✅ 글씨 크기 조정 */
+    color: #333; /* ✅ 글자 색 변경 */
+    text-align: center; /* ✅ 중앙 정렬 */
+    margin-bottom: 15px; /* ✅ 하단 간격 추가 */
+}
+
+.bold-text {
+    font-weight: bold; /* ✅ "일별 민원"은 굵게 */
+}
+
+.normal-text {
+    font-weight: normal !important; /* ✅ "통계"는 일반 폰트 */
+}
+
+.half_con {
     padding: 35px 7%;
+    width: 100%; /* ✅ 너비 설정 */
 }
 
 /* 📌 🔹 차트 박스 스타일 */
 .half_box .chart-box {
     position: relative;
     width: 100%;
-    max-width: 400px;
-    height: 300px;
+    max-width: 450px; /* ✅ 차트 크기 조정 */
+    height: 400px; /* ✅ 차트 높이 조정 */
 }
 
 /* ✅ 반응형 - 모바일(태블릿 이하)에서는 상하 배치 */
@@ -131,12 +167,63 @@ half_con {
     #malicious-gender-content {
         flex-direction: column; /* ✅ 세로 정렬 */
         align-items: center;
+        gap: 10px; /* ✅ 간격 조정 */
     }
 
     .half_box {
-        width: 100%;
-        margin-bottom: 20px;
+        width: 100%; /* ✅ 너비 100%로 설정 */
+        margin-bottom: 20px; /* ✅ 하단 여백 추가 */
     }
+
+    .half_box .chart-box {
+        max-width: 90%; /* ✅ 모바일에서 차트 크기 조정 */
+    }
+}
+
+/* ✅ 날짜 선택 및 검색 버튼 스타일 */
+.date-filter {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px; /* 요소 간 간격 */
+    margin-bottom: 10px;
+}
+
+.date-filter label {
+    font-size: 14px;
+    font-weight: bold;
+    color: #333;
+}
+
+.date-filter input {
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.date-filter button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background 0.3s ease-in-out;
+}
+
+.date-filter button:hover {
+    background-color: #0056b3;
+}
+
+/* ✅ 현재 날짜 표시 스타일 */
+.date-text {
+    font-size: 14px;
+    font-weight: bold;
+    color: #666;
+    text-align: center;
+    margin-top: 5px;
 }
 
 /* ✅ 통계 페이지 공통 차트 설정 */
@@ -161,7 +248,6 @@ half_con {
 /* ✅ 카드 헤더 */
 .card-header {
     font-size: 1.2rem;
-    font-weight: bold;
     padding: 1rem;
     text-align: center;
 }
@@ -176,17 +262,6 @@ half_con {
     .half_box {
         width: 100%;
         margin: 0 0 20px 0;
-    }
-}
-
-/* ✅ 반응형 설정 (태블릿 이하) */
-@media (max-width: 768px) {
-    .half_box {
-        padding: 15px;
-    }
-
-    .card {
-        max-width: 90%;
     }
 }
 

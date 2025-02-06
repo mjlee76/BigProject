@@ -25,7 +25,6 @@ main {
     margin-bottom: 30px; /* 아래 간격 */
     padding: 30px 10%; /* 상하 여백과 좌우 패딩 */
     background-color: #f4f4f4; /* 배경색 */
-
 }
 
 .report-header h1 {
@@ -169,8 +168,6 @@ main {
     position: relative; /* 탭 버튼의 위치를 조정 가능하게 설정 */
 }
 
-
-
 /* 활성화된 탭 스타일 */
 .tab.active {
     color: #22A9FD;
@@ -199,8 +196,6 @@ main {
 a:-webkit-any-link {
     text-decoration: none;  /* 기본 밑줄 제거 */
 }
-
-
 
 /* 테이블 기본 스타일 */
 .post-table {
@@ -320,6 +315,7 @@ a:-webkit-any-link {
     display: flex;
     justify-content: center; /* 가운데 정렬 */
     align-items: center; /* 세로 정렬 */
+    gap: 20px; /* 버튼 간 간격 */
     margin-top: 20px; /* 위쪽 여백 */
     margin-bottom: 30px; /* 아래쪽 여백 */
 

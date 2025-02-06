@@ -1,6 +1,6 @@
 /* Sidebar 기본 스타일 */
 .sidebar {
-    width: 80px;
+    width: 250px; /* ✅ 기본적으로 넓은 사이드바 */
     min-height: 100vh;
     background: #343a40;
     color: #ffffff;
@@ -223,14 +223,5 @@
         width: 100%;
         text-align: left;
         padding: 1rem;
-    }
-
-    .sidebar.toggled {
-        overflow: visible;
-        width: 80px !important;
-    }
-
-    .sidebar.toggled .brand .brand-text {
-        display: none;
     }
 }
