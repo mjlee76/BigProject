@@ -88,7 +88,7 @@ public class ComplaintController {
         Page<QuestionDTO> questionList = questionService.searchAndFilter(query, status, category, role, pageable);
 
         // 페이징 정보 계산
-        int blockLimit = 10; // 화면에 보여질 페이지 번호 개수
+        int blockLimit = 5; // 화면에 보여질 페이지 번호 개수
         int startPage = (((int)(Math.ceil((double)page / blockLimit))) - 1) * blockLimit + 1;
         int endPage = Math.min(startPage + blockLimit - 1, questionList.getTotalPages());
 
