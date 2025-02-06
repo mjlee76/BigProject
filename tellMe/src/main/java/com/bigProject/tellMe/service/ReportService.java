@@ -60,4 +60,20 @@ public class ReportService {
 
         return reports.map(reportMapper::toDto);
     }
+    // ✅ 상태 변경
+
+    public void updateReportStatus(Long reportId, ReportStatus status) {
+        Report report = reportRepository.findById(reportId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 보고서를 찾을 수 없습니다."));
+
+        // 상태를 확인 완료로 변경
+        report.setReportStatus(status);
+        reportRepository.save(report); // 상태 업데이트
+    }
+
+    // 보고서 상태별 카운트
+    public long countReportsByStatus(ReportStatus reportStatus) {
+        return reportRepository.countByReportStatus(reportStatus);
+    }
+
 }

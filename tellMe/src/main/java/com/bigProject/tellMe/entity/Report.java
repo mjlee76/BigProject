@@ -29,6 +29,8 @@ public class Report {
     @Column(nullable = false)
     private Category category; // 보고서 유형
 
+    // setter 추가
+    @Setter
     @Enumerated(EnumType.STRING) // ✅ ENUM을 문자열로 저장
     @Column(nullable = false)
     private ReportStatus reportStatus;
