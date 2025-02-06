@@ -172,7 +172,7 @@ manager_task = "복지민원 담당"
 
 class MakeReport():
     def __init__(self):
-        self.doc = Document("C:/Users/User/Desktop/빅프로젝트/BigProject/api/service/특이민원_발생보고서.docx")
+        self.doc = Document("C:/Users/User/Desktop/BigProject/api/service/특이민원_발생보고서.docx")
         self.llm = None
 
     async def init(self):
@@ -239,7 +239,7 @@ class MakeReport():
     def report_save(self):
         time = datetime.datetime.now().strftime("%y%m%d_%H%M%S")
         output_file = f"특이민원_보고서_{time}.docx"
-        report_file_path = os.path.join("C:/Users/User/Desktop/빅프로젝트/BigProject/", "tellMe/tellMe-reports/")
+        report_file_path = os.path.join("C:/Users/User/Desktop/BigProject/", "tellMe/tellMe-reports/")
         self.doc.save(report_file_path + output_file)
         print(f"문서가 {output_file}에 저장되었습니다.")
         return time, output_file

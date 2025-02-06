@@ -52,12 +52,6 @@ public class QuestionService {
                 .map(questionMapper::quToQuDTO)
                 .map(dto -> new QuestionApiDTO(dto.getId(), dto.getTitle(), dto.getContent()))
                 .collect(Collectors.toList());
-//        List<Long> ids = questionDTO.stream().map(QuestionDTO::getId).collect(Collectors.toList());
-//        List<String> titles = questionDTO.stream().map(QuestionDTO::getTitle).collect(Collectors.toList());
-//        List<String> contents = questionDTO.stream().map(QuestionDTO::getContent).collect(Collectors.toList());
-//        questionBody.put("id", ids);
-//        questionBody.put("title", titles);
-//        questionBody.put("content", contents);
         questionBody.put("question", questionDTO);
 
         Map<String, Object> requestBody = new HashMap<>();
@@ -67,6 +61,7 @@ public class QuestionService {
         System.out.println("========================REQUESTBODY"+requestBody);
 
         Map<String, Object> responseBody = fastApiClient.getSpam(requestBody);
+        System.out.println("========================responseBody"+responseBody);
         Map<String, Object> response = new HashMap<>();
 
         if (responseBody != null && Boolean.TRUE.equals(responseBody.get("valid"))) {
