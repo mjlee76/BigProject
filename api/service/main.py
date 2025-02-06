@@ -45,7 +45,7 @@ os.makedirs(UPLOAD_DIR, exist_ok=True)
 
 load_directory = "./nsfw_model"
 image_model, processor, image_classifier = nd.load_model(load_directory)
-spam_detector = SpamDetector(model_name="snunlp/KR-SBERT-V40K-klueNLI-augSTS", threshold=0.8)
+spam_detector = SpamDetector()
 
 #게시글 작성자 정보
 class UserInfo(BaseModel):
@@ -80,13 +80,18 @@ class ReportBody(BaseModel):
 class CombinedModel(BaseModel):
     post_data: PostBody
     report_req: ReportBody
+    
+class SpamQuestion(BaseModel):
+    question_id: int
+    title: str
+    content: str
 
 @app.post("/filtered_module")
 async def update_item(data: CombinedModel):
     try:
         post_data = data.post_data
         report_req = data.report_req
-        
+
         title = post_data.title
         content = post_data.content
         post_origin_data = {"제목": title, "내용": content} # 원문데이터 저장용
@@ -142,7 +147,7 @@ async def update_item(data: CombinedModel):
     except Exception as e:
         logger.error(f"처리 실패: {str(e)}")
         raise HTTPException(500, "서버 내부 오류")
-    
+
 @app.post("/make_report")
 def make_report(data: CombinedModel):
     post_data = data.post_data
@@ -169,6 +174,19 @@ def make_report(data: CombinedModel):
             "report_req": report_req.dict()
     }
 '''report_req , {"status": "ok", "spring_response": result}'''
+
+@app.post("/check_spam/")
+def check_spam(spam_question: SpamQuestion):
+    """
+    게시글 스팸 여부를 확인하는 엔드포인트
+    """
+    filtered_id = spam_detector.check_spam_and_store(spam_question)
+
+    return {
+        "status": "success",
+        "filtered_id": filtered_id,
+        "message": "게시글 처리 완료"
+    }
 
 #이미지 탐지
 @app.post("/upload/")
