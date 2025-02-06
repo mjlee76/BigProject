@@ -154,9 +154,3 @@ button.delete-button:hover {
     background-color: #e6e6e6;
     color: #000;
 }
-
-.pagination a.disabled {
-    pointer-events: none; /* 클릭 방지 */
-    opacity: 0.5; /* 흐리게 표시 */
-    cursor: default; /* 기본 마우스 커서 */
-}

@@ -445,7 +445,6 @@ a:-webkit-any-link {
     border-radius: 4px;;
 }
 
-
 /* 비활성화된 링크 스타일 (첫 페이지, 마지막 페이지 비활성화 시) */
 .pagination a[disabled], .pagination a:disabled,
 .pagination button[disabled], .pagination button:disabled {
