@@ -62,6 +62,10 @@ public class QuestionDTO {
         return questionDTO;
     }
 
+    public void updateEntity(Question question) {
+        question.updateTitleAndContent(this.title, this.content);
+    }
+
 //    public QuestionDTO(Question question) {
 //        id = question.getId();
 //        title = question.getTitle();

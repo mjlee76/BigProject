@@ -38,6 +38,11 @@ public class UserService {
 
     }
 
+    public User findUserById(Long userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+    }
+
     public String checkUnique(String userId, String password, String phoneNum, String eMail) {
         List<User> listUsers = userRepository.findAll();
 

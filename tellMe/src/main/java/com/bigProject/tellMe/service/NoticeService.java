@@ -98,7 +98,7 @@ public class NoticeService {
         // ✅ 현재 요청된 페이지 번호에서 1을 뺀 값 (Spring Data JPA는 페이지 인덱스를 0부터 시작함)
         int page = pageable.getPageNumber() - 1;
         // ✅ 한 페이지에서 보여줄 공지사항 개수
-        int pageLimit = 5;
+        int pageLimit = 10;
         // ✅ 공지사항을 ID 기준으로 내림차순 정렬하여 페이지네이션 적용된 데이터 조회
         // PageRequest.of(페이지 번호, 페이지당 개수, 정렬 기준)
         Page<Notice> notices =

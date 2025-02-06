@@ -196,8 +196,11 @@ main {
     background-color: #22A9FD;
 }
 
-
-
+/* 모든 링크에 대해 밑줄 제거 */
+a:-webkit-any-link {
+    text-decoration: none;  /* 기본 밑줄 제거 */
+    color: inherit;  /* 기본 글자 색상 상속 */
+}
 
 /* 테이블 기본 스타일 */
 .post-table {

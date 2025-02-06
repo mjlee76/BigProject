@@ -91,4 +91,10 @@ public class Question {
         this.status = Status.답변완료;
     }
 
+    public void updateTitleAndContent(String title, String content) {
+        this.title = title;
+        this.content = content;
+    }
+
+
 }

@@ -1,6 +1,9 @@
 package com.bigProject.tellMe.controller;
 
+import com.bigProject.tellMe.dto.QuestionDTO;
 import com.bigProject.tellMe.dto.UserDTO;
+import com.bigProject.tellMe.entity.User;
+import com.bigProject.tellMe.service.QuestionService;
 import com.bigProject.tellMe.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -9,20 +12,28 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.List;
+
 @Controller
 @RequestMapping("myPage")
 @RequiredArgsConstructor
 public class MyPageController {
     private final UserService userService;
+    private final QuestionService questionService;
 
     @GetMapping("/editInfo")
     public String myPage(Authentication auth, Model model) {
-        UserDTO user = userService.findByUserId(auth.getName());
+        UserDTO userDTO = userService.findByUserId(auth.getName());
 
-        user.setPhone(maskPhNum(user.getPhone()));
-        user.setEmail(maskEmail(user.getEmail()));
+        userDTO.setPhone(maskPhNum(userDTO.getPhone()));
+        userDTO.setEmail(maskEmail(userDTO.getEmail()));
 
-        model.addAttribute("user", user);
+        User user = userService.findUserById(userDTO.getId());
+        List<QuestionDTO> questions = questionService.findQuestionsByUser(user);
+
+        model.addAttribute("user", userDTO);
+        model.addAttribute("questions", questions);
+
         return "mypage/main";
     }
     private String maskPhNum(String phone) {
@@ -44,13 +55,9 @@ public class MyPageController {
         return email; // 유효하지 않은 이메일은 그대로 반환
     }
 
-    @GetMapping("/editPassword")
-    public String editInfo() {
-        return "mypage/edit_password";
-    }
+//    @GetMapping("/editPassword")
+//    public String editInfo() {
+//        return "mypage/edit_password";
+//    }
 
-    @GetMapping("/myComplaint")
-    public String checkComplaint() {
-        return "mypage/my_complaint";
-    }
 }

@@ -1,4 +1,43 @@
 document.addEventListener("DOMContentLoaded", function () {
+    const datePicker = document.getElementById("date-picker");
+    const searchBtn = document.getElementById("search-btn");
+    const currentDateElement = document.getElementById("current-date");
+
+    // ✅ 현재 날짜 설정
+    function setCurrentDate() {
+        const today = new Date();
+        const formattedDate = today.toISOString().split("T")[0]; // YYYY-MM-DD 형식
+        currentDateElement.textContent = `현재 날짜: ${formattedDate}`;
+        datePicker.value = formattedDate; // 날짜 선택창 기본값 설정
+    }
+
+    setCurrentDate(); // ✅ 페이지 로드 시 현재 날짜 표시
+
+    // ✅ 날짜별 통계 검색 기능
+    searchBtn.addEventListener("click", function () {
+        const selectedDate = datePicker.value; // 사용자가 선택한 날짜 가져오기
+        if (!selectedDate) {
+            alert("날짜를 선택해주세요!");
+            return;
+        }
+
+        // ✅ 선택한 날짜로 데이터 요청
+        fetch(`/api/statistics/daily?date=${selectedDate}`)
+            .then(response => response.json())
+            .then(data => {
+                updateDailyChart(data); // ✅ 차트 업데이트 실행
+            })
+            .catch(error => console.error("데이터 불러오기 오류:", error));
+    });
+
+    // ✅ 날짜 선택 변경 시 자동 검색 (선택 사항)
+    datePicker.addEventListener("change", function () {
+        searchBtn.click();
+    });
+});
+
+
+document.addEventListener("DOMContentLoaded", function () {
     const menuItems = document.querySelectorAll(".menu-item");
 
     // 각 통계별 div 요소 가져오기
@@ -28,7 +67,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function showSection(target) {
         Object.values(sections).forEach(section => section.style.display = "none");
-        if (sections[target]) sections[target].style.display = "block";
+        if (sections[target]) sections[target].style.display = "flex";
     }
 
     function loadDailyChart() {
@@ -123,12 +162,29 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function loadAgeChart() {
         removeExistingChart(chartInstances.agePieChartInstance);
-        let ctx = document.getElementById("agePieChart").getContext("2d");
+        let ctx = document.getElementById("ageBarChart").getContext("2d");
 
         chartInstances.agePieChartInstance = new Chart(ctx, {
-            type: "pie",
-            data: { labels: ["10대", "20대", "30대 이상"], datasets: [{ data: [20, 50, 30], backgroundColor: ["#FFCE56", "#36A2EB", "#FF6384"] }] },
-            options: { responsive: true }
+            type: "bar", // ✅ 바 그래프로 변경
+            data: {
+                labels: ["10대", "20대", "30대", "40대", "50대", "60대 이상"],
+                datasets: [{
+                    label: "연령별 악성민원 수",
+                    data: [20, 50, 40, 30, 25, 15], // ✅ 실제 데이터 입력
+                    backgroundColor: "rgba(54, 162, 235, 0.6)",
+                    borderColor: "rgba(54, 162, 235, 1)",
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
         });
     }
 
