@@ -51,7 +51,6 @@ spam_detector = SpamDetector()
 classifier = TextClassifier()
 changetexter = ChangeText()
 report = MakeReport()
-
 docu_loader = LoadDocumentFile()
 logger = logging.getLogger("my_logger")
 
@@ -89,6 +88,7 @@ class CombinedModel(BaseModel):
     post_data: PostBody
     report_req: ReportBody
     
+#spam_detect용 class 생성성
 class QuestionApiDTO(BaseModel):
     id: int
     title: str
@@ -105,6 +105,7 @@ class SpamQuestionRequest(BaseModel):
     post_data: PostData
     question_data: QuestionData
 
+#민원 악성탐지 및 순화
 @app.post("/filtered_module")
 async def update_item(data: CombinedModel):
     try:
@@ -152,7 +153,7 @@ async def update_item(data: CombinedModel):
             # 보고서 생성
             return {
                 "valid": True,
-                "message": "데이터 수신 및 처리 완료",
+                "message": "악성 데이터 수신 및 처리 완료",
                 "post_data": post_data.model_dump(),
                 "report_req": report_req.model_dump()
             }
@@ -162,15 +163,20 @@ async def update_item(data: CombinedModel):
             report_req.category.content = content_label
             return    {
                 "valid": True,
-                "message": "데이터 수신 및 처리 완료",
+                "message": "원문 데이터 수신 및 처리 완료",
                 "post_data": post_data.model_dump(),
                 "report_req": report_req.model_dump()
             }
 
     except Exception as e:
         logger.error(f"처리 실패: {str(e)}")
-        raise HTTPException(500, "서버 내부 오류")
+        return  {
+            "valid": False,
+            "message" : f"처리 실패: {str(e)}",
+        }
     
+
+#보고서 작성 플로우
 @app.post("/make_report")
 async def make_report(data: CombinedModel):
     post_data = data.post_data
@@ -180,7 +186,6 @@ async def make_report(data: CombinedModel):
         report.report_prompt(post_data)
         report.cell_fill(post_data, report_req)
         time, output_file = report.report_save()
-        # formatted_time = time.strftime("%Y-%m-%d %H:%M:%S")
         report_req.create_date = time
         report_req.report_path = output_file
 
@@ -192,18 +197,18 @@ async def make_report(data: CombinedModel):
     }
 
 @app.post("/check_spam/")
-def check_spam(request: SpamQuestionRequest):
+async def check_spam(request: SpamQuestionRequest):
     """
     게시글 스팸 여부를 확인하는 엔드포인트
     """
     post = request.post_data
     questions = request.question_data.question
-    
-    filtered_id = spam_detector.check_spam_and_store(post, questions)
-
+    await spam_detector.init()
+    filtered_id = await spam_detector.async_check_spam_and_store(post, questions)
     return {
+        "valid" : True,
         "status": "success",
-        "filtered_id": filtered_id,
+        "filtered_id": f"{filtered_id}",
         "message": "게시글 처리 완료"
     }
 
@@ -225,14 +230,13 @@ async def upload_image(file: FilePath):
         nsfw_score = None
         try:
             image = nd.load_image(file_location)
-            
             # 이미지가 손상되었는지 체크
             try : 
                 image.verify()
                 
             except Exception as e:
                 return {
-                    "valid": True,
+                    "valid": False,
                     "message" : "이미지 파일이 손상되었거나 유효하지 않습니다.",
                     "file_path" : file_path
                     }
@@ -254,7 +258,7 @@ async def upload_image(file: FilePath):
 
         except Exception as e: 
             return {
-                "valid": True,
+                "valid": False,
                 "message" : str(e),
                 "file_path" : file_path
                 }
@@ -266,7 +270,7 @@ async def upload_image(file: FilePath):
     else:
         if not file_name.lower().endswith((".hwp", ".hwpx", ".doc", ".docx", ".pdf")):
             return {
-                "valid": True,
+                "valid": False,
                 "message" : "유효한 문서 파일이 아닙니다.",
                 "file_path" : file_path
                 }
@@ -281,12 +285,13 @@ async def upload_image(file: FilePath):
         if content_label != '정상':
             os.remove(file_location)
             return{
-                "valid": True,
+                "valid": False,
                 "message" : "악성 파일로 판단되어 업로드가 차단되었습니다.",
                 "file_path" : file_path
-                }
+            }
 
         return {
             "valid": True,
             "message" : f"문서 탐지 결과: {content_label}",
-            "file_path" : file_path}
+            "file_path" : file_path
+        }
