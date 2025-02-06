@@ -277,9 +277,6 @@ class LoadDocumentFile:
             loader = HWPLoader(docu_path)
         elif ext in [".doc", ".docx"]:
             loader = Docx2txtLoader(docu_path)
-        elif ext == ".txt":
-            text_loader_kwargs = {"autodetect_encoding": True}
-            loader = DirectoryLoader(docu_file_path, loader_cls=TextLoader, loader_kwargs=text_loader_kwargs)
         else: 
             raise ValueError(f"지원되지 않는 파일 형식: {ext}")
         data = loader.load()

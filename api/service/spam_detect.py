@@ -4,6 +4,8 @@ from pydantic import BaseModel
 import torch
 from sentence_transformers import SentenceTransformer, util
 
+#question_id, title, content
+
 class SpamDetector:
     def __init__(self, model_name="snunlp/KR-SBERT-V40K-klueNLI-augSTS", threshold=0.8, max_duplicates=3):
         print("모델 로딩 중...")

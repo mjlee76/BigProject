@@ -137,8 +137,8 @@ async def update_item(data: CombinedModel):
             return {
                 "valid": True,
                 "message": "데이터 수신 및 처리 완료",
-                "post_data": post_data.model_dump_json(),
-                "report_req": report_req.model_dump_json()
+                "post_data": post_data.model_dump(),
+                "report_req": report_req.model_dump()
             }
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
         else: 
@@ -147,8 +147,8 @@ async def update_item(data: CombinedModel):
             return    {
                 "valid": True,
                 "message": "데이터 수신 및 처리 완료",
-                "post_data": post_data.model_dump_json(),
-                "report_req": report_req.model_dump_json()
+                "post_data": post_data.model_dump(),
+                "report_req": report_req.model_dump()
             }
             
     except Exception as e:
@@ -166,11 +166,13 @@ async def make_report(data: CombinedModel):
         time, output_file = report.report_save()
         # formatted_time = time.strftime("%Y-%m-%d %H:%M:%S")
         report_req.create_date = time
-        report_req.report_path = output_file
+        report_req.report_path = output_file                                                                                                                                                                                                                              
     
     return {
             "valid": True,
-            "report_req": report_req.model_dump_json()
+            "message": "보고서 작성 완료",
+            "post_data": post_data.model_dump(),
+            "report_req": report_req.model_dump()
     }
 
 @app.post("/post")
@@ -190,26 +192,34 @@ def create_post(post_data: PostBody):
     return {"message": "게시글 등록 성공", "post_id": post_id, "status": "success"}
 
 #이미지 탐지
-@app.post("/upload/")
-async def upload_image(file: UploadFile = File(...)):
+#임시파일 경로 저장 후 python으로 보냄
+#path 경로는 어떻게? ./uploaded_images 이런형태로?
+class FilePath(BaseModel):
+    file_path : str
     
-    if file.filename.lower().endswith((".jpg", ".jpeg", ".png", ".gif", ".bmp")):
-        if not file.content_type.startswith("image/"):
-            raise HTTPException(status_code=400, detail="유효한 이미지 파일이 아닙니다.")
-        file_location = f"{UPLOAD_DIR}/{file.filename}"
+@app.post("/upload/")
+async def upload_image(file: FilePath):
+    
+    file_path = file.file_path
+    filenames = os.listdir(file_path)
+    file_name = filenames[0]
+    file_location = os.path.join(file_path, file_name)
+
+    if file_name.lower().endswith((".jpg", ".jpeg", ".png", ".gif", ".bmp")):
         nsfw_score = None
         try:
-            async with aiofiles.open(file_location, "wb") as buffer:
-                content = await file.read()
-                await buffer.write(content)
-            image = nd.load_image(UPLOAD_DIR)
+            image = nd.load_image(file_location)
             
             # 이미지가 손상되었는지 체크
             try : 
                 image.verify()
                 
             except Exception as e:
-                raise HTTPException(status_code=400, detail="이미지 파일이 손상되었거나 유효하지 않습니다.")
+                return {
+                    "valid": True,
+                    "message" : "이미지 파일이 손상되었거나 유효하지 않습니다.",
+                    "file_path" : file_path
+                    }
             
             result = image_classifier(image)
             for item in result:
@@ -217,27 +227,51 @@ async def upload_image(file: UploadFile = File(...)):
                     nsfw_score = item.get("score")
                     break
             if nsfw_score is not None and nsfw_score > 0.7:
-                print(nsfw_score)
-                os.remove(file_location)
-                raise HTTPException(status_code=400, detail="NSFW 이미지로 판단되어 업로드가 차단되었습니다.")
-
-            return {"message": "Success", "result": result}
+                results = '악성'
+            else : results = '정상'
+            
+            return {
+                "valid": True,
+                "message" : f"이미지 탐지 결과: {results}",
+                "file_path" : file_path
+            }
 
         except Exception as e: 
-            return {"error": str(e)}
+            return {
+                "valid": True,
+                "message" : str(e),
+                "file_path" : file_path
+                }
         
         finally : 
             if nsfw_score is not None and nsfw_score < 0.7 :
                 os.remove(file_location)
     
     else:
-        file_location = f"{UPLOAD_DIR}/{file.filename}"
-        async with aiofiles.open(file_location, "wb") as buffer:
-            content = await file.read()
-            await buffer.write(content)
+        if not file_name.lower().endswith((".hwp", ".hwpx", ".doc", ".docx", ".pdf")):
+            return {
+                "valid": True,
+                "message" : "유효한 문서 파일이 아닙니다.",
+                "file_path" : file_path
+                }
         
         chroma = Chroma("fewshot_chat", OpenAIEmbeddings())
         data = await docu_loader.select_loader(file_location)
         await docu_loader.init()
         llm_chain = await docu_loader.make_llm_text(data)
-        return llm_chain
+        combined_text = " ".join(llm_chain)
+        content_label = classifier.classify_text(combined_text)
+        print(content_label)
+        if content_label != '정상':
+            os.remove(file_location)
+            return{
+                "valid": True,
+                "message" : "악성 파일로 판단되어 업로드가 차단되었습니다.",
+                "file_path" : file_path
+                }
+            
+        return {
+            "valid": True,
+            "message" : f"문서 탐지 결과: {content_label}",
+            "file_path" : file_path}
+        
