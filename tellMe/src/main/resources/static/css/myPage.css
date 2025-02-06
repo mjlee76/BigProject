@@ -123,7 +123,6 @@ body {
     height: 100px;
     border-radius: 50%;
     overflow: hidden;
-    cursor: pointer;
     border: 3px solid var(--button-bg);
 }
 

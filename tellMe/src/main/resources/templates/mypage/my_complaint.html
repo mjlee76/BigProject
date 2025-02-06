@@ -25,7 +25,11 @@
     <ul class="menu">
       <li class="menu-item" data-target="profile"><a th:href = "@{/myPage/editInfo}">내 프로필</a></li>
       <li class="menu-item" data-target="security"><a th:href = "@{/myPage/editPassword}">비밀번호 설정</a></li>
+<<<<<<< HEAD
       <li class="menu-item active" data-target="history" sec:authorize="hasRole('ROLE_USER')"><a th:href = "@{/myPage/myComplaint}">내 민원 조회</a></li>
+=======
+      <li class="menu-item active" data-target="history"><a th:href = "@{/myPage/myComplaint}">내 민원 조회</a></li>
+>>>>>>> f149090 (내 페이지 수정.)
     </ul>
   </aside>
   <main class="content">
@@ -37,6 +41,7 @@
         <!--        <button class="tab" data-category="처리중" onclick="filterPosts('처리중')">처리중</button>-->
         <!--        <button class="tab" data-category="답변완료" onclick="filterPosts('답변완료')">답변완료</button>-->
         <a class="tab" data-category="all"
+<<<<<<< HEAD
            th:href="@{/myPage/myComplaint(query=${query}, category=${category}, status=null)}"
            th:classappend="${status == 'all' or status == null} ? 'active' : ''">전체</a>
         <a class="tab" data-category="접수중"
@@ -51,14 +56,33 @@
       </div>
       <div class="search-bar">
         <form id="search-form" th:action="@{/myPage/myComplaint}" method="get">
+=======
+           th:href="@{/myPage/editInfo(query=${query}, category=${category}, status=null)}"
+           th:classappend="${status == 'all'} ? 'active' : ''">전체</a>
+        <a class="tab" data-category="접수중"
+           th:href="@{/myPage/editInfo(query=${query}, category=${category}, status='접수중')}"
+           th:classappend="${status == '접수중'} ? 'active' : ''">접수중</a>
+        <a class="tab" data-category="처리중"
+           th:href="@{/myPage/editInfo(query=${query}, category=${category}, status='처리중')}"
+           th:classappend="${status == '처리중'} ? 'active' : ''">처리중</a>
+        <a class="tab" data-category="답변완료"
+           th:href="@{/myPage/editInfo(query=${query}, category=${category}, status='답변완료')}"
+           th:classappend="${status == '답변완료'} ? 'active' : ''">답변완료</a>
+      </div>
+      <div class="search-bar">
+        <form id="search-form" th:action="@{/myPage/editInfo}" method="get">
+>>>>>>> f149090 (내 페이지 수정.)
           <select id="search-category" name="category">
             <option value="all" th:selected="${category == 'all'}">전체</option>
             <option value="title" th:selected="${category == 'title'}">제목</option>
             <option value="content" th:selected="${category == 'content'}">내용</option>
           </select>
           <input id="search-input" type="text" name="query" th:value="${query}" placeholder="검색어를 입력하세요.">
+<<<<<<< HEAD
           <input type="hidden" name="page" th:value="${currentPage}">
           <input type="hidden" name="status" th:value="${status}">
+=======
+>>>>>>> f149090 (내 페이지 수정.)
           <input type="hidden" name="page" value="1">
           <button type="submit" id="search-button">
             <!-- 새로운 SVG 아이콘 -->
@@ -107,6 +131,7 @@
         </tbody>
       </table>
 
+<<<<<<< HEAD
       <div class="pagination" th:if="${not questions.isEmpty()}">
 
         <!-- 첫 번째 페이지로 이동 버튼 (<<) -->
@@ -129,10 +154,20 @@
         <span th:each="pageNum : ${#numbers.sequence(startPage, endPage)}">
         <a th:if="${pageNum != currentPage}"
            th:href="@{/myPage/myComplaint(query=${query}, category=${category}, status=${status}, page=${pageNum})}"
+=======
+      <div class="pagination">
+        <a th:if="${startPage > 1}"
+           th:href="@{/myPage/editInfo(query=${query}, category=${category}, status=${status}, page=${startPage - 1})}">이전</a>
+
+        <span th:each="pageNum : ${#numbers.sequence(startPage, endPage)}">
+        <a th:if="${pageNum != currentPage}"
+           th:href="@{/myPage/editInfo(query=${query}, category=${category}, status=${status}, page=${pageNum})}"
+>>>>>>> f149090 (내 페이지 수정.)
            th:text="${pageNum}"></a>
         <span th:unless="${pageNum != currentPage}" th:text="${pageNum}" class="current"></span>
         </span>
 
+<<<<<<< HEAD
         <!-- 다음 페이지 이동 버튼 (>) -->
         <a th:href="@{/myPage/myComplaint(
            query=${query},
@@ -148,6 +183,10 @@
            status=${status},
            page=${totalPages})}"
            th:classappend="${currentPage == totalPages} ? 'disabled' : ''">»</a>
+=======
+        <a th:if="${endPage < totalPages}"
+           th:href="@{/myPage/editInfo(query=${query}, category=${category}, status=${status}, page=${endPage + 1})}">다음</a>
+>>>>>>> f149090 (내 페이지 수정.)
       </div>
 
     </section>
