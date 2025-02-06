@@ -13,20 +13,11 @@
 <body>
 <div th:replace="layouts/navbar::tellMe_header"></div>
 <main id="inquiry-board">
-
     <div class="inquiry-header">
         <h1>문의게시판</h1>
     </div>
 
     <div class="tabs">
-<!--        <button class="tab active" data-status="all" onclick="filterPosts('all')">전체</button>-->
-<!--        <button class="tab" data-status="접수중" onclick="filterPosts('접수중')">접수중</button>-->
-<!--        <button class="tab" data-status="처리중" onclick="filterPosts('처리중')">처리중</button>-->
-<!--        <button class="tab" data-status="답변완료" onclick="filterPosts('답변완료')">답변완료</button>-->
-<!--        <a class="tab" data-status="all" th:href="@{/complaint/question(query=${query}, category=${category}, status=null, page=1, size=5)}" th:classappend="${status == 'all'} ? 'active' : ''">전체</a>-->
-<!--        <a class="tab" data-status="접수중" th:href="@{/complaint/question(query=${query}, category=${category}, status='접수중', page=1, size=${questionList.size})}" th:classappend="${status == '접수중'} ? 'active' : ''">접수중</a>-->
-<!--        <a class="tab" data-status="처리중" th:href="@{/complaint/question(query=${query}, category=${category}, status='처리중', page=1, size=${questionList.size})}" th:classappend="${status == '처리중'} ? 'active' : ''">처리중</a>-->
-<!--        <a class="tab" data-status="답변완료" th:href="@{/complaint/question(query=${query}, category=${category}, status='답변완료', page=1, size=${questionList.size})}" th:classappend="${status == '답변완료'} ? 'active' : ''">답변완료</a>-->
         <a class="tab" th:href="@{/complaint/question(query=${query}, category=${category}, status=null, page=1, size=${questionList.size})}"
            th:classappend="${status == 'all' or status == null} ? 'active' : ''" data-status="all">전체</a>
         <a class="tab" th:href="@{/complaint/question(query=${query}, category=${category}, status='접수중', page=1, size=${questionList.size})}"
@@ -88,10 +79,8 @@
         </script>
     </table>
     <p>전체 <strong id="total-posts">0</strong> (1 / <span id="total-pages">1</span> 페이지)</p>
-
     <div class="content-area"></div>
     <div class="pagination">
-        <div class="pagination">
             <!-- 첫 번째 페이지로 이동 버튼 (<<) -->
             <a th:href="@{/complaint/question(query=${query}, category=${category}, status=${status}, page=1, size=10)}"
                th:classappend="${currentPage == 1} ? 'disabled' : ''">«</a>
@@ -107,11 +96,6 @@
 
             <!-- 페이지 번호 -->
             <span th:each="pageNum : ${#numbers.sequence(startPage, T(java.lang.Math).min(endPage, startPage + 4))}">
-<!--            <span th:each="page: ${#numbers.sequence(startPage, endPage)}">-->
-<!--                <span th:if="${page == questionList.number + 1}" class="current" th:text="${page}"></span>-->
-<!--                <a th:unless="${page == questionList.number + 1}" th:href="@{/complaint/question(page=${page})}" th:text="${page}"></a>-->
-<!--            </span>-->
-            <span th:each="pageNum : ${#numbers.sequence(startPage, endPage)}">
             <a th:if="${pageNum != currentPage}"
                th:href="@{/complaint/question(query=${query}, category=${category}, status=${status}, page=${pageNum}, size=10)}"
                th:text="${pageNum}"></a>
@@ -130,7 +114,6 @@
             <!-- 마지막 페이지로 이동 버튼 (>>) -->
             <a th:href="@{/complaint/question(query=${query}, category=${category}, status=${status}, page=${totalPages}, size=10)}"
                th:classappend="${currentPage == totalPages} ? 'disabled' : ''">»</a>
-        </div>
     </div>
 </main>
 <div th:replace="layouts/footer::tellMe_footer"></div>

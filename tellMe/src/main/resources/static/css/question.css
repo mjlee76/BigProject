@@ -19,7 +19,6 @@ body {
 
 a:-webkit-any-link {
     text-decoration: none;  /* 기본 밑줄 제거 */
-    color: inherit;  /* 기본 글자 색상 상속 */
 }
 
 .inquiry-header {

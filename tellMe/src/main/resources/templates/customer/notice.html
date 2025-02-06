@@ -97,7 +97,6 @@
 
     <!-- 첫번째 페이지로 이동 -->
     <!-- /notice/paging?page=1 -->
-    <div class="pagination">
         <div class="pagination">
             <!-- 첫번째 페이지로 이동 -->
             <a th:href="@{/customer/notice(page=1)}">«</a>
@@ -117,7 +116,6 @@
             <!-- 마지막 페이지로 이동 -->
             <a th:href="@{/customer/notice(page=${noticeList.totalPages})}">»</a>
         </div>
-    </div>
 </main>
 <div th:replace="layouts/footer::tellMe_footer"></div>
 </body>

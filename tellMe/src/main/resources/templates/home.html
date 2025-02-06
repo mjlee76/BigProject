@@ -12,62 +12,150 @@
 </head>
 <body>
 <div th:replace="layouts/navbar::tellMe_header"></div>
-<div class="wrapper">
-    <div class="background-container">
-        <img th:src="@{/image/background.png}" class="background-image">
-    </div>
-    <div class="grid-style">
-        <div class="box left">
-            <div class="image fit">
-                <img src="image/home_inquiry.png" alt="상담 이미지" width="600" height="300">
-            </div>
-            <div class="content">
-                <div class="inner">
-                    <header class="align-center">
-                        <p>민원 처리 및 고충이 있다면 언제든지 연락주세요.</p>
-                        <h1>원하는 상담 및 기능이
-                            있으신가요?</h1>
-                    </header>
-                    <div class="menu-bar">
-                        <button class="menu-button" onclick="updateContent('유선 상담을 원하시나요?')">유선상담</button>
-                        <button class="menu-button" onclick="updateContent('채팅 상담을 원하시나요?')">채팅상담</button>
-                        <button class="menu-button" onclick="updateContent('기술 지원이 필요하신가요?')">기술지원</button>
-                    </div>
-                    <div id="dynamic-area" class="dynamic-content">
-                        <h2 id="main-text"></h2> <!-- 초기 상태 비워둠 -->
-                        <p id="sub-text"></p> <!-- 초기 상태 비워둠 -->
-                        <p>
-                            <strong id="contact-strong"></strong>
-                            <span id="contact-icon"></span>
-                            <span id="contact-info"></span>
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
 
-        <div class="box right">
-            <div class="image fit">
-                <img src="image/homebackground.jpg" alt="게시판 이미지" width="600" height="300">
-            </div>
-            <div class="content">
-                <div class="inner">
-                    <header class="align-center">
-                        <p>민원 게시판을 이용하기</p>
-                        <h1>민원 게시판을 이용하시려면 아래 시작하기 버튼을 눌러주세요.</h1>
-                    </header>
-                    <p>민원 처리는 복잡하지 않아야 합니다.
-                        고객님의 불편을 귀담아듣고 신속히 해결할 수 있도록 노력하겠습니다.
-                        지금 바로 민원 처리를 시작해보세요.
-                    </p>
-                    <footer class="align-center">
-                        <a th:href="@{/complaint/new}" class="button alt">시작하기</a>
-                    </footer>
-                </div>
-            </div>
-        </div>
+<div class="wrapper2">
+    <div class="area left">
+
+    </div>
+    <div class="area left">
+
     </div>
 </div>
+
+
+<div class="wrapper">
+    <div class="area left">
+        <div class="image fit">
+            <img src="image/homebackground.png" alt="게시판 이미지" width="600" height="300">
+        </div>
+    </div>
+    <div class="area right">
+        <ul class="grid-container">
+            <li class="box">
+                <img th:src="@{/image/background2.png}" class="background-image">
+                <div>
+                    <p>깨끗하고 원활한</p>
+                    <p>민원 접수</p>
+                </div>
+                <p>안심하세요!</p>
+            </li>
+            <li class="box">
+                <img th:src="@{/image/box2.jpg}" class="background-image">
+                <div>
+                    <p>불편한 게시글은 사라지고</p>
+                    <p>원하는 답변은 빠르게!</p>
+                </div>
+                <p></p>
+            </li>
+            <li class="box">
+                <img th:src="@{/image/pic01.jpg}" class="background-image">
+                <div>
+                    <p>신고하고 싶은 글?</p>
+                    <p>도배, 욕설, 부적절한 이미지?</p>
+                </div>
+                <p>AI 필터가 차단해요!</p>
+            </li>
+            <li class="box typeTwo">
+                <img th:src="@{/image/background.png}" class="background-image">
+                <div>
+                    <p>여러분의 민원이</p>
+                    <p>빠르고 정확하게</p>
+                </div>
+                <p>처리됩니다!</p>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<!--<div class="wrapper2">-->
+<!--    <div class="area left">-->
+<!--        <ul class="grid-container">-->
+<!--            <li class="box">-->
+<!--                <div>-->
+<!--                    <p>빠른 민원 접수</p>-->
+<!--                    <p>쉽고 직관적인 인터페이스로 빠르게 민원 작성</p>-->
+<!--                </div>-->
+<!--                <p></p>-->
+<!--            </li>-->
+<!--            <li class="box">-->
+<!--                <div>-->
+<!--                    <p>불편한 글 자동 차단</p>-->
+<!--                    <p>욕설, 도배, 혐오 표현 없이 쾌적한 환경 제공</p>-->
+<!--                </div>-->
+<!--                <p></p>-->
+<!--            </li>-->
+<!--            <li class="box">-->
+<!--                <div>-->
+<!--                    <p>내 민원 처리 상황 한눈에</p>-->
+<!--                    <p>내가 남긴 글의 진행 상태를 실시간 확인</p>-->
+<!--                </div>-->
+<!--                <p></p>-->
+<!--            </li>-->
+<!--            <li class="box typeTwo">-->
+<!--                <div>-->
+<!--                    <p>유사 민원 자동 추천</p>-->
+<!--                    <p>기존 해결된 유사 사례를 통해 빠른 해결 가능</p>-->
+<!--                </div>-->
+<!--                <p></p>-->
+<!--            </li>-->
+<!--        </ul>-->
+<!--    </div>-->
+<!--    <div class="area right">-->
+<!--        <div class="image fit">-->
+<!--            <img src="image/home_inquiry.png" alt="게시판 이미지" width="600" height="300">-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
+
+<!-------------------------------------------->
+
+<!--<div class="wrapper style2">-->
+<!--    <div class="area left">왼쪽 영역</div>-->
+<!--        <div class="content">-->
+<!--            <div class="inner">-->
+<!--                <header class="align-center">-->
+<!--                    <p>민원 처리 및 고충이 있다면 언제든지 연락주세요.</p>-->
+<!--                    <h1>원하는 상담 및 기능이-->
+<!--                        있으신가요?</h1>-->
+<!--                </header>-->
+<!--                <div class="menu-bar">-->
+<!--                    <button class="menu-button" onclick="updateContent('유선 상담을 원하시나요?')">유선상담</button>-->
+<!--                    <button class="menu-button" onclick="updateContent('채팅 상담을 원하시나요?')">채팅상담</button>-->
+<!--                    <button class="menu-button" onclick="updateContent('기술 지원이 필요하신가요?')">기술지원</button>-->
+<!--                </div>-->
+<!--                <div id="dynamic-area" class="dynamic-content">-->
+<!--                    <h2 id="main-text"></h2> &lt;!&ndash; 초기 상태 비워둠 &ndash;&gt;-->
+<!--                    <p id="sub-text"></p> &lt;!&ndash; 초기 상태 비워둠 &ndash;&gt;-->
+<!--                    <p>-->
+<!--                        <strong id="contact-strong"></strong>-->
+<!--                        <span id="contact-icon"></span>-->
+<!--                        <span id="contact-info"></span>-->
+<!--                    </p>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--    <div class="area right">-->
+<!--        <div class="content">-->
+<!--            <div class="inner">-->
+<!--                <header>-->
+<!--                    <p>민원 게시판을 이용하기</p>-->
+<!--                    <h1>민원 게시판을 이용하시려면 아래 시작하기 버튼을 눌러주세요.</h1>-->
+<!--                </header>-->
+<!--                <p>민원 처리는 복잡하지 않아야 합니다.-->
+<!--                    고객님의 불편을 귀담아듣고 신속히 해결할 수 있도록 노력하겠습니다.-->
+<!--                    지금 바로 민원 처리를 시작해보세요.-->
+<!--                </p>-->
+<!--                <footer class="align-center">-->
+<!--                    <a th:href="@{/complaint/new}" class="button alt">시작하기</a>-->
+<!--                </footer>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
+
+<!-------------------------------------------->
+
 <div th:replace="layouts/footer::tellMe_footer"></div>
 </body>
 </html>
