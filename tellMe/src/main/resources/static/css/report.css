@@ -170,8 +170,6 @@ main {
     position: relative; /* 탭 버튼의 위치를 조정 가능하게 설정 */
 }
 
-
-
 /* 활성화된 탭 스타일 */
 .tab.active {
     color: #22A9FD;

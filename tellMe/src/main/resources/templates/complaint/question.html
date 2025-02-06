@@ -19,15 +19,19 @@
     </div>
 
     <div class="tabs">
-<!--        <button class="tab active" data-status="all" onclick="filterPosts('all')">전체</button>-->
-<!--        <button class="tab" data-status="접수중" onclick="filterPosts('접수중')">접수중</button>-->
-<!--        <button class="tab" data-status="처리중" onclick="filterPosts('처리중')">처리중</button>-->
-<!--        <button class="tab" data-status="답변완료" onclick="filterPosts('답변완료')">답변완료</button>-->
-        <a class="tab" data-status="all" th:href="@{/complaint/question(query=${query}, category=${category}, status=null, page=1, size=10)}" th:classappend="${status == 'all'} ? 'active' : ''">전체</a>
-        <a class="tab" data-status="접수중" th:href="@{/complaint/question(query=${query}, category=${category}, status='접수중', page=1, size=${questionList.size})}" th:classappend="${status == '접수중'} ? 'active' : ''">접수중</a>
-        <a class="tab" data-status="처리중" th:href="@{/complaint/question(query=${query}, category=${category}, status='처리중', page=1, size=${questionList.size})}" th:classappend="${status == '처리중'} ? 'active' : ''">처리중</a>
-        <a class="tab" data-status="답변완료" th:href="@{/complaint/question(query=${query}, category=${category}, status='답변완료', page=1, size=${questionList.size})}" th:classappend="${status == '답변완료'} ? 'active' : ''">답변완료</a>
+        <a class="tab active" data-status="all"
+           th:href="@{/complaint/question(query=${query}, category=${category}, page=1, size=10)}"
+           th:classappend="${status == 'all'} ? 'active' : ''">전체</a>
+
+        <a class="tab" data-status="접수중" th:href="@{/complaint/question(query=${query}, category=${category}, status='접수중', page=1, size=${questionList.size})}"
+           th:classappend="${status == '접수중'} ? 'active' : ''">접수중</a>
+        <a class="tab" data-status="처리중" th:href="@{/complaint/question(query=${query}, category=${category}, status='처리중', page=1, size=${questionList.size})}"
+           th:classappend="${status == '처리중'} ? 'active' : ''">처리중</a>
+        <a class="tab" data-status="답변완료" th:href="@{/complaint/question(query=${query}, category=${category}, status='답변완료', page=1, size=${questionList.size})}"
+           th:classappend="${status == '답변완료'} ? 'active' : ''">답변완료</a>
     </div>
+
+
     <div class="search-bar">
         <form id="search-form" th:action="@{/complaint/question}" method="get">
             <select id="search-category" name="category">

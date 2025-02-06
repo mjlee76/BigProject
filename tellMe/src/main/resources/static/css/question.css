@@ -19,6 +19,7 @@ body {
 
 a:-webkit-any-link {
     text-decoration: none;  /* 기본 밑줄 제거 */
+    color: inherit;  /* 기본 글자 색상 상속 */
 }
 
 .inquiry-header {
@@ -200,14 +201,12 @@ a:-webkit-any-link {
     position: relative; /* 탭 버튼의 위치를 조정 가능하게 설정 */
 }
 
-
-
 /* 활성화된 탭 스타일 */
 .tab.active {
-    color: #22A9FD;
-    font-weight: bold;
-    bottom: -1px; /* 같은 위치에서 밑줄 생성 */
-    border-bottom: 1px solid #22A9FD;
+    color: #22A9FD !important;
+    font-weight: bold !important;
+    bottom: -1px !important; /* 같은 위치에서 밑줄 생성 */
+    border-bottom: 1px solid #22A9FD !important;
 }
 
 /* 탭 호버 효과 */
@@ -241,8 +240,8 @@ a:-webkit-any-link {
     padding: 10px; /* 셀 내부 여백을 늘림 */
     text-align: center; /* 모든 셀 중앙 정렬 */
 }
-.post-table td a:hover {
 
+.post-table td a:hover {
     color: #1674C3; /* 호버 시 색상 변경 (선택 사항) */
 }
 
