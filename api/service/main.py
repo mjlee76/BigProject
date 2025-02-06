@@ -48,6 +48,12 @@ os.makedirs(UPLOAD_DIR, exist_ok=True)
 load_directory = "./nsfw_model"
 image_model, processor, image_classifier = nd.load_model(load_directory)
 spam_detector = SpamDetector()
+classifier = TextClassifier()
+changetexter = ChangeText()
+report = MakeReport()
+
+docu_loader = LoadDocumentFile()
+logger = logging.getLogger("my_logger")
 
 #게시글 작성자 정보
 class UserInfo(BaseModel):
@@ -83,10 +89,21 @@ class CombinedModel(BaseModel):
     post_data: PostBody
     report_req: ReportBody
 
-class SpamQuestion(BaseModel):
-    question_id: int
+class QuestionApiDTO(BaseModel):
+    id: int
     title: str
     content: str
+
+class PostData(BaseModel):
+    title: str
+    content: str
+
+class QuestionData(BaseModel):
+    question: List[QuestionApiDTO]
+
+class SpamQuestionRequest(BaseModel):
+    post_data: PostData
+    question_data: QuestionData
 
 @app.post("/filtered_module")
 async def update_item(data: CombinedModel):
@@ -176,10 +193,15 @@ async def make_report(data: CombinedModel):
 
 @app.post("/check_spam")
 def check_spam(spam_question: SpamQuestion):
+@app.post("/check_spam/")
+def check_spam(request: SpamQuestionRequest):
     """
     게시글 스팸 여부를 확인하는 엔드포인트
     """
-    filtered_id = spam_detector.check_spam_and_store(spam_question)
+    post = request.post_data
+    questions = request.question_data.question
+
+    filtered_id = spam_detector.check_spam_and_store(post, questions)
 
     return {
         "status": "success",
