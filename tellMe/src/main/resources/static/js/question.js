@@ -1,4 +1,4 @@
-//document.addEventListener('DOMContentLoaded', function() {
+// document.addEventListener('DOMContentLoaded', function() {
 //    const searchForm = document.getElementById('search-form');
 //    const searchInput = document.getElementById('search-input');
 //    const searchCategory = document.getElementById('search-category');
@@ -131,13 +131,14 @@
 //        document.getElementById('total-posts').textContent = count;
 //        document.getElementById('total-pages').textContent = Math.ceil(count / 10);
 //    }
-//});
+// });
 //
-//document.querySelectorAll('.pagination a').forEach(link => {
+// document.querySelectorAll('.pagination a').forEach(link => {
 //    link.addEventListener('click', function(e) {
 //        e.preventDefault();
 //        const page = this.getAttribute('th:href').match(/page=(\d+)/)[1];
 //        updatePage(page);
 //        applyFilters(); // 필터 재적용
 //    });
-//});
+// });
+
