@@ -124,7 +124,10 @@ body {
     height: 100px;
     border-radius: 50%;
     overflow: hidden;
+<<<<<<< HEAD
     cursor: pointer;
+=======
+>>>>>>> 24246e8 (내 페이지 수정.)
     border: 3px solid var(--button-bg);
 }
 
@@ -490,7 +493,11 @@ input {
     color: #333; /* 호버 시 진한 색 */
 }
 
+<<<<<<< HEAD
 /* 비활성화 버튼*/
+=======
+/* 비활성화 버튼 */
+>>>>>>> 24246e8 (내 페이지 수정.)
 .pagination button:disabled {
     color: #ccc;
     cursor: not-allowed; /* 비활성화된 버튼 표시 */
