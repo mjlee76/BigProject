@@ -51,17 +51,35 @@ public class ManagerController {
             reportPage = reportService.searchReportsPaged(query, status, pageable);
         }
 
+        int totalPages = reportPage.getTotalPages();
+
+        // 5페이지씩 그룹으로 나누기
+        int groupSize = 5;
+        int currentGroup = (page - 1) / groupSize;
+        int startPage = currentGroup * groupSize + 1;
+        int endPage = Math.min(startPage + groupSize - 1, totalPages);
+
+        // 이전 그룹, 다음 그룹 링크를 위한 로직
+        int prevGroup = (currentGroup > 0) ? currentGroup - 1 : 0;
+        int nextGroup = (currentGroup + 1) * groupSize < totalPages ? currentGroup + 1 : currentGroup;
+
         log.info("Fetching reports - Query: {}, Status: {}, Current Page: {}, Total Pages: {}, Total Elements: {}",
-                query, status, page, reportPage.getTotalPages(), reportPage.getTotalElements());
+                query, status, page, totalPages, reportPage.getTotalElements());
 
         model.addAttribute("reports", reportPage.getContent());
         model.addAttribute("currentPage", page);
-        model.addAttribute("totalPages", reportPage.getTotalPages());
+        model.addAttribute("totalPages", totalPages);
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("endPage", endPage);
+        model.addAttribute("prevGroup", prevGroup);
+        model.addAttribute("nextGroup", nextGroup);
         model.addAttribute("query", query);
         model.addAttribute("status", status);
 
         return "manager/report";
     }
+
+
 
 
 

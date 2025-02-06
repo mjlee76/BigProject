@@ -90,56 +90,29 @@
         </tbody>
     </table>
 
-    <!--        &lt;!&ndash; 보고서 리스트 예시 &ndash;&gt;-->
-    <!--        <tr>-->
-    <!--            <th>1</th>-->
-    <!--            <td>특이 민원 보고서1</td>-->
-    <!--            <td>2025-01-31</td>-->
-    <!--            <td>협박</td>-->
-    <!--            <td class="status unchecked">미확인</td>-->
-    <!--            <td>-->
-    <!--                <a href="#" class="download-link">-->
-    <!--                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-download" viewBox="0 0 24 24">-->
-    <!--                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>-->
-    <!--                        <polyline points="7 10 12 15 17 10"></polyline>-->
-    <!--                        <line x1="12" y1="15" x2="12" y2="3"></line>-->
-    <!--                    </svg>-->
-    <!--                </a>-->
-    <!--            </td>-->
-    <!--        </tr>-->
-    <!--        <tr>-->
-    <!--            <th>2</th>-->
-    <!--            <td>특이 민원 보고서2</td>-->
-    <!--            <td>2025-01-30</td>-->
-    <!--            <td>폭행</td>-->
-    <!--            <td class="status checked">확인 완료</td>-->
-    <!--            <td>-->
-    <!--                <a href="#" class="download-link">-->
-    <!--                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-download" viewBox="0 0 24 24">-->
-    <!--                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>-->
-    <!--                        <polyline points="7 10 12 15 17 10"></polyline>-->
-    <!--                        <line x1="12" y1="15" x2="12" y2="3"></line>-->
-    <!--                    </svg>-->
-    <!--                </a>-->
-    <!--            </td>-->
-    <!--        </tr>-->
-    <!--        </tbody>-->
-    <!--    </table>-->
 
     <!-- 페이지네이션 -->
     <div class="pagination" th:if="${not reports.isEmpty()}">
-        <span th:if="${currentPage > 1}">
-            <a th:href="@{/manager/report(query=${query}, status=${status}, page=${currentPage - 1})}">이전</a>
-        </span>
-        <span th:each="i : ${#numbers.sequence(1, totalPages)}">
-            <a th:href="@{/manager/report(query=${query}, status=${status}, page=${i})}"
-               th:text="${i}"
-               th:classappend="${i == currentPage} ? 'active' : ''"></a>
-        </span>
-        <span th:if="${currentPage < totalPages}">
-            <a th:href="@{/manager/report(query=${query}, status=${status}, page=${currentPage + 1})}">다음</a>
-        </span>
+        <!-- 첫 번째 페이지로 이동 -->
+        <a th:href="@{/manager/report(query=${query}, status=${status}, page=1)}">«</a>
+
+        <!-- 이전 페이지로 이동 -->
+        <a th:href="@{/manager/report(query=${query}, status=${status}, page=${currentPage > 1 ? currentPage - 1 : 1})}">‹</a>
+
+        <!-- 5개의 페이지 범위만 표시 -->
+        <span th:each="i : ${#numbers.sequence(startPage, endPage)}">
+        <a th:href="@{/manager/report(query=${query}, status=${status}, page=${i})}"
+           th:text="${i}"
+           th:classappend="${i == currentPage} ? 'active' : ''"></a>
+    </span>
+
+        <!-- 다음 페이지로 이동 -->
+        <a th:href="@{/manager/report(query=${query}, status=${status}, page=${currentPage < totalPages ? currentPage + 1 : totalPages})}">›</a>
+
+        <!-- 마지막 페이지로 이동 -->
+        <a th:href="@{/manager/report(query=${query}, status=${status}, page=${totalPages})}">»</a>
     </div>
+
 
 </main>
 <div th:replace="layouts/footer::tellMe_footer"></div>
