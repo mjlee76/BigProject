@@ -23,10 +23,18 @@
 <!--        <button class="tab" data-status="접수중" onclick="filterPosts('접수중')">접수중</button>-->
 <!--        <button class="tab" data-status="처리중" onclick="filterPosts('처리중')">처리중</button>-->
 <!--        <button class="tab" data-status="답변완료" onclick="filterPosts('답변완료')">답변완료</button>-->
-        <a class="tab" data-status="all" th:href="@{/complaint/question(query=${query}, category=${category}, status=null, page=1, size=10)}" th:classappend="${status == 'all'} ? 'active' : ''">전체</a>
-        <a class="tab" data-status="접수중" th:href="@{/complaint/question(query=${query}, category=${category}, status='접수중', page=1, size=${questionList.size})}" th:classappend="${status == '접수중'} ? 'active' : ''">접수중</a>
-        <a class="tab" data-status="처리중" th:href="@{/complaint/question(query=${query}, category=${category}, status='처리중', page=1, size=${questionList.size})}" th:classappend="${status == '처리중'} ? 'active' : ''">처리중</a>
-        <a class="tab" data-status="답변완료" th:href="@{/complaint/question(query=${query}, category=${category}, status='답변완료', page=1, size=${questionList.size})}" th:classappend="${status == '답변완료'} ? 'active' : ''">답변완료</a>
+<!--        <a class="tab" data-status="all" th:href="@{/complaint/question(query=${query}, category=${category}, status=null, page=1, size=5)}" th:classappend="${status == 'all'} ? 'active' : ''">전체</a>-->
+<!--        <a class="tab" data-status="접수중" th:href="@{/complaint/question(query=${query}, category=${category}, status='접수중', page=1, size=${questionList.size})}" th:classappend="${status == '접수중'} ? 'active' : ''">접수중</a>-->
+<!--        <a class="tab" data-status="처리중" th:href="@{/complaint/question(query=${query}, category=${category}, status='처리중', page=1, size=${questionList.size})}" th:classappend="${status == '처리중'} ? 'active' : ''">처리중</a>-->
+<!--        <a class="tab" data-status="답변완료" th:href="@{/complaint/question(query=${query}, category=${category}, status='답변완료', page=1, size=${questionList.size})}" th:classappend="${status == '답변완료'} ? 'active' : ''">답변완료</a>-->
+        <a class="tab" th:href="@{/complaint/question(query=${query}, category=${category}, status=null, page=1, size=${questionList.size})}"
+           th:classappend="${status == 'all' or status == null} ? 'active' : ''" data-status="all">전체</a>
+        <a class="tab" th:href="@{/complaint/question(query=${query}, category=${category}, status='접수중', page=1, size=${questionList.size})}"
+           th:classappend="${#strings.equals(status, '접수중')} ? 'active' : ''" data-status="접수중">접수중</a>
+        <a class="tab" th:href="@{/complaint/question(query=${query}, category=${category}, status='처리중', page=1, size=${questionList.size})}"
+           th:classappend="${#strings.equals(status, '처리중')} ? 'active' : ''" data-status="처리중">처리중</a>
+        <a class="tab" th:href="@{/complaint/question(query=${query}, category=${category}, status='답변완료', page=1, size=${questionList.size})}"
+           th:classappend="${#strings.equals(status, '답변완료')} ? 'active' : ''" data-status="답변완료">답변완료</a>
     </div>
     <div class="search-bar">
         <form id="search-form" th:action="@{/complaint/question}" method="get">
@@ -38,6 +46,7 @@
             </select>
             <input type="text" name="query" th:value="${query}" placeholder="검색어를 입력하세요." id="search-input">
             <input type="hidden" name="page" th:value="${currentPage}">
+            <input type="hidden" name="status" th:value="${status}">
 <!--            <input type="hidden" name="size" th:value="${questionList.size}">-->
             <input type="hidden" name="size" value="10">
             <button type="submit" id="search-button">
@@ -97,15 +106,11 @@
                th:classappend="${currentPage == 1} ? 'disabled' : ''">‹</a>
 
             <!-- 페이지 번호 -->
-<!--            <span th:each="page: ${#numbers.sequence(startPage, endPage)}">-->
-<!--                <span th:if="${page == questionList.number + 1}" class="current" th:text="${page}"></span>-->
-<!--                <a th:unless="${page == questionList.number + 1}" th:href="@{/complaint/question(page=${page})}" th:text="${page}"></a>-->
-<!--            </span>-->
-            <span th:each="pageNum : ${#numbers.sequence(startPage, endPage)}">
+            <span th:each="pageNum : ${#numbers.sequence(startPage, T(java.lang.Math).min(endPage, startPage + 4))}">
             <a th:if="${pageNum != currentPage}"
                th:href="@{/complaint/question(query=${query}, category=${category}, status=${status}, page=${pageNum}, size=10)}"
                th:text="${pageNum}"></a>
-            <span th:unless="${pageNum != currentPage}" th:text="${pageNum}" class="current"></span>
+            <span th:unless="${pageNum != currentPage}" th:text="${pageNum}" class="current-page"></span>
             </span>
 
             <!-- 다음 페이지 이동 버튼 (>) -->
