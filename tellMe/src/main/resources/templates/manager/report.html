@@ -61,7 +61,7 @@
         </thead>
         <tbody>
         <!-- 데이터가 없는 경우 -->
-        <tr th:if="${reports.isEmpty()}">
+        <tr th:if="${reports.isEmpty()}" class="empty-message">
             <td colspan="6" style="text-align: center;">등록된 보고서가 없습니다.</td>
         </tr>
         <!-- 데이터베이스에서 불러온 보고서 목록 표시 -->
@@ -91,8 +91,9 @@
     </table>
 
 
+
     <!-- 페이지네이션 -->
-    <div class="pagination" th:if="${not reports.isEmpty()}">
+    <div class="pagination" th:if="${not reports.isEmpty()}" th:classappend="${reports.isEmpty() ? 'no-pagination' : ''}">
         <!-- 첫 번째 페이지로 이동 -->
         <a th:href="@{/manager/report(query=${query}, status=${status}, page=1)}">«</a>
 
@@ -103,7 +104,7 @@
         <span th:each="i : ${#numbers.sequence(startPage, endPage)}">
         <a th:href="@{/manager/report(query=${query}, status=${status}, page=${i})}"
            th:text="${i}"
-           th:classappend="${i == currentPage} ? 'active' : ''"></a>
+           th:classappend="${i == currentPage} ? 'active current' : ''"></a>
     </span>
 
         <!-- 다음 페이지로 이동 -->
@@ -112,6 +113,7 @@
         <!-- 마지막 페이지로 이동 -->
         <a th:href="@{/manager/report(query=${query}, status=${status}, page=${totalPages})}">»</a>
     </div>
+
 
 
 </main>
