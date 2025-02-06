@@ -1,9 +1,10 @@
 from typing import Union, List
-from fastapi import FastAPI, File, UploadFile, HTTPException, Body
+from fastapi import FastAPI, File, UploadFile, HTTPException, Body, Depends
 from pydantic import BaseModel
 from langchain_chroma import Chroma
 from langchain_openai import OpenAIEmbeddings
 
+import json
 import shutil
 import os
 import requests
@@ -14,6 +15,7 @@ import basic_module as bm
 import nsfw_detection as nd
 import aiofiles
 import asyncio
+import logging
 
 from basic_module import TextClassifier
 from basic_module import ChangeText
@@ -97,83 +99,80 @@ async def update_item(data: CombinedModel):
         post_origin_data = {"제목": title, "내용": content} # 원문데이터 저장용
         report_req.post_origin_data = post_origin_data
 
-        classifier = TextClassifier()
         # 분류
         title_label = classifier.classify_text(title)
         content_label = classifier.classify_text(content)
-        changetexter = ChangeText()
         await changetexter.init()
         result = {}
 
         if title_label != '정상' or content_label != '정상':
-            if title_label != '정상':
+            if title_label != '정상' and content_label == '정상':
                 title_changed = await changetexter.change_text(title)
                 post_data.title =  title_changed
                 report_req.category.title = title_label
 
                 # 팝업 날릴거
                 result["제목"] = {"text": f"{title_changed}","경고문": f"{title_label} 감지"}
-            else:
-                result["제목"] = {"text": title}
+                result["내용"] = {"text": content}
 
-            if content_label != '정상':
+            elif title_label == '정상' and content_label != '정상':
                 content_changed = await changetexter.change_text(content)
                 post_data.content =  content_changed
                 report_req.category.content = content_label
 
+                result["제목"] = {"text": title}
                 result["내용"] = {"text": f"{content_changed}","경고문": f"{content_label} 감지"}
             else:
-                result["내용"] = {"text": content}
-
+                title_changed = await changetexter.change_text(title)
+                post_data.title =  title_changed
+                content_changed = await changetexter.change_text(content)
+                post_data.content =  content_changed
+                report_req.category.title = title_label
+                report_req.category.content = content_label
+                result["제목"] = {"text": f"{title_changed}","경고문": f"{title_label} 감지"}
+                result["내용"] = {"text": f"{content_changed}","경고문": f"{content_label} 감지"}
+            
             # 보고서 생성
             return {
                 "valid": True,
                 "message": "데이터 수신 및 처리 완료",
-                "post_data": post_data.model_dump_json(),
-                "report_req": report_req.model_dump_json()
+                "post_data": post_data.model_dump(),
+                "report_req": report_req.model_dump()
             }
-            '''post_data, report_req'''
 
         else:
-            '''post_data.title = title
-            post_data.content = content
-            return post_data, report_req'''
+            report_req.category.title = title_label
+            report_req.category.content = content_label
             return    {
                 "valid": True,
                 "message": "데이터 수신 및 처리 완료",
-                "post_data": post_data.model_dump_json(),
-                "report_req": report_req.model_dump_json()
+                "post_data": post_data.model_dump(),
+                "report_req": report_req.model_dump()
             }
+
     except Exception as e:
         logger.error(f"처리 실패: {str(e)}")
         raise HTTPException(500, "서버 내부 오류")
-
+    
 @app.post("/make_report")
-def make_report(data: CombinedModel):
+async def make_report(data: CombinedModel):
     post_data = data.post_data
     report_req = data.report_req
-    
     if report_req.category.title != '정상' or report_req.category.content != '정상':
-        report = MakeReport()
+        await report.init()
         report.report_prompt(post_data)
         report.cell_fill(post_data, report_req)
         time, output_file = report.report_save()
-        formatted_time = time.strftime("%Y-%m-%d %H:%M:%S")
-        report_req.create_date = formatted_time
+        # formatted_time = time.strftime("%Y-%m-%d %H:%M:%S")
+        report_req.create_date = time
         report_req.report_path = output_file
-    
-    '''def send_report_to_spring():
-        url = "http://localhost:8000/"
-        data = report_req.model_dump_json()
-        response = requests.post(url, json=data)
-        return response.json()
-    
-    result = send_report_to_spring()'''
+
     return {
             "valid": True,
-            "report_req": report_req.dict()
+            "message": "보고서 작성 완료",
+            "post_data": post_data.model_dump(),
+            "report_req": report_req.model_dump()
     }
-'''report_req , {"status": "ok", "spring_response": result}'''
 
 @app.post("/check_spam/")
 def check_spam(spam_question: SpamQuestion):
@@ -189,26 +188,34 @@ def check_spam(spam_question: SpamQuestion):
     }
 
 #이미지 탐지
+#임시파일 경로 저장 후 python으로 보냄
+#path 경로는 어떻게? ./uploaded_images 이런형태로?
+class FilePath(BaseModel):
+    file_path : str
+
 @app.post("/upload/")
-async def upload_image(file: UploadFile = File(...)):
+async def upload_image(file: FilePath):
     
-    if file.filename.lower().endswith((".jpg", ".jpeg", ".png", ".gif", ".bmp")):
-        if not file.content_type.startswith("image/"):
-            raise HTTPException(status_code=400, detail="유효한 이미지 파일이 아닙니다.")
-        file_location = f"{UPLOAD_DIR}/{file.filename}"
+    file_path = file.file_path
+    filenames = os.listdir(file_path)
+    file_name = filenames[0]
+    file_location = os.path.join(file_path, file_name)
+
+    if file_name.lower().endswith((".jpg", ".jpeg", ".png", ".gif", ".bmp")):
         nsfw_score = None
         try:
-            async with aiofiles.open(file_location, "wb") as buffer:
-                content = await file.read()
-                await buffer.write(content)
-            image = nd.load_image(UPLOAD_DIR)
+            image = nd.load_image(file_location)
             
             # 이미지가 손상되었는지 체크
             try : 
                 image.verify()
                 
             except Exception as e:
-                raise HTTPException(status_code=400, detail="이미지 파일이 손상되었거나 유효하지 않습니다.")
+                return {
+                    "valid": True,
+                    "message" : "이미지 파일이 손상되었거나 유효하지 않습니다.",
+                    "file_path" : file_path
+                    }
             
             result = image_classifier(image)
             for item in result:
@@ -216,26 +223,50 @@ async def upload_image(file: UploadFile = File(...)):
                     nsfw_score = item.get("score")
                     break
             if nsfw_score is not None and nsfw_score > 0.7:
-                os.remove(file_location)
-                raise HTTPException(status_code=400, detail="NSFW 이미지로 판단되어 업로드가 차단되었습니다.")
+                results = '악성'
+            else : results = '정상'
 
-            return {"message": "Success", "result": result}
+            return {
+                "valid": True,
+                "message" : f"이미지 탐지 결과: {results}",
+                "file_path" : file_path
+            }
 
         except Exception as e: 
-            return {"error": str(e)}
+            return {
+                "valid": True,
+                "message" : str(e),
+                "file_path" : file_path
+                }
         
         finally : 
             if nsfw_score is not None and nsfw_score < 0.7 :
                 os.remove(file_location)
     
     else:
-        file_location = f"{UPLOAD_DIR}/{file.filename}"
-        async with aiofiles.open(file_location, "wb") as buffer:
-            content = await file.read()
-            await buffer.write(content)
-        docu_loader = LoadDocumentFile()
+        if not file_name.lower().endswith((".hwp", ".hwpx", ".doc", ".docx", ".pdf")):
+            return {
+                "valid": True,
+                "message" : "유효한 문서 파일이 아닙니다.",
+                "file_path" : file_path
+                }
+
         chroma = Chroma("fewshot_chat", OpenAIEmbeddings())
         data = await docu_loader.select_loader(file_location)
         await docu_loader.init()
         llm_chain = await docu_loader.make_llm_text(data)
-        return llm_chain
+        combined_text = " ".join(llm_chain)
+        content_label = classifier.classify_text(combined_text)
+        print(content_label)
+        if content_label != '정상':
+            os.remove(file_location)
+            return{
+                "valid": True,
+                "message" : "악성 파일로 판단되어 업로드가 차단되었습니다.",
+                "file_path" : file_path
+                }
+
+        return {
+            "valid": True,
+            "message" : f"문서 탐지 결과: {content_label}",
+            "file_path" : file_path}

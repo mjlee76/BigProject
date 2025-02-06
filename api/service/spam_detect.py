@@ -7,7 +7,7 @@ from sentence_transformers import SentenceTransformer, util
 
 if TYPE_CHECKING:
     from main import SpamQuestion
-    
+
 class SpamDetector:
     def __init__(self, model_name="snunlp/KR-SBERT-V40K-klueNLI-augSTS", threshold=0.8):
         print("모델 로딩 중...")
@@ -47,5 +47,5 @@ class SpamDetector:
             return spam_question.question_id
 
         print(f"게시글 {spam_question.question_id}는 기존 게시글 {most_similar_id}과 유사")
-        
+
         return most_similar_id
