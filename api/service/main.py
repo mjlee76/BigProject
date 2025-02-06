@@ -48,6 +48,12 @@ os.makedirs(UPLOAD_DIR, exist_ok=True)
 load_directory = "./nsfw_model"
 image_model, processor, image_classifier = nd.load_model(load_directory)
 spam_detector = SpamDetector()
+classifier = TextClassifier()
+changetexter = ChangeText()
+report = MakeReport()
+
+docu_loader = LoadDocumentFile()
+logger = logging.getLogger("my_logger")
 
 #게시글 작성자 정보
 class UserInfo(BaseModel):
