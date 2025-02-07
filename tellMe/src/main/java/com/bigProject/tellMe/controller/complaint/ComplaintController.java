@@ -61,7 +61,7 @@ public class ComplaintController {
             questionDTO = questionMapper.quToQuDTO(question);
             Long questionId = questionDTO.getId();
             System.out.println("================="+questionDTO.toString());
-            if(!multipartFiles.isEmpty()) {
+            if(multipartFiles != null && multipartFiles.stream().anyMatch(file -> !file.isEmpty())) {
                 String uploadDir = "tellMe/tellMe-uploadFile/question/" + questionId;
                 List<String> savedFiles = FileUpLoadUtil.saveFiles(uploadDir, multipartFiles);
 
