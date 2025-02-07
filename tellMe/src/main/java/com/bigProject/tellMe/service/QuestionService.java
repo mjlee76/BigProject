@@ -1,7 +1,10 @@
 package com.bigProject.tellMe.service;
 
+import com.bigProject.tellMe.client.api.FastApiClient;
+import com.bigProject.tellMe.client.dto.QuestionApiDTO;
 import com.bigProject.tellMe.dto.NoticeDTO;
 import com.bigProject.tellMe.dto.QuestionDTO;
+import com.bigProject.tellMe.dto.UserDTO;
 import com.bigProject.tellMe.entity.Answer;
 import com.bigProject.tellMe.entity.Notice;
 import com.bigProject.tellMe.entity.Question;
@@ -10,6 +13,9 @@ import com.bigProject.tellMe.enumClass.Reveal;
 import com.bigProject.tellMe.enumClass.Status;
 import com.bigProject.tellMe.mapper.QuestionMapper;
 import com.bigProject.tellMe.repository.QuestionRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -18,9 +24,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor

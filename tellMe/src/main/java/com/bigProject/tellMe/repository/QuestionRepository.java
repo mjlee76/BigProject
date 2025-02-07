@@ -1,10 +1,13 @@
 package com.bigProject.tellMe.repository;
 
 import com.bigProject.tellMe.entity.Question;
+import com.bigProject.tellMe.entity.User;
 import com.bigProject.tellMe.enumClass.Reveal;
+import com.bigProject.tellMe.enumClass.Status;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 import java.util.List;
 

@@ -77,7 +77,7 @@ public class Question {
             this.views = 0;  // DB에 저장되기 전에 기본값 설정
         }
         if(this.status == null) {
-            this.status = Status.처리중;  // DB에 저장되기 전에 기본값 설정
+            this.status = Status.접수중;  // DB에 저장되기 전에 기본값 설정
         }
     }
 
