@@ -203,16 +203,24 @@ async def check_spam(request: SpamQuestionRequest):
     """
     게시글 스팸 여부를 확인하는 엔드포인트
     """
-    post = request.post_data
-    questions = request.question_data.question
-    await spam_detector.init()
-    filtered_id = await spam_detector.async_check_spam_and_store(post, questions)
-    return {
-        "valid" : True,
-        "status": "success",
-        "filtered_id": f"{filtered_id}",
-        "message": "게시글 처리 완료"
-    }
+    try:
+        post = request.post_data
+        questions = request.question_data.question
+        await spam_detector.init()
+        filtered_id = await spam_detector.async_check_spam_and_store(post, questions)
+        return {
+            "valid" : True,
+            "filtered_id": f"{filtered_id}",
+            "message": "게시글 처리 완료"
+        }
+            
+    except Exception as e:
+        logger.error(f"처리 실패: {str(e)}") 
+        return {
+            "valid": False,
+            "filtered_id": f"{filtered_id}",
+            "message" : str(e),
+        }
 
 #이미지 탐지
 #임시파일 경로 저장 후 python으로 보냄
@@ -230,13 +238,14 @@ async def upload_image(file: FilePath):
 
     if file_name.lower().endswith((".jpg", ".jpeg", ".png", ".gif", ".bmp")):
         nsfw_score = None
-        try:
-            image = nd.load_image(file_location)
+        try: 
+            image = nd.load_image(file_path)
             # 이미지가 손상되었는지 체크
             try : 
                 image.verify()
                 
             except Exception as e:
+                logger.error(f"처리 실패: {str(e)}")
                 return {
                     "valid": False,
                     "message" : "이미지 파일이 손상되었거나 유효하지 않습니다.",
@@ -258,7 +267,8 @@ async def upload_image(file: FilePath):
                 "file_path" : file_path
             }
 
-        except Exception as e: 
+        except Exception as e:
+            logger.error(f"처리 실패: {str(e)}") 
             return {
                 "valid": False,
                 "message" : str(e),
