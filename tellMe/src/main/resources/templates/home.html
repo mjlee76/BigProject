@@ -13,6 +13,58 @@
 <body>
 <div th:replace="layouts/navbar::tellMe_header"></div>
 
+<div id="home" class="section">
+    <div class="slider">
+        <div class="slide">깨끗하고 원활한 민원 접수, 안심하세요!</div>
+        <div class="slide">불편한 게시글은 사라지고, 원하는 답변은 빠르게!</div>
+        <div class="slide">신고하고 싶은 글? AI 필터가 먼저 차단해요!</div>
+    </div>
+</div>
+<!--    <div class="controls">-->
+<!--        <button class="control-button" onclick="goToSlide(0)"></button>-->
+<!--        <button class="control-button" onclick="goToSlide(1)"></button>-->
+<!--        <button class="control-button" onclick="goToSlide(2)"></button>-->
+<!--        <button class="stop-button" onclick="toggleSlide()">||</button>-->
+<!--    </div>-->
+<!--    <button class="start-button">시작하기</button>-->
+
+
+
+<div class="wrapper2">
+    <div class="area left">
+        <div>
+            <h1>깨끗하고 원활한 민원 접수,<br>안심하세요!</h1>
+            <p>신고하고 싶은 글?<br>AI 필터가 먼저 차단해요!</p>
+        </div>
+    </div>
+    <div class="area right">
+        <ul class="grid-container">
+            <li class="box left">
+                <div>
+                    <p>빠른 민원 접수</p>
+                    <p>쉽고 직관적인 인터페이스로 빠르게 민원 작성</p>
+                </div>
+                <div>
+                    <p></p>
+                    <p></p>
+                </div>
+            </li>
+            <li class="box right">
+                <div>
+                    <p>불편한 글 자동 차단</p>
+                    <p>욕설, 도배, 혐오 표현 없이 쾌적한 환경 제공</p>
+                </div>
+                <div>
+                    <p></p>
+                    <p></p>
+                </div>
+                <p></p>
+            </li>
+        </ul>
+    </div>
+</div>
+
+
 <div class="wrapper">
     <div class="area left">
         <div class="image fit">
@@ -22,6 +74,7 @@
     <div class="area right">
         <ul class="grid-container">
             <li class="box">
+                <img th:src="@{/image/background2.png}" class="background-image">
                 <div>
                     <p>깨끗하고 원활한</p>
                     <p>민원 접수</p>
@@ -29,6 +82,7 @@
                 <p>안심하세요!</p>
             </li>
             <li class="box">
+                <img th:src="@{/image/box2.jpg}" class="background-image">
                 <div>
                     <p>불편한 게시글은 사라지고</p>
                     <p>원하는 답변은 빠르게!</p>
@@ -36,6 +90,7 @@
                 <p></p>
             </li>
             <li class="box">
+                <img th:src="@{/image/pic01.jpg}" class="background-image">
                 <div>
                     <p>신고하고 싶은 글?</p>
                     <p>도배, 욕설, 부적절한 이미지?</p>
@@ -43,6 +98,7 @@
                 <p>AI 필터가 차단해요!</p>
             </li>
             <li class="box typeTwo">
+                <img th:src="@{/image/background.png}" class="background-image">
                 <div>
                     <p>여러분의 민원이</p>
                     <p>빠르고 정확하게</p>
@@ -53,19 +109,43 @@
     </div>
 </div>
 
-<!--<div class="wrapper">-->
+<!--<div class="wrapper2">-->
 <!--    <div class="area left">-->
-<!--        <div class="image fit">-->
-<!--            <img src="image/homebackground.png" alt="게시판 이미지" width="600" height="300">-->
-<!--        </div>-->
+<!--        <ul class="grid-container">-->
+<!--            <li class="box">-->
+<!--                <div>-->
+<!--                    <p>빠른 민원 접수</p>-->
+<!--                    <p>쉽고 직관적인 인터페이스로 빠르게 민원 작성</p>-->
+<!--                </div>-->
+<!--                <p></p>-->
+<!--            </li>-->
+<!--            <li class="box">-->
+<!--                <div>-->
+<!--                    <p>불편한 글 자동 차단</p>-->
+<!--                    <p>욕설, 도배, 혐오 표현 없이 쾌적한 환경 제공</p>-->
+<!--                </div>-->
+<!--                <p></p>-->
+<!--            </li>-->
+<!--            <li class="box">-->
+<!--                <div>-->
+<!--                    <p>내 민원 처리 상황 한눈에</p>-->
+<!--                    <p>내가 남긴 글의 진행 상태를 실시간 확인</p>-->
+<!--                </div>-->
+<!--                <p></p>-->
+<!--            </li>-->
+<!--            <li class="box typeTwo">-->
+<!--                <div>-->
+<!--                    <p>유사 민원 자동 추천</p>-->
+<!--                    <p>기존 해결된 유사 사례를 통해 빠른 해결 가능</p>-->
+<!--                </div>-->
+<!--                <p></p>-->
+<!--            </li>-->
+<!--        </ul>-->
 <!--    </div>-->
 <!--    <div class="area right">-->
-<!--        <ul class="grid-container">-->
-<!--            <li class="box">📌 민원 등록</li>-->
-<!--            <li class="box">🔍 진행 상황 조회</li>-->
-<!--            <li class="box">🚨 불편 신고</li>-->
-<!--            <li class="box">📜 이용 가이드</li>-->
-<!--        </ul>-->
+<!--        <div class="image fit">-->
+<!--            <img src="image/home_inquiry.png" alt="게시판 이미지" width="600" height="300">-->
+<!--        </div>-->
 <!--    </div>-->
 <!--</div>-->
 
