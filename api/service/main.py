@@ -199,7 +199,7 @@ async def make_report(data: CombinedModel):
     }
 
 @app.post("/check_spam")
-def check_spam(request: SpamQuestionRequest):
+async def check_spam(request: SpamQuestionRequest):
     """
     게시글 스팸 여부를 확인하는 엔드포인트
     """
