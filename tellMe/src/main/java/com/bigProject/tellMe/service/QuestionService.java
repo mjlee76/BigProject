@@ -68,10 +68,20 @@ public class QuestionService {
 
         if (responseBody != null && Boolean.TRUE.equals(responseBody.get("valid"))) {
             response.put("valid", true);
-            response.put("message", "성공적으로 검증되었습니다.");
+            if(responseBody.get("spam").equals(0)) {
+                response.put("spam", "도배아님");
+                response.put("message", "성공적으로 검증되었습니다.");
+            }else {
+                response.put("spam", "도배");
+                response.put("message", "도배 감지!!! 게시글이 등록되지 않습니다.");
+            }
         } else {
             response.put("valid", false);
-            response.put("message", "검증 실패: 유효하지 않은 요청입니다.");
+            if(responseBody.get("message") != null) {
+                response.put("message", responseBody.get("message"));
+            }else {
+                response.put("message", "검증 실패: 유효하지 않은 요청입니다.");
+            }
         }
 
         return response;

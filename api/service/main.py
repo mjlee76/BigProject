@@ -210,7 +210,7 @@ async def check_spam(request: SpamQuestionRequest):
     return {
         "valid" : True,
         "status": "success",
-        "filtered_id": f"{filtered_id}",
+        "spam": filtered_id,
         "message": "게시글 처리 완료"
     }
 
