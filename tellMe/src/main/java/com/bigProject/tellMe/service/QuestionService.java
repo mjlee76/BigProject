@@ -68,7 +68,7 @@ public class QuestionService {
 
         if (responseBody != null && Boolean.TRUE.equals(responseBody.get("valid"))) {
             response.put("valid", true);
-            if(responseBody.get("spam").equals(0)) {
+            if(responseBody.get("spam")=="도배아님") {
                 response.put("spam", "도배아님");
                 response.put("message", "성공적으로 검증되었습니다.");
             }else {

@@ -196,7 +196,7 @@ async def make_report(data: CombinedModel):
             "report_req": report_req.model_dump()
     }
 
-@app.post("/check_spam/")
+@app.post("/check_spam")
 async def check_spam(request: SpamQuestionRequest):
     """
     게시글 스팸 여부를 확인하는 엔드포인트
@@ -205,10 +205,10 @@ async def check_spam(request: SpamQuestionRequest):
         post = request.post_data
         questions = request.question_data.question
         await spam_detector.init()
-        filtered_id = await spam_detector.async_check_spam_and_store(post, questions)
+        spam = await spam_detector.async_check_spam_and_store(post, questions)
         return {
             "valid" : True,
-            "filtered_id": f"{filtered_id}",
+            "spam": spam,
             "message": "게시글 처리 완료"
         }
 
@@ -216,7 +216,7 @@ async def check_spam(request: SpamQuestionRequest):
         logger.error(f"처리 실패: {str(e)}")
         return {
             "valid": False,
-            "filtered_id": f"{filtered_id}",
+            "spam": spam,
             "message" : str(e),
         }
 
