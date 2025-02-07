@@ -9,22 +9,28 @@
 <link rel="stylesheet" type="text/css" th:href="@{/css/statistics.css}" />
 <link rel="stylesheet" type="text/css" th:href="@{/css/sidebar.css}" />
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script> <!-- Ensure this plugin is loaded -->
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
 <script th:src="@{/js/statistics.js}"></script>
 </head>
 <body>
 <div th:replace="layouts/navbar::tellMe_header"></div>
 
-<!-- ✅ 사이드바 -->
 <div id="wrapper">
-    <!-- Sidebar -->
-    <ul class="sidebar bg-primary sidebar-dark" id="sidebar">
-        <!-- Sidebar Content -->
-    </ul>
-    <!-- End of Sidebar -->
-
-    <!-- Content Wrapper -->
+    <ul class="sidebar bg-primary sidebar-dark" id="sidebar"></ul>
     <div id="content-wrapper">
+        <!-- 실시간 민원 현황 -->
+        <div id="real-time-status" style="display: block;">
+            <h2 class="text-center">실시간 민원 현황</h2>
+            <div class="stats">
+                <p>오늘 접수된 전체 민원 수: <span th:text="${statistics.전체민원수}"></span></p>
+                <p>악성 민원 비율: <span th:text="${statistics.악성민원비율}"></span>%</p>
+                <p>평균 처리 시간: <span th:text="${statistics.평균처리시간}"></span>시간</p>
+            </div>
+            <div class="chart-wrapper">
+                <canvas id="realTimeChart"></canvas>
+            </div>
+        </div>
+
         <!-- 처리 대기중 민원수 -->
         <div id="status-content" style="display: block;">
             <h2 class="text-center">처리 대기중 민원수</h2>
@@ -40,14 +46,40 @@
                 <canvas id="reportstatusChart"></canvas>
             </div>
         </div>
-
     </div>
-
 </div>
 
 <div th:replace="layouts/footer::tellMe_footer"></div>
 
 <script>
+    // 실시간 민원 현황 차트
+    var realTimeCtx = document.getElementById('realTimeChart').getContext('2d');
+    var realTimeChart = new Chart(realTimeCtx, {
+        type: 'line',
+        data: {
+            labels: ['00:00', '01:00', '02:00', '03:00', '04:00', '05:00', '06:00', '07:00', '08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00', '22:00', '23:00'],
+            datasets: [{
+                label: '일반 민원',
+                data: [/* 일반 민원 데이터 */],
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+            }, {
+                label: '악성 민원',
+                data: [/* 악성 민원 데이터 */],
+                borderColor: 'rgba(255, 99, 132, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
     // 민원 처리 상태별 파이 차트
     var ctx = document.getElementById('statusChart').getContext('2d');
     var statusChart = new Chart(ctx, {
@@ -57,7 +89,6 @@
             datasets: [{
                 label: '민원 수',
                 data: [
-                    /* 통계 데이터 (서버에서 전달된 값으로 대체됨) */
                     [[${statistics.접수중Count}]],
                     [[${statistics.처리중Count}]]
                 ],
@@ -76,13 +107,13 @@
             responsive: true,
             plugins: {
                 datalabels: {
-                    color: 'white', // 라벨의 텍스트 색상
+                    color: 'white',
                     font: {
-                        size: 14, // 폰트 크기
-                        weight: 'bold' // 폰트 두께
+                        size: 14,
+                        weight: 'bold'
                     },
                     formatter: function(value) {
-                        return value;  // 백분율 대신 값만 표시
+                        return value;
                     }
                 }
             }
@@ -98,7 +129,6 @@
             datasets: [{
                 label: '보고서 수',
                 data: [
-                    /* 통계 데이터 (서버에서 전달된 값으로 대체됨) */
                     [[${statistics.미확인Count}]],
                     [[${statistics.확인완료Count}]]
                 ],
@@ -117,13 +147,13 @@
             responsive: true,
             plugins: {
                 datalabels: {
-                    color: 'white', // 라벨의 텍스트 색상
+                    color: 'white',
                     font: {
-                        size: 14, // 폰트 크기
-                        weight: 'bold' // 폰트 두께
+                        size: 14,
+                        weight: 'bold'
                     },
                     formatter: function(value) {
-                        return value;  // 백분율 대신 값만 표시
+                        return value;
                     }
                 }
             }

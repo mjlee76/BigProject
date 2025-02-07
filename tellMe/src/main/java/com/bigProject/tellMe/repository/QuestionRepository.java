@@ -3,12 +3,14 @@ package com.bigProject.tellMe.repository;
 import com.bigProject.tellMe.dto.UserDTO;
 import com.bigProject.tellMe.entity.Question;
 import com.bigProject.tellMe.entity.User;
+import com.bigProject.tellMe.enumClass.Category;
 import com.bigProject.tellMe.enumClass.Reveal;
 import com.bigProject.tellMe.enumClass.Status;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
@@ -19,4 +21,8 @@ public interface QuestionRepository extends JpaRepository<Question, Long>, JpaSp
     List<Question> findByUser(User user);
 
     long countByStatus(Status status);
+
+    // 악성 민원 수 (정상이 아닌 카테고리의 민원 수)
+    @Query("SELECT COUNT(q) FROM Question q WHERE q.category <> :category")
+    long countByCategoryNot(Category category);
 }

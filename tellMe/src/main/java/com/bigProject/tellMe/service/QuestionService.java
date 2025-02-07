@@ -7,6 +7,7 @@ import com.bigProject.tellMe.entity.Answer;
 import com.bigProject.tellMe.entity.Notice;
 import com.bigProject.tellMe.entity.Question;
 import com.bigProject.tellMe.entity.User;
+import com.bigProject.tellMe.enumClass.Category;
 import com.bigProject.tellMe.enumClass.Reveal;
 import com.bigProject.tellMe.enumClass.Status;
 import com.bigProject.tellMe.mapper.QuestionMapper;
@@ -185,4 +186,15 @@ public class QuestionService {
     public long countByStatus(Status status) {
         return questionRepository.countByStatus(status);
     }
+    // 전체 민원 수
+    public long countAllQuestions() {
+        return questionRepository.count();
+    }
+
+    // 악성 민원 수 (정상이 아닌 카테고리의 민원 수)
+    public long countByCategoryNotNormal() {
+        return questionRepository.countByCategoryNot(Category.정상);
+    }
+
+
 }
