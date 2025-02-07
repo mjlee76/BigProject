@@ -27,7 +27,16 @@ public interface QuestionRepository extends JpaRepository<Question, Long>, JpaSp
     @Query("SELECT COUNT(q) FROM Question q WHERE q.createDate BETWEEN :start AND :end")
     long countByCreateDateBetween(LocalDateTime start, LocalDateTime end);
 
+
+
+
+
+    @Query("SELECT COUNT(q) FROM Question q WHERE q.category = :category AND q.createDate BETWEEN :start AND :end")
+    long countByCategoryAndCreateDateBetween(Category category, LocalDateTime start, LocalDateTime end);
+
     @Query("SELECT COUNT(q) FROM Question q WHERE q.category <> :category AND q.createDate BETWEEN :start AND :end")
     long countByCategoryNotAndCreateDateBetween(Category category, LocalDateTime start, LocalDateTime end);
+
+
 
 }
