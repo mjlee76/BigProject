@@ -62,22 +62,23 @@ body {
 
 .menu-item {
     padding: 12px;
+    cursor: pointer;
     border-radius: var(--border-radius);
     transition: background 0.3s;
     text-align: left;
 }
 
 .menu-item a {
-    font-size: 17px;
+    text-size: 17px;
+    display: block;
     text-decoration: none;
-    color: black;
+    color: inherit;
 }
 
+.menu-item:hover,
 .menu-item.active {
-    font-weight: bold;
-    text-decoration: underline; /* 밑줄 추가 */
-    text-decoration-thickness: 3px; /* 밑줄 두께 설정 */
-    text-underline-offset: 5px; /* 밑줄과 글자 간격 조정 */
+    background: var(--button-bg);
+    color: white;
 }
 
 /* 메인 콘텐츠 */
