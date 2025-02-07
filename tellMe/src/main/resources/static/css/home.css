@@ -22,6 +22,36 @@ h1 {
     font-size: 1.7rem;
 }
 
+#home {
+    width: 100%;
+    height: 85vh;
+    overflow: hidden;
+    position: relative;
+}
+
+/* 슬라이더 */
+.slider {
+    display: flex;
+    width: 300vw;
+    transition: transform 1s ease-in-out;
+}
+
+/* 슬라이드 개별 스타일 */
+.slide {
+    width: 90%;
+    height: 85vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+/* 슬라이드별 배경색 */
+.slide:nth-child(1) { background-color: #f4f4f9; }
+.slide:nth-child(2) { background-color: #e3e3ff; }
+.slide:nth-child(3) { background-color: #d0f0c0; }
+.slide:nth-child(4) { background-color: #f4f4f9; } /* 첫 번째 화면 복제 */
+
 .wrapper {
     display: flex;
     width: 100%;
@@ -101,8 +131,8 @@ h1 {
 
 /* 첫 번째 p (제목) */
 .box div p:first-of-type {
-    font-size: 14px;
-    color: #333; /* 📌 어두운 배경엔 흰색 */
+    font-size: 20px;
+    color: #fff; /* 📌 어두운 배경엔 흰색 */
     text-align: left;
 }
 
@@ -141,19 +171,17 @@ h1 {
     color: #00695c;
 }
 
-
 .wrapper2 {
-    padding: 0 100px;
     display: flex;
     width: 100%;
     height: 600px;
     background-color: #fff;
     box-sizing: border-box; /* 패딩 포함 계산 */
     overflow: hidden; /* 가로 스크롤 제거 */
+    background: linear-gradient(to bottom, #D5C5FF, #AFC3FF);
 }
 
 .wrapper2 .area {
-    flex: 1; /* 동일한 너비로 좌우 배분 */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -162,13 +190,74 @@ h1 {
 }
 
 .wrapper2 .area.left {
+    flex: 2;
     text-align: center; /* 전체 중앙 정렬 */
     margin: 20px;
-    background-color: #fff;
+    background-color: transparent;
+}
+
+.area.left h1 {
+    font-size: 40px; /* 큰 글씨 */
+    font-weight: bold; /* 굵게 강조 */
+    color: #fff;
+    margin-left: 10px;
+    text-align: left;
+}
+
+.area.left p {
+    font-size: 50px;
+    color: #666;
+    margin-top: 10px;
+    margin-left: 10px;
+    text-align: left;
 }
 
 .wrapper2 .area.right {
+    flex: 3;
     margin: 20px;
     border-radius: 20px;
-    background-color: #F4F4F4;
+    background-color: transparent;
+}
+
+.wrapper2 .grid-container {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* 2개씩 정렬 */
+    gap: 40px;
+    margin: 20px;
+    padding: 10px;
+    margin-top: 20px;
+    list-style: none;
+}
+
+.wrapper2 .box {
+    position: relative; /* 📌 부모에 relative 추가 */
+    overflow: hidden;
+    border: 3px solid rgba(255, 255, 255, .8);
+    border-radius: 1.5rem;
+    text-align: center;
+    font-size: 1.2rem;
+    font-weight: bold;
+    background-color: transparent;
+    transition: transform 0.3s ease-in-out; /* 부드러운 애니메이션 효과 */
+    width: 300px;
+    height: 400px;
+    /* 높이 지정이 필요할 수 있음 (예: height: 300px;) */
+}
+
+/* 🔥 왼쪽 위 배치 */
+.box.left {
+    margin-bottom: 10px;
+    top: 150px;
+    left: 20px;
+    transform: rotate(-8deg);
+}
+
+/* 🔥 오른쪽 아래 배치 */
+.box.right {
+    margin-top: 10px;
+    bottom: 0px;
+    right: 20px;
+    transform: rotate(8deg);
 }
