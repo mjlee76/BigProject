@@ -24,10 +24,12 @@ public class StatisticsService {
         // 보고서 상태별 통계
         long 미확인Count = reportService.countReportsByStatus(ReportStatus.미확인);
         long 확인완료Count = reportService.countReportsByStatus(ReportStatus.확인완료);
-        // 전체 민원 수
-        long 전체민원수 = questionService.countAllQuestions();
-        // 악성 민원 수
-        long 악성민원수 = questionService.countByCategoryNotNormal();
+        // 전체 민원 수 (오늘만의 민원 수)
+        long 전체민원수 = questionService.countTodayQuestions();
+
+        // 오늘의 악성 민원 수
+        long 악성민원수 = questionService.countTodayCategoryNotNormal();
+
 
 <<<<<<< HEAD
 //        // 민원 카테고리별 통계 - 리턴값 넣기

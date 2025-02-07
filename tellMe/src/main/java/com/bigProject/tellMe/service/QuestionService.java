@@ -33,11 +33,20 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+<<<<<<< HEAD
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
+=======
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+>>>>>>> 458bc89 (실시간 민원 현황 - 오늘만으로 날짜 변경)
 import java.util.stream.Collectors;
+import java.time.LocalDateTime;
+
 
 @Service
 @RequiredArgsConstructor
@@ -362,6 +371,7 @@ public class QuestionService {
         return questionRepository.countByStatus(status);
     }
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 //    // 민원 악성 카테고리별 카운트
 //    public long countByCategory(Category category) {
@@ -371,11 +381,23 @@ public class QuestionService {
     // 전체 민원 수
     public long countAllQuestions() {
         return questionRepository.count();
+=======
+
+    // QuestionService에 오늘의 민원 수와 악성 민원 수를 조회하는 메서드 추가
+    public long countTodayQuestions() {
+        // 오늘 날짜에 해당하는 민원 수를 조회하는 쿼리 작성
+        LocalDate today = LocalDate.now();
+        return questionRepository.countByCreateDateBetween(
+                today.atStartOfDay(), today.atTime(23, 59, 59)
+        );
+>>>>>>> 458bc89 (실시간 민원 현황 - 오늘만으로 날짜 변경)
     }
 
-    // 악성 민원 수 (정상이 아닌 카테고리의 민원 수)
-    public long countByCategoryNotNormal() {
-        return questionRepository.countByCategoryNot(Category.정상);
+    public long countTodayCategoryNotNormal() {
+        LocalDate today = LocalDate.now();
+        return questionRepository.countByCategoryNotAndCreateDateBetween(
+                Category.정상, today.atStartOfDay(), today.atTime(23, 59, 59)
+        );
     }
 
 
