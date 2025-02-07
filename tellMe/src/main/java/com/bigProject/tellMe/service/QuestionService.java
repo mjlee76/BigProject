@@ -361,9 +361,23 @@ public class QuestionService {
     public long countByStatus(Status status) {
         return questionRepository.countByStatus(status);
     }
+<<<<<<< HEAD
 
 //    // 민원 악성 카테고리별 카운트
 //    public long countByCategory(Category category) {
 //        return questionRepository.countByCategory(category);
 //    }
+=======
+    // 전체 민원 수
+    public long countAllQuestions() {
+        return questionRepository.count();
+    }
+
+    // 악성 민원 수 (정상이 아닌 카테고리의 민원 수)
+    public long countByCategoryNotNormal() {
+        return questionRepository.countByCategoryNot(Category.정상);
+    }
+
+
+>>>>>>> fe779d2 (실시간 민원 현황 - 모든 날짜 조회)
 }

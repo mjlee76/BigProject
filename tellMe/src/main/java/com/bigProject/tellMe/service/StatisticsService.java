@@ -24,7 +24,12 @@ public class StatisticsService {
         // 보고서 상태별 통계
         long 미확인Count = reportService.countReportsByStatus(ReportStatus.미확인);
         long 확인완료Count = reportService.countReportsByStatus(ReportStatus.확인완료);
+        // 전체 민원 수
+        long 전체민원수 = questionService.countAllQuestions();
+        // 악성 민원 수
+        long 악성민원수 = questionService.countByCategoryNotNormal();
 
+<<<<<<< HEAD
 //        // 민원 카테고리별 통계 - 리턴값 넣기
 //        long 모욕Count = questionService.countByCategory(Category.모욕);
 //        long 협박Count = questionService.countByCategory(Category.협박);
@@ -40,5 +45,21 @@ public class StatisticsService {
 //        long 나이Count = questionService.countByCategory(Category.나이차별);
 
         return new StatisticsDTO(접수중Count, 처리중Count, 답변완료Count, 미확인Count, 확인완료Count);
+=======
+        // 악성 민원 비율
+        double 악성민원비율 = 전체민원수 == 0 ? 0 : (double) 악성민원수 / 전체민원수 * 100;
+
+        // 평균 처리 시간 (예시로 1시간으로 설정)
+        double 평균처리시간 = calculateAverageProcessingTime();
+
+        return new StatisticsDTO(접수중Count, 처리중Count, 답변완료Count, 미확인Count, 확인완료Count, 전체민원수, 악성민원수, 악성민원비율, 평균처리시간);
+>>>>>>> fe779d2 (실시간 민원 현황 - 모든 날짜 조회)
     }
+
+    private double calculateAverageProcessingTime() {
+        // 평균 처리 시간 계산 로직 (예시로 1시간 반환)
+        return 1.0; // 실제로는 데이터베이스에서 처리 시간을 계산하여 반환
+    }
+
+
 }
