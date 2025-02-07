@@ -28,6 +28,8 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
+import java.util.Map;
 
 
 @Controller
@@ -155,7 +157,13 @@ public class ManagerController {
     public String statisticsBoard(Model model) {
         // 통계 데이터를 가져와서 뷰로 전달
         StatisticsDTO statisticsDTO = statisticsService.getStatistics();
+        // 악성 민원의 시간대별 데이터
+
+        // 오늘의 민원 수와 악성 민원의 시간대별 데이터
+        Map<String, List<Long>> questionsAndMaliciousByHour = statisticsService.getQuestionsAndMaliciousByHour();
         model.addAttribute("statistics", statisticsDTO);
+        model.addAttribute("questionsAndMaliciousByHour", questionsAndMaliciousByHour);
+
         return "manager/statistics";  // 통계 페이지
     }
 

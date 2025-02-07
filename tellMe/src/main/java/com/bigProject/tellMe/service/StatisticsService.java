@@ -7,6 +7,10 @@ import com.bigProject.tellMe.enumClass.Status;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Map;
+
 @Service
 @RequiredArgsConstructor
 public class StatisticsService {
@@ -62,6 +66,15 @@ public class StatisticsService {
         // 평균 처리 시간 계산 로직 (예시로 1시간 반환)
         return 1.0; // 실제로는 데이터베이스에서 처리 시간을 계산하여 반환
     }
+
+    public Map<String, List<Long>> getQuestionsAndMaliciousByHour() {
+        LocalDate today = LocalDate.now();
+        return questionService.countQuestionsAndMaliciousByHour(today);
+    }
+
+
+
+
 
 
 }

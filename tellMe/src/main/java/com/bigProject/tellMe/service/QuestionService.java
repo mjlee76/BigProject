@@ -40,10 +40,14 @@ import java.util.*;
 import java.util.concurrent.CompletableFuture;
 =======
 import java.time.LocalDate;
+<<<<<<< HEAD
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 >>>>>>> 458bc89 (실시간 민원 현황 - 오늘만으로 날짜 변경)
+=======
+import java.util.*;
+>>>>>>> 2f58b01 (실시간 민원 현황 - 시간대별 그래프 기능 완성)
 import java.util.stream.Collectors;
 import java.time.LocalDateTime;
 
@@ -399,6 +403,34 @@ public class QuestionService {
                 Category.정상, today.atStartOfDay(), today.atTime(23, 59, 59)
         );
     }
+
+    public Map<String, List<Long>> countQuestionsAndMaliciousByHour(LocalDate today) {
+        List<Long> normalCounts = new ArrayList<>();
+        List<Long> maliciousCounts = new ArrayList<>();
+
+        for (int hour = 0; hour < 24; hour++) {
+            LocalDateTime startOfHour = today.atTime(hour, 0);
+            LocalDateTime endOfHour = today.atTime(hour, 59, 59);
+
+
+            // 일반 민원 수 조회 (category가 정상인 경우)
+            long normalCount = questionRepository.countByCategoryAndCreateDateBetween(Category.정상, startOfHour, endOfHour);
+            normalCounts.add(normalCount);
+
+            // 악성 민원 수 조회 (정상이 아닌 카테고리)
+            long maliciousCount = questionRepository.countByCategoryNotAndCreateDateBetween(Category.정상, startOfHour, endOfHour);
+            maliciousCounts.add(maliciousCount);
+        }
+
+        // 결과를 Map으로 반환하여 일반 민원과 악성 민원의 시간대별 데이터를 한 번에 반환
+        Map<String, List<Long>> result = new HashMap<>();
+        result.put("normal", normalCounts);
+        result.put("malicious", maliciousCounts);
+
+        return result;
+    }
+
+
 
 
 >>>>>>> fe779d2 (실시간 민원 현황 - 모든 날짜 조회)
