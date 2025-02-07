@@ -7,6 +7,7 @@ import com.bigProject.tellMe.entity.Answer;
 import com.bigProject.tellMe.entity.Notice;
 import com.bigProject.tellMe.entity.Question;
 import com.bigProject.tellMe.entity.User;
+import com.bigProject.tellMe.enumClass.Category;
 import com.bigProject.tellMe.enumClass.Reveal;
 import com.bigProject.tellMe.enumClass.Status;
 import com.bigProject.tellMe.mapper.QuestionMapper;
@@ -185,4 +186,9 @@ public class QuestionService {
     public long countByStatus(Status status) {
         return questionRepository.countByStatus(status);
     }
+
+//    // 민원 악성 카테고리별 카운트
+//    public long countByCategory(Category category) {
+//        return questionRepository.countByCategory(category);
+//    }
 }

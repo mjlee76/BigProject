@@ -3,6 +3,7 @@ package com.bigProject.tellMe.repository;
 import com.bigProject.tellMe.dto.UserDTO;
 import com.bigProject.tellMe.entity.Question;
 import com.bigProject.tellMe.entity.User;
+import com.bigProject.tellMe.enumClass.Category;
 import com.bigProject.tellMe.enumClass.Reveal;
 import com.bigProject.tellMe.enumClass.Status;
 import org.springframework.data.domain.Page;
@@ -19,4 +20,6 @@ public interface QuestionRepository extends JpaRepository<Question, Long>, JpaSp
     List<Question> findByUser(User user);
 
     long countByStatus(Status status);
+
+    long countByCategory(Category category);
 }
