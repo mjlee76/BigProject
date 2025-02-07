@@ -12,6 +12,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface QuestionRepository extends JpaRepository<Question, Long>, JpaSpecificationExecutor<Question> {
@@ -22,7 +23,11 @@ public interface QuestionRepository extends JpaRepository<Question, Long>, JpaSp
 
     long countByStatus(Status status);
 
-    // 악성 민원 수 (정상이 아닌 카테고리의 민원 수)
-    @Query("SELECT COUNT(q) FROM Question q WHERE q.category <> :category")
-    long countByCategoryNot(Category category);
+    // QuestionRepository에 오늘 날짜와 관련된 쿼리 메서드 추가
+    @Query("SELECT COUNT(q) FROM Question q WHERE q.createDate BETWEEN :start AND :end")
+    long countByCreateDateBetween(LocalDateTime start, LocalDateTime end);
+
+    @Query("SELECT COUNT(q) FROM Question q WHERE q.category <> :category AND q.createDate BETWEEN :start AND :end")
+    long countByCategoryNotAndCreateDateBetween(Category category, LocalDateTime start, LocalDateTime end);
+
 }

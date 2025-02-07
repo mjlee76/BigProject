@@ -20,10 +20,13 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.time.LocalDateTime;
+
 
 @Service
 @RequiredArgsConstructor
@@ -186,14 +189,21 @@ public class QuestionService {
     public long countByStatus(Status status) {
         return questionRepository.countByStatus(status);
     }
-    // 전체 민원 수
-    public long countAllQuestions() {
-        return questionRepository.count();
+
+    // QuestionService에 오늘의 민원 수와 악성 민원 수를 조회하는 메서드 추가
+    public long countTodayQuestions() {
+        // 오늘 날짜에 해당하는 민원 수를 조회하는 쿼리 작성
+        LocalDate today = LocalDate.now();
+        return questionRepository.countByCreateDateBetween(
+                today.atStartOfDay(), today.atTime(23, 59, 59)
+        );
     }
 
-    // 악성 민원 수 (정상이 아닌 카테고리의 민원 수)
-    public long countByCategoryNotNormal() {
-        return questionRepository.countByCategoryNot(Category.정상);
+    public long countTodayCategoryNotNormal() {
+        LocalDate today = LocalDate.now();
+        return questionRepository.countByCategoryNotAndCreateDateBetween(
+                Category.정상, today.atStartOfDay(), today.atTime(23, 59, 59)
+        );
     }
 
 
