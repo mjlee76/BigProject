@@ -15,7 +15,9 @@ import com.bigProject.tellMe.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -82,32 +84,50 @@ public class ComplaintController {
 
     // 모든 문의 데이터를 조회하여 뷰에 전달하는 메서드.
     @GetMapping("/question")
-    public String complaintBoard(@PageableDefault(page = 1) Pageable pageable,
+    public String complaintBoard(@RequestParam(required = false) String query,       // 검색어
+                                 @RequestParam(required = false) Status status,      // 상태 필터 (접수중, 처리중, 답변완료)
+                                 @RequestParam(defaultValue = "1") int page,         // 페이지 번호 (기본값: 1)
+                                 @RequestParam(defaultValue = "10") int size,        // 페이지 크기 (기본값: 10)
+                                 @RequestParam(required = false) String category,    // 검색 카테고리 (제목, 작성자, 내용 등)
                                  Authentication auth,
                                  Model model) {
 
-        UserDTO user = userService.findByUserId(auth.getName());
-        String role = String.valueOf(user.getRole());
+        // 현재 사용자의 역할 확인
+        String role = "ROLE_USER";
+        if (auth != null && auth.isAuthenticated()) {
+            UserDTO user = userService.findByUserId(auth.getName());
+            role = String.valueOf(user.getRole());
+        }
 
-        System.out.println(role);
+        // Pageable 객체 생성
+        Pageable pageable = PageRequest.of(page - 1, size, Sort.by(Sort.Direction.DESC, "id"));
 
-        Page<QuestionDTO> questionList = questionService.paging(pageable, role);
+        // 검색 및 필터링 결과 조회
+        Page<QuestionDTO> questionList = questionService.searchAndFilter(query, status, category, role, pageable);
 
-        int blockLimit = 5; // 화면에 보여지는 페이지 갯수
-        int startPage = (((int)(Math.ceil((double)pageable.getPageNumber() / blockLimit))) - 1) * blockLimit + 1;  // 1, 6, 11, ~
-        int endPage = ((startPage + blockLimit - 1) < questionList.getTotalPages()) ? startPage + blockLimit - 1 : questionList.getTotalPages();
+        // 페이징 정보 계산
+        int blockLimit = 5; // 화면에 보여질 페이지 번호 개수
+        int startPage = (((int)(Math.ceil((double)page / blockLimit))) - 1) * blockLimit + 1;
+        int endPage = Math.min(startPage + blockLimit - 1, questionList.getTotalPages());
 
+        // 모델에 데이터 추가
         model.addAttribute("questionList", questionList);
         model.addAttribute("startPage", startPage);
         model.addAttribute("endPage", endPage);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", questionList.getTotalPages());
+        model.addAttribute("query", query);
+        model.addAttribute("status", status);
+        model.addAttribute("category", category);
 
         return "complaint/question";
     }
 
     // 문의 제목을 클릭하여 상세페이지 표출 메서드
     @GetMapping("/question/{id}")
-    public String getQuestion(@PathVariable Long id, Model model,
-                              @RequestParam(required = false, defaultValue = "1")int page) {
+    public String getQuestion(@PathVariable Long id,
+                              @RequestParam(required = false, defaultValue = "1")int page,
+                              Model model) {
         QuestionDTO questionDTO = questionService.getQuestion(id);
         model.addAttribute("question", questionDTO);
         model.addAttribute("page", page);
@@ -127,6 +147,26 @@ public class ComplaintController {
 
         answerService.saveAnswer(answerDTO, auth);
         return "redirect:/complaint/question/" + answerDTO.getQuestionId();
+    }
+
+
+    @GetMapping("/edit/{id}")
+    public String editForm(@PathVariable Long id, Model model) {
+        QuestionDTO dto = questionService.getQuestion(id);
+        model.addAttribute("question", dto);
+        return "question/edit-form";
+    }
+
+    @PostMapping("/update")
+    public String update(@ModelAttribute QuestionDTO dto) {
+        questionService.updateQuestion(dto);
+        return "redirect:/myPage/editInfo";
+    }
+
+    @PostMapping("/delete/{id}")
+    public String delete(@PathVariable Long id) {
+        questionService.deleteQuestion(id);
+        return "redirect:/myPage/editInfo";
     }
 
 }

@@ -1,19 +1,26 @@
 package com.bigProject.tellMe.controller.manager;
 
 import com.bigProject.tellMe.dto.ReportDTO;
+import com.bigProject.tellMe.dto.StatisticsDTO;
+import com.bigProject.tellMe.enumClass.ReportStatus;
+import com.bigProject.tellMe.enumClass.Status;
 import com.bigProject.tellMe.service.ReportService;
+import com.bigProject.tellMe.service.StatisticsService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
-import java.io.File;
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
@@ -21,51 +28,80 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
+
 
 @Controller
 @RequestMapping("/manager")
 @RequiredArgsConstructor
+@Slf4j // ✅ Lombok의 Slf4j 추가
 public class ManagerController {
     private final ReportService reportService;
-    // ✅ 보고서 기본 경로 (환경변수 없이 하드코딩)
     private static final String REPORT_BASE_PATH = "C:/Users/User/BigProject/tellMe/tellMe-reports/";
 
-
-    // ✅ 보고서 목록 조회 (Thymeleaf 페이지 렌더링)
+    // ✅ 보고서 목록 조회 (페이지네이션 적용)
     @GetMapping("/report")
     public String reportBoard(@RequestParam(value = "query", required = false) String query,
                               @RequestParam(value = "status", required = false, defaultValue = "all") String status,
+                              @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+                              @RequestParam(value = "size", required = false, defaultValue = "10") int size,
                               Model model) {
-        List<ReportDTO> reports;
+        Pageable pageable = PageRequest.of(Math.max(page - 1, 0), size, Sort.by(Sort.Direction.DESC, "createDate"));
+        Page<ReportDTO> reportPage;
 
         if ((query == null || query.isEmpty()) && (status == null || status.equals("all"))) {
-            reports = reportService.findAll(); // 전체 조회
+            reportPage = reportService.findAllPaged(pageable);
         } else {
-            reports = reportService.searchReports(query, status);
+            reportPage = reportService.searchReportsPaged(query, status, pageable);
         }
 
-        model.addAttribute("reports", reports);
-        return "manager/report"; // Thymeleaf 템플릿 경로
+        int totalPages = reportPage.getTotalPages();
+
+        // 5페이지씩 그룹으로 나누기
+        int groupSize = 5;
+        int currentGroup = (page - 1) / groupSize;
+        int startPage = currentGroup * groupSize + 1;
+        int endPage = Math.min(startPage + groupSize - 1, totalPages);
+
+        // 이전 그룹, 다음 그룹 링크를 위한 로직
+        int prevGroup = (currentGroup > 0) ? currentGroup - 1 : 0;
+        int nextGroup = (currentGroup + 1) * groupSize < totalPages ? currentGroup + 1 : currentGroup;
+
+        log.info("Fetching reports - Query: {}, Status: {}, Current Page: {}, Total Pages: {}, Total Elements: {}",
+                query, status, page, totalPages, reportPage.getTotalElements());
+
+        model.addAttribute("reports", reportPage.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", totalPages);
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("endPage", endPage);
+        model.addAttribute("prevGroup", prevGroup);
+        model.addAttribute("nextGroup", nextGroup);
+        model.addAttribute("query", query);
+        model.addAttribute("status", status);
+
+        return "manager/report";
     }
+
+
+
+
 
 
     // ✅ 특정 보고서 열기
     @GetMapping("report/view/{id}")
     public String viewReport(@PathVariable Long id) throws UnsupportedEncodingException {
+        // 보고서 상태를 확인 완료로 변경
+        reportService.updateReportStatus(id, ReportStatus.확인완료);
+
         ReportDTO report = reportService.getReport(id);
 
         if (report == null || report.getReport() == null) {
             return "redirect:/error";
         }
 
-        // ✅ 파일 경로를 tellMe-reports로 변경
         Path filePath = Paths.get(report.getReport());
-
-        // ✅ 파일명 UTF-8 인코딩 (한글 지원)
         String encodedFileName = URLEncoder.encode(filePath.getFileName().toString(), StandardCharsets.UTF_8.toString());
 
-        // ✅ 리다이렉트 시 변경된 URL 사용
         return "redirect:/manager/reports/" + encodedFileName;
     }
 
@@ -81,8 +117,7 @@ public class ManagerController {
         return MediaType.APPLICATION_OCTET_STREAM;
     }
 
-
-    // ✅ 로컬 폴더에서 보고서 파일을 제공하는 엔드포인트
+    // ✅ 로컬 폴더에서 보고서 파일 제공
     @GetMapping("/reports/{fileName}")
     public ResponseEntity<Resource> getReportFile(@PathVariable String fileName) throws MalformedURLException, UnsupportedEncodingException {
         Path filePath = Paths.get(REPORT_BASE_PATH, fileName);
@@ -92,7 +127,6 @@ public class ManagerController {
             return ResponseEntity.notFound().build();
         }
 
-        // 파일명 UTF-8 인코딩
         String encodedFileName = URLEncoder.encode(fileName, StandardCharsets.UTF_8.toString());
 
         return ResponseEntity.ok()
@@ -102,9 +136,28 @@ public class ManagerController {
     }
 
 
-    @GetMapping("/statistics")
-    public String statisticsBoard() {
-        return "manager/statistics";
+
+    @PostMapping("/report/update-status/{id}")
+    public ResponseEntity<?> updateStatus(@PathVariable Long id) {
+        try {
+            // 상태를 '확인완료'로 변경
+            reportService.updateReportStatus(id, ReportStatus.확인완료);
+            return ResponseEntity.ok().body("{\"success\": true}");
+        } catch (Exception e) {
+            // 에러 발생 시 500 상태 코드와 함께 실패 응답
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("{\"success\": false}");
+        }
     }
+
+    private final StatisticsService statisticsService;
+
+    @GetMapping("/statistics")
+    public String statisticsBoard(Model model) {
+        // 통계 데이터를 가져와서 뷰로 전달
+        StatisticsDTO statisticsDTO = statisticsService.getStatistics();
+        model.addAttribute("statistics", statisticsDTO);
+        return "manager/statistics";  // 통계 페이지
+    }
+
 
 }

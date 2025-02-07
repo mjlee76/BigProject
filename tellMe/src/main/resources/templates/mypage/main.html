@@ -1,3 +1,282 @@
+<!--<!DOCTYPE html>-->
+<!--<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">-->
+<!--<head th:replace="layouts/navbar::tellMe_head"/>-->
+<!--<head th:replace="layouts/footer::tellMe_foot"/>-->
+<!--<head>-->
+<!--  <meta charset="UTF-8">-->
+<!--  <title>마이페이지</title>-->
+<!--  <script src="https://code.jquery.com/jquery-3.6.3.js"></script>-->
+<!--  <script type="text/javascript" th:src="@{/js/myPageEditInfo.js}"></script>-->
+<!--  <script type="text/javascript" th:src="@{/js/myPage.js}"></script>-->
+<!--  <link rel="stylesheet" type="text/css" th:href="@{/css/myPage.css}" />-->
+<!--  <style>-->
+<!--    /* 모달 배경 */-->
+<!--    .edit-form {-->
+<!--        position: fixed;-->
+<!--        top: 50%;-->
+<!--        left: 50%;-->
+<!--        transform: translate(-50%, -50%);-->
+<!--        background: white;-->
+<!--        padding: 20px;-->
+<!--        border: 1px solid #ccc;-->
+<!--        box-shadow: 0 0 10px rgba(0,0,0,0.1);-->
+<!--        z-index: 1000;-->
+<!--        display: none; /* 초기 상태 숨김 */-->
+<!--    }-->
+
+<!--    /* 배경 어둡게 처리 */-->
+<!--    .modal-backdrop {-->
+<!--        position: fixed;-->
+<!--        top: 0;-->
+<!--        left: 0;-->
+<!--        width: 100%;-->
+<!--        height: 100%;-->
+<!--        background: rgba(0,0,0,0.5);-->
+<!--        z-index: 999;-->
+<!--        display: none;-->
+<!--    }-->
+<!--  </style>-->
+<!--</head>-->
+<!--<body>-->
+<!--<div th:replace="layouts/navbar::tellMe_header"></div>-->
+<!--<div class="container">-->
+<!--  <aside class="sidebar">-->
+<!--    <div class="profile-header">-->
+<!--      <label for="profile-upload" class="profile-img">-->
+<!--        <input type="file" id="profile-upload" accept="image/*">-->
+<!--        <img id="profile-pic" th:src="@{/image/profile.png}" alt="프로필 사진">-->
+<!--      </label>-->
+<!--      <form th:action="@{/user/save}" th:object="${user}" method="post" onsubmit="return checkNameUnique(this)">-->
+<!--        <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>-->
+<!--        <input type="hidden" th:field="*{id}"/>-->
+<!--        <div class="user-name" th:text="*{userName}"></div>-->
+<!--      </form>-->
+<!--    </div>-->
+<!--    <ul class="menu">-->
+<!--      <li class="menu-item active" data-target="profile">내 프로필</li>-->
+<!--      <li class="menu-item" data-target="security">비밀번호 설정</li>-->
+<!--      <li class="menu-item" data-target="history">내 민원 조회</li>-->
+<!--    </ul>-->
+<!--  </aside>-->
+
+<!--  <main class="content">-->
+<!--    <section id="profile" class="content-section active">-->
+<!--      <h2 class="section-title">내 프로필</h2>-->
+<!--      <div class="profile-card">-->
+<!--        <form th:action="@{/user/save}" th:object="${user}" method="post" onsubmit="return checkNameUnique(this)">-->
+<!--          <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>-->
+<!--          <input type="hidden" th:field="*{id}"/>-->
+<!--          <p><strong>이름:</strong> <span class="user-name" th:text="*{userName}"></span> <button type="button" onclick="changeName()">실명수정</button></p>-->
+<!--          <p><strong>전화번호:</strong> <span class="user-phone" th:text="*{phone}"></span> <button type="button" onclick="changePhone()">핸드폰 수정</button></p>-->
+<!--          <p><strong>이메일:</strong> <span class="user-email" th:text="*{email}"></span> <button type="button" onclick="changeEmail()">이메일 수정</button></p>-->
+<!--          <p><strong>주소:</strong> <span class="user-address" th:text="*{address}"></span> <button type="button" onclick="changeAddress()">주소 수정</button></p>-->
+<!--        </form>-->
+<!--      </div>-->
+<!--    </section>-->
+
+<!--    <section id="security" class="content-section">-->
+<!--      <h2 class="section-title">비밀번호 설정</h2>-->
+<!--      <div class="security-card">-->
+<!--        <p><strong>비밀번호:</strong> ●●●●●●●● <button class="edit-btn">수정</button></p>-->
+<!--      </div>-->
+<!--    </section>-->
+<!--    <section id="history" class="content-section">-->
+<!--      <h2 class="section-title">내 민원 조회</h2>-->
+<!--      <div class="tabs">-->
+<!--&lt;!&ndash;        <button class="tab active" data-category="all" onclick="filterPosts('all')">전체</button>&ndash;&gt;-->
+<!--&lt;!&ndash;        <button class="tab" data-category="접수중" onclick="filterPosts('접수중')">접수중</button>&ndash;&gt;-->
+<!--&lt;!&ndash;        <button class="tab" data-category="처리중" onclick="filterPosts('처리중')">처리중</button>&ndash;&gt;-->
+<!--&lt;!&ndash;        <button class="tab" data-category="답변완료" onclick="filterPosts('답변완료')">답변완료</button>&ndash;&gt;-->
+<!--        <a class="tab" data-category="all"-->
+<!--           th:href="@{/myPage/editInfo(query=${query}, category=${category}, status=null)}"-->
+<!--           th:classappend="${status == 'all'} ? 'active' : ''">전체</a>-->
+<!--        <a class="tab" data-category="접수중"-->
+<!--           th:href="@{/myPage/editInfo(query=${query}, category=${category}, status='접수중')}"-->
+<!--           th:classappend="${status == '접수중'} ? 'active' : ''">접수중</a>-->
+<!--        <a class="tab" data-category="처리중"-->
+<!--           th:href="@{/myPage/editInfo(query=${query}, category=${category}, status='처리중')}"-->
+<!--           th:classappend="${status == '처리중'} ? 'active' : ''">처리중</a>-->
+<!--        <a class="tab" data-category="답변완료"-->
+<!--           th:href="@{/myPage/editInfo(query=${query}, category=${category}, status='답변완료')}"-->
+<!--           th:classappend="${status == '답변완료'} ? 'active' : ''">답변완료</a>-->
+<!--      </div>-->
+<!--      <div class="search-bar">-->
+<!--        <form id="search-form" th:action="@{/myPage/editInfo}" method="get">-->
+<!--          <select id="search-category" name="category">-->
+<!--            <option value="all" th:selected="${category == 'all'}">전체</option>-->
+<!--            <option value="title" th:selected="${category == 'title'}">제목</option>-->
+<!--            <option value="content" th:selected="${category == 'content'}">내용</option>-->
+<!--          </select>-->
+<!--          <input id="search-input" type="text" name="query" th:value="${query}" placeholder="검색어를 입력하세요.">-->
+<!--          <input type="hidden" name="page" value="1">-->
+<!--          <button type="submit" id="search-button">-->
+<!--            &lt;!&ndash; 새로운 SVG 아이콘 &ndash;&gt;-->
+<!--            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search" viewBox="0 0 24 24">-->
+<!--              <circle cx="11" cy="11" r="8"></circle>-->
+<!--              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>-->
+<!--            </svg>-->
+<!--          </button>-->
+<!--        </form>-->
+<!--      </div>-->
+
+<!--      <table class="post-table">-->
+<!--        <thead>-->
+<!--        <tr>-->
+<!--          <th>번호</th>-->
+<!--          <th>제목</th>-->
+<!--          <th>작성일</th>-->
+<!--          <th>답변여부</th>-->
+<!--          <th>조회수</th>-->
+<!--        </tr>-->
+<!--        </thead>-->
+<!--        <tbody class="post-list">-->
+<!--        <tr th:each="question : ${questions}">-->
+<!--          <td th:text="${question.id}"></td>-->
+<!--          <td class="post-title">-->
+<!--            <a th:href="@{/complaint/question/{id}(id=${question.id})}"-->
+<!--               th:text="${question.title}"></a>-->
+<!--          </td>-->
+<!--          <td th:text="${#temporals.format(question.createDate, 'yyyy-MM-dd')}"></td>-->
+<!--          <td class="answer-status"-->
+<!--              th:classappend="${question.status == '답변완료'} ? 'completed' : 'pending'">-->
+<!--            <span th:text="${question.status}"></span>-->
+<!--            <div th:if="${question.answer != null}">-->
+<!--              <p th:text="${question.answer.content}"></p>-->
+<!--              <a th:if="${question.answer.file1 != null}"-->
+<!--                 th:href="@{/download/{filename}(filename=${question.answer.file})}">-->
+<!--                첨부파일 다운로드-->
+<!--              </a>-->
+<!--            </div>-->
+<!--          </td>-->
+<!--          <td th:text="${question.views}"></td>-->
+<!--        </tr>-->
+<!--        <tr th:if="${questions.isEmpty()}">-->
+<!--          <td colspan="6">등록된 문의가 없습니다</td>-->
+<!--        </tr>-->
+<!--        </tbody>-->
+<!--      </table>-->
+<!--      <p>전체 <strong id="total-posts">0</strong> (1 / <span id="total-pages">1</span> 페이지)</p>-->
+<!--      <div class="content-area"></div>-->
+<!--      <div class="pagination">-->
+<!--        <a th:if="${startPage > 1}"-->
+<!--           th:href="@{/myPage/editInfo(query=${query}, category=${category}, status=${status}, page=${startPage - 1})}">이전</a>-->
+
+<!--        <span th:each="pageNum : ${#numbers.sequence(startPage, endPage)}">-->
+<!--        <a th:if="${pageNum != currentPage}"-->
+<!--           th:href="@{/myPage/editInfo(query=${query}, category=${category}, status=${status}, page=${pageNum})}"-->
+<!--           th:text="${pageNum}"></a>-->
+<!--        <span th:unless="${pageNum != currentPage}" th:text="${pageNum}" class="current"></span>-->
+<!--        </span>-->
+
+<!--        <a th:if="${endPage < totalPages}"-->
+<!--           th:href="@{/myPage/editInfo(query=${query}, category=${category}, status=${status}, page=${endPage + 1})}">다음</a>-->
+<!--      </div>-->
+<!--    </section>-->
+<!--  </main>-->
+<!--</div>-->
+
+<!--&lt;!&ndash;<div th:replace="layouts/navbar::tellMe_header"></div>&ndash;&gt;-->
+<!--&lt;!&ndash;<div>&ndash;&gt;-->
+<!--&lt;!&ndash;  <div class="sidebar">&ndash;&gt;-->
+<!--&lt;!&ndash;    <ul th:replace="layouts/sidebar_mypage::TellMe_side_mypage">&ndash;&gt;-->
+
+<!--&lt;!&ndash;    </ul>&ndash;&gt;-->
+<!--&lt;!&ndash;  </div>&ndash;&gt;-->
+<!--&lt;!&ndash;  <div>&ndash;&gt;-->
+<!--&lt;!&ndash;    <div>&ndash;&gt;-->
+<!--&lt;!&ndash;      <div>&ndash;&gt;-->
+<!--&lt;!&ndash;        <h2>기본 정보</h2>&ndash;&gt;-->
+<!--&lt;!&ndash;        <form th:action="@{/user/save}" th:object="${user}" method="post" onsubmit="return checkNameUnique(this)">&ndash;&gt;-->
+<!--&lt;!&ndash;          <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>&ndash;&gt;-->
+<!--&lt;!&ndash;          <input type="hidden" th:field="*{id}"/>&ndash;&gt;-->
+<!--&lt;!&ndash;          <ul>&ndash;&gt;-->
+<!--&lt;!&ndash;            <li>&ndash;&gt;-->
+<!--&lt;!&ndash;              <div>&ndash;&gt;-->
+<!--&lt;!&ndash;                <div>&ndash;&gt;-->
+<!--&lt;!&ndash;                  <div class="user-name" th:text="*{userName}"></div>&ndash;&gt;-->
+<!--&lt;!&ndash;                  <button type="button" onclick="changeName()">실명수정</button>&ndash;&gt;-->
+<!--&lt;!&ndash;                </div>&ndash;&gt;-->
+<!--&lt;!&ndash;              </div>&ndash;&gt;-->
+<!--&lt;!&ndash;            </li>&ndash;&gt;-->
+<!--&lt;!&ndash;            <li>&ndash;&gt;-->
+<!--&lt;!&ndash;              <div>&ndash;&gt;-->
+<!--&lt;!&ndash;                <div class="user-phone" th:text="*{phone}"></div>&ndash;&gt;-->
+<!--&lt;!&ndash;                <button type="button" onclick="changePhone()">핸드폰 수정</button>&ndash;&gt;-->
+<!--&lt;!&ndash;              </div>&ndash;&gt;-->
+<!--&lt;!&ndash;            </li>&ndash;&gt;-->
+<!--&lt;!&ndash;            <li>&ndash;&gt;-->
+<!--&lt;!&ndash;              <div>&ndash;&gt;-->
+<!--&lt;!&ndash;                <div class="user-email" th:text="*{email}"></div>&ndash;&gt;-->
+<!--&lt;!&ndash;                <button type="button" onclick="changeEmail()">이메일 수정</button>&ndash;&gt;-->
+<!--&lt;!&ndash;              </div>&ndash;&gt;-->
+<!--&lt;!&ndash;            </li>&ndash;&gt;-->
+<!--&lt;!&ndash;            <li>&ndash;&gt;-->
+<!--&lt;!&ndash;              <div>&ndash;&gt;-->
+<!--&lt;!&ndash;                <div class="user-address" th:text="*{address}"></div>&ndash;&gt;-->
+<!--&lt;!&ndash;                <button type="button" onclick="changeAddress()">주소 수정</button>&ndash;&gt;-->
+<!--&lt;!&ndash;              </div>&ndash;&gt;-->
+<!--&lt;!&ndash;            </li>&ndash;&gt;-->
+<!--&lt;!&ndash;          </ul>&ndash;&gt;-->
+<!--&lt;!&ndash;        </form>&ndash;&gt;-->
+<!--&lt;!&ndash;      </div>&ndash;&gt;-->
+<!--&lt;!&ndash;    </div>&ndash;&gt;-->
+<!--&lt;!&ndash;  </div>&ndash;&gt;-->
+<!--&lt;!&ndash;</div>&ndash;&gt;-->
+<!--<div class="modal-backdrop" id="modalBackdrop" onclick="cancelEdit()"></div>-->
+<!--<div id="editModal" class="edit-form">-->
+<!--  <input type="password" id="password" minlength="4" maxlength="20" placeholder="비밀번호로 인증을 해주세요." required>-->
+<!--  <button type="button" id="passwordBtn" onclick="checkPassword()">인증하기</button>-->
+
+<!--  <div id="nameEditSection" class="edit-section">-->
+<!--    <input type="text" id="newName" placeholder="새 이름 입력" disabled>-->
+<!--    <button type="button" id="saveNameBtn" onclick="saveNewName()" disabled>저장</button>-->
+<!--  </div>-->
+
+<!--  <div id="phoneEditSection" class="edit-section">-->
+<!--    <input type="text" id="newPhone" placeholder="새 핸드폰 번호 입력" disabled>-->
+<!--    <button type="button" id="savePhoneBtn" onclick="saveNewPhone()" disabled>저장</button>-->
+<!--  </div>-->
+
+<!--  <div id="emailEditSection" class="edit-section">-->
+<!--    <input type="email" id="newEmail" placeholder="새 이메일 입력" disabled>-->
+<!--    <button type="button" id="saveEmailBtn" onclick="saveNewEmail()" disabled>저장</button>-->
+<!--  </div>-->
+<!--  <button type="button" onclick="cancelEdit()">취소</button>-->
+<!--</div>-->
+<!--<script th:inline="javascript">-->
+<!--  var checkPasswordUrl = [[@{/user/checkPassword}]];-->
+<!--  var saveNameUrl = [[@{/user/updateName}]];-->
+<!--  var savePhoneUrl = [[@{/user/updatePhone}]];-->
+<!--  var saveEmailUrl = [[@{/user/updateEmail}]];-->
+<!--  // 문의 수정-->
+<!--  function editQuestion(id) {-->
+<!--      window.location.href = `/question/edit/${id}`;-->
+<!--  }-->
+
+<!--  // 문의 삭제-->
+<!--  async function deleteQuestion(id) {-->
+<!--      if (confirm("정말 삭제하시겠습니까?")) {-->
+<!--          try {-->
+<!--              const response = await fetch(`/question/delete/${id}`, {-->
+<!--                  method: "POST",-->
+<!--                  headers: {-->
+<!--                      "Content-Type": "application/json",-->
+<!--                      "X-CSRF-TOKEN": document.querySelector("[name='_csrf']").value-->
+<!--                  }-->
+<!--              });-->
+<!--              if (response.ok) {-->
+<!--                  location.reload();-->
+<!--              }-->
+<!--          } catch (error) {-->
+<!--              console.error("삭제 실패:", error);-->
+<!--          }-->
+<!--      }-->
+<!--  }-->
+<!--</script>-->
+<!--<div th:replace="layouts/footer::tellMe_footer"></div>-->
+<!--</body>-->
+<!--</html>-->
+
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 <head th:replace="layouts/navbar::tellMe_head"/>
@@ -53,78 +332,25 @@
       </form>
     </div>
     <ul class="menu">
-      <li class="menu-item active" data-target="profile">내 프로필</li>
-      <li class="menu-item" data-target="security">비밀번호 설정</li>
-      <li class="menu-item" data-target="history">내 민원 조회</li>
+      <li class="menu-item active"><a th:href = "@{/myPage/editInfo}">내 프로필</a></li>
+      <li class="menu-item"><a th:href = "@{/myPage/editPassword}">비밀번호 설정</a></li>
+      <li class="menu-item"><a th:href = "@{/myPage/myComplaint}">내 민원 조회</a></li>
     </ul>
   </aside>
 
   <main class="content">
-    <section id="profile" class="content-section active">
+    <section id="profile" class="content-section">
       <h2 class="section-title">내 프로필</h2>
       <div class="profile-card">
         <form th:action="@{/user/save}" th:object="${user}" method="post" onsubmit="return checkNameUnique(this)">
           <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
           <input type="hidden" th:field="*{id}"/>
-          <p><strong>이름:</strong> <span class="user-name" th:text="*{userName}"></span> <button type="button" onclick="changeName()">실명수정</button></p>
-          <p><strong>전화번호:</strong> <span class="user-phone" th:text="*{phone}"></span> <button type="button" onclick="changePhone()">핸드폰 수정</button></p>
-          <p><strong>이메일:</strong> <span class="user-email" th:text="*{email}"></span> <button type="button" onclick="changeEmail()">이메일 수정</button></p>
-          <p><strong>주소:</strong> <span class="user-address" th:text="*{address}"></span> <button type="button" onclick="changeAddress()">주소 수정</button></p>
+          <p><strong>이름:</strong> <span class="user-name" th:text="*{userName}"></span> <button type="button" class="edit-btn" onclick="changeName()">실명수정</button></p>
+          <p><strong>전화번호:</strong> <span class="user-phone" th:text="*{phone}"></span> <button type="button" class="edit-btn" onclick="changePhone()">핸드폰 수정</button></p>
+          <p><strong>이메일:</strong> <span class="user-email" th:text="*{email}"></span> <button type="button" class="edit-btn" onclick="changeEmail()">이메일 수정</button></p>
+          <p><strong>주소:</strong> <span class="user-address" th:text="*{address}"></span> <button type="button" class="edit-btn" onclick="changeAddress()">주소 수정</button></p>
         </form>
       </div>
-    </section>
-
-    <section id="security" class="content-section">
-      <h2 class="section-title">비밀번호 설정</h2>
-      <div class="security-card">
-        <p><strong>비밀번호:</strong> ●●●●●●●● <button class="edit-btn">수정</button></p>
-      </div>
-    </section>
-    <section id="history" class="content-section">
-      <h2 class="section-title">내 민원 조회</h2>
-      <div class="tabs">
-        <button class="tab active" data-category="all" onclick="filterPosts('all')">전체</button>
-        <button class="tab" data-category="접수중" onclick="filterPosts('접수중')">접수중</button>
-        <button class="tab" data-category="처리중" onclick="filterPosts('처리중')">처리중</button>
-        <button class="tab" data-category="답변완료" onclick="filterPosts('답변완료')">답변완료</button>
-      </div>
-      <div class="search-bar">
-        <form id="search-form">
-          <select id="search-category" name="category">
-            <option value="all">전체</option>
-            <option value="title">제목</option>
-            <option value="content">내용</option>
-          </select>
-          <input type="text" placeholder="검색어를 입력하세요." id="search-input" name="query">
-          <button type="submit" id="search-button">
-            <!-- 새로운 SVG 아이콘 -->
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search" viewBox="0 0 24 24">
-              <circle cx="11" cy="11" r="8"></circle>
-              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-            </svg>
-          </button>
-        </form>
-      </div>
-
-      <table class="post-table">
-        <thead>
-        <tr>
-          <th>번호</th>
-          <th>제목</th>
-          <th>작성일</th>
-          <th>답변여부</th>
-          <th>조회수</th>
-        </tr>
-        </thead>
-        <tbody class="post-list">
-        <tr>
-          <td colspan="7">게시글이 없습니다.</td>
-        </tr>
-        </tbody>
-      </table>
-      <p>전체 <strong id="total-posts">0</strong> (1 / <span id="total-pages">1</span> 페이지)</p>
-      <div class="content-area"></div>
-      <div class="pagination"></div>
     </section>
   </main>
 </div>
@@ -202,6 +428,30 @@
   var saveNameUrl = [[@{/user/updateName}]];
   var savePhoneUrl = [[@{/user/updatePhone}]];
   var saveEmailUrl = [[@{/user/updateEmail}]];
+  // 문의 수정
+  function editQuestion(id) {
+      window.location.href = `/question/edit/${id}`;
+  }
+
+  // 문의 삭제
+  async function deleteQuestion(id) {
+      if (confirm("정말 삭제하시겠습니까?")) {
+          try {
+              const response = await fetch(`/question/delete/${id}`, {
+                  method: "POST",
+                  headers: {
+                      "Content-Type": "application/json",
+                      "X-CSRF-TOKEN": document.querySelector("[name='_csrf']").value
+                  }
+              });
+              if (response.ok) {
+                  location.reload();
+              }
+          } catch (error) {
+              console.error("삭제 실패:", error);
+          }
+      }
+  }
 </script>
 <div th:replace="layouts/footer::tellMe_footer"></div>
 </body>

@@ -24,9 +24,7 @@ main {
     text-align: left; /* 중앙 정렬 */
     margin-bottom: 30px; /* 아래 간격 */
     padding: 30px 10%; /* 상하 여백과 좌우 패딩 */
-
     background-color: #f4f4f4; /* 배경색 */
-
 }
 
 .report-header h1 {
@@ -170,8 +168,6 @@ main {
     position: relative; /* 탭 버튼의 위치를 조정 가능하게 설정 */
 }
 
-
-
 /* 활성화된 탭 스타일 */
 .tab.active {
     color: #22A9FD;
@@ -196,8 +192,10 @@ main {
     background-color: #22A9FD;
 }
 
-
-
+/* 모든 링크에 대해 밑줄 제거 */
+a:-webkit-any-link {
+    text-decoration: none;  /* 기본 밑줄 제거 */
+}
 
 /* 테이블 기본 스타일 */
 .post-table {
@@ -205,6 +203,7 @@ main {
     margin: 0 auto; /* 가운데 정렬 */
     border-collapse: collapse;
     margin-top: 20px;
+    margin-bottom: 20px; /* 테이블 하단 여백 추가 */
 }
 
 .post-table th, .post-table td {
@@ -311,45 +310,6 @@ main {
     padding-right: 10%; /* 오른쪽 여백 */
 }
 
-
-/* 버튼 스타일 */
-.write-button, .delete-button {
-    display: inline-block;
-    padding:4px 10px;
-    font-size: 13px;
-    font-weight: bold;
-    text-align: center;
-    text-decoration: none;
-    border: 1px solid #d1d1d1dd; /* 테두리 두께와 색상 */
-    border-radius: 4px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-/* 글쓰기 버튼 스타일 */
-.write-button {
-    background-color: #ffffff;
-    color: #1674C3;
-}
-
-.write-button:hover {
-    background-color: #F8FCFD;
-    color: #1674C3;
-    border-color: #1674C3; /* 호버 시 테두리 색상 유지 */
-}
-
-/* 삭제 버튼 스타일 */
-.delete-button {
-    background-color: #1674C3;
-    color: #ffffff;
-}
-
-.delete-button:hover {
-    background-color: #ffffff;
-    color: #1674C3;
-    border-color: #1674C3; /* 호버 시 테두리 색상 유지 */
-}
-
 /* 페이지네이션 컨테이너 */
 .pagination {
     display: flex;
@@ -361,49 +321,41 @@ main {
 
 }
 
-/* 기본 버튼 스타일 */
-.pagination button {
-    padding: 5px 2px;
-    font-size: 10px;
-    justify-content: center; /* 가로 중앙 정렬 */
-    line-height: 1; /* 높이를 맞추기 위해 1로 설정 */
-    align-items: center; /* 세로 중앙 정렬 */
-    color: #aaa; /* 기본 글씨 색 */
-    background: none; /* 배경 제거 */
-    border: none; /* 테두리 제거 */
-    outline: none; /* 포커스 시 외곽선 제거 */
-    box-shadow: none; /* 그림자 제거 */
+/* 페이지네이션 버튼 스타일 */
+.pagination a, .pagination button {
+    padding: 5px 5px;
+    margin: 0 3px;
     cursor: pointer;
-    transition: color 0.3s ease, border-bottom 0.3s ease;
+    transition: background-color 0.3s ease;
+    text-decoration: none;
+    font-size: 14px;
+    color: #333;
+    border-radius: 4px;
 }
 
-/* 호버 효과 */
-.pagination button:hover {
-    color: #333; /* 호버 시 진한 색 */
+/* 페이지네이션 버튼 hover 효과 */
+.pagination a:hover, .pagination button:hover {
+    background-color: #eee;
 }
 
-/* 비활성화 버튼 */
-.pagination button[disabled] {
-    color: #ccc;
-    cursor: not-allowed; /* 비활성화된 버튼 표시 */
+/* 현재 페이지 스타일 */
+.pagination .current {
+    padding: 5px 5px;
+    margin: 0 3px;
+    transition: background-color 0.3s ease;
+    text-decoration: none;
+    font-size: 14px;
+    color: #22A9FD;
+    border-radius: 4px;;
 }
 
-/* 활성화된 페이지 */
-.pagination button.active {
-    color: black;
-    font-weight: bold;
-    position: relative;
+/* 비활성화된 링크 스타일 (첫 페이지, 마지막 페이지 비활성화 시) */
+.pagination a[disabled], .pagination a:disabled,
+.pagination button[disabled], .pagination button:disabled {
+    background-color: #f0f0f0;
+    color: #aaa;
+    cursor: not-allowed;
+    border: 1px solid #ddd;
 }
 
-.pagination button.active::after {
-    content: '';
-    position: absolute;
-    bottom: -2px; /* 글자 아래에 밑줄 */
-    left: 0;
-    width: 100%;
-    height: 2px;
-    background-color: black;
-}
-p {
-    display: none; /* <p> 태그 전체를 숨김 */
-}
+

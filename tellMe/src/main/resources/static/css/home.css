@@ -11,40 +11,57 @@ body {
     height: auto;
 }
 
-*, *:before, *:after {
-    box-sizing: border-box;
-}
-
-html {
-    font-size: 13pt;
-}
-
 h1, h2, h3, h4, h5, h6 {
     font-weight: 300;
     line-height: 1.5;
     margin: 0 0 1rem 0;
 }
-
 h1 {
     font-size: 1.7rem;
 }
 
+.wrapper {
+    position: relative;
+    width: 100%;
+    min-height: calc(100vh - 60px); /* 네비게이션 바 제외한 전체 영역 */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+.wrapper h1, .wrapper h2, .wrapper h3 {
+    color: #000;
+}
+.wrapper input[type="button"], .wrapper button, .wrapper .button {
+    background-color: #000;
+    color: #f2f2f2 !important;
+}
+.wrapper input[type="button"].alt, .wrapper button.alt, .wrapper .button.alt {
+    background-color: transparent;
+    box-shadow: inset 0 0 0 2px rgba(0, 0, 0, 0.15);
+    color: #000 !important;
+}
+.wrapper input[type="button"].alt:hover, .wrapper button.alt:hover, .wrapper .button.alt:hover {
+    background-color: rgba(0, 0, 0, 0.075);
+}
+
+/* 박스 크기 조정 */
 .box {
-    margin-bottom: 2rem;
+    margin-bottom: 1rem; /* 기존 1.5rem에서 줄임 */
     background: #FFF;
     display: flex;
     flex-direction: column;
-    justify-content: space-between; /* 위-아래 균등 배분 */
-    max-width: 100%; /* 🔥 부모 크기에 맞게 자동 확장 */
-    width: 100%;
-    min-height: 800px;
-    height: 100%; /* 박스 높이를 늘려 동일하게 설정 */
+    justify-content: space-between;
+    max-width: 100%;
+    width: 90%; /* 기존 95%에서 줄임 */
+    height: auto; /* 높이를 자동으로 조정 */
+    min-height: 500px; /* 기존 600px에서 줄임 */
 }
 
 .box .image.fit {
     margin: 0;
 }
-
 .box .image.fit img {
     border-radius: 0;
     width: 100%; /* 이미지를 박스에 맞게 조정 */
@@ -52,27 +69,27 @@ h1 {
     object-fit: cover; /* 이미지를 잘리지 않게 유지 */
 }
 
-.box header h1 {
-    margin-bottom: 2rem;
-    text-align: center;
+.box header {
+    height: 100px;
 }
 
-.box header {
-    height: 120px;
+.box header h1 {
+    margin-bottom: 0.75rem;
+    font-size: 1.2rem
+    text-align: center;
 }
 
 .box header p {
     text-transform: uppercase;
-    font-size: 0.75rem;
+    font-size: 0.6rem;
     font-weight: 300;
-    margin: 0 0 0.25rem 0;
-    padding: 0 0 0.75rem 0;
+    margin: 0 0 1rem 0;
+    padding: 0 0 0.25rem 0;
     letter-spacing: 0.25rem;
     text-align: center;
     position: relative;
     color: #bbb;
 }
-
 .box header p:after {
     content: '';
     position: absolute;
@@ -84,30 +101,33 @@ h1 {
     height: 1px;
     background-color: rgba(0, 0, 0, 0.125);
 }
-
 .box .content {
-    padding: 2rem; /* 기존 3rem에서 줄여 균형 조정 */
+    display: block;
+    padding: 1.5rem; /* 기존 3rem에서 줄여 균형 조정 */
     flex: 1;
 }
-
-.box .content h1,
-.box .content h2 {
+.box .content h1 {
     max-width: 100%; /* 🔥 전체 너비를 활용 */
     word-break: keep-all; /* 🔥 단어가 부자연스럽게 끊어지지 않도록 설정 */
     white-space: normal; /* 🔥 필요할 때만 줄 바꿈 */
     text-align: center; /* 🔥 중앙 정렬 유지 */
-    font-size: 1.5rem; /* 🔥 크기 조정 */
-    line-height: 1.6; /* 🔥 줄 간격 조정 */
+    font-size: 1.1rem; /* 🔥 크기 조정 */
+    line-height: 1.3; /* 🔥 줄 간격 조정 */
 }
-
 .box .content p {
+    font-size:0.8rem;
     max-width: 100%;
     word-break: keep-all; /* 🔥 단어가 중간에서 끊기지 않도록 */
     white-space: normal;
     text-align: center;
-    line-height: 1.5;
+    line-height: 1.3;
     color: #bbb; /* 🔥 기본 텍스트 색상 (기존보다 조금 더 강조) */
 }
+
+.inner {
+    min-height: 300px; /* 원하는 최소 높이 설정 */
+}
+
 
 @media (max-width: 768px) {
     .box .content h1,
@@ -116,7 +136,6 @@ h1 {
         line-height: 1.5;
     }
 }
-
 input[type="button"], button, .button {
     appearance: none;
     transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
@@ -133,251 +152,114 @@ input[type="button"], button, .button {
     text-transform: uppercase;
     white-space: nowrap;
 }
-
 .menu-bar {
     display: flex; /* 버튼을 Flexbox로 정렬 */
     justify-content: center; /* 버튼을 가로로 중앙 정렬 */
     gap: 1rem; /* 버튼 간 간격 추가 */
     margin-top: 1rem; /* 상단 간격 추가 (필요하면 조정) */
 }
-
 .menu-button {
     display: inline-flex; /* 버튼 안의 글자를 Flexbox로 정렬 */
     align-items: center; /* 수직 중앙 정렬 */
     justify-content: center; /* 가로 중앙 정렬 */
-    padding: 0.1rem 1.5rem; /* 버튼 내부 여백 설정 */
+    padding: 0.1rem 0.8rem; /* 버튼 내부 여백 설정 */
     border: none;
     background-color: #333;
     color: #fff;
     cursor: pointer;
-    font-size: 1rem;
+    font-size: 0.8rem;
     border-radius: 5px; /* 버튼 모서리 둥글게 */
     transition: background-color 0.3s ease;
     height: auto; /* 높이를 내용에 맞게 조정 */
     text-align: center; /* 텍스트 정렬 */
     white-space: nowrap; /* 텍스트가 줄바꿈되지 않도록 */
 }
-
 .menu-button:hover {
     background-color: #555; /* 호버 시 버튼 색 변경 */
 }
-
 .dynamic-content {
     display: block; /* 반드시 표시되도록 설정 */
-    margin-top: 2rem;
-    padding: 1rem;
+    margin-top: 0.75rem;
+    padding: 0.25rem;
 }
+
 .dynamic-content h2 {
+    font-size: 1rem;
+    margin-bottom: 0.25rem;
     margin: 0 0 1rem 0;
     text-align: center;
 }
 .dynamic-content p {
+    font-size: 0.8rem;
     margin: 0;
     text-align: center;
 }
-
 .background-container {
-    position: relative;
-    width: 100%;
-    height: 100vh; /* 전체 화면 높이 */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-}
-
-/* 🔹 배경 이미지 설정 */
-.background-container img {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    object-fit: cover;
-    z-index: -1; /* 배경을 뒤로 보냄 */
+    z-index: -1; /* 배경을 뒤로 보내기 */
 }
 
-.wrapper {
-    padding: 6rem 0 4rem 0;
-    position: relative;
-    margin: 0;
-}
-
-.wrapper > .inner {
-    margin: 0 auto;
-    width: 80rem;
-}
-
-.wrapper.style2 {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -30%);
-    width: 90%;
-    max-width: 1300px; /* 🔥 최대 너비 조정 */
-    background: transparent;
-    padding: 30px;
-    display: flex;
-    justify-content: center; /* 🔥 중앙 정렬 */
-}
-
-
-.wrapper.style2 h1, .wrapper.style2 h2, .wrapper.style2 h3 {
-    color: #000;
-}
-
-.wrapper.style2 input[type="button"], .wrapper.style2 button, .wrapper.style2 .button {
-    background-color: #000;
-    color: #f2f2f2 !important;
-}
-
-.wrapper.style2 input[type="button"].alt, .wrapper.style2 button.alt, .wrapper.style2 .button.alt {
-    background-color: transparent;
-    box-shadow: inset 0 0 0 2px rgba(0, 0, 0, 0.15);
-    color: #000 !important;
-}
-
-.wrapper.style2 input[type="button"].alt:hover, .wrapper.style2 button.alt:hover, .wrapper.style2 .button.alt:hover {
-    background-color: rgba(0, 0, 0, 0.075);
+.background-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* 배경 이미지 꽉 채우기 */
 }
 
 .grid-style {
     display: flex;
     justify-content: center; /* 🔥 그리드 요소를 가운데 정렬 */
-    gap: 2rem;
-    width: 100%;
+    align-items: stretch; /* 내부 요소 높이 동일하게 */
+    gap: 3rem;
+    width: 70%;
     max-width: 1400px; /* 🔥 최대 너비 설정 */
     margin: 0 auto; /* 🔥 중앙 정렬 */
 }
 
-.grid-style > div {
-    flex: 1 1 calc(50% - 2rem); /* 각 박스가 50% 너비를 가지도록 설정 */
-    max-width: 700px;
-    display: flex; /* 내부 요소를 플렉스로 정렬 */
-    flex-direction: column; /* 세로 정렬 */
-    justify-content: space-between; /* 위/아래 간격 균등 배분 */
-}
-
-@media (max-width: 768px) {
-    .wrapper.style2 {
-        transform: translate(-50%, -20%);
-        width: 95%;
-        padding: 20px;
-    }
-
-    .grid-style {
-        flex-direction: column; /* 모바일에서 한 줄씩 */
-        align-items: center;
-    }
-
-    .grid-style > div {
-        flex: 1 1 100%;
-    }
-}
-
 footer.align-center {
+    padding: 1.25rem 0 0 0;
     display: flex;
     justify-content: center; /* 수평 중앙 정렬 */
 }
 
-/* 반응형 디자인 추가 */
-
-/* 📌 태블릿 크기 대응 (768px 이하) */
-@media (max-width: 768px) {
-    html {
-        font-size: 12pt;
-    }
-
-    .wrapper {
-        padding: 4rem 0 3rem 0;
-    }
-
-    .wrapper > .inner {
-        width: 95%;
-    }
-
+@media (max-width: 1200px) {
     .box {
-        min-height: 600px !important;
-        padding: 1.5rem !important;
+        min-height: 450px; /* 기존 550px에서 줄임 */
     }
 
-    .grid-style {
-        flex-direction: column;
-        align-items: center;
+    .box .content h1 {
+        font-size: 1rem; /* 기존 1.2rem에서 줄임 */
     }
 
-    .grid-style > div {
-        max-width: 100%;
-        width: 90%;
-    }
-
-    .menu-bar {
-        flex-direction: column !important; /* 버튼을 세로로 정렬 */
-        gap: 0.5rem;
+    .box .content p {
+        font-size: 0.75rem; /* 기존 0.8rem에서 줄임 */
     }
 
     .menu-button {
-        width: 100% !important; /* 버튼을 전체 너비로 확장 */
-        font-size: 0.9rem !important;
-        padding: 0.5rem;
+        font-size: 0.75rem; /* 기존 0.8rem에서 줄임 */
+        padding: 0.2rem 0.7rem; /* 기존 0.3rem 1rem에서 줄임 */
     }
 }
 
-/* 📌 모바일 크기 대응 (480px 이하) */
-@media (max-width: 480px) {
-    html {
-        font-size: 11pt;
-    }
 
-    h1 {
-        font-size: 1.5rem;
-    }
-
-    .wrapper {
-        padding: 3rem 0 2rem 0;
-    }
-
+@media (max-width: 768px) {
     .box {
-        min-height: auto;
-        padding: 1rem;
+        min-height: 400px; /* 기존 500px에서 줄임 */
     }
 
-    .grid-style {
-        flex-direction: column;
-        gap: 1rem;
+    .box .content h1 {
+        font-size: 0.9rem; /* 기존 1.1rem에서 줄임 */
     }
 
-    .grid-style > div {
-        width: 100%;
-    }
-
-    .box .content h1,
-    .box .content h2 {
-        font-size: 1.2rem;
-        line-height: 1.4;
+    .box .content p {
+        font-size: 0.7rem; /* 기존 0.75rem에서 줄임 */
     }
 
     .menu-button {
-        font-size: 0.85rem;
-        padding: 0.5rem;
-    }
-
-    .background-container {
-        height: 60vh; /* 모바일에서 배경 높이 축소 */
-    }
-
-    .background-container img {
-        object-fit: contain; /* 배경이 짤리지 않도록 조정 */
-    }
-
-    .wrapper.style2 {
-        transform: translate(-50%, -15%);
-        width: 100%;
-        padding: 15px;
-    }
-
-    footer.align-center {
-        flex-direction: column;
-        gap: 0.5rem;
+        font-size: 0.7rem; /* 기존 0.7rem 유지 */
+        padding: 0.1rem 0.6rem; /* 기존 0.2rem 0.8rem에서 줄임 */
     }
 }

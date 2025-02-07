@@ -18,23 +18,30 @@
     </div>
     <!-- 탭 -->
     <div class="tabs">
-        <button class="tab active" data-filter="all" onclick="filterPosts('all')">전체</button>
-        <button class="tab" data-filter="확인완료" onclick="filterPosts('확인완료')">확인 완료</button>
-        <button class="tab" data-filter="미확인" onclick="filterPosts('미확인')">미확인</button>
+        <!-- 기존 탭 클릭 시 status 값 전달 -->
+        <a class="tab" th:href="@{/manager/report(query=${query}, status='all', page=1)}"
+           th:classappend="${status == 'all'} ? 'active' : ''" data-filter="all">전체</a>
+        <a class="tab" th:href="@{/manager/report(query=${query}, status='확인완료', page=1)}"
+           th:classappend="${status == '확인완료'} ? 'active' : ''" data-filter="확인완료">확인 완료</a>
+        <a class="tab" th:href="@{/manager/report(query=${query}, status='미확인', page=1)}"
+           th:classappend="${status == '미확인'} ? 'active' : ''" data-filter="미확인">미확인</a>
     </div>
 
     <!-- 검색창 -->
     <div class="search-bar">
-        <form id="search-form">
+        <form id="search-form" th:action="@{/manager/report}" method="get">
             <input type="text" placeholder="검색어를 입력하세요." id="search-input" name="query">
+            <input type="hidden" name="status" th:value="${status}">  <!-- 기존 상태 유지 -->
+            <input type="hidden" name="page" value="1">  <!-- 검색 시 항상 첫 페이지로 이동 -->
             <button type="submit" class="search-button">
-                <!-- 새로운 SVG 아이콘 -->
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search" viewBox="0 0 24 24">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"
+                     stroke-linecap="round" stroke-linejoin="round" class="feather feather-search" viewBox="0 0 24 24">
                     <circle cx="11" cy="11" r="8"></circle>
                     <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                 </svg>
             </button>
         </form>
+
     </div>
 
     <!-- 보고서 목록 -->
@@ -51,14 +58,15 @@
         </thead>
         <tbody>
         <!-- 데이터가 없는 경우 -->
-        <tr th:if="${reports.isEmpty()}">
+        <tr th:if="${reports.isEmpty()}" class="empty-message">
             <td colspan="6" style="text-align: center;">등록된 보고서가 없습니다.</td>
         </tr>
         <!-- 데이터베이스에서 불러온 보고서 목록 표시 -->
         <tr th:each="report, stat : ${reports}">
-            <th th:text="${stat.index + 1}"></th>
+            <td th:text="${(currentPage - 1) * 10 + stat.index + 1}"></td>  <!-- 순번 계산 -->
             <td>
                 <!-- 보고서 제목 클릭 시 웹뷰어에서 열기 -->
+
                 <a th:href="@{/manager/report/view/{id}(id=${report.id})}" target="_blank">
                     <span th:text="${report.report}"></span>
                 </a>
@@ -67,7 +75,7 @@
             <td th:text="${report.category}"></td>
             <td th:text="${report.reportStatus}" th:classappend="${report.reportStatus == '미확인' ? 'unchecked' : 'checked'}"></td>
             <td>
-                <a th:href="@{/manager/report/view/{id}(id=${report.id})}" class="download-link">
+                <a th:href="@{/manager/report/view/{id}(id=${report.id})}" class="download-link" data-report-id="${report.id}">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-download" viewBox="0 0 24 24">
                         <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                         <polyline points="7 10 12 15 17 10"></polyline>
@@ -79,45 +87,32 @@
         </tbody>
     </table>
 
-    <!--        &lt;!&ndash; 보고서 리스트 예시 &ndash;&gt;-->
-    <!--        <tr>-->
-    <!--            <th>1</th>-->
-    <!--            <td>특이 민원 보고서1</td>-->
-    <!--            <td>2025-01-31</td>-->
-    <!--            <td>협박</td>-->
-    <!--            <td class="status unchecked">미확인</td>-->
-    <!--            <td>-->
-    <!--                <a href="#" class="download-link">-->
-    <!--                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-download" viewBox="0 0 24 24">-->
-    <!--                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>-->
-    <!--                        <polyline points="7 10 12 15 17 10"></polyline>-->
-    <!--                        <line x1="12" y1="15" x2="12" y2="3"></line>-->
-    <!--                    </svg>-->
-    <!--                </a>-->
-    <!--            </td>-->
-    <!--        </tr>-->
-    <!--        <tr>-->
-    <!--            <th>2</th>-->
-    <!--            <td>특이 민원 보고서2</td>-->
-    <!--            <td>2025-01-30</td>-->
-    <!--            <td>폭행</td>-->
-    <!--            <td class="status checked">확인 완료</td>-->
-    <!--            <td>-->
-    <!--                <a href="#" class="download-link">-->
-    <!--                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-download" viewBox="0 0 24 24">-->
-    <!--                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>-->
-    <!--                        <polyline points="7 10 12 15 17 10"></polyline>-->
-    <!--                        <line x1="12" y1="15" x2="12" y2="3"></line>-->
-    <!--                    </svg>-->
-    <!--                </a>-->
-    <!--            </td>-->
-    <!--        </tr>-->
-    <!--        </tbody>-->
-    <!--    </table>-->
+
 
     <!-- 페이지네이션 -->
-    <div class="pagination">
+    <div class="pagination" th:if="${not reports.isEmpty()}" th:classappend="${reports.isEmpty() ? 'no-pagination' : ''}">
+        <!-- 첫 번째 페이지로 이동 -->
+        <a th:href="@{/manager/report(query=${query}, status=${status}, page=1)}">«</a>
+
+        <!-- 이전 페이지로 이동 -->
+        <a th:href="@{/manager/report(query=${query}, status=${status}, page=${currentPage > 1 ? currentPage - 1 : 1})}">‹</a>
+
+        <!-- 5개의 페이지 범위만 표시 -->
+        <span th:each="i : ${#numbers.sequence(startPage, endPage)}">
+        <a th:href="@{/manager/report(query=${query}, status=${status}, page=${i})}"
+           th:text="${i}"
+           th:classappend="${i == currentPage} ? 'active current' : ''"></a>
+    </span>
+
+        <!-- 다음 페이지로 이동 -->
+        <a th:href="@{/manager/report(query=${query}, status=${status}, page=${currentPage < totalPages ? currentPage + 1 : totalPages})}">›</a>
+
+        <!-- 마지막 페이지로 이동 -->
+        <a th:href="@{/manager/report(query=${query}, status=${status}, page=${totalPages})}">»</a>
     </div>
+
+
+
 </main>
 <div th:replace="layouts/footer::tellMe_footer"></div>
 

@@ -1,31 +1,28 @@
 package com.bigProject.tellMe.service;
 
-import com.bigProject.tellMe.client.api.FastApiClient;
-import com.bigProject.tellMe.client.dto.QuestionApiDTO;
+import com.bigProject.tellMe.dto.NoticeDTO;
 import com.bigProject.tellMe.dto.QuestionDTO;
-import com.bigProject.tellMe.dto.UserDTO;
+import com.bigProject.tellMe.entity.Answer;
+import com.bigProject.tellMe.entity.Notice;
 import com.bigProject.tellMe.entity.Question;
+import com.bigProject.tellMe.entity.User;
 import com.bigProject.tellMe.enumClass.Reveal;
+import com.bigProject.tellMe.enumClass.Status;
 import com.bigProject.tellMe.mapper.QuestionMapper;
 import com.bigProject.tellMe.repository.QuestionRepository;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @Service
-@Transactional
 @RequiredArgsConstructor
 public class QuestionService {
     private final FastApiClient fastApiClient;
@@ -160,39 +157,50 @@ public class QuestionService {
         }
     }
 
-    /**
-     * 공지사항 목록을 페이지 단위로 조회하는 메서드
-     *
-     * @param pageable 페이지 정보(PageRequest) 객체 (페이지 번호, 정렬 방식 포함)
-     * @return Page<NoticeDTO> 페이징된 공지사항 목록 (id, 제목, 작성일, 조회수 포함)
-     */
-    public Page<QuestionDTO> paging(Pageable pageable, String role) {
+    public Page<QuestionDTO> searchAndFilter(String query, Status status, String category, String role, Pageable pageable) {
+        // 동적 쿼리를 위한 조건 생성
+        Specification<Question> spec = Specification.where(null);
 
-        // ✅ 현재 요청된 페이지 번호에서 1을 뺀 값 (Spring Data JPA는 페이지 인덱스를 0부터 시작함)
-        int page = pageable.getPageNumber() - 1;
-
-        // ✅ 한 페이지에서 보여줄 공지사항 개수
-        int pageLimit = 5;
-
-        // ✅ 공지사항을 ID 기준으로 내림차순 정렬하여 페이지네이션 적용된 데이터 조회
-        // PageRequest.of(페이지 번호, 페이지당 개수, 정렬 기준)
-        Page<Question> questions;
-        if ("ROLE_MANAGER".equals(role)) {
-            // ✅ 매니저는 모든 게시글을 조회
-            questions = questionRepository.findAll(
-                    PageRequest.of(page, pageLimit, Sort.by(Sort.Direction.DESC, "id"))
-            );
-        } else {
-            // ✅ 일반 사용자는 공개된 게시글만 조회
-            questions = questionRepository.findByReveal(
-                    Reveal.공개,
-                    PageRequest.of(page, pageLimit, Sort.by(Sort.Direction.DESC, "id"))
-            );
+        // 역할에 따른 공개 여부 필터링
+        if (!role.equals("ROLE_MANAGER") && !role.equals("ROLE_ADMIN")) {
+            spec = spec.and((root, cq, criteriaBuilder) -> criteriaBuilder.equal(root.get("reveal"), Reveal.공개));
         }
 
-        // ✅ 조회된 데이터를 questionDTO 형태로 변환하여 반환
-        // Question 엔티티의 id, title, createDate, views, userName, status만 매핑하여 DTO로 변환
-        Page<QuestionDTO> questionDTOS = questions.map(question -> new QuestionDTO(
+        // 상태 필터링
+        if (status != null) {
+            spec = spec.and((root, cq, criteriaBuilder) -> criteriaBuilder.equal(root.get("status"), status));
+        }
+
+        // 검색어 필터링
+        if (query != null && !query.isEmpty()) {
+            if (category == null || "all".equals(category)) {
+                // 전체 검색 (제목, 작성자, 내용)
+                spec = spec.and((root, cq, criteriaBuilder) -> criteriaBuilder.or(
+                        criteriaBuilder.like(root.get("title"), "%" + query + "%"),
+                        criteriaBuilder.like(root.get("user").get("userName"), "%" + query + "%"),
+                        criteriaBuilder.like(root.get("content"), "%" + query + "%")
+                ));
+            } else {
+                // 카테고리별 검색
+                switch (category) {
+                    case "title":
+                        spec = spec.and((root, cq, criteriaBuilder) -> criteriaBuilder.like(root.get("title"), "%" + query + "%"));
+                        break;
+                    case "author":
+                        spec = spec.and((root, cq, criteriaBuilder) -> criteriaBuilder.like(root.get("user").get("userName"), "%" + query + "%"));
+                        break;
+                    case "content":
+                        spec = spec.and((root, cq, criteriaBuilder) -> criteriaBuilder.like(root.get("content"), "%" + query + "%"));
+                        break;
+                }
+            }
+        }
+
+        // 페이징 처리
+        Page<Question> questions = questionRepository.findAll(spec, pageable);
+
+        // Question 엔티티를 QuestionDTO로 변환
+        return questions.map(question -> new QuestionDTO(
                 question.getId(),
                 question.getTitle(),
                 question.getCreateDate(),
@@ -200,7 +208,39 @@ public class QuestionService {
                 question.getUser().getUserName(),
                 question.getStatus()
         ));
-        return questionDTOS; // 변환된 공지사항 DTO 목록 반환
+    }
+
+    // MyPage 내 민원 조회 - 카테고리별 검색 로직 추가
+    public Page<QuestionDTO> searchUserQuestions(User user, String query, Status status, String category, Pageable pageable) {
+        Specification<Question> spec = Specification.where((root, cq, cb) ->
+                cb.equal(root.get("user"), user)
+        );
+
+        // 상태 필터링
+        if (status != null) {
+            spec = spec.and((root, cq, cb) -> cb.equal(root.get("status"), status));
+        }
+
+        // 검색어 및 카테고리 필터링
+        if (query != null && !query.isEmpty()) {
+            switch (category) {
+                case "title":
+                    spec = spec.and((root, cq, cb) ->
+                            cb.like(root.get("title"), "%" + query + "%"));
+                    break;
+                case "content":
+                    spec = spec.and((root, cq, cb) ->
+                            cb.like(root.get("content"), "%" + query + "%"));
+                    break;
+                default: // 전체 검색
+                    spec = spec.and((root, cq, cb) -> cb.or(
+                            cb.like(root.get("title"), "%" + query + "%"),
+                            cb.like(root.get("content"), "%" + query + "%")));
+            }
+        }
+
+        Page<Question> questions = questionRepository.findAll(spec, pageable);
+        return questions.map(QuestionDTO::toQuestionDTO);
     }
 
     // 접수중을 처리중으로 변경
@@ -214,5 +254,30 @@ public class QuestionService {
         } else {
             throw new IllegalArgumentException("해당 ID의 질문을 찾을 수 없습니다.");
         }
+    }
+
+
+    public List<QuestionDTO> findQuestionsByUser(User user) {
+        List<Question> questions = questionRepository.findByUser(user);
+        return questions.stream()
+                .map(QuestionDTO::toQuestionDTO)
+                .collect(Collectors.toList());
+    }
+
+    public void deleteQuestion(Long id) {
+        questionRepository.deleteById(id);
+    }
+
+    public void updateQuestion(QuestionDTO dto) {
+        Question question = questionRepository.findById(dto.getId())
+                .orElseThrow(() -> new IllegalArgumentException("Invalid question ID"));
+
+        dto.updateEntity(question);
+        questionRepository.save(question);
+    }
+
+    // 민원 상태별 카운트
+    public long countByStatus(Status status) {
+        return questionRepository.countByStatus(status);
     }
 }

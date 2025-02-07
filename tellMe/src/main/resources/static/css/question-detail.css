@@ -1,10 +1,14 @@
 /* 공통 스타일 */
 body {
     font-family: Arial, sans-serif;
-    line-height: 1.6;
-    margin: 20px;
-    background-color: #f9f9f9; /* 배경색 통일 */
-    color: #333; /* 기본 글자 색상 */
+    margin: 0;
+    padding: 0;
+    background-color: #ffffff;
+    color: #333;
+}
+
+* {
+    box-sizing: border-box;
 }
 
 /* 테이블 스타일 */
@@ -16,6 +20,9 @@ table {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* 테이블을 더 깔끔하게 보이도록 그림자 추가 */
 }
 
+.border-top th, .border-top td {
+    border-top: 2px solid #0067A3;
+}
 
 th, td {
     border: 1px solid #ccc; /* 테두리 색상 통일 */
@@ -26,19 +33,18 @@ th, td {
 th {
     background-color: #f4f4f4; /* 테이블 헤더 배경색 통일 */
     font-weight: bold;
-    width: 10%; /* 기본 너비 설정 */
 }
 
-td {
-    width: 40%; /* 기본 너비 설정 */
-}
+table tr th:nth-child(1), table tr td:nth-child(1) { width: 10%; }
+table tr th:nth-child(2), table tr td:nth-child(2) { width: 10%; }
+table tr th:nth-child(3), table tr td:nth-child(3) { width: 10%; }
+table tr th:nth-child(4), table tr td:nth-child(4) { width: 10%; }
+table tr th:nth-child(5), table tr td:nth-child(5) { width: 10%; }
+table tr th:nth-child(6), table tr td:nth-child(6) { width: 10%; }
 
-td pre {
-    font-weight: 550; /* 글씨 굵기 */
-    font-size: 16px; /* 글씨 크기 조정 (선택 사항) */
-    line-height: 1.6; /* 줄 간격 조정 (선택 사항) */
+.content-text {
     white-space: pre-wrap; /* 줄바꿈 유지 */
-    padding-left: 20px;
+    word-wrap: break-word;
 }
 
 h1 {
@@ -54,11 +60,11 @@ h1 {
 
 /* 본문 내용 스타일 */
 .content {
-    width: 60%; /* 테이블 너비를 60%로 조정 */
+    width: 80%; /* 테이블 너비를 60%로 조정 */
     border-collapse: collapse;
     margin: 20px auto;
     padding: 15px;
-    background-color: #f9f9f9; /* 본문 배경색 통일 */
+    background-color: #fff; /* 본문 배경색 통일 */
     color: #333; /* 본문 글자 색상 */
     line-height: 1.6; /* 본문 줄 간격 */
 }
@@ -102,4 +108,49 @@ button.delete-button {
 
 button.delete-button:hover {
     background-color: #f4a3a2; /* 삭제 버튼 hover 색상 */
+}
+
+/* 답변 폼을 감싸는 div 스타일 */
+.answer-box {
+    background-color: #fff; /* 배경색 */
+    border-radius: 8px; /* 둥근 모서리 */
+    margin-top: 20px; /* 위쪽 여백 */
+    max-width: 100%; /* 폼이 너무 넓어지지 않도록 제한 */
+}
+
+.answer-form {
+    width: 100%; /* 폼이 div의 너비를 채우도록 설정 */
+    display: flex;
+    flex-direction: column; /* 요소들을 세로로 나열 */
+}
+
+.answer-form textarea {
+    width: 100%; /* 텍스트 영역이 폼의 너비를 가득 채우도록 */
+    padding: 10px;
+    font-size: 1em;
+    border: 1px solid #ccc;
+    resize: none;
+    height: 100px;
+    margin-bottom: 10px; /* 텍스트 영역과 버튼 사이에 여백 추가 */
+}
+
+/* answer-form 내부 버튼 스타일 */
+.answer-form {
+    position: relative; /* form 내에서 위치 조정을 위해 설정 */
+}
+
+.answer-form button {
+    padding: 10px 20px;
+    border: 1px solid #ccc;
+    background-color: #f4f4f4;
+    color: #333;
+    cursor: pointer;
+    font-size: 14px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.answer-form button:hover {
+    background-color: #e6e6e6;
+    color: #000;
 }
