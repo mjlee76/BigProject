@@ -7,6 +7,7 @@ import com.bigProject.tellMe.enumClass.Status;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter

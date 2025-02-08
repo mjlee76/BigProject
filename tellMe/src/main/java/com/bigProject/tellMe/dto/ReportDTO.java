@@ -1,6 +1,5 @@
 package com.bigProject.tellMe.dto;
 
-import com.bigProject.tellMe.entity.Report;
 import com.bigProject.tellMe.enumClass.Category;
 import com.bigProject.tellMe.enumClass.ReportStatus;
 import lombok.*;

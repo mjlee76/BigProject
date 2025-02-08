@@ -52,6 +52,6 @@ class SpamDetector:
         if most_similar_id is None:
             return "도배아님"
         print(f"게시글이 기존 질문 {most_similar_id}과 유사")
-        if len(most_similar_id) >= 3:
+        if len(most_similar_id) >= 2:
             return "도배"
         else : return "도배아님"

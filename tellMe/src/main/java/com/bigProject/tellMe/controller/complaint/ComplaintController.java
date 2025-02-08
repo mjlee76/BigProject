@@ -30,6 +30,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/complaint")
@@ -59,6 +60,7 @@ public class ComplaintController {
                 (questionDTO.getContent() != null && !questionDTO.getContent().trim().isEmpty())) {
             Question question = questionService.save(questionDTO);
             questionDTO = questionMapper.quToQuDTO(question);
+            questionService.filterApi(questionDTO);
             Long questionId = questionDTO.getId();
             System.out.println("================="+questionDTO.toString());
             if(multipartFiles != null && multipartFiles.stream().anyMatch(file -> !file.isEmpty())) {

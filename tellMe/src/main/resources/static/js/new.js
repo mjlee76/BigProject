@@ -35,6 +35,8 @@ function spamAPI(event) {
     })
     .then(data => {
         if (data.valid) { // 서버에서 유효성 검사 결과가 true일 때만 제출
+            console.log(data);
+            console.log(data.spam.trim());
             alert("API 검증 결과 : " + data.message);
             // 버튼 다시 활성화 (폼 제출 후)
             if (submitButton) {

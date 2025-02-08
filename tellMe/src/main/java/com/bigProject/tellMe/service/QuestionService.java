@@ -2,13 +2,11 @@ package com.bigProject.tellMe.service;
 
 import com.bigProject.tellMe.client.api.FastApiClient;
 import com.bigProject.tellMe.client.dto.QuestionApiDTO;
-import com.bigProject.tellMe.dto.NoticeDTO;
 import com.bigProject.tellMe.dto.QuestionDTO;
 import com.bigProject.tellMe.dto.UserDTO;
-import com.bigProject.tellMe.entity.Answer;
-import com.bigProject.tellMe.entity.Notice;
 import com.bigProject.tellMe.entity.Question;
 import com.bigProject.tellMe.entity.User;
+import com.bigProject.tellMe.enumClass.Category;
 import com.bigProject.tellMe.enumClass.Reveal;
 import com.bigProject.tellMe.enumClass.Status;
 import com.bigProject.tellMe.mapper.QuestionMapper;
@@ -18,9 +16,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -34,6 +30,8 @@ public class QuestionService {
 
     private final QuestionMapper questionMapper;
     private final QuestionRepository questionRepository;
+
+    private final UserService userService;
 
     public Question save(QuestionDTO questionDTO) {
         Question question = questionMapper.quDTOToQu(questionDTO);
@@ -68,10 +66,12 @@ public class QuestionService {
 
         if (responseBody != null && Boolean.TRUE.equals(responseBody.get("valid"))) {
             response.put("valid", true);
-            if(responseBody.get("spam")=="도배아님") {
+            if("도배아님".equals(responseBody.get("spam"))) {
+                System.out.println(responseBody.get("spam"));
                 response.put("spam", "도배아님");
                 response.put("message", "성공적으로 검증되었습니다.");
             }else {
+                System.out.println(responseBody.get("spam"));
                 response.put("spam", "도배");
                 response.put("message", "도배 감지!!! 게시글이 등록되지 않습니다.");
             }
@@ -83,47 +83,34 @@ public class QuestionService {
                 response.put("message", "검증 실패: 유효하지 않은 요청입니다.");
             }
         }
-
+        System.out.println(response.get("spam"));
         return response;
     }
 
-    public Map<String, Object> checkApi(Map<String, String> request, UserDTO userDTO) {
-        String title = request.get("title");
-        String content = request.get("content");
+    public Map<String, Object> filterApi(QuestionDTO questionDTO) {
+        String title = questionDTO.getTitle();
+        String content = questionDTO.getContent();
+        Long userId = questionDTO.getUserId();
+        UserDTO userDTO = userService.findById(userId);
 
         Map<String, Object> requestBody = new HashMap<>();
-        Map<String, Object> postBody = new HashMap<>();
-        Map<String, Object> reportBody = new HashMap<>();
 
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
         ObjectNode userNode = objectMapper.createObjectNode();
-        userNode.put("user_id", userDTO.getUserId());
         userNode.put("user_name", userDTO.getUserName());
-        userNode.put("gender", userDTO.getGender());
-        userNode.put("role", userDTO.getRole().toString());
-        userNode.put("birth_date", userDTO.getBirthDate());
         userNode.put("phone", userDTO.getPhone());
-        userNode.put("address", userDTO.getAddress());
-        userNode.put("email", userDTO.getEmail());
-        userNode.put("create_date", userDTO.getCreateDate().toString());
         userNode.put("count", userDTO.getCount());
-
         //ObjectNode를 `Map<String, Object>`로 변환
         Map<String, Object> userMap = objectMapper.convertValue(userNode, Map.class);
 
-        System.out.println("================" + title);
-        System.out.println("================" + content);
-        System.out.println("================" + userMap.toString());
-
+        Map<String, Object> postBody = new HashMap<>();
         postBody.put("title", title);
         postBody.put("content", content);
         postBody.put("user", userMap);
 
-        Map<String, Object> category = new HashMap<>();
-        category.put("title", "");
-        category.put("content", "");
-        reportBody.put("category", category);
+        Map<String, Object> reportBody = new HashMap<>();
+        reportBody.put("category", "");
         reportBody.put("post_origin_data", "");
         reportBody.put("report_path", "");
         reportBody.put("create_date", "");
@@ -134,7 +121,28 @@ public class QuestionService {
         Map<String, Object> responseBody = fastApiClient.getFilter(requestBody);
         System.out.println("================" + responseBody);
         Map<String, Object> response = new HashMap<>();
+
         if (responseBody != null && Boolean.TRUE.equals(responseBody.get("valid"))) {
+            if("악성".equals(responseBody.get("message"))) {
+                Map<String, Object> post_data = (Map<String, Object>) responseBody.get("post_data");
+                Map<String, Object> reportReq = (Map<String, Object>) responseBody.get("report_req");
+                if (reportReq != null) {
+                    List<String> responseCategories = (List<String>) reportReq.get("category");
+                    List<QuestionDTO> categoryDTOList = responseCategories.stream()
+                            .map(category -> {
+                                QuestionDTO question = new QuestionDTO();
+                                question.setCategory(Category.fromString(category));
+                                return question;
+                            })
+                            .toList();
+                    List<Question> categoryList = categoryDTOList.stream()
+                            .map(questionMapper::quDTOToQu)  // DTO -> Entity 변환
+                            .collect(Collectors.toList());
+                    questionRepository.saveAll(categoryList);
+                }
+            }else {
+
+            }
             response.put("valid", true);
             response.put("message", "성공적으로 검증되었습니다.");
         } else {

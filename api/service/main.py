@@ -56,15 +56,8 @@ logger = logging.getLogger("my_logger")
 
 #게시글 작성자 정보
 class UserInfo(BaseModel):
-    user_id : str
     user_name: str
-    gender : str
-    role : str
-    birth_date : str
     phone : str
-    address : str
-    email: str
-    create_date : str
     count : int
 
 # 게시글 정보
@@ -73,13 +66,9 @@ class PostBody(BaseModel):
     content: str
     user: UserInfo
 
-class Category(BaseModel):
-    title: str
-    content: str
-
 #DB로 넘길 report 정보
 class ReportBody(BaseModel):
-    category : Category
+    category : str
     post_origin_data : str
     report_path : str
     create_date : str
@@ -153,7 +142,7 @@ async def update_item(data: CombinedModel):
             # 보고서 생성
             return {
                 "valid": True,
-                "message": "악성 데이터 수신 및 처리 완료",
+                "message": "악성",
                 "post_data": post_data.model_dump(),
                 "report_req": report_req.model_dump()
             }
@@ -163,7 +152,7 @@ async def update_item(data: CombinedModel):
             report_req.category.content = content_label
             return    {
                 "valid": True,
-                "message": "원문 데이터 수신 및 처리 완료",
+                "message": "원문",
                 "post_data": post_data.model_dump(),
                 "report_req": report_req.model_dump()
             }

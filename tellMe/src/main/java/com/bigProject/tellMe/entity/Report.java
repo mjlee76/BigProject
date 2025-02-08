@@ -4,10 +4,10 @@ import com.bigProject.tellMe.enumClass.Category;
 import com.bigProject.tellMe.enumClass.ReportStatus;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Builder // notice
@@ -37,5 +37,4 @@ public class Report {
 
     @Column(nullable = false)
     private LocalDateTime createDate;
-
 }
