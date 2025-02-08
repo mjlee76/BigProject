@@ -67,11 +67,9 @@ public class QuestionService {
         if (responseBody != null && Boolean.TRUE.equals(responseBody.get("valid"))) {
             response.put("valid", true);
             if("도배아님".equals(responseBody.get("spam"))) {
-                System.out.println(responseBody.get("spam"));
                 response.put("spam", "도배아님");
                 response.put("message", "성공적으로 검증되었습니다.");
             }else {
-                System.out.println(responseBody.get("spam"));
                 response.put("spam", "도배");
                 response.put("message", "도배 감지!!! 게시글이 등록되지 않습니다.");
             }
@@ -83,7 +81,7 @@ public class QuestionService {
                 response.put("message", "검증 실패: 유효하지 않은 요청입니다.");
             }
         }
-        System.out.println(response.get("spam"));
+
         return response;
     }
 
