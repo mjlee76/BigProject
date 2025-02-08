@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FileUpLoadUtil {
-    public static List<String> saveFiles(String uploadDir, List<MultipartFile    > multipartFiles) throws IOException {
+    public static List<String> saveFiles(String uploadDir, List<MultipartFile> multipartFiles) throws IOException {
         List<String> savedFileNames = new ArrayList<>();
         Path uploadPath = Paths.get(uploadDir);
 
