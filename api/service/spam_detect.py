@@ -51,7 +51,9 @@ class SpamDetector:
         most_similar_id = await self.async_find_most_relevant_base_id(new_emb, questions)
         if most_similar_id is None:
             return "도배아님"
-        print(f"게시글이 기존 질문 {most_similar_id}과 유사")
-        if len(most_similar_id) >= 3:
-            return "도배"
-        else : return "도배아님"
+        else:
+            print(f"게시글이 기존 질문 {most_similar_id}과 유사")
+            print(most_similar_id)
+            if len(most_similar_id) >= 2:
+                return "도배"
+            else : return "도배아님"
