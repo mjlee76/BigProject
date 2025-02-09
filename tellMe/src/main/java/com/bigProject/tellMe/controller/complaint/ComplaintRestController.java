@@ -8,19 +8,18 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import reactor.core.publisher.Mono;
 
+import java.io.IOException;
 import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
 public class ComplaintRestController {
+    private final SseEmitter emitter = new SseEmitter(Long.MAX_VALUE);
     private final QuestionService questionService;
-    private final UserService userService;
 
     @PostMapping("/api/spam")
     @ResponseBody
@@ -57,4 +56,17 @@ public class ComplaintRestController {
 //        }
 //
 //    }
+
+    @GetMapping("/api/events")
+    public SseEmitter streamEvents() {
+        return emitter;
+    }
+
+    public void sendRefreshEvent() {
+        try {
+            emitter.send(SseEmitter.event().name("refresh").data("reload"));
+        } catch (IOException e) {
+            emitter.complete();
+        }
+    }
 }

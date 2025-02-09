@@ -2,6 +2,7 @@ package com.bigProject.tellMe.service;
 
 import com.bigProject.tellMe.client.api.FastApiClient;
 import com.bigProject.tellMe.client.dto.QuestionApiDTO;
+import com.bigProject.tellMe.controller.complaint.ComplaintRestController;
 import com.bigProject.tellMe.dto.FilteredDTO;
 import com.bigProject.tellMe.dto.QuestionDTO;
 import com.bigProject.tellMe.dto.ReportDTO;
@@ -23,6 +24,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -39,6 +42,10 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class QuestionService {
     private final FastApiClient fastApiClient;
+
+    @Lazy
+    @Autowired
+    private ComplaintRestController complaintRestController;
 
     private final QuestionMapper questionMapper;
     private final FilteredMapper filteredMapper;
@@ -161,6 +168,8 @@ public class QuestionService {
                 }
                 questionDTO.setStatus(Status.접수중);
                 questionRepository.save(questionMapper.quDTOToQu(questionDTO));
+
+                complaintRestController.sendRefreshEvent();
 
                 if("악성".equals(responseBody.get("message"))) {
                     CompletableFuture.runAsync(() -> reportApi(responseBody));
