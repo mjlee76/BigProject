@@ -161,21 +161,22 @@ async def update_item(data: CombinedModel):
 
 @app.post("/make_report")
 async def make_report(data: CombinedModel):
-        post_data, report_req = data.post_data, data.report_req
-        if report_req.category != "정상":
-            await report.init()
-            report.report_prompt(post_data)
-            report.cell_fill(post_data, report_req)
-            time, output_file = report.report_save()
-            report_req.create_date = time
-            report_req.report_path = output_file
+    print(1234)
+    post_data, report_req = data.post_data, data.report_req
+    if report_req.category != "정상":
+        await report.init()
+        report.report_prompt(post_data)
+        report.cell_fill(post_data, report_req)
+        time, output_file = report.report_save()
+        report_req.create_date = time
+        report_req.report_path = output_file
 
-        return {
-                "valid": True,
-                "message": "보고서 작성 완료",
-                "post_data": post_data.model_dump(),
-                "report_req": report_req.model_dump()
-        }
+    return {
+            "valid": True,
+            "message": "보고서 작성 완료",
+            "post_data": post_data.model_dump(),
+            "report_req": report_req.model_dump()
+    }
 
 @app.post("/check_spam")
 async def check_spam(request: SpamQuestionRequest):

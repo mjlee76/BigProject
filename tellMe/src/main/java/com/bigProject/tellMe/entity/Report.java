@@ -2,6 +2,7 @@ package com.bigProject.tellMe.entity;
 
 import com.bigProject.tellMe.enumClass.Category;
 import com.bigProject.tellMe.enumClass.ReportStatus;
+import com.bigProject.tellMe.enumClass.Role;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -16,7 +17,6 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-@EntityListeners(AuditingEntityListener.class)
 public class Report {
 
     @Id @GeneratedValue(strategy= GenerationType.IDENTITY)
@@ -28,9 +28,8 @@ public class Report {
     @Column(nullable = false)
     private String report;
 
-    @Enumerated(EnumType.STRING) // ✅ ENUM을 문자열로 저장
     @Column(nullable = false)
-    private Category category; // 보고서 유형
+    private String category; // 보고서 유형
 
     // setter 추가
     @Setter
@@ -38,6 +37,13 @@ public class Report {
     @Column(nullable = false)
     private ReportStatus reportStatus;
 
-    @CreatedDate
+    @Column(nullable = false)
     private LocalDateTime createDate;
+
+    @PrePersist
+    public void setDefaultValues() {
+        if(this.reportStatus == null) {
+            this.reportStatus = ReportStatus.미확인;  // DB에 저장되기 전에 기본값 설정
+        }
+    }
 }

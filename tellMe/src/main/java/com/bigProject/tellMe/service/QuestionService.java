@@ -4,17 +4,21 @@ import com.bigProject.tellMe.client.api.FastApiClient;
 import com.bigProject.tellMe.client.dto.QuestionApiDTO;
 import com.bigProject.tellMe.dto.FilteredDTO;
 import com.bigProject.tellMe.dto.QuestionDTO;
+import com.bigProject.tellMe.dto.ReportDTO;
 import com.bigProject.tellMe.dto.UserDTO;
 import com.bigProject.tellMe.entity.Filtered;
 import com.bigProject.tellMe.entity.Question;
+import com.bigProject.tellMe.entity.Report;
 import com.bigProject.tellMe.entity.User;
 import com.bigProject.tellMe.enumClass.Category;
 import com.bigProject.tellMe.enumClass.Reveal;
 import com.bigProject.tellMe.enumClass.Status;
 import com.bigProject.tellMe.mapper.FilteredMapper;
 import com.bigProject.tellMe.mapper.QuestionMapper;
+import com.bigProject.tellMe.mapper.ReportMapper;
 import com.bigProject.tellMe.repository.FilteredRepository;
 import com.bigProject.tellMe.repository.QuestionRepository;
+import com.bigProject.tellMe.repository.ReportRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -26,6 +30,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
@@ -37,8 +42,10 @@ public class QuestionService {
 
     private final QuestionMapper questionMapper;
     private final FilteredMapper filteredMapper;
+    private final ReportMapper reportMapper;
     private final QuestionRepository questionRepository;
     private final FilteredRepository filteredRepository;
+    private final ReportRepository reportRepository;
 
     private final UserService userService;
 
@@ -128,9 +135,8 @@ public class QuestionService {
             System.out.println("================requestBody : " + requestBody);
             Map<String, Object> responseBody = fastApiClient.getFilter(requestBody);
             System.out.println("================responseBody : " + responseBody);
-            Map<String, Object> response = new HashMap<>();
 
-            if (responseBody != null && Boolean.TRUE.equals(responseBody.get("valid"))) {
+            if(responseBody != null && Boolean.TRUE.equals(responseBody.get("valid"))) {
                 if("악성".equals(responseBody.get("message"))) {
                     Map<String, Object> post_data = (Map<String, Object>) responseBody.get("post_data");
                     Map<String, Object> reportReq = (Map<String, Object>) responseBody.get("report_req");
@@ -155,11 +161,33 @@ public class QuestionService {
                 }
                 questionDTO.setStatus(Status.접수중);
                 questionRepository.save(questionMapper.quDTOToQu(questionDTO));
+
+                if("악성".equals(responseBody.get("message"))) {
+                    CompletableFuture.runAsync(() -> reportApi(responseBody));
+                }
             }
             return CompletableFuture.completedFuture(null);
         }catch (Exception e) {
             System.err.println("🚨 비동기 API 실행 중 오류 발생: " + e.getMessage());
             return CompletableFuture.failedFuture(e);
+        }
+    }
+
+    private void reportApi(Map<String, Object> requestBody) {
+        System.out.println("==============reportApi : requestBody : "+requestBody);
+        Map<String, Object> responseBody = fastApiClient.getReport(requestBody);
+        System.out.println("==============reportApi : responseBody : "+responseBody);
+
+        if(responseBody != null && Boolean.TRUE.equals(responseBody.get("valid"))) {
+            Map<String, Object> reportReq = (Map<String, Object>) responseBody.get("report_req");
+            List<String> responseCategories = (List<String>) reportReq.get("category");
+            String categoryString = String.join(",", responseCategories);
+
+            ReportDTO reportDTO = new ReportDTO();
+            reportDTO.setReport((String)reportReq.get("report_path"));
+            reportDTO.setCreateDate((LocalDateTime) reportReq.get("create_date"));
+            reportDTO.setCategory(categoryString);
+            reportRepository.save(reportMapper.repoDTOTORepo(reportDTO));
         }
     }
 

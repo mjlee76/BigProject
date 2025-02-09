@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 public class ReportDTO {
     private Long id;
     private String report;
-    private Category category;
+    private String category;
     private ReportStatus reportStatus;
     private LocalDateTime createDate;
 }

@@ -17,4 +17,7 @@ public interface FastApiClient {
 
     @PostMapping(value = "/filtered_module", consumes = "application/json", produces = "application/json")
     Map<String, Object> getFilter(@RequestBody Map<String, Object> requestBody);
+
+    @PostMapping(value = "/make_report", consumes = "application/json", produces = "application/json")
+    Map<String, Object> getReport(@RequestBody Map<String, Object> requestBody);
 }
