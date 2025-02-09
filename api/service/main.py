@@ -1,6 +1,6 @@
-from typing import List
+from typing import List, Dict
 from fastapi import FastAPI, BackgroundTasks
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from langchain_chroma import Chroma
 from langchain_openai import OpenAIEmbeddings
 
@@ -61,8 +61,8 @@ class PostBody(BaseModel):
 
 #DB로 넘길 report 정보
 class ReportBody(BaseModel):
-    category : list
-    post_origin_data : dict = ""
+    category : List[str] = Field(default_factory=list)
+    post_origin_data : Dict[str, str] = Field(default_factory=dict)
     report_path : str = ""
     create_date : str = ""
     
@@ -100,8 +100,7 @@ async def update_item(data: CombinedModel):
 
         title = post_data.title
         content = post_data.content
-        
-        post_origin_data = {"제목": title, "내용": content} # 원문데이터 저장용
+        post_origin_data = dict(제목=title, 내용=content) # 원문데이터 저장용
         report_req.post_origin_data = post_origin_data
         
         # 분류
