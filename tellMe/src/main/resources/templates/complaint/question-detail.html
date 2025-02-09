@@ -3,12 +3,20 @@
 <html lang="ko">
 <head th:replace="layouts/navbar::tellMe_head"/>
 <head th:replace="layouts/footer::tellMe_foot"/>
+<<<<<<< HEAD
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title th:text="${question.title}"></title>
     <link rel="stylesheet" type="text/css" th:href="@{/css/question-detail.css}" />
     <link href="https://cdn.jsdelivr.net/gh/sun-typeface/SUIT@2/fonts/static/woff2/SUIT.css" rel="stylesheet">
     <script th:src="@{/js/question-detail.js}" defer></script>
+=======
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title th:text="${question.title}"></title>
+<link rel="stylesheet" type="text/css" th:href="@{/css/question-detail.css}" />
+<script th:src="@{/js/question-detail.js}" defer></script>
+>>>>>>> e3adacd (목록보기 버튼을 "접근한 경로"에 따라 다르게 동작하도록 구현/ 통계 js, html 분리)
 </head>
 <body>
 <div th:replace="layouts/navbar::tellMe_header"></div>
