@@ -13,11 +13,9 @@
 <body>
 <div th:replace="layouts/navbar::tellMe_header"></div>
 <main id="inquiry-board">
-
     <div class="inquiry-header">
         <h1>문의게시판</h1>
     </div>
-
     <div class="tabs">
         <a class="tab" th:href="@{/complaint/question(query=${query}, category=${category}, status=null, page=1, size=${questionList.size})}"
            th:classappend="${status == 'all' or status == null} ? 'active' : ''" data-status="all">전체</a>
