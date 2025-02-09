@@ -34,6 +34,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
@@ -133,7 +134,7 @@ public class QuestionService {
 
             Map<String, Object> reportBody = new HashMap<>();
             reportBody.put("category", new ArrayList<>());
-            reportBody.put("post_origin_data", "");
+            reportBody.put("post_origin_data", new HashMap<>());
             reportBody.put("report_path", "");
             reportBody.put("create_date", "");
 
@@ -142,6 +143,7 @@ public class QuestionService {
             System.out.println("================requestBody : " + requestBody);
             Map<String, Object> responseBody = fastApiClient.getFilter(requestBody);
             System.out.println("================responseBody : " + responseBody);
+            String categoryString = "";
 
             if(responseBody != null && Boolean.TRUE.equals(responseBody.get("valid"))) {
                 if("악성".equals(responseBody.get("message"))) {
@@ -162,13 +164,14 @@ public class QuestionService {
                     questionDTO.setFilteredId(filter_id);
 
                     List<String> responseCategories = (List<String>) reportReq.get("category");
-                    String categoryString = String.join(",", responseCategories);
+                    categoryString = String.join(",", responseCategories);
                     //가져오는 법 : Arrays.asList(question.getCategory().split(","))
                     questionDTO.setCategory(categoryString);
                 }
                 questionDTO.setStatus(Status.접수중);
                 questionRepository.save(questionMapper.quDTOToQu(questionDTO));
 
+                //complaintRestController.sendNotification(userDTO.getUserId(), "악성민원이 감지되어 게시글이 수정되었습니다. 사유 : " + categoryString);
                 complaintRestController.sendRefreshEvent();
 
                 if("악성".equals(responseBody.get("message"))) {
@@ -186,16 +189,24 @@ public class QuestionService {
         System.out.println("==============reportApi : requestBody : "+requestBody);
         Map<String, Object> responseBody = fastApiClient.getReport(requestBody);
         System.out.println("==============reportApi : responseBody : "+responseBody);
-
+        ReportDTO reportDTO = new ReportDTO();
         if(responseBody != null && Boolean.TRUE.equals(responseBody.get("valid"))) {
+            System.out.println("==============reportApi : responseBody : "+responseBody);
             Map<String, Object> reportReq = (Map<String, Object>) responseBody.get("report_req");
+            System.out.println("==============reportApi : reportReq : "+reportReq);
             List<String> responseCategories = (List<String>) reportReq.get("category");
             String categoryString = String.join(",", responseCategories);
+            System.out.println("==============reportApi : categoryString : "+categoryString);
 
-            ReportDTO reportDTO = new ReportDTO();
             reportDTO.setReport((String)reportReq.get("report_path"));
-            reportDTO.setCreateDate((LocalDateTime) reportReq.get("create_date"));
+            String createDateStr = (String) reportReq.get("create_date"); // 🔹 FastAPI 응답에서 가져오기
+            // 🔹 변환을 위한 포맷 정의
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyMMdd_HHmmss");
+            // 🔹 `LocalDateTime`으로 변환
+            LocalDateTime createDate = LocalDateTime.parse(createDateStr, formatter);
+            reportDTO.setCreateDate(createDate);
             reportDTO.setCategory(categoryString);
+            System.out.println("==============reportApi : reportDTO : "+reportDTO);
             reportRepository.save(reportMapper.repoDTOTORepo(reportDTO));
         }
     }

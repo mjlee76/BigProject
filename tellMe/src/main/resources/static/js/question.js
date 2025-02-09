@@ -1,5 +1,5 @@
 // SSE 연결
-let eventSource = new EventSource("/api/events");
+let eventSource = new EventSource("/tellMe/api/events");
 
 eventSource.addEventListener("refresh", function(event) {
     console.log("🔄 새로고침 이벤트 수신!");
@@ -10,7 +10,7 @@ eventSource.onerror = function() {
     console.error("❌ SSE 연결 오류. 재연결 시도 중...");
     eventSource.close();
     setTimeout(() => {
-        eventSource = new EventSource("/sse/events");
+        eventSource = new EventSource("/tellMe/api/events");
     }, 3000); // 3초 후 재연결 시도
 };
 
