@@ -1,10 +1,14 @@
 /* 기본 설정 */
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'SUIT', sans-serif;
     margin: 0;
     padding: 0;
     background-color: #ffffff;
     color: #333;
+}
+
+a:-webkit-any-link {
+    text-decoration: none;  /* 기본 밑줄 제거 */
 }
 
 /* 메인 영역
