@@ -92,38 +92,22 @@ class SpamQuestionRequest(BaseModel):
 # make report()가 안되는 거 수정해야됨
 
 @app.post("/filtered_module")
-async def update_item(data: CombinedModel, background_tasks: BackgroundTasks):
+async def update_item(data: CombinedModel):
     #보고서 작성 플로우
-    async def make_report(post_data, report_req):
-        if report_req.category != "정상":
-            await report.init()
-            report.report_prompt(post_data)
-            report.cell_fill(post_data, report_req)
-            time, output_file = report.report_save()
-            report_req.create_date = time
-            report_req.report_path = output_file
-
-        return {
-                "valid": True,
-                "message": "보고서 작성 완료",
-                "post_data": post_data.model_dump(),
-                "report_req": report_req.model_dump()
-        }
-
     try:
         post_data = data.post_data
         report_req = data.report_req
 
         title = post_data.title
         content = post_data.content
-
+        
         post_origin_data = {"제목": title, "내용": content} # 원문데이터 저장용
         report_req.post_origin_data = post_origin_data
-
+        
         # 분류
         title_label = classifier.classify_text(title)
         content_label = classifier.classify_text(content)
-
+        
         await changetexter.init()
         result = {}
         if title_label != '정상' or content_label != '정상':
@@ -147,20 +131,17 @@ async def update_item(data: CombinedModel, background_tasks: BackgroundTasks):
                 title_changed = await changetexter.change_text(title)
                 post_data.title =  title_changed
                 content_changed = await changetexter.change_text(content)
-                post_data.content =  content_changed
+                post_data.content =  content_changed 
                 report_req.category = list(set(title_label.split(",") + content_label.split(",")))
                 result["제목"] = {"text": f"{title_changed}","경고문": f"{title_label} 감지"}
                 result["내용"] = {"text": f"{content_changed}","경고문": f"{content_label} 감지"}
             
-            response_data = {
+            return {
                 "valid": True,
                 "message": "악성",
                 "post_data": post_data.model_dump(),
                 "report_req": report_req.model_dump()
             }
-            # BackgroundTasks에 make_report 함수를 추가
-            background_tasks.add_task(make_report, post_data, report_req)
-            return response_data
 
         else:
             report_req.category = title_label
@@ -176,6 +157,24 @@ async def update_item(data: CombinedModel, background_tasks: BackgroundTasks):
         return  {
             "valid": False,
             "message" : f"처리 실패: {str(e)}",
+        }
+
+@app.post("/make_report")
+async def make_report(data: CombinedModel):
+        post_data, report_req = data.post_data, data.report_req
+        if report_req.category != "정상":
+            await report.init()
+            report.report_prompt(post_data)
+            report.cell_fill(post_data, report_req)
+            time, output_file = report.report_save()
+            report_req.create_date = time
+            report_req.report_path = output_file
+
+        return {
+                "valid": True,
+                "message": "보고서 작성 완료",
+                "post_data": post_data.model_dump(),
+                "report_req": report_req.model_dump()
         }
 
 @app.post("/check_spam")
