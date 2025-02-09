@@ -12,7 +12,10 @@ main {
     position: relative;
         padding-bottom: 80px; /* 버튼 영역을 위한 여백 추가 */
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> a599846 (home수정)
 /* 공지사항 상단 제목 */
 .notice-header {
     text-align: left; /* 중앙 정렬 */
@@ -554,7 +557,10 @@ body.delete-mode .delete-mode-buttons {
     color: #000;
 }
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> a599846 (home수정)
 /* 🔹 페이지네이션 컨테이너 스타일 */
 .pagination-container {
     display: flex;
@@ -571,10 +577,15 @@ body.delete-mode .delete-mode-buttons {
     left: 50%; /* 부모의 50% 위치로 이동 */
     transform: translateX(-50%); /* 정확한 중앙 정렬 */
     display: flex;
+<<<<<<< HEAD
     align-items: center;
     margin-left: 140px;
 }
 
 .feather feather-search {
     margin-bottom: 10px;
+=======
+    gap: 5px;
+    align-items: center;
+>>>>>>> a599846 (home수정)
 }
