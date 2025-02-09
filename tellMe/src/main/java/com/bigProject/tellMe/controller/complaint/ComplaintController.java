@@ -105,16 +105,41 @@ public class ComplaintController {
         return "complaint/question";
     }
 
-    // 문의 제목을 클릭하여 상세페이지 표출 메서드
+//    // 문의 제목을 클릭하여 상세페이지 표출 메서드
+//    @GetMapping("/question/{id}")
+//    public String getQuestion(@PathVariable Long id,
+//                              @RequestParam(required = false, defaultValue = "1")int page,
+//                              Model model) {
+//        QuestionDTO questionDTO = questionService.getQuestion(id);
+//        model.addAttribute("question", questionDTO);
+//        model.addAttribute("page", page);
+//        return "complaint/question-detail";
+//    }
+
     @GetMapping("/question/{id}")
     public String getQuestion(@PathVariable Long id,
-                              @RequestParam(required = false, defaultValue = "1")int page,
+                              @RequestParam(required = false, defaultValue = "1") int page,
+                              Authentication auth, // 🔹 로그인한 사용자 정보 가져오기
                               Model model) {
         QuestionDTO questionDTO = questionService.getQuestion(id);
+
+        // 현재 로그인한 사용자 정보 가져오기
+        Long currentUserId = null;
+        if (auth != null && auth.isAuthenticated()) {
+            UserDTO userDTO = userService.findByUserId(auth.getName());
+            currentUserId = userDTO.getId();
+        }
+
+        // 모델에 현재 로그인한 사용자 ID 추가
         model.addAttribute("question", questionDTO);
-        model.addAttribute("page", page);
+        model.addAttribute("currentUserId", currentUserId); // 로그인한 유저 ID    model.addAttribute("page", page);
+
         return "complaint/question-detail";
     }
+
+
+
+
 
     // 접수중을 처리중으로 변경하는 메서드
     @PostMapping("/question/{id}/status")
@@ -145,10 +170,17 @@ public class ComplaintController {
         return "redirect:/myPage/editInfo";
     }
 
+//    @PostMapping("/delete/{id}")
+//    public String delete(@PathVariable Long id) {
+//        questionService.deleteQuestion(id);
+//        return "redirect:/myPage/editInfo";
+//    }
+
     @PostMapping("/delete/{id}")
     public String delete(@PathVariable Long id) {
         questionService.deleteQuestion(id);
-        return "redirect:/myPage/editInfo";
+        return "redirect:/myPage/myComplaint";
     }
+
 
 }

@@ -123,6 +123,9 @@
 
     <input type="hidden" id="page" th:value="${page}" /> <!-- 현재 페이지 번호 -->
     <input type="hidden" id="questionId" th:value="${question.id}" /> <!-- 문의 ID -->
+    <input type="hidden" id="currentUserId" th:value="${currentUserId}" /> <!-- 로그인한 유저 ID -->
+    <input type="hidden" id="questionUserId" th:value="${question.userId}" /> <!-- 글 작성자 ID -->
+
 
     <!-- 버튼 -->
     <div class="buttons">
@@ -130,6 +133,16 @@
         <form th:action="@{/complaint/question/{id}/status(id=${question.id})}" method="post">
             <button th:onclick="updateQuestionStatus()" sec:authorize="hasRole('ROLE_MANAGER')">처리중으로 변경</button>
         </form>
+
+        <!-- 삭제 버튼: 로그인한 사용자가 해당 게시글 작성자일 경우에만 표시 -->
+        <form th:if="${currentUserId == question.userId}"
+              th:action="@{/complaint/delete/{id}(id=${question.id})}"
+              method="post"
+              onsubmit="return confirm('정말로 삭제하시겠습니까?');">
+            <button type="submit" sec:authorize="hasRole('ROLE_USER')">삭제하기</button>
+        </form>
+
+
 
     </div>
 </main>
