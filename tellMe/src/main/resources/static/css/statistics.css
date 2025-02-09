@@ -2,7 +2,7 @@ body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #ffffff;
+    background-color: #f7f9fc;  /* 배경색을 밝은 회색으로 설정 */
     color: #333;
 }
 
@@ -10,6 +10,8 @@ body {
 #wrapper {
     display: flex;
     min-height: 100vh;
+    padding: 20px;
+    background-color: #f7f9fc;
 }
 
 /* ✅ 사이드바 설정 */
@@ -17,289 +19,102 @@ body {
     width: 250px;
     min-height: 100vh;
     transition: width 0.3s ease-in-out;
+    background-color: #2c3e50; /* 사이드바 배경색 */
+    border-radius: 15px; /* 사이드바 모서리를 둥글게 처리 */
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
 }
+
+
+
 
 /* ✅ 메인 컨텐츠 레이아웃 */
 #content-wrapper {
     flex-grow: 1; /* 사이드바를 제외한 나머지 공간을 모두 차지 */
-    padding: 42px 3% 22px;
+    padding: 20px;
     width: calc(100% - 250px); /* 사이드바 250px 제외한 나머지 영역 */
-    min-height: 100vh;
     display: flex;
-    flex-direction: column; /* ✅ 기본적으로 세로 정렬 */
-    justify-content: flex-start;
+    flex-direction: column; /* 세로 정렬 */
+    gap: 20px;  /* 요소들 간의 간격을 설정 */
 }
 
+/* ✅ 통계 박스 스타일 */
 
-/* ✅ 컨텐츠 내부 설정 */
-#content {
-    display: flex;
-    flex-wrap: nowrap; /* ✅ 줄 바꿈 방지 */
-    justify-content: flex-start; /* ✅ 왼쪽 정렬 */
-    align-items: flex-start;
-    width: 100%;
-    min-height: 100%;
-}
-
-
-/* ✅ 통계 페이지 내부 컨텐츠 크기 설정 */
-#content-wrapper .container {
-    flex-grow: 1;
-    max-width: 1200px;
-}
-
-/* ✅ 카드 스타일 (차트 포함) */
-#content-wrapper .card {
-    background: #fff;
-    border-radius: 8px;
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-    padding: 1rem;
-    width: 100%;
-    max-width: 800px;
+/* ✅ 차트 박스 제목 */
+.chart-box h2 {
+    font-size: 24px;
+    color: #333;
     margin-bottom: 20px;
-}
-
-/* ✅ 카드 헤더 스타일 */
-#content-wrapper .card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem;
-    border-bottom: 1px solid #ddd;
-    font-size: 1.2rem;
+    text-align: center;
 }
 
 /* ✅ 차트 컨테이너 중앙 정렬 */
-#content-wrapper .chart-wrapper {
+.chart-wrapper {
     display: flex;
     justify-content: center;
     align-items: center;
     width: 100%;
-    margin-top: 1rem;
 }
 
 /* ✅ 차트 크기 설정 */
-#content-wrapper .chart-container {
-    width: 50%;
-    max-width: 350px;
-    height: auto;
-    display: flex;
-    justify-content: center;
-}
-
-/* ✅ 차트 영역 설정 */
-#content-wrapper .chart-box {
-    position: relative;
-    width: 100%;
-    height: 8rem;
-}
-
-/* 📌 🔹 악성민원 성별/연령별 통계 컨테이너 */
-#daily-complaints-content,
-#monthly-complaints-content,
-#malicious-gender-content {
-    display: flex;
-    flex-direction: row !important; /* ✅ 가로 정렬 */
-    justify-content: space-between; /* ✅ 좌우 정렬 */
-    align-items: stretch;
-    flex-wrap: nowrap; /* ✅ 줄바꿈 방지 */
-    gap: 20px; /* ✅ 좌우 간격 조정 */
-    padding: 20px;
-    width: 100%; /* ✅ 너비 100%로 설정 */
-    max-width: 1200px; /* ✅ 최대 너비 설정 */
-    margin: 0 auto; /* ✅ 중앙 정렬 */
-}
-
-/* 📌 🔹 성별 / 연령별 개별 항목 */
-.half_box {
-    flex: 1; /* ✅ 동일한 비율로 공간 차지 */
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    text-align: center;
-    min-width: 45%; /* ✅ 최소 너비 설정 */
-    background: #fff; /* ✅ 배경색 추가 */
-    border-radius: 8px; /* ✅ 둥근 모서리 */
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1); /* ✅ 그림자 효과 */
-    padding: 20px; /* ✅ 내부 여백 추가 */
-}
-
-.half_box.right {
-    background: #f9fafc; /* ✅ 오른쪽 박스 배경색 */
-}
-
-.half_box .info.type1 {
-    padding: 10px 2% 10px 4%;
-    font-size: 1.2rem; /* ✅ 제목 크기 조정 */
-}
-
-.info h1 {
-    font-size: 24px; /* ✅ 글씨 크기 조정 */
-    color: #333; /* ✅ 글자 색 변경 */
-    text-align: center; /* ✅ 중앙 정렬 */
-    margin-bottom: 15px; /* ✅ 하단 간격 추가 */
-}
-
-.bold-text {
-    font-weight: bold; /* ✅ "일별 민원"은 굵게 */
-}
-
-.normal-text {
-    font-weight: normal !important; /* ✅ "통계"는 일반 폰트 */
-}
-
-.half_con {
-    padding: 35px 7%;
-    width: 100%; /* ✅ 너비 설정 */
-}
-
-/* 📌 🔹 차트 박스 스타일 */
-.half_box .chart-box {
-    position: relative;
-    width: 100%;
-    max-width: 450px; /* ✅ 차트 크기 조정 */
-    height: 400px; /* ✅ 차트 높이 조정 */
-}
-
-/* ✅ 반응형 - 모바일(태블릿 이하)에서는 상하 배치 */
-@media (max-width: 768px) {
-    #malicious-gender-content {
-        flex-direction: column; /* ✅ 세로 정렬 */
-        align-items: center;
-        gap: 10px; /* ✅ 간격 조정 */
-    }
-
-    .half_box {
-        width: 100%; /* ✅ 너비 100%로 설정 */
-        margin-bottom: 20px; /* ✅ 하단 여백 추가 */
-    }
-
-    .half_box .chart-box {
-        max-width: 90%; /* ✅ 모바일에서 차트 크기 조정 */
-    }
-}
-
-/* ✅ 날짜 선택 및 검색 버튼 스타일 */
-.date-filter {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px; /* 요소 간 간격 */
-    margin-bottom: 10px;
-}
-
-.date-filter label {
-    font-size: 14px;
-    font-weight: bold;
-    color: #333;
-}
-
-.date-filter input {
-    padding: 8px 12px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 14px;
-}
-
-.date-filter button {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    padding: 8px 12px;
-    border-radius: 5px;
-    font-size: 14px;
-    cursor: pointer;
-    transition: background 0.3s ease-in-out;
-}
-
-.date-filter button:hover {
-    background-color: #0056b3;
-}
-
-/* ✅ 현재 날짜 표시 스타일 */
-.date-text {
-    font-size: 14px;
-    font-weight: bold;
-    color: #666;
-    text-align: center;
-    margin-top: 5px;
-}
-
-/* ✅ 통계 페이지 공통 차트 설정 */
-.chart-col {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-}
-
-/* ✅ 카드 공통 스타일 */
-.card {
-    background: white;
-    border-radius: 10px;
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    width: 100%;
-    max-width: 500px;
-    margin: auto;
-}
-
-/* ✅ 카드 헤더 */
-.card-header {
-    font-size: 1.2rem;
-    padding: 1rem;
-    text-align: center;
-}
-
-/* ✅ 반응형 디자인 */
-@media (max-width: 992px) {
-    #content-wrapper {
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .half_box {
-        width: 100%;
-        margin: 0 0 20px 0;
-    }
-}
-
-/* ✅ 캔버스 크기 조절 */
 canvas {
-    max-width: 450px !important;
-    max-height: 350px !important;
+    max-width: 100%;
+    height: auto;
+    max-height: 400px;
 }
 
-@media (min-width: 768px) {
-    #content-wrapper .chart-box {
-        height: 15rem;
-    }
+/* ✅ 차트 사이드에 배치된 박스들을 정렬 */
+.chart-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+/* ✅ 각 차트 박스 스타일 */
+.chart-box {
+    flex: 1;
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* ✅ 사이드바 내 아이콘 및 텍스트 정렬 */
+.sidebar .menu-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 20px;
+    font-size: 16px;
+    color: #fff;
+}
+
+.sidebar .menu-item:hover {
+    background-color: #575757;
 }
 
 /* ✅ 반응형 설정 */
-@media (max-width: 992px) {
-    #content-wrapper .chart-container {
-        width: 70%;
-    }
-}
-
 @media (max-width: 768px) {
-    #content-wrapper {
-        padding: 1rem;
+    #wrapper {
+        flex-direction: column;
     }
 
-    #content-wrapper .chart-container {
-        width: 90%;
+    .chart-container {
+        flex-direction: column;
     }
 
-    #content-wrapper .card {
+    .chart-box {
         max-width: 100%;
+        margin-bottom: 20px;
+    }
+
+    .chart-wrapper {
+        width: 100%;
+    }
+
+    canvas {
+        max-width: 90%;
     }
 }
 
-/* ✅ 차트 크기 조절 */
-canvas {
-    max-width: 500px !important;
-    max-height: 400px !important;
-}
+
+

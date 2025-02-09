@@ -30,7 +30,8 @@ document.addEventListener("DOMContentLoaded", function() {
     // 민원 처리 상태별 파이 차트
     var ctx = document.getElementById('statusChart').getContext('2d');
     var statusChart = new Chart(ctx, {
-        type: 'pie',
+        plugins: [ChartDataLabels],
+        type: 'doughnut',
         data: {
             labels: ['접수중', '처리중'],
             datasets: [{
@@ -43,10 +44,6 @@ document.addEventListener("DOMContentLoaded", function() {
                     'rgba(255, 99, 132, 0.2)',
                     'rgba(54, 162, 235, 0.2)'
                 ],
-                borderColor: [
-                    'rgba(255, 99, 132, 1)',
-                    'rgba(54, 162, 235, 1)'
-                ],
                 borderWidth: 1
             }]
         },
@@ -54,13 +51,16 @@ document.addEventListener("DOMContentLoaded", function() {
             responsive: true,
             plugins: {
                 datalabels: {
-                    color: 'white',
+                    color: 'black',
                     font: {
                         size: 14,
                         weight: 'bold'
                     },
-                    formatter: function(value) {
-                        return value;
+                    formatter: function (value, context) {
+                        var idx = context.dataIndex; // 각 데이터 인덱스
+
+                        // 출력 텍스트
+                        return context.chart.data.labels[idx] + value + '건';
                     }
                 }
             }
@@ -70,7 +70,8 @@ document.addEventListener("DOMContentLoaded", function() {
     // 보고서 상태별 파이 차트
     var reportCtx = document.getElementById('reportstatusChart').getContext('2d');
     var reportstatusChart = new Chart(reportCtx, {
-        type: 'pie',
+        plugins: [ChartDataLabels],
+        type: 'doughnut',
         data: {
             labels: ['미확인', '확인완료'],
             datasets: [{
@@ -83,10 +84,6 @@ document.addEventListener("DOMContentLoaded", function() {
                     'rgba(255, 159, 64, 0.2)',
                     'rgba(75, 192, 192, 0.2)'
                 ],
-                borderColor: [
-                    'rgba(255, 159, 64, 1)',
-                    'rgba(75, 192, 192, 1)'
-                ],
                 borderWidth: 1
             }]
         },
@@ -94,13 +91,16 @@ document.addEventListener("DOMContentLoaded", function() {
             responsive: true,
             plugins: {
                 datalabels: {
-                    color: 'white',
+                    color: 'black',
                     font: {
                         size: 14,
                         weight: 'bold'
                     },
-                    formatter: function(value) {
-                        return value;
+                    formatter: function (value, context) {
+                        var idx = context.dataIndex; // 각 데이터 인덱스
+
+                        // 출력 텍스트
+                        return context.chart.data.labels[idx] + value + '건';
                     }
                 }
             }

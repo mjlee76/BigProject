@@ -8,8 +8,10 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 <link rel="stylesheet" type="text/css" th:href="@{/css/statistics.css}" />
 <link rel="stylesheet" type="text/css" th:href="@{/css/sidebar.css}" />
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.0.0/dist/chart.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.00"></script>
+<!-- 버전 2 (최신) -->
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
 <script th:src="@{/js/statistics.js}" defer></script>
 </head>
 <body>
@@ -68,36 +70,33 @@
     <!-- ✅ 사이드바 끝 -->
     <div id="content-wrapper">
         <!-- 실시간 민원 현황 -->
-        <div id="real-time-status" style="display: block;">
-            <h2 class="text-center">실시간 민원 현황</h2>
-            <div class="stats">
-                <p>오늘 접수된 전체 민원 수: <span th:text="${statistics.전체민원수}"></span></p>
-                <p>악성 민원 비율: <span th:text="${statistics.악성민원비율}"></span>%</p>
-            </div>
+        <div class="chart-box">
+            <h2>실시간 민원 현황</h2>
             <div class="chart-wrapper">
                 <canvas id="realTimeChart"></canvas>
             </div>
         </div>
 
         <!-- 파이차트 2개를 같은 줄에 배치 -->
-        <div class="chart-container" style="display: flex; justify-content: space-between; gap: 20px;">
+        <div class="chart-container">
             <!-- 처리 대기중 민원수 -->
-            <div id="status-content" style="flex: 1;">
-                <h2 class="text-center">처리 대기중 민원수</h2>
+            <div class="chart-box">
+                <h2>처리 대기중 민원수</h2>
                 <div class="chart-wrapper">
                     <canvas id="statusChart"></canvas>
                 </div>
             </div>
 
             <!-- 보고서 확인 상태별 통계 -->
-            <div id="reportstatus-content" style="flex: 1;">
-                <h2 class="text-center">보고서 상태별 통계</h2>
+            <div class="chart-box">
+                <h2>보고서 상태별 통계</h2>
                 <div class="chart-wrapper">
                     <canvas id="reportstatusChart"></canvas>
                 </div>
             </div>
         </div>
     </div>
+
 </div>
 
 <div th:replace="layouts/footer::tellMe_footer"></div>
@@ -120,5 +119,7 @@
     };
     /*]]>*/
 </script>
+
+
 </body>
 </html>
