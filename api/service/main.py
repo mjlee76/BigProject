@@ -62,7 +62,7 @@ class PostBody(BaseModel):
 #DB로 넘길 report 정보
 class ReportBody(BaseModel):
     category : list
-    post_origin_data : str = ""
+    post_origin_data : dict = ""
     report_path : str = ""
     create_date : str = ""
     
@@ -138,7 +138,7 @@ async def update_item(data: CombinedModel):
             
             return {
                 "valid": True,
-                "message": "악성 데이터 수신 및 처리 완료",
+                "message": "악성",
                 "post_data": post_data.model_dump(),
                 "report_req": report_req.model_dump()
             }
@@ -147,7 +147,7 @@ async def update_item(data: CombinedModel):
             report_req.category = title_label
             return    {
                 "valid": True,
-                "message": "원문 데이터 수신 및 처리 완료",
+                "message": "원문",
                 "post_data": post_data.model_dump(),
                 "report_req": report_req.model_dump()
             }
@@ -164,7 +164,7 @@ async def make_report(data: CombinedModel):
         post_data, report_req = data.post_data, data.report_req
         if report_req.category != "정상":
             await report.init()
-            report.report_prompt(post_data)
+            report.report_prompt(report_req)
             report.cell_fill(post_data, report_req)
             time, output_file = report.report_save()
             report_req.create_date = time

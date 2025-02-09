@@ -142,7 +142,7 @@ class PostBody(BaseModel):
 #DB로 넘길 report 정보
 class ReportBody(BaseModel):
     category : list
-    post_origin_data : str
+    post_origin_data : dict
     report_path : str
     create_date : str
     
@@ -178,9 +178,9 @@ class MakeReport():
             rPr.append(rFonts)
             run.font.size = Pt(font_size)
 
-    def report_prompt(self, post_body : PostBody):
-        title = post_body.title
-        content = post_body.content
+    def report_prompt(self, report_body : ReportBody):
+        title = report_body.post_origin_data["제목"]
+        content = report_body.post_origin_data["내용"]
         full_text = f"제목 : {title}" + " " + f"내용 : {content}"
         prompt = (
             "당신은 민원에 대한 처리를 하는 상담사입니다. 특이민원이 발생하여 이에 대한 보고서를 작성해야합니다."
@@ -221,7 +221,7 @@ class MakeReport():
         run = paragraph.add_run("○")
         run.font.size = Pt(22)
         
-        prompt = self.report_prompt(post_body)
+        prompt = self.report_prompt(report_body)
         table.cell(6, 1).text = prompt
         
     def report_save(self):
