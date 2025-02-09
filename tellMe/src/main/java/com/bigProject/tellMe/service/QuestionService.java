@@ -2,14 +2,18 @@ package com.bigProject.tellMe.service;
 
 import com.bigProject.tellMe.client.api.FastApiClient;
 import com.bigProject.tellMe.client.dto.QuestionApiDTO;
+import com.bigProject.tellMe.dto.FilteredDTO;
 import com.bigProject.tellMe.dto.QuestionDTO;
 import com.bigProject.tellMe.dto.UserDTO;
+import com.bigProject.tellMe.entity.Filtered;
 import com.bigProject.tellMe.entity.Question;
 import com.bigProject.tellMe.entity.User;
 import com.bigProject.tellMe.enumClass.Category;
 import com.bigProject.tellMe.enumClass.Reveal;
 import com.bigProject.tellMe.enumClass.Status;
+import com.bigProject.tellMe.mapper.FilteredMapper;
 import com.bigProject.tellMe.mapper.QuestionMapper;
+import com.bigProject.tellMe.repository.FilteredRepository;
 import com.bigProject.tellMe.repository.QuestionRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -18,9 +22,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 @Service
@@ -29,7 +36,9 @@ public class QuestionService {
     private final FastApiClient fastApiClient;
 
     private final QuestionMapper questionMapper;
+    private final FilteredMapper filteredMapper;
     private final QuestionRepository questionRepository;
+    private final FilteredRepository filteredRepository;
 
     private final UserService userService;
 
@@ -58,10 +67,7 @@ public class QuestionService {
         requestBody.put("post_data", postBody);
         requestBody.put("question_data", questionBody);
 
-        System.out.println("========================REQUESTBODY"+requestBody);
-
         Map<String, Object> responseBody = fastApiClient.getSpam(requestBody);
-        System.out.println("========================responseBody"+responseBody);
         Map<String, Object> response = new HashMap<>();
 
         if (responseBody != null && Boolean.TRUE.equals(responseBody.get("valid"))) {
@@ -85,70 +91,76 @@ public class QuestionService {
         return response;
     }
 
-    public Map<String, Object> filterApi(QuestionDTO questionDTO) {
-        String title = questionDTO.getTitle();
-        String content = questionDTO.getContent();
-        Long userId = questionDTO.getUserId();
-        UserDTO userDTO = userService.findById(userId);
+    @Async
+    @Transactional
+    public CompletableFuture<Void> filterApi(QuestionDTO questionDTO) {
+        try {
+            System.out.println("================"+questionDTO.toString());
+            String title = questionDTO.getTitle();
+            String content = questionDTO.getContent();
+            Long userId = questionDTO.getUserId();
+            UserDTO userDTO = userService.findById(userId);
 
-        Map<String, Object> requestBody = new HashMap<>();
+            Map<String, Object> requestBody = new HashMap<>();
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.registerModule(new JavaTimeModule());
-        ObjectNode userNode = objectMapper.createObjectNode();
-        userNode.put("user_name", userDTO.getUserName());
-        userNode.put("phone", userDTO.getPhone());
-        userNode.put("count", userDTO.getCount());
-        //ObjectNode를 `Map<String, Object>`로 변환
-        Map<String, Object> userMap = objectMapper.convertValue(userNode, Map.class);
+            ObjectMapper objectMapper = new ObjectMapper();
+            objectMapper.registerModule(new JavaTimeModule());
+            ObjectNode userNode = objectMapper.createObjectNode();
+            userNode.put("user_name", userDTO.getUserName());
+            userNode.put("phone", userDTO.getPhone());
+            userNode.put("count", userDTO.getCount());
+            //ObjectNode를 `Map<String, Object>`로 변환
+            Map<String, Object> userMap = objectMapper.convertValue(userNode, Map.class);
 
-        Map<String, Object> postBody = new HashMap<>();
-        postBody.put("title", title);
-        postBody.put("content", content);
-        postBody.put("user", userMap);
+            Map<String, Object> postBody = new HashMap<>();
+            postBody.put("title", title);
+            postBody.put("content", content);
+            postBody.put("user", userMap);
 
-        Map<String, Object> reportBody = new HashMap<>();
-        reportBody.put("category", "");
-        reportBody.put("post_origin_data", "");
-        reportBody.put("report_path", "");
-        reportBody.put("create_date", "");
+            Map<String, Object> reportBody = new HashMap<>();
+            reportBody.put("category", new ArrayList<>());
+            reportBody.put("post_origin_data", "");
+            reportBody.put("report_path", "");
+            reportBody.put("create_date", "");
 
-        requestBody.put("post_data", postBody);
-        requestBody.put("report_req", reportBody);
-        System.out.println("================" + requestBody);
-        Map<String, Object> responseBody = fastApiClient.getFilter(requestBody);
-        System.out.println("================" + responseBody);
-        Map<String, Object> response = new HashMap<>();
+            requestBody.put("post_data", postBody);
+            requestBody.put("report_req", reportBody);
+            System.out.println("================requestBody : " + requestBody);
+            Map<String, Object> responseBody = fastApiClient.getFilter(requestBody);
+            System.out.println("================responseBody : " + responseBody);
+            Map<String, Object> response = new HashMap<>();
 
-        if (responseBody != null && Boolean.TRUE.equals(responseBody.get("valid"))) {
-            if("악성".equals(responseBody.get("message"))) {
-                Map<String, Object> post_data = (Map<String, Object>) responseBody.get("post_data");
-                Map<String, Object> reportReq = (Map<String, Object>) responseBody.get("report_req");
-                if (reportReq != null) {
+            if (responseBody != null && Boolean.TRUE.equals(responseBody.get("valid"))) {
+                if("악성".equals(responseBody.get("message"))) {
+                    Map<String, Object> post_data = (Map<String, Object>) responseBody.get("post_data");
+                    Map<String, Object> reportReq = (Map<String, Object>) responseBody.get("report_req");
+
+                    String filteredTitle = (String) post_data.get("title");
+                    String filteredContent = (String) post_data.get("content");
+                    System.out.println("===========filteredTitle : "+filteredTitle);
+                    FilteredDTO filteredDTO = new FilteredDTO();
+                    filteredDTO.setTitle(filteredTitle);
+                    filteredDTO.setContent(filteredContent);
+                    Filtered filtered = filteredMapper.filToFilDTO(filteredDTO);
+                    filtered = filteredRepository.save(filtered);
+
+                    Long filter_id = filtered.getId();
+                    System.out.println("============filter_id : "+filter_id);
+                    questionDTO.setFilteredId(filter_id);
+
                     List<String> responseCategories = (List<String>) reportReq.get("category");
-                    List<QuestionDTO> categoryDTOList = responseCategories.stream()
-                            .map(category -> {
-                                QuestionDTO question = new QuestionDTO();
-                                question.setCategory(Category.fromString(category));
-                                return question;
-                            })
-                            .toList();
-                    List<Question> categoryList = categoryDTOList.stream()
-                            .map(questionMapper::quDTOToQu)  // DTO -> Entity 변환
-                            .collect(Collectors.toList());
-                    questionRepository.saveAll(categoryList);
+                    String categoryString = String.join(",", responseCategories);
+                    //가져오는 법 : Arrays.asList(question.getCategory().split(","))
+                    questionDTO.setCategory(categoryString);
                 }
-            }else {
-
+                questionDTO.setStatus(Status.접수중);
+                questionRepository.save(questionMapper.quDTOToQu(questionDTO));
             }
-            response.put("valid", true);
-            response.put("message", "성공적으로 검증되었습니다.");
-        } else {
-            response.put("valid", false);
-            response.put("message", "검증 실패: 유효하지 않은 요청입니다.");
+            return CompletableFuture.completedFuture(null);
+        }catch (Exception e) {
+            System.err.println("🚨 비동기 API 실행 중 오류 발생: " + e.getMessage());
+            return CompletableFuture.failedFuture(e);
         }
-
-        return response;
     }
 
     // 반복문을 통해 Entity를 DTO로 변환하고

@@ -26,11 +26,7 @@ public class ComplaintRestController {
     @ResponseBody
     public ResponseEntity<Map<String, Object>> spamCheck(@RequestBody Map<String, String> request) {
         try{
-//            Long id = Long.parseLong(request.get("userId"));
-//            QuestionDTO questionDTO = questionService.findByUserId(id);
-//            UserDTO userDTO = userService.findById(id);
             Map<String, Object> response = questionService.spamCheck(request);
-            System.out.println(response);
 
             return ResponseEntity.ok(response);
         }catch (NumberFormatException e) {
