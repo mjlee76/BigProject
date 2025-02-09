@@ -11,6 +11,7 @@ import com.bigProject.tellMe.enumClass.Status;
 import com.bigProject.tellMe.service.AnswerService;
 import com.bigProject.tellMe.service.QuestionService;
 import com.bigProject.tellMe.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -177,9 +178,15 @@ public class ComplaintController {
 //    }
 
     @PostMapping("/delete/{id}")
-    public String delete(@PathVariable Long id) {
+    public String delete(@PathVariable Long id, @RequestParam(required = false) String from) {
         questionService.deleteQuestion(id);
-        return "redirect:/myPage/myComplaint";
+
+        // from 파라미터에 따라 리다이렉트 경로 결정
+        if ("myPage".equals(from)) {
+            return "redirect:/myPage/myComplaint";
+        } else {
+            return "redirect:/complaint/question";
+        }
     }
 
 

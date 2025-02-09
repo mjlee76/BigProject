@@ -21,3 +21,25 @@ const detailListReq = () => {
     location.href = targetUrl;
 };
 
+
+function handleDeleteFormSubmit(form) {
+    // 이전 경로 확인
+    const referrer = document.referrer;
+
+    // from 파라미터 설정
+    let fromParam = "questionBoard"; // 기본값: 게시판에서 접근
+    if (referrer.includes("/myPage/myComplaint")) {
+        fromParam = "myPage"; // 마이페이지에서 접근
+    }
+
+    // hidden input으로 from 파라미터 추가
+    const fromInput = document.createElement("input");
+    fromInput.type = "hidden";
+    fromInput.name = "from";
+    fromInput.value = fromParam;
+    form.appendChild(fromInput);
+
+    // 삭제 확인
+    return confirm('정말로 삭제하시겠습니까?');
+}
+

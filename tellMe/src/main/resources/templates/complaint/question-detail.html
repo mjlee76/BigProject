@@ -138,7 +138,7 @@
         <form th:if="${currentUserId == question.userId}"
               th:action="@{/complaint/delete/{id}(id=${question.id})}"
               method="post"
-              onsubmit="return confirm('정말로 삭제하시겠습니까?');">
+              onsubmit="return handleDeleteFormSubmit(this);">
             <button type="submit" sec:authorize="hasRole('ROLE_USER')">삭제하기</button>
         </form>
 
