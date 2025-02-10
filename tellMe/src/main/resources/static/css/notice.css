@@ -9,13 +9,10 @@ body {
 
 /* 메인 영역
 main {
-    max-width: 1000px;
-    margin: 100px auto;
-    background: white;
-    padding: 50px;
-    border-radius: 4px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-} */
+    position: relative;
+        padding-bottom: 80px; /* 버튼 영역을 위한 여백 추가 */
+
+
 /* 공지사항 상단 제목 */
 .notice-header {
     text-align: left; /* 중앙 정렬 */
@@ -36,6 +33,10 @@ main {
 .notice-header p {
     font-size: 14px;
     color: #666;
+}
+
+#notice-board p {
+    display: none; /* <p> 태그 전체를 숨김 */
 }
 
 /* 게시글 목록 */
@@ -75,6 +76,7 @@ main {
     width: 100%; /* 전체 너비 */
     max-width: 600px; /* 최대 너비 */
     margin: 20px auto; /* 중앙 정렬 */
+    margin-top: 70px;
     border-bottom: 1px solid #333; /* 밑줄 */
 }
 
@@ -88,6 +90,7 @@ main {
     font-size: 14px; /* 글씨 크기 */
     color: #333; /* 기본 글자색 */
     margin-left: 10px; /* 입력 필드 외부의 왼쪽 간격 추가 */
+    margin-bottom: 5px;
 }
 
 .search-input::placeholder {
@@ -111,13 +114,6 @@ main {
     color: #1674C3; /* 호버 시 색상 변경 */
 }
 
-
-/* 페이지네이션 */
-.pagination {
-    display: flex;
-    justify-content: center;
-    margin-top: 20px;
-}
 
 .pagination button {
     border: 1px solid #ddd;
@@ -321,10 +317,40 @@ body.delete-mode .checkbox-column {
     display: table-cell;
 }
 
-/* 🔹 삭제 모드일 때 번호 칼럼 숨김 */
+/* 🔹 삭제 모드일 때 번호 칼럼 숨김
 body.delete-mode .number-column,
 body.delete-mode #number-header {
     display: none;
+}
+*/
+
+/* 새로 추가할 스타일 */
+.number-column {
+    position: relative;
+    width: 5% !important;
+}
+
+.notice-number {
+    display: block;
+    position: relative;
+    z-index: 1;
+}
+
+.delete-checkbox {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+    display: none;
+}
+
+body.delete-mode .delete-checkbox {
+    display: block;
+}
+
+body.delete-mode .notice-number {
+    visibility: hidden;
 }
 
 /* 🔹 체크박스 스타일 */
@@ -360,13 +386,30 @@ body.delete-mode #number-header {
     color: #000; /* 버튼 hover 글자색 */
 }
 
+/* 🔹 삭제 버튼 스타일 (글쓰기 버튼과 동일하게 적용) */
+#select-button, #delete-button, #cancel-button {
+    text-decoration: none;  /* 밑줄 제거 */
+    padding: 10px 20px;
+    border: 1px solid #ccc; /* 버튼 테두리 색상 */
+    background-color: #f4f4f4; /* 버튼 배경색 통일 */
+    color: #333; /* 버튼 글자 색상 */
+    cursor: pointer;
+    font-size: 14px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+#select-button:hover, #delete-button:hover, #cancel-button:hover {
+    background-color: #e6e6e6; /* 버튼 hover 배경색 */
+    color: #000; /* 버튼 hover 글자색 */
+}
+
 /* 🔹 상단 바 (글쓰기 버튼 + 삭제 버튼) */
 .top-bar {
+    position: absolute;
+    right: 10%; /* 오른쪽 끝 정렬 */
     display: flex;
-    justify-content: flex-end; /* 🔥 버튼들을 오른쪽 정렬 */
-    align-items: center;
-    gap: 15px; /* 버튼 간 간격 */
-    padding: 10px 10%; /* 좌우 여백 */
+    gap: 10px;
 }
 
 /* 🔹 삭제 버튼 스타일 */
@@ -398,14 +441,6 @@ body.delete-mode #number-header {
     color: #1674C3;
 }
 
-/* 페이지네이션 컨테이너 */
-.pagination {
-    display: flex;
-    justify-content: center; /* 중앙 정렬 */
-    margin-top: 20px; /* 위쪽 여백 */
-    margin-bottom: 20px;
-    align-items: center;
-}
 
 /* 페이지네이션 버튼 스타일 */
 .pagination a, .pagination button {
@@ -431,7 +466,7 @@ body.delete-mode #number-header {
     transition: background-color 0.3s ease;
     text-decoration: none;
     font-size: 14px;
-    color: blue;
+    color: #22A9FD;
     border-radius: 4px;;
 }
 
@@ -442,4 +477,104 @@ body.delete-mode #number-header {
     color: #aaa;
     cursor: not-allowed;
     border: 1px solid #ddd;
+}
+
+
+/* 공지사항 이슈 수정 */
+/* 번호 셀 내부 정렬 */
+/* 번호 셀 내부 정렬 */
+.number-cell {
+    position: relative;
+    min-width: 40px;
+    text-align: center; /*번호중앙정렬*/
+}
+
+.notice-number {
+    display: inline-block;
+    width: 100%;
+    visibility: visible; /*항상 보이도록 설정*/
+}
+
+.delete-checkbox {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    display: none; /* 초기 상태: 숨김 */
+    z-index: 1;
+}
+
+/* 🔹 삭제 모드에서 체크박스 표시 */
+body.delete-mode .delete-checkbox {
+    display: block; /* 체크박스 표시 */
+}
+
+body.delete-mode .notice-number {
+    visibility: hidden; /* 번호 숨김 */
+}
+
+.button-group {
+    display: flex;
+    gap: 10px;
+}
+
+.delete-mode-buttons {
+    display: none; /* 초기 상태: 숨김 */
+    gap: 10px;
+}
+
+/* 🔹 삭제 모드에서 버튼 그룹 전환 */
+body.delete-mode .button-group {
+    display: none; /* 일반 버튼 그룹 숨김 */
+}
+
+body.delete-mode .delete-mode-buttons {
+    display: flex; /* 삭제 모드 버튼 그룹 표시 */
+}
+
+/* 🔹 취소 버튼 스타일 */
+#cancel-button {
+    display: inline-block; /* 항상 표시 */
+}
+
+/* 🔹 삭제 버튼 스타일 */
+#delete-button, #select-delete-button, #cancel-button {
+    padding: 10px 20px;
+    border: 1px solid #ccc;
+    background-color: #f4f4f4;
+    color: #333;
+    cursor: pointer;
+    font-size: 14px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+#delete-button:hover, #select-delete-button:hover, #cancel-button:hover {
+    background-color: #e6e6e6;
+    color: #000;
+}
+
+
+/* 🔹 페이지네이션 컨테이너 스타일 */
+.pagination-container {
+    display: flex;
+    justify-content: center; /* 페이지네이션과 버튼을 양쪽으로 분리 */
+    align-items: center; /* 세로 중앙 정렬 */
+    position: relative; /* 상대 위치 지정 */
+    margin-top: 20px; /* 위쪽 여백 */
+    margin-bottom: 20px; /* 아래쪽 여백 */
+    padding: 0 10%; /* 좌우 여백 */
+}
+
+/* 🔹 페이지네이션 스타일 */
+.pagination {
+    left: 50%; /* 부모의 50% 위치로 이동 */
+    transform: translateX(-50%); /* 정확한 중앙 정렬 */
+    display: flex;
+    align-items: center;
+    margin-left: 140px;
+}
+
+.feather feather-search {
+    margin-bottom: 10px;
 }

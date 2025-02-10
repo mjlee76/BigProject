@@ -124,7 +124,7 @@
                th:classappend="${currentPage == totalPages} ? 'disabled' : ''">»</a>
         </div>
         <div class="write-button-container">
-            <a th:href="@{/complaint/new}" class="write-button">글쓰기</a>
+            <a th:href="@{/complaint/new}" class="write-button" sec:authorize="hasRole('ROLE_USER')">글쓰기</a>
         </div>
 </main>
 <div th:replace="layouts/footer::tellMe_footer"></div>

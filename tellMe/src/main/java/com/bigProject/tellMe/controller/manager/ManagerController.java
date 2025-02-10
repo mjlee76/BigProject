@@ -159,5 +159,4 @@ public class ManagerController {
         return "manager/statistics";  // 통계 페이지
     }
 
-
 }

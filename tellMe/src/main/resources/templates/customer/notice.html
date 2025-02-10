@@ -18,13 +18,13 @@
     <div class="notice-header">
         <h1>공지사항</h1>
     </div>
-    <div class="tabs">
-        <button class="tab" data-category="all">전체</button>
-        <button class="tab" data-category="공고">공고</button>
-        <button class="tab" data-category="행사">행사</button>
-        <button class="tab" data-category="업데이트">업데이트</button>
-        <button class="tab" data-category="기타">기타</button>
-    </div>
+<!--    <div class="tabs">-->
+<!--        <button class="tab" data-category="all">전체</button>-->
+<!--        <button class="tab" data-category="공고">공고</button>-->
+<!--        <button class="tab" data-category="행사">행사</button>-->
+<!--        <button class="tab" data-category="업데이트">업데이트</button>-->
+<!--        <button class="tab" data-category="기타">기타</button>-->
+<!--    </div>-->
 
     <div class="search-bar">
         <form id="search-form">
@@ -76,27 +76,23 @@
         </tr>
         </tbody>
     </table>
-    <div class="top-bar" sec:authorize="hasRole('ROLE_MANAGER')">
-        <!-- 🔹 왼쪽: 글쓰기 버튼 -->
-        <div class="write-button-container">
-            <a class="write-button" th:href="@{/customer/write}">글쓰기</a>
-        </div>
-
-        <!-- 🔹 오른쪽: 삭제 관련 버튼 -->
-        <div class="delete-button-container">
-            <!-- 🔹 삭제 버튼 (삭제 모드 활성화) -->
-            <button id="select-button" class="delete-button" th:onclick="toggleDeleteMode()">삭제</button>
-
-            <!-- 🔹 선택 삭제 버튼 (삭제 모드에서만 표시) -->
-            <button id="delete-button" class="delete-button" th:onclick="deleteSelectedNotices()">선택 삭제</button>
-
-            <!-- 🔹 취소 버튼 (삭제 모드에서만 표시) -->
-            <button id="cancel-button" class="delete-button" th:onclick="toggleDeleteMode()">취소</button>
-        </div>
-    </div>
+<!--    <div class="top-bar" sec:authorize="hasRole('ROLE_MANAGER')">-->
+<!--        <div class="button-group">-->
+<!--            <a class="write-button" th:href="@{/customer/write}">글쓰기</a>-->
+<!--            <button id="select-button" class="delete-button">삭제</button>-->
+<!--        </div>-->
+<!--        <div class="button-group delete-mode-buttons" style="display: none;">-->
+<!--            <button id="delete-button" class="delete-button">선택 삭제</button>-->
+<!--            <button id="cancel-button" class="delete-button">취소</button>-->
+<!--        </div>-->
+<!--    </div>-->
 
     <!-- 첫번째 페이지로 이동 -->
     <!-- /notice/paging?page=1 -->
+<<<<<<< HEAD
+=======
+    <div class="pagination-container">
+>>>>>>> 8e087ac (공지사항 삭제, 선택삭제 최종수정완료, 공,민,보 게시판 css 조정)
         <div class="pagination">
             <!-- 첫번째 페이지로 이동 -->
             <a th:href="@{/customer/notice(page=1)}">«</a>
@@ -116,6 +112,22 @@
             <!-- 마지막 페이지로 이동 -->
             <a th:href="@{/customer/notice(page=${noticeList.totalPages})}">»</a>
         </div>
+<<<<<<< HEAD
+=======
+
+        <div class="top-bar" sec:authorize="hasRole('ROLE_MANAGER')">
+            <div class="button-group">
+                <a class="write-button" th:href="@{/customer/write}">글쓰기</a>
+                <button id="select-button" class="delete-button">삭제</button>
+            </div>
+            <div class="button-group delete-mode-buttons" style="display: none;">
+                <button id="delete-button" class="delete-button">선택 삭제</button>
+                <button id="cancel-button" class="delete-button">취소</button>
+            </div>
+        </div>
+
+    </div>
+>>>>>>> 8e087ac (공지사항 삭제, 선택삭제 최종수정완료, 공,민,보 게시판 css 조정)
 </main>
 <div th:replace="layouts/footer::tellMe_footer"></div>
 </body>
