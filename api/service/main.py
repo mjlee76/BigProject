@@ -256,22 +256,38 @@ async def upload_image(file: FilePath):
                 os.remove(file_location)
     
     else:
-        if not file_name.lower().endswith((".hwp", ".hwpx", ".doc", ".docx", ".pdf")):
+        if not file_name.lower().endswith((".hwp", ".hwpx", ".doc", ".docx", ".pdf", ".txt")):
             return {
                 "valid": False,
                 "message" : "유효한 문서 파일이 아닙니다.",
                 "file_path" : file_path
                 }
+        elif file_name.lower().endswith(".txt"):
+             file_location = file_path
 
         chroma = Chroma("fewshot_chat", OpenAIEmbeddings())
         data = await docu_loader.select_loader(file_location)
         await docu_loader.init()
         llm_chain = await docu_loader.make_llm_text(data)
         combined_text = " ".join(llm_chain)
+        
+        if not combined_text:  # ✅ 문서가 공백 또는 빈 문자열인지 확인
+            return {
+                "valid": False,
+                "message": "문서 내용이 없습니다. 올바른 문서를 업로드하세요.",
+                "file_path": file_location
+            }
+        
         content_label = classifier.classify_text(combined_text)
-        print(content_label)
         if content_label != '정상':
-            os.remove(file_location)
+            if file_name.lower().endswith((".hwp", ".hwpx", ".doc", ".docx", ".pdf")):
+                os.remove(file_location)
+            elif file_name.lower().endswith(".txt"):
+                file_path = file.file_path
+                filenames = os.listdir(file_path)
+                file_name = filenames[0]
+                file_location = os.path.join(file_path, file_name)
+                os.remove(file_location)
             return{
                 "valid": False,
                 "message" : "악성 파일로 판단되어 업로드가 차단되었습니다.",
