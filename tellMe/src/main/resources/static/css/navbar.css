@@ -344,4 +344,12 @@
 .auth-link.logout {
     cursor: pointer;
 }
+<<<<<<< HEAD
 >>>>>>> a18053f (내 페이지 수정.)
+=======
+
+.image {
+    width: 150px;
+    height: 40px;
+}
+>>>>>>> bd7ce89 (내 페이지 수정.)
