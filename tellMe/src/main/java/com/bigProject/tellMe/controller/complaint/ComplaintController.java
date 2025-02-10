@@ -1,13 +1,14 @@
 package com.bigProject.tellMe.controller.complaint;
 
+import com.bigProject.tellMe.config.FileUpLoadUtil;
 import com.bigProject.tellMe.dto.AnswerDTO;
-import com.bigProject.tellMe.dto.NoticeDTO;
 import com.bigProject.tellMe.dto.QuestionDTO;
 import com.bigProject.tellMe.dto.UserDTO;
 import com.bigProject.tellMe.entity.Question;
 import com.bigProject.tellMe.entity.User;
-import com.bigProject.tellMe.enumClass.Role;
+import com.bigProject.tellMe.enumClass.Reveal;
 import com.bigProject.tellMe.enumClass.Status;
+import com.bigProject.tellMe.mapper.QuestionMapper;
 import com.bigProject.tellMe.service.AnswerService;
 import com.bigProject.tellMe.service.QuestionService;
 import com.bigProject.tellMe.service.UserService;
@@ -18,39 +19,59 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/complaint")
 @RequiredArgsConstructor
 public class ComplaintController {
+    private final QuestionMapper questionMapper;
     private final UserService userService;
     private final QuestionService questionService;
     private final AnswerService answerService;
 
     @GetMapping("/new")
-    public String newComplaintForm() { return "complaint/new"; }
+    public String newComplaintForm(Authentication auth, Model model) {
+        UserDTO user = userService.findByUserId(auth.getName());
+        QuestionDTO questionDto = new QuestionDTO();
+        questionDto.setUserId(user.getId());
+        questionDto.setReveal(Reveal.공개);
+        model.addAttribute("question", questionDto);
+
+        return "complaint/new";
+    }
 
     @PostMapping("/create")
-    public String createComplaint(Authentication auth, QuestionDTO questionDTO) {
-        UserDTO user = userService.findByUserId(auth.getName());
+    public String createComplaint(QuestionDTO questionDTO, @RequestParam("files") List<MultipartFile> multipartFiles) throws IOException {
+        if ((questionDTO.getTitle() != null && !questionDTO.getTitle().trim().isEmpty()) ||
+                (questionDTO.getContent() != null && !questionDTO.getContent().trim().isEmpty())) {
+            System.out.println("==============="+questionDTO);
+            Question question = questionService.save(questionDTO);
+            questionDTO = questionMapper.quToQuDTO(question);
+            questionService.filterApi(questionDTO);
+            Long questionId = questionDTO.getId();
+            if(multipartFiles != null && multipartFiles.stream().anyMatch(file -> !file.isEmpty())) {
+                String uploadDir = "tellMe/tellMe-uploadFile/question/" + questionId;
+                List<String> savedFiles = FileUpLoadUtil.saveFiles(uploadDir, multipartFiles);
 
-        questionDTO.setCreateDate(LocalDateTime.now());
-        questionDTO.setViews(0);
-        questionDTO.setUserId(user.getId());
-        questionDTO.setStatus(Status.접수중);
+                if (savedFiles.size() > 0) questionDTO.setFile1(savedFiles.get(0));
+                if (savedFiles.size() > 1) questionDTO.setFile2(savedFiles.get(1));
+                if (savedFiles.size() > 2) questionDTO.setFile3(savedFiles.get(2));
 
-        // 2. Repository에게 Entity를 DB안에 저장하게 함!
-        Question saved = questionService.save(questionDTO);
+                questionService.save(questionDTO);
+            }
+        }
 
         return "redirect:/complaint/question";
     }

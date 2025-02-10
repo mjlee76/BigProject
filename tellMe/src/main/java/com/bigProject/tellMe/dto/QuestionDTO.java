@@ -7,6 +7,7 @@ import com.bigProject.tellMe.enumClass.Status;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -18,15 +19,16 @@ public class QuestionDTO {
     private String title;
     private String content;
     private Long userId;
+    private LocalDateTime createDate;
     private String userName;
-    private LocalDateTime createDate = LocalDateTime.now();
+    private Long filteredId;
     private Reveal reveal;
     private Status status;
-    private Integer views = 0;
-    private Category category;
-    private String file1 = null;
-    private String file2 = null;
-    private String file3 = null;
+    private Integer views;
+    private String category;
+    private String file1;
+    private String file2;
+    private String file3;
     private AnswerDTO answer;
 
     public QuestionDTO(Long id, String title, LocalDateTime createDate, Integer views, String userName, Status status) {
@@ -34,16 +36,22 @@ public class QuestionDTO {
         this.title = title;
         this.createDate = createDate;
         this.views = views;
-        this.userName = userName;
+        //this.userName = userName;
         this.status = status;
     }
+
+//    public QuestionDTO(Long id, String title, String content) {
+//        this.id = id;
+//        this.title = title;
+//        this.content = content;
+//    }
 
     // 목록보여주기 위해 Entity를 DTO로 변환 메서드
     public static QuestionDTO toQuestionDTO (Question question) {
         QuestionDTO questionDTO = new QuestionDTO();
         questionDTO.setId(question.getId());
         questionDTO.setUserId(question.getUser().getId()); // ?
-        questionDTO.setUserName(question.getUser().getUserName()); // userName 설정
+        //questionDTO.setUserName(question.getUser().getUserName()); // userName 설정
         questionDTO.setTitle(question.getTitle());
         questionDTO.setContent(question.getContent());
         questionDTO.setCreateDate(question.getCreateDate());
@@ -55,9 +63,9 @@ public class QuestionDTO {
         questionDTO.setFile2(questionDTO.getFile2());
         questionDTO.setFile3(questionDTO.getFile3());
 
-        if (question.getAnswer() != null) {
-            questionDTO.setAnswer(AnswerDTO.toAnswerDTO(question.getAnswer()));
-        }
+//        if (question.getAnswer() != null) {
+//            questionDTO.setAnswer(AnswerDTO.toAnswerDTO(question.getAnswer()));
+//        }
 
         return questionDTO;
     }

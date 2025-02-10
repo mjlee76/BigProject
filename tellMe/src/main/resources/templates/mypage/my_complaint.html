@@ -6,6 +6,7 @@
   <meta charset="UTF-8">
   <title>내 민원 조회</title>
   <link rel="stylesheet" type="text/css" th:href="@{/css/my_complaint.css}" />
+  <link href="https://cdn.jsdelivr.net/gh/sun-typeface/SUIT@2/fonts/static/woff2/SUIT.css" rel="stylesheet">
 </head>
 <body>
 <div th:replace="layouts/navbar::tellMe_header"></div>
@@ -32,10 +33,6 @@
     <section id="history" class="content-section">
       <h2 class="section-title">내 민원 조회</h2>
       <div class="tabs">
-        <!--        <button class="tab active" data-category="all" onclick="filterPosts('all')">전체</button>-->
-        <!--        <button class="tab" data-category="접수중" onclick="filterPosts('접수중')">접수중</button>-->
-        <!--        <button class="tab" data-category="처리중" onclick="filterPosts('처리중')">처리중</button>-->
-        <!--        <button class="tab" data-category="답변완료" onclick="filterPosts('답변완료')">답변완료</button>-->
         <a class="tab" data-category="all"
            th:href="@{/myPage/myComplaint(query=${query}, category=${category}, status=null)}"
            th:classappend="${status == 'all' or status == null} ? 'active' : ''">전체</a>

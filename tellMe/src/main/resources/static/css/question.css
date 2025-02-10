@@ -1,6 +1,6 @@
 /* 기본 설정 */
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'SUIT', sans-serif;
     margin: 0;
     padding: 0;
     background-color: #ffffff;
@@ -202,15 +202,15 @@ a:-webkit-any-link {
 
 /* 활성화된 탭 스타일 */
 .tab.active {
-    color: #22A9FD !important;
+    color: #5E64E0 !important;
     font-weight: bold !important;
     bottom: -1px !important; /* 같은 위치에서 밑줄 생성 */
-    border-bottom: 1px solid #22A9FD !important;
+    border-bottom: 1px solid #989EFF !important;
 }
 
 /* 탭 호버 효과 */
 .tab:hover {
-    color: #22A9FD;
+    color: #989EFF;
 }
 
 /* 탭 호버 가상환경 */
@@ -222,7 +222,7 @@ a:-webkit-any-link {
     left: 0;
     width: 100%;
     height: 1.7px; /* 호버 시 밑줄 두께 */
-    background-color: #22A9FD; /* 밑줄 색상 */
+    background-color: #989EFF; /* 밑줄 색상 */
 }
 
 /* 테이블 기본 스타일 */
@@ -258,7 +258,7 @@ a:-webkit-any-link {
 /* 테이블 맨 위 선 굵게 */
 .post-table thead tr th {
     border-top: 1px solid #333; /* 굵은 검은색 선 */
-    background-color: #F8FCFD ; /* 배경색 */
+    background-color: #FAF8FF ; /* 배경색 */
     padding: 15px;
 }
 
@@ -441,7 +441,7 @@ a:-webkit-any-link {
     transition: background-color 0.3s ease;
     text-decoration: none;
     font-size: 14px;
-    color: #22A9FD;
+    color: #989EFF;
     border-radius: 4px;;
 }
 

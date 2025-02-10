@@ -9,6 +9,8 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -56,8 +58,8 @@ public class Question {
     private Integer views;
 
     @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private Category category;
+    //@Enumerated(EnumType.STRING)
+    private String category;
 
     @Column
     private String file1;
@@ -71,7 +73,13 @@ public class Question {
     @PrePersist
     public void setDefaultValues() {
         if(this.category == null) {
-            this.category = Category.정상;  // DB에 저장되기 전에 기본값 설정
+            this.category = "정상";  // DB에 저장되기 전에 기본값 설정
+        }
+        if(this.views == null) {
+            this.views = 0;  // DB에 저장되기 전에 기본값 설정
+        }
+        if(this.status == null) {
+            this.status = Status.필터링중;  // DB에 저장되기 전에 기본값 설정
         }
     }
 

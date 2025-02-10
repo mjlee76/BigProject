@@ -11,4 +11,6 @@ public interface ReportMapper {
 
     // Entity → DTO 변환
     ReportDTO toDto(Report entity);
+
+    Report repoDTOTORepo(ReportDTO reportDTO);
 }

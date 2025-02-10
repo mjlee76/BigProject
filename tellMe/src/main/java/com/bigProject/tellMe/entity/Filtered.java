@@ -1,6 +1,5 @@
 package com.bigProject.tellMe.entity;
 
-import com.bigProject.tellMe.enumClass.Category;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
