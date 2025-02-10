@@ -288,7 +288,7 @@ async def upload_image(file: FilePath):
                 file_name = filenames[0]
                 file_location = os.path.join(file_path, file_name)
                 os.remove(file_location)
-            return{
+            return {
                 "valid": False,
                 "message" : "악성 파일로 판단되어 업로드가 차단되었습니다.",
                 "file_path" : file_path
