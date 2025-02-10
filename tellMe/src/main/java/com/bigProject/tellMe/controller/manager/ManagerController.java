@@ -1,13 +1,17 @@
 package com.bigProject.tellMe.controller.manager;
 
 import com.bigProject.tellMe.dto.ReportDTO;
+import com.bigProject.tellMe.dto.StatisticsDTO;
 import com.bigProject.tellMe.enumClass.ReportStatus;
+import com.bigProject.tellMe.enumClass.Status;
 import com.bigProject.tellMe.service.ReportService;
+import com.bigProject.tellMe.service.StatisticsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -50,12 +54,28 @@ public class ManagerController {
             reportPage = reportService.searchReportsPaged(query, status, pageable);
         }
 
+        int totalPages = reportPage.getTotalPages();
+
+        // 5페이지씩 그룹으로 나누기
+        int groupSize = 5;
+        int currentGroup = (page - 1) / groupSize;
+        int startPage = currentGroup * groupSize + 1;
+        int endPage = Math.min(startPage + groupSize - 1, totalPages);
+
+        // 이전 그룹, 다음 그룹 링크를 위한 로직
+        int prevGroup = (currentGroup > 0) ? currentGroup - 1 : 0;
+        int nextGroup = (currentGroup + 1) * groupSize < totalPages ? currentGroup + 1 : currentGroup;
+
         log.info("Fetching reports - Query: {}, Status: {}, Current Page: {}, Total Pages: {}, Total Elements: {}",
-                query, status, page, reportPage.getTotalPages(), reportPage.getTotalElements());
+                query, status, page, totalPages, reportPage.getTotalElements());
 
         model.addAttribute("reports", reportPage.getContent());
         model.addAttribute("currentPage", page);
-        model.addAttribute("totalPages", reportPage.getTotalPages());
+        model.addAttribute("totalPages", totalPages);
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("endPage", endPage);
+        model.addAttribute("prevGroup", prevGroup);
+        model.addAttribute("nextGroup", nextGroup);
         model.addAttribute("query", query);
         model.addAttribute("status", status);
 
@@ -65,9 +85,14 @@ public class ManagerController {
 
 
 
+
+
     // ✅ 특정 보고서 열기
     @GetMapping("report/view/{id}")
     public String viewReport(@PathVariable Long id) throws UnsupportedEncodingException {
+        // 보고서 상태를 확인 완료로 변경
+        reportService.updateReportStatus(id, ReportStatus.확인완료);
+
         ReportDTO report = reportService.getReport(id);
 
         if (report == null || report.getReport() == null) {
@@ -110,8 +135,29 @@ public class ManagerController {
                 .body(resource);
     }
 
-    @GetMapping("/statistics")
-    public String statisticsBoard() {
-        return "manager/statistics";
+
+
+    @PostMapping("/report/update-status/{id}")
+    public ResponseEntity<?> updateStatus(@PathVariable Long id) {
+        try {
+            // 상태를 '확인완료'로 변경
+            reportService.updateReportStatus(id, ReportStatus.확인완료);
+            return ResponseEntity.ok().body("{\"success\": true}");
+        } catch (Exception e) {
+            // 에러 발생 시 500 상태 코드와 함께 실패 응답
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("{\"success\": false}");
+        }
     }
+
+    private final StatisticsService statisticsService;
+
+    @GetMapping("/statistics")
+    public String statisticsBoard(Model model) {
+        // 통계 데이터를 가져와서 뷰로 전달
+        StatisticsDTO statisticsDTO = statisticsService.getStatistics();
+        model.addAttribute("statistics", statisticsDTO);
+        return "manager/statistics";  // 통계 페이지
+    }
+
+
 }

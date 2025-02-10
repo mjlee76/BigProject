@@ -2,6 +2,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const searchInput = document.getElementById("search-input");
     const searchForm = document.getElementById("search-form");
     const tabs = document.querySelectorAll(".tab");
+    const downloadLinks = document.querySelectorAll('.download-link');  // 다운로드 링크 선택자
 
     // ✅ 현재 URL에서 파라미터 값을 가져오는 함수
     function getQueryParam(param) {
@@ -31,9 +32,44 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
-
     // ✅ 검색 이벤트 (form submit)
     if (searchForm) {
         searchForm.addEventListener("submit", searchReports);
     }
+
+    // ✅ 다운로드 링크 클릭 시 상태 변경 요청을 서버로 보내는 함수
+    function updateReportStatus(reportId, linkElement) {
+        fetch(`/manager/report/update-status/${reportId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ status: '확인완료' }),
+        })
+        .then(response => response.json())
+
+        .then(data => {
+            if (data.success) {
+                    // 상태 셀 업데이트
+                    const statusCell = row.querySelector('td:nth-child(5)'); // 5번째 <td> (상태 셀)
+                    statusCell.textContent = '확인완료';
+                    statusCell.classList.remove('unchecked');
+                    statusCell.classList.add('checked');
+                }
+            }
+        })
+        .catch(error => {
+            console.error('상태 변경 오류:', error);
+        });
+    }
+
+    // ✅ 다운로드 링크 클릭 시 상태 변경
+    downloadLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            const reportId = e.target.closest('a').getAttribute('data-report-id'); // 각 보고서 ID 가져오기
+            if (reportId) {
+                updateReportStatus(reportId);  // 상태 변경 요청 보내기
+            }
+        });
+    });
 });

@@ -5,8 +5,15 @@
     font-style: normal;
 }
 
+@font-face {
+    font-family: 'SUIT-Regular';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_suit@1.0/SUIT-Regular.woff2') format('woff2');
+    font-weight: 900;
+    font-style: normal;
+}
+
 body {
-    font-family: 'Pretendard-Regular', sans-serif;
+    font-family: 'SUIT', sans-serif;
     margin: 0;
     padding: 0;
     background-color: #ffffff;
@@ -22,10 +29,41 @@ h1 {
     font-size: 1.7rem;
 }
 
+#home {
+    width: 100%;
+    height: 700px;
+    overflow: hidden;
+    position: relative;
+}
+
+/* 슬라이더 */
+.slider {
+    display: flex;
+    width: 300vw;
+    transition: transform 1s ease-in-out;
+}
+
+/* 슬라이드 개별 스타일 */
+.slide {
+    width: 100%;
+    height: 700px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+/* 슬라이드별 배경색 */
+.slide:nth-child(1) { background: linear-gradient(to right, #7FB3FF, #989EFF); }
+
+.slide:nth-child(3) { background: linear-gradient(to right, #C9B3FF, #7FB3FF); }
+
+.slide:nth-child(4) { background: linear-gradient(to right, #7FB3FF, #989EFF); }
+
 .wrapper {
     display: flex;
     width: 100%;
-    height: 800px;
+    height: 600px;
     background-color: #fff;
     box-sizing: border-box; /* 패딩 포함 계산 */
     overflow: hidden; /* 가로 스크롤 제거 */
@@ -144,11 +182,11 @@ h1 {
 .wrapper2 {
     display: flex;
     width: 100%;
-    height: 600px;
+    height: 700px;
     background-color: #fff;
     box-sizing: border-box; /* 패딩 포함 계산 */
     overflow: hidden; /* 가로 스크롤 제거 */
-    background: linear-gradient(to bottom, #D5C5FF, #AFC3FF);
+    background: transparent;
 }
 
 .wrapper2 .area {
@@ -160,6 +198,7 @@ h1 {
 }
 
 .wrapper2 .area.left {
+    flex-direction: column;
     flex: 2;
     text-align: center; /* 전체 중앙 정렬 */
     margin: 20px;
@@ -174,12 +213,24 @@ h1 {
     text-align: left;
 }
 
+h1::after {
+    content: "";
+    display: block;
+    width: 80px; /* 가로줄 길이 */
+    height: 3px; /* 줄 두께 */
+    background: #ddd; /* 줄 색상 */
+    margin: 10px auto; /* 상하 간격 & 가운데 정렬 */
+}
+
 .area.left p {
+    font-weight: 850;
     font-size: 50px;
-    color: #666;
     margin-top: 10px;
     margin-left: 10px;
     text-align: left;
+    background: linear-gradient(90deg, #5650FF 0%, #AF4BFF 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
 .wrapper2 .area.right {
@@ -218,45 +269,122 @@ h1 {
 
 /* 🔥 왼쪽 위 배치 */
 .box.left {
-    margin-bottom: 10px;
+    margin-bottom: 0px;
     top: 150px;
-    left: 0px;
+    left: 20px;
     transform: rotate(-8deg);
 }
 
 /* 🔥 오른쪽 아래 배치 */
 .box.right {
-    margin-top: 10px;
+    margin-top: 50px;
     bottom: 0px;
-    right: 0px;
+    right: 20px;
     transform: rotate(8deg);
 }
 
-#home {
-    width: 100%;
-    height: 85vh;
-    overflow: hidden;
+.button {
+    display: flex;
+    justify-content: flex-start; /* 왼쪽 정렬 */
+    width: 100%; /* 부모 너비를 꽉 채워서 왼쪽 정렬 유지 */
+    margin-top: 20px; /* 버튼과 텍스트 사이 여백 */
+}
+
+/* 버튼 스타일 */
+.btn {
+    margin-left: 40px;
     position: relative;
-}
-
-/* 슬라이더 */
-.slider {
-    display: flex;
-    width: 300vw;
-    transition: transform 1s ease-in-out;
-}
-
-/* 슬라이드 개별 스타일 */
-.slide {
-    width: 90%;
-    height: 85vh;
-    display: flex;
-    justify-content: center;
+    display: inline-flex;
     align-items: center;
-    flex-direction: column;
+    justify-content: center;
+    min-width: 12rem;
+    padding: 12px 24px;
+    border-radius: 30px;
+    font-size: 1.2rem;
+    font-weight: 800;
+    text-align: center;
+    text-decoration: none;
+    color: white;
+    background: linear-gradient(90deg, #5650ff, #7d70ff);
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
 }
 
-/* 슬라이드별 배경색 */
-.slide:nth-child(1) { background-color: #f4f4f9; }
-.slide:nth-child(2) { background-color: #e3e3ff; }
-.slide:nth-child(3) { background-color: #d0f0c0; }
+/* 버튼 안의 텍스트 (span) */
+.btn span {
+    display: block;
+    padding: 5px 0;
+}
+
+/* 버튼 호버 효과 */
+.btn:hover {
+    background: linear-gradient(90deg, #7d70ff, #5650ff);
+    transform: scale(1.05);
+}
+
+/* 컨트롤 버튼 */
+.controls {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 12px;
+    padding: 8px 16px;
+}
+
+.control-button {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.5);
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.control-button:hover {
+    background-color: rgba(255, 255, 255, 0.8);
+    transform: scale(1.2); /* 버튼 커짐 */
+}
+
+.control-button.active {
+    background-color: white;
+    width: 16px;
+    height: 16px;
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.7);
+}
+
+.video-container {
+    position: relative; /* 부모 요소 기준 */
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+}
+
+.video-container video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.video-container::after {
+    content: "";  /* 반드시 필요! */
+    position: absolute; /* 부모 기준으로 덮어씌우기 */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5); /* 어두운 효과 */
+    z-index: 0; /* 비디오보다 위 */
+}
+
+.video-content {
+    position: absolute;
+    z-index: 1; /* 텍스트가 비디오와 오버레이 위에 보이도록 */
+    color: white; /* 글씨 색상 */
+    font-size: 2rem;
+    font-weight: bold;
+    text-align: center;
+}

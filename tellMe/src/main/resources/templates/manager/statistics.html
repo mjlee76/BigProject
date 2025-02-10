@@ -1,214 +1,134 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml" lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>통계 게시판</title>
-
-    <!-- ✅ 외부 스타일 시트 및 스크립트 -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" type="text/css" th:href="@{/css/statistics.css}" />
-    <link rel="stylesheet" type="text/css" th:href="@{/css/sidebar.css}" />
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script th:src="@{/js/statistics.js}"></script>
-
-    <!-- ✅ Thymeleaf를 활용한 공통 레이아웃 포함 -->
-    <head th:replace="layouts/navbar::tellMe_head"/>
-    <head th:replace="layouts/footer::tellMe_foot"/>
+<head th:replace="layouts/navbar::tellMe_head"/>
+<head th:replace="layouts/footer::tellMe_foot"/>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>통계 게시판</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<link rel="stylesheet" type="text/css" th:href="@{/css/statistics.css}" />
+<link rel="stylesheet" type="text/css" th:href="@{/css/sidebar.css}" />
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script> <!-- Ensure this plugin is loaded -->
+<script th:src="@{/js/statistics.js}"></script>
 </head>
-
 <body>
-<!-- ✅ 네비게이션 바 -->
 <div th:replace="layouts/navbar::tellMe_header"></div>
 
-<!-- ✅ 전체 래퍼 -->
+<!-- ✅ 사이드바 -->
 <div id="wrapper">
-
-    <!-- ✅ 사이드바 -->
+    <!-- Sidebar -->
     <ul class="sidebar bg-primary sidebar-dark" id="sidebar">
-        <div class="sidebar-brand d-flex align-items-center justify-content-center">
-            <div class="brand-text">Aivle Manager</div>
-        </div>
-        <hr class="divider">
-
-        <li class="menu-item active" data-target="inquiry-stats">
-            <i class="fas fa-home"></i>
-            <span>문의 통계</span>
-        </li>
-        <hr class="divider">
-
-        <div class="sidebar-heading">정보 관리</div>
-        <li class="menu-item" data-target="user-management">
-            <i class="fas fa-users"></i>
-            <span>회원 관리</span>
-        </li>
-        <li class="menu-item" data-target="inquiry-management">
-            <i class="fas fa-comments"></i>
-            <span>문의 관리</span>
-        </li>
-        <hr class="divider">
-
-        <div class="sidebar-heading">민원 통계</div>
-        <li class="menu-item" data-target="daily-complaints">
-            <i class="fas fa-chart-line"></i>
-            <span>일별 민원 통계</span>
-        </li>
-        <li class="menu-item" data-target="monthly-complaints">
-            <i class="fas fa-chart-bar"></i>
-            <span>월별 민원 통계</span>
-        </li>
-        <li class="menu-item" data-target="yearly-complaints">
-            <i class="fas fa-calendar-alt"></i>
-            <span>연도별 민원 통계</span>
-        </li>
-        <hr class="divider">
-
-        <div class="sidebar-heading">유형 통계</div>
-        <li class="menu-item" data-target="malicious-type">
-            <i class="fas fa-exclamation-triangle"></i>
-            <span>악성민원 유형 통계</span>
-        </li>
-        <li class="menu-item" data-target="malicious-gender">
-            <i class="fas fa-venus-mars"></i>
-            <span>악성민원 성별, 연령별통계</span>
-        </li>
-
-        <hr class="divider d-none d-md-block">
+        <!-- Sidebar Content -->
     </ul>
-    <!-- ✅ 사이드바 끝 -->
+    <!-- End of Sidebar -->
 
-    <!-- ✅ 메인 콘텐츠 영역 -->
+    <!-- Content Wrapper -->
     <div id="content-wrapper">
-
-        <!-- 📌 일별 민원 통계 -->
-        <div id="daily-complaints-content" style="display: none;">
-            <div class="half_box left">
-                <div class="info type1">
-                    <h1>
-                        <span class="bold-text">일별 민원</span> <span class="normal-text">통계</span>
-                    </h1>
-                    <!-- ✅ 날짜 선택 및 검색 기능 추가 -->
-                    <div class="date-filter">
-                        <label for="daily-date-picker">날짜 선택:</label>
-                        <input type="date" id="daily-date-picker">
-                        <button id="daily-search-btn">검색</button>
-                    </div>
-                    <p id="daily-current-date" class="date-text"></p>
-                    <div class="chart-box">
-                        <canvas id="dailyAreaChart"></canvas>
-                    </div>
-                </div>
-            </div>
-
-            <div class="half_box right">
-                <div class="info type1">
-                    <h1>
-                        <span class="bold-text">일별 악성 민원</span> <span class="normal-text">통계</span>
-                    </h1>
-                    <!-- ✅ 날짜 선택 및 검색 기능 추가 -->
-                    <div class="date-filter">
-                        <label for="malicious-daily-date-picker">날짜 선택:</label>
-                        <input type="date" id="malicious-daily-date-picker">
-                        <button id="malicious-daily-search-btn">검색</button>
-                    </div>
-                    <p id="malicious-daily-current-date" class="date-text"></p>
-                    <div class="chart-box">
-                        <canvas id="dailyMaliciousChart"></canvas>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- 📌 월별 민원 통계 -->
-        <div id="monthly-complaints-content" style="display: none;">
-            <div class="half_box left">
-                <div class="info type1">
-                    <h1>
-                        <span class="bold-text">월별 민원</span> <span class="normal-text">통계</span>
-                    </h1>
-                    <!-- ✅ 날짜 선택 및 검색 기능 추가 -->
-                    <div class="date-filter">
-                        <label for="monthly-date-picker">날짜 선택:</label>
-                        <input type="month" id="monthly-date-picker">
-                        <button id="monthly-search-btn">검색</button>
-                    </div>
-                    <p id="monthly-current-date" class="date-text"></p>
-                    <div class="chart-box">
-                        <canvas id="monthlyAreaChart"></canvas>
-                    </div>
-                </div>
-            </div>
-
-            <div class="half_box right">
-                <div class="info type1">
-                    <h1>
-                        <span class="bold-text">월별 악성 민원</span> <span class="normal-text">통계</span>
-                    </h1>
-                    <!-- ✅ 날짜 선택 및 검색 기능 추가 -->
-                    <div class="date-filter">
-                        <label for="malicious-monthly-date-picker">날짜 선택:</label>
-                        <input type="month" id="malicious-monthly-date-picker">
-                        <button id="malicious-monthly-search-btn">검색</button>
-                    </div>
-                    <p id="malicious-monthly-current-date" class="date-text"></p>
-                    <div class="chart-box">
-                        <canvas id="monthlyMaliciousChart"></canvas>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- 📌 연도별 민원 통계 -->
-        <div id="yearly-complaints-content" style="display: none;">
-            <h2 class="text-center">연도별 민원 통계</h2>
+        <!-- 처리 대기중 민원수 -->
+        <div id="status-content" style="display: block;">
+            <h2 class="text-center">처리 대기중 민원수</h2>
             <div class="chart-wrapper">
-                <canvas id="yearlyPieChart"></canvas>
+                <canvas id="statusChart"></canvas>
             </div>
         </div>
 
-        <!-- 📌 악성민원 유형 통계 -->
-        <div id="malicious-type-content" style="display: none;">
-            <h2 class="text-center">악성민원 유형 통계</h2>
+        <!-- 보고서 확인 상태별 통계 -->
+        <div id="reportstatus-content" style="display: block;">
+            <h2 class="text-center">보고서 상태별 통계</h2>
             <div class="chart-wrapper">
-                <canvas id="maliciousTypeChart"></canvas>
+                <canvas id="reportstatusChart"></canvas>
             </div>
-        </div>
-
-        <!-- 📌 악성민원 성별, 연령별 통계 -->
-        <div id="malicious-gender-content" style="display: none;">
-            <div class="half_box left">
-                <div class="info type1">
-                    <h1>
-                        <span class="bold-text">성별 민원</span> <span class="normal-text">통계</span>
-                    </h1>
-                    <div class="chart-box">
-                        <canvas id="genderPieChart"></canvas>
-                    </div>
-                </div>
-            </div>
-
-            <div class="half_box right">
-                <div class="info type1">
-                    <h1>
-                        <span class="bold-text">연령별 민원</span> <span class="normal-text">통계</span>
-                    </h1>
-                    <div class="chart-box">
-                        <canvas id="ageBarChart"></canvas>
-                    </div>
-                </div>
-            </div>
-
         </div>
 
     </div>
-    <!-- ✅ 콘텐츠 영역 끝 -->
 
 </div>
-<!-- ✅ 전체 래퍼 끝 -->
 
-<!-- ✅ Footer -->
 <div th:replace="layouts/footer::tellMe_footer"></div>
 
+<script>
+    // 민원 처리 상태별 파이 차트
+    var ctx = document.getElementById('statusChart').getContext('2d');
+    var statusChart = new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: ['접수중', '처리중'],
+            datasets: [{
+                label: '민원 수',
+                data: [
+                    /* 통계 데이터 (서버에서 전달된 값으로 대체됨) */
+                    [[${statistics.접수중Count}]],
+                    [[${statistics.처리중Count}]]
+                ],
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                datalabels: {
+                    color: 'white', // 라벨의 텍스트 색상
+                    font: {
+                        size: 14, // 폰트 크기
+                        weight: 'bold' // 폰트 두께
+                    },
+                    formatter: function(value) {
+                        return value;  // 백분율 대신 값만 표시
+                    }
+                }
+            }
+        }
+    });
+
+    // 보고서 상태별 파이 차트
+    var reportCtx = document.getElementById('reportstatusChart').getContext('2d');
+    var reportstatusChart = new Chart(reportCtx, {
+        type: 'pie',
+        data: {
+            labels: ['미확인', '확인완료'],
+            datasets: [{
+                label: '보고서 수',
+                data: [
+                    /* 통계 데이터 (서버에서 전달된 값으로 대체됨) */
+                    [[${statistics.미확인Count}]],
+                    [[${statistics.확인완료Count}]]
+                ],
+                backgroundColor: [
+                    'rgba(255, 159, 64, 0.2)',
+                    'rgba(75, 192, 192, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(255, 159, 64, 1)',
+                    'rgba(75, 192, 192, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                datalabels: {
+                    color: 'white', // 라벨의 텍스트 색상
+                    font: {
+                        size: 14, // 폰트 크기
+                        weight: 'bold' // 폰트 두께
+                    },
+                    formatter: function(value) {
+                        return value;  // 백분율 대신 값만 표시
+                    }
+                }
+            }
+        }
+    });
+</script>
 </body>
 </html>

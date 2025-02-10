@@ -115,6 +115,39 @@ public class QuestionService {
         ));
     }
 
+    // MyPage 내 민원 조회 - 카테고리별 검색 로직 추가
+    public Page<QuestionDTO> searchUserQuestions(User user, String query, Status status, String category, Pageable pageable) {
+        Specification<Question> spec = Specification.where((root, cq, cb) ->
+                cb.equal(root.get("user"), user)
+        );
+
+        // 상태 필터링
+        if (status != null) {
+            spec = spec.and((root, cq, cb) -> cb.equal(root.get("status"), status));
+        }
+
+        // 검색어 및 카테고리 필터링
+        if (query != null && !query.isEmpty()) {
+            switch (category) {
+                case "title":
+                    spec = spec.and((root, cq, cb) ->
+                            cb.like(root.get("title"), "%" + query + "%"));
+                    break;
+                case "content":
+                    spec = spec.and((root, cq, cb) ->
+                            cb.like(root.get("content"), "%" + query + "%"));
+                    break;
+                default: // 전체 검색
+                    spec = spec.and((root, cq, cb) -> cb.or(
+                            cb.like(root.get("title"), "%" + query + "%"),
+                            cb.like(root.get("content"), "%" + query + "%")));
+            }
+        }
+
+        Page<Question> questions = questionRepository.findAll(spec, pageable);
+        return questions.map(QuestionDTO::toQuestionDTO);
+    }
+
     // 접수중을 처리중으로 변경
     public void updateStatusToProcessing(Long id) {
         Optional<Question> optionalQuestion = questionRepository.findById(id);
@@ -146,5 +179,10 @@ public class QuestionService {
 
         dto.updateEntity(question);
         questionRepository.save(question);
+    }
+
+    // 민원 상태별 카운트
+    public long countByStatus(Status status) {
+        return questionRepository.countByStatus(status);
     }
 }
