@@ -234,10 +234,12 @@ class MakeReport():
 class LoadDocumentFile:
     def __init__(self):
         self.llm = None
+        self.llm_cla = None
 
     async def init(self):
         file_path = os.path.join(os.getcwd(), "api_key.txt")
         api_key = await load_api_key(file_path)
+        self.llm = await self.selecting_model(api_key)
         self.llm_cla = await self.selecting_classify_model(api_key)
     
     async def selecting_model(self, api_key):

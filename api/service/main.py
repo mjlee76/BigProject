@@ -204,7 +204,7 @@ async def check_spam(request: SpamQuestionRequest):
 class FilePath(BaseModel):
     file_path : str
 
-@app.post("/upload/")
+@app.post("/upload")
 async def upload_image(file: FilePath):
     
     file_path = file.file_path
@@ -271,7 +271,7 @@ async def upload_image(file: FilePath):
         llm_chain = await docu_loader.make_llm_text(data)
         combined_text = " ".join(llm_chain)
         
-        if not combined_text:  # ✅ 문서가 공백 또는 빈 문자열인지 확인
+        if not combined_text: 
             return {
                 "valid": False,
                 "message": "문서 내용이 없습니다. 올바른 문서를 업로드하세요.",
@@ -290,12 +290,20 @@ async def upload_image(file: FilePath):
                 os.remove(file_location)
             return {
                 "valid": True,
-                "message" : "악성 파일로 판단되어 업로드가 차단되었습니다.",
+                "message" : "악성",
                 "file_path" : file_path
             }
-
-        return {
-            "valid": True,
-            "message" : "정상",
-            "file_path" : file_path
-        }
+        else:
+            if file_name.lower().endswith((".hwp", ".hwpx", ".doc", ".docx", ".pdf")):
+                os.remove(file_location)
+            elif file_name.lower().endswith(".txt"):
+                file_path = file.file_path
+                filenames = os.listdir(file_path)
+                file_name = filenames[0]
+                file_location = os.path.join(file_path, file_name)
+                os.remove(file_location)
+            return {
+                "valid": True,
+                "message" : "정상",
+                "file_path" : file_path
+            }
