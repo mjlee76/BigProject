@@ -1,5 +1,5 @@
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'SUIT', sans-serif;
     margin: 0;
     padding: 0;
     background-color: #ffffff;  /* 배경색을 밝은 회색으로 설정 */
@@ -72,6 +72,11 @@ body {
     background-color: #22A9FD;
 }
 /* 모든 링크에 대해 밑줄 제거 */
+a:-webkit-any-link {
+    text-decoration: none;  /* 기본 밑줄 제거 */
+}
+
+
 a:-webkit-any-link {
     text-decoration: none;  /* 기본 밑줄 제거 */
 }

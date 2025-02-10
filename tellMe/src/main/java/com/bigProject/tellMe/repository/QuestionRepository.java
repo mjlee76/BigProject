@@ -1,6 +1,5 @@
 package com.bigProject.tellMe.repository;
 
-import com.bigProject.tellMe.dto.UserDTO;
 import com.bigProject.tellMe.entity.Question;
 import com.bigProject.tellMe.entity.User;
 import com.bigProject.tellMe.enumClass.Category;
@@ -19,9 +18,13 @@ public interface QuestionRepository extends JpaRepository<Question, Long>, JpaSp
     // 공개된 게시글만 조회하는 메서드
     Page<Question> findByReveal(Reveal reveal, Pageable pageable);
 
+    List<Question> findByUserId(Long id);
+
     List<Question> findByUser(User user);
 
     long countByStatus(Status status);
+
+    long countByCategory(Category category);
 
     // QuestionRepository에 오늘 날짜와 관련된 쿼리 메서드 추가
     @Query("SELECT COUNT(q) FROM Question q WHERE q.createDate BETWEEN :start AND :end")

@@ -2,7 +2,6 @@
 
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<html lang="en">
 <head th:replace="layouts/navbar::tellMe_head"/>
 <head th:replace="layouts/footer::tellMe_foot"/>
 <head>
@@ -10,6 +9,43 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>민원 작성</title>
     <link rel="stylesheet" type="text/css" th:href="@{/css/new.css}" />
+    <link href="https://cdn.jsdelivr.net/gh/sun-typeface/SUIT@2/fonts/static/woff2/SUIT.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.3.js"></script>
+    <script th:src="@{/js/new.js}"></script>
+    <style>
+        /* 로딩 오버레이 스타일 */
+        #loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5); /* 배경을 어둡게 */
+            display: none; /* 기본적으로 숨김 */
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            color: white;
+            font-size: 1.5rem;
+            z-index: 1000;
+        }
+
+        /* 로딩 스피너 애니메이션 */
+        .loading-spinner {
+            border: 5px solid rgba(255, 255, 255, 0.3);
+            border-top: 5px solid white;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin-bottom: 15px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
 </head>
 <body>
 <div th:replace="layouts/navbar::tellMe_header"></div>
@@ -17,58 +53,46 @@
     <div class="complaint-header">
         <h1>민원 작성</h1>
     </div>
-<!--<form th:action="@{/complaint/create}" method="post" enctype="multipart/form-data">-->
-<form th:action="@{/complaint/create}" method="post">
-    <!-- 제목 -->
+<form th:action="@{/complaint/create}" th:object="${question}" method="post" enctype="multipart/form-data" onsubmit="return spamAPI(event)">
+    <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
+    <input type="hidden" th:field="*{userId}" id="userId"/>
     <table class="form-table">
-        <tr>
+        <tr><!-- 제목 -->
             <th><label for="title">제목</label></th>
-            <td><input type="text" id="title" name="title" required /></td>
+            <td><input type="text" id="title" th:field="*{title}" required /></td>
         </tr>
-
-        <tr>
+        <tr><!-- 공개 여부 -->
             <th>공개 여부</th>
             <td>
-                <input type="radio" id="public" name="reveal" value="공개" checked />
-                <label for="public">공개</label>
-                <input type="radio" id="private" name="reveal" value="비공개" />
-                <label for="private">비공개</label>
+                <div th:each="option : ${question.reveal.values()}">
+                    <input type="radio" th:field="*{reveal}" th:value="${option}" th:id="${option}" />
+                    <label th:for="${option}" th:text="${option}"></label>
+                </div>
             </td>
         </tr>
-
-        <tr>
+        <tr><!-- 내용 -->
             <th><label for="content">내용</label></th>
-            <td><textarea id="content" name="content" rows="6" required></textarea></td>
+            <td><textarea id="content" th:field="*{content}" rows="6" required></textarea></td>
         </tr>
-
-        <tr>
+        <tr><!-- 첨부파일 -->
             <th>첨부파일</th>
             <td>
-                <div class="file-upload">
-                    <input type="file" name="file1" />
-                    <button type="button">X 취소</button>
-                </div>
-                <div class="file-upload">
-                    <input type="file" name="file2" />
-                    <button type="button">X 취소</button>
-                </div>
-                <div class="file-upload">
-                    <input type="file" name="file3" />
-                    <button type="button">X 취소</button>
+                <div th:each="i : ${#numbers.sequence(1, 3)}" class="file-upload">
+                    <input type="hidden" th:field="*{__${'file' + i}__}" />
+                    <input type="file" th:id="'fileImage' + ${i}" th:name="files"
+                           accept="image/png, image/jpeg, image/jpg, application/pdf, application/hwp,
+                       application/vnd.openxmlformats-officedocument.wordprocessingml.document, text/plain"
+                           class="file-input-field"/>
+                    <button type="button" class="remove-file-button" th:onclick="'resetFileInput(' + ${i} + ')'">취소</button>
                 </div>
             </td>
         </tr>
     </table>
-
-
-    <!-- 개인정보 수집 동의 -->
-    <div>
+    <div><!-- 개인정보 수집 동의 -->
         <input type="checkbox" id="agreement" name="agreement" required />
         <label for="agreement">개인정보 수집 및 이용에 동의합니다.</label>
     </div>
-
-    <!-- 버튼 -->
-    <div>
+    <div><!-- 버튼 -->
         <button type="submit">등록</button>
         <button type="button">목록</button>
         <button type="button">임시저장</button>
@@ -76,6 +100,10 @@
 </form>
 </main>
 <div th:replace="layouts/footer::tellMe_footer"></div>
+<div id="loading-overlay">
+    <div class="loading-spinner"></div>
+    <p>도배 방지를 위해 검사가 진행 중입니다...</p>
+</div>
 </body>
 </html>
 </html>

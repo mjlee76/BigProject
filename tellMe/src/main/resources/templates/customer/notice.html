@@ -10,6 +10,7 @@
     <meta name="_csrf_header" th:content="${_csrf.headerName}">
     <title>공지사항</title>
     <link rel="stylesheet" type="text/css" th:href="@{/css/notice.css}"/>
+    <link href="https://cdn.jsdelivr.net/gh/sun-typeface/SUIT@2/fonts/static/woff2/SUIT.css" rel="stylesheet">
     <script th:src="@{/js/notice.js}" defer></script>
 </head>
 <body>
@@ -18,25 +19,11 @@
     <div class="notice-header">
         <h1>공지사항</h1>
     </div>
-    <div class="tabs">
-        <button class="tab" data-category="all">전체</button>
-        <button class="tab" data-category="공고">공고</button>
-        <button class="tab" data-category="행사">행사</button>
-        <button class="tab" data-category="업데이트">업데이트</button>
-        <button class="tab" data-category="기타">기타</button>
-    </div>
-
     <div class="search-bar">
         <form id="search-form">
             <input type="text" placeholder="검색어를 입력하세요." id="search-input" name="query">
-        <!--            <select id="search-answer-status" name="answerStatus">-->
-        <!--                <option value="all">답변여부(전체)</option>-->
-        <!--                <option value="completed">답변완료</option>-->
-        <!--                <option value="transferred">이송이첩</option>-->
-        <!--                <option value="pending">대기중</option>-->
-        <!--            </select>-->
             <button type="submit" class="search-button">
-            <!-- 새로운 SVG 아이콘 -->
+                <!-- 새로운 SVG 아이콘 -->
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search" viewBox="0 0 24 24">
                     <circle cx="11" cy="11" r="8"></circle>
                     <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
@@ -47,11 +34,6 @@
     <table class="post-table">
         <thead>
         <tr>
-<!--             🔹 번호 대신 체크박스로 변경될 칼럼-->
-<!--            <th class="checkbox-header" style="display: none;">-->
-<!--                <input type="checkbox" id="select-all-checkbox">-->
-<!--            </th>-->
-<!--            <th id="number-header" class="number-header" style="width: 5%;">번호</th>-->
             <th>번호</th>
             <th>제목</th>
             <th>작성일</th>
@@ -76,28 +58,9 @@
         </tr>
         </tbody>
     </table>
-    <div class="top-bar" sec:authorize="hasRole('ROLE_MANAGER')">
-        <!-- 🔹 왼쪽: 글쓰기 버튼 -->
-        <div class="write-button-container">
-            <a class="write-button" th:href="@{/customer/write}">글쓰기</a>
-        </div>
-
-        <!-- 🔹 오른쪽: 삭제 관련 버튼 -->
-        <div class="delete-button-container">
-            <!-- 🔹 삭제 버튼 (삭제 모드 활성화) -->
-            <button id="select-button" class="delete-button" th:onclick="toggleDeleteMode()">삭제</button>
-
-            <!-- 🔹 선택 삭제 버튼 (삭제 모드에서만 표시) -->
-            <button id="delete-button" class="delete-button" th:onclick="deleteSelectedNotices()">선택 삭제</button>
-
-            <!-- 🔹 취소 버튼 (삭제 모드에서만 표시) -->
-            <button id="cancel-button" class="delete-button" th:onclick="toggleDeleteMode()">취소</button>
-        </div>
-    </div>
-
     <!-- 첫번째 페이지로 이동 -->
     <!-- /notice/paging?page=1 -->
-    <div class="pagination">
+    <div class="pagination-container">
         <div class="pagination">
             <!-- 첫번째 페이지로 이동 -->
             <a th:href="@{/customer/notice(page=1)}">«</a>
@@ -116,6 +79,16 @@
 
             <!-- 마지막 페이지로 이동 -->
             <a th:href="@{/customer/notice(page=${noticeList.totalPages})}">»</a>
+        </div>
+        <div class="top-bar" sec:authorize="hasRole('ROLE_MANAGER')">
+            <div class="button-group">
+                <a class="write-button" th:href="@{/customer/write}">글쓰기</a>
+                <button id="select-button" class="delete-button">삭제</button>
+            </div>
+            <div class="button-group delete-mode-buttons" style="display: none;">
+                <button id="delete-button" class="delete-button">선택 삭제</button>
+                <button id="cancel-button" class="delete-button">취소</button>
+            </div>
         </div>
     </div>
 </main>

@@ -1,43 +1,66 @@
-// 초기화 함수: 페이지 로드 시 기본값 설정
-function initializeContent() {
-    updateContent('유선 상담을 원하시나요?'); // 기본값: "유선 상담"
-}
+document.addEventListener("DOMContentLoaded", () => {
+    let currentIndex = 0;
+    const slider = document.querySelector(".slider");
+    const slides = document.querySelectorAll(".slide");
+    const totalSlides = slides.length;
+    const buttons = document.querySelectorAll(".control-button");
+    let interval;
 
-// 업데이트 함수: 버튼 클릭 시 호출
-function updateContent(newMainText) {
-    // 요소 가져오기
-    const mainText = document.getElementById('main-text');
-    const subText = document.getElementById('sub-text');
-    const contactInfo = document.getElementById('contact-info');
-    const contactIcon = document.getElementById('contact-icon');
-    const contactSt = document.getElementById('contact-strong');
+    // 첫 번째 슬라이드를 복제해서 마지막에 추가 (무한 슬라이드 효과)
+    const firstClone = slides[0].cloneNode(true);
+    slider.appendChild(firstClone);
 
-    // main-text 업데이트
-    mainText.textContent = newMainText;
+    // 부모 컨테이너에 overflow 설정
+    const sliderContainer = document.getElementById("home");
+    sliderContainer.style.overflow = "hidden";
 
-    // main-text에 따라 sub-text와 기타 정보를 업데이트
-    if (newMainText.includes('유선 상담')) {
-        subText.textContent = '유선 상담을 통해 상세한 안내를 받을 수 있습니다.';
-        contactIcon.textContent = '📞'; // 아이콘 업데이트
-        contactInfo.textContent = '02)873-4466'; // 연락처 업데이트
-        contactSt.textContent = 'Contact : ';
-    } else if (newMainText.includes('채팅 상담')) {
-        subText.textContent = '채팅 상담으로 실시간 도움을 받을 수 있습니다.';
-        contactIcon.textContent = '💬'; // 아이콘 업데이트
-        contactInfo.textContent = 'chat@example.com'; // 연락처 업데이트
-        contactSt.textContent = 'Contact : ';
-    } else if (newMainText.includes('기술 지원')) {
-        subText.textContent = '기술 지원과 관련된 문의는 이곳에서 처리됩니다.';
-        contactIcon.textContent = '🛠'; // 아이콘 업데이트
-        contactInfo.textContent = 'support@example.com'; // 연락처 업데이트
-        contactSt.textContent = 'Contact : ';
-    } else {
-        subText.textContent = '유선 상담을 통해 상세한 안내를 받을 수 있습니다.';
-        contactIcon.textContent = '📞'; // 아이콘 업데이트
-        contactInfo.textContent = '02)873-4466'; // 연락처 업데이트
-        contactSt.textContent = 'Contact : ';
+    // 슬라이드 크기 자동 조정
+    slider.style.display = "flex";
+    slider.style.width = `${(totalSlides + 1) * 100}vw`; // 복제된 슬라이드 포함하여 전체 크기 설정
+
+    function moveSlide(index) {
+        currentIndex = index;
+        slider.style.transition = "transform 0.5s ease-in-out";
+        slider.style.transform = `translateX(-${currentIndex * 100}vw)`;
+
+        // 마지막 슬라이드에 도달하면 transition 없이 첫 번째 슬라이드로 이동
+        if (currentIndex === totalSlides) {
+            setTimeout(() => {
+                slider.style.transition = "none";
+                slider.style.transform = "translateX(0)";
+                currentIndex = 0;
+                updateActiveButton();
+            }, 500);
+        } else {
+            updateActiveButton();
+        }
     }
-}
 
-// 페이지 로드 시 초기화 함수 호출
-window.onload = initializeContent;
+    function resetInterval() {
+        clearInterval(interval);
+        interval = setInterval(() => moveSlide(currentIndex + 1), 4000);
+    }
+
+    function goToSlide(index) {
+        moveSlide(index);
+        resetInterval();
+    }
+
+    function updateActiveButton() {
+        buttons.forEach((btn, i) => {
+            btn.classList.remove("active");
+        });
+        buttons[currentIndex % totalSlides].classList.add("active"); // 첫 번째 버튼 활성화
+    }
+
+    // 버튼 이벤트 추가
+    buttons.forEach((button, index) => {
+        button.addEventListener("click", () => goToSlide(index));
+    });
+
+    // 자동 슬라이드 시작
+    interval = setInterval(() => moveSlide(currentIndex + 1), 500000);
+
+    // 웹 시작 시 첫 번째 버튼 활성화
+    updateActiveButton();
+});

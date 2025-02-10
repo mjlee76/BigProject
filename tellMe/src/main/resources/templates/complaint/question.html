@@ -8,6 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>문의게시판</title>
     <link rel="stylesheet" type="text/css" th:href="@{/css/question.css}" />
+    <link href="https://cdn.jsdelivr.net/gh/sun-typeface/SUIT@2/fonts/static/woff2/SUIT.css" rel="stylesheet">
     <script type="text/javascript" th:src="@{/js/question.js}"></script>
 </head>
 <body>
@@ -122,6 +123,9 @@
             <!-- 마지막 페이지로 이동 버튼 (>>) -->
             <a th:href="@{/complaint/question(query=${query}, category=${category}, status=${status}, page=${totalPages}, size=10)}"
                th:classappend="${currentPage == totalPages} ? 'disabled' : ''">»</a>
+        </div>
+        <div class="write-button-container">
+            <a th:href="@{/complaint/new}" class="write-button" sec:authorize="hasRole('ROLE_USER')">글쓰기</a>
         </div>
 </main>
 <div th:replace="layouts/footer::tellMe_footer"></div>
