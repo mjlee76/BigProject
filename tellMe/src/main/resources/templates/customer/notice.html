@@ -19,14 +19,6 @@
     <div class="notice-header">
         <h1>공지사항</h1>
     </div>
-    <div class="tabs">
-        <button class="tab" data-category="all">전체</button>
-        <button class="tab" data-category="공고">공고</button>
-        <button class="tab" data-category="행사">행사</button>
-        <button class="tab" data-category="업데이트">업데이트</button>
-        <button class="tab" data-category="기타">기타</button>
-    </div>
-
     <div class="search-bar">
         <form id="search-form">
             <input type="text" placeholder="검색어를 입력하세요." id="search-input" name="query">
@@ -132,6 +124,7 @@
 
     </div>
 </main>
-<div th:replace="layouts/footer::tellMe_footer"></div>
+
 </body>
+<div th:replace="layouts/footer::tellMe_footer"></div>
 </html>

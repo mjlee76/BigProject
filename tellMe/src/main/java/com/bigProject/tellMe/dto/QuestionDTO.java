@@ -7,6 +7,7 @@ import com.bigProject.tellMe.enumClass.Status;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -20,10 +21,11 @@ public class QuestionDTO {
     private Long userId;
     private LocalDateTime createDate;
     private String userName;
+    private Long filteredId;
     private Reveal reveal;
     private Status status;
     private Integer views;
-    private Category category;
+    private String category;
     private String file1;
     private String file2;
     private String file3;

@@ -37,7 +37,7 @@ class SpamDetector:
             #코사인 유사도 계산 후 임계값보다 높으면 저장
             sim = util.cos_sim(new_emb, existing_emb).item()
             if sim >= self.threshold:
-                valid_candidates.append((question.id, sim))
+                valid_candidates.append(question.id)
         if not valid_candidates:
             return None  # 유사한 기준 글이 없으면 새로운 기준으로 등록
         valid_candidates.sort(key=lambda x: x)
@@ -50,7 +50,10 @@ class SpamDetector:
         new_emb = await self.async_encode(new_text)
         most_similar_id = await self.async_find_most_relevant_base_id(new_emb, questions)
         if most_similar_id is None:
-            return 0
-        print(f"게시글이 기존 질문 {most_similar_id}과 유사")
-        return most_similar_id
-    
+            return "도배아님"
+        else:
+            print(f"게시글이 기존 질문 {most_similar_id}과 유사")
+            print(most_similar_id)
+            if len(most_similar_id) >= 2:
+                return "도배"
+            else : return "도배아님"

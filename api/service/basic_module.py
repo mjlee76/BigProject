@@ -129,15 +129,8 @@ def laws_caution(label):
     print()
 
 class UserInfo(BaseModel):
-    user_id : str
     user_name: str
-    gender : str
-    role : str
-    birth_date : str
     phone : str
-    address : str
-    email: str
-    create_date : str
     count : int
 
 # 게시글 정보
@@ -146,14 +139,10 @@ class PostBody(BaseModel):
     content: str
     user: UserInfo
 
-class Category(BaseModel):
-    title: str
-    content: str
-
 #DB로 넘길 report 정보
 class ReportBody(BaseModel):
-    category : Category
-    post_origin_data : str
+    category : list
+    post_origin_data : dict
     report_path : str
     create_date : str
     
@@ -164,19 +153,19 @@ class CombinedModel(BaseModel):
 department = "민원복지과"
 department_supervisior = "홍길동"
 label = '성희롱'
-customer = "김태환"
-customer_Telephone = "010-1234-4567"
 manager = "김영희"
 manager_telephone = "02-873-4466"
 manager_task = "복지민원 담당"
 
 class MakeReport():
     def __init__(self):
-        self.doc = Document("C:/Users/User/Desktop/BigProject/api/service/특이민원_발생보고서.docx")
+        self.doc = Document(os.path.join(os.getcwd(), "특이민원_발생보고서.docx"))
         self.llm = None
+        self.time = datetime.datetime.now().strftime("%y%m%d_%H%M%S")
 
     async def init(self):
         # 비동기 초기화 메서드: API 키 로드와 모델 초기화
+        self.path = os.getcwd()
         file_path = os.path.join(os.getcwd(), "api_key.txt")
         api_key = await load_api_key(file_path)
         self.llm = await selecting_model(api_key)
@@ -189,9 +178,9 @@ class MakeReport():
             rPr.append(rFonts)
             run.font.size = Pt(font_size)
 
-    def report_prompt(self, post_body : PostBody):
-        title = post_body.title
-        content = post_body.content
+    def report_prompt(self, report_body : ReportBody):
+        title = report_body.post_origin_data["제목"]
+        content = report_body.post_origin_data["내용"]
         full_text = f"제목 : {title}" + " " + f"내용 : {content}"
         prompt = (
             "당신은 민원에 대한 처리를 하는 상담사입니다. 특이민원이 발생하여 이에 대한 보고서를 작성해야합니다."
@@ -209,23 +198,22 @@ class MakeReport():
     # 표 검색 후 특정 셀 찾기
     def cell_fill(self, post_body : PostBody, report_body : ReportBody):
         table = self.doc.tables[0]
-        table.cell(0, 1).text = "2025-01-01"  # 예: 발생일자
+        table.cell(0, 1).text = f"{self.time}"  # 예: 발생일자
+        table.cell(4, 1).text = f"{post_body.user.user_name}"
+        table.cell(4, 4).text = f"{post_body.user.phone}"
         table.cell(0, 4).text = f"{department}"
-        table.cell(0, 7).text =  f"{department_supervisior}"
-        table.cell(4, 1).text = f"{customer}"
-        table.cell(4, 4).text = f"{customer_Telephone}"
+        table.cell(0, 7).text = f"{department_supervisior}"
         table.cell(5, 1).text = f"{manager}"
         table.cell(5, 4).text = f"{manager_telephone}"
         table.cell(5, 7).text = f"{manager_task}"
         
-        label_title = report_body.category.title
-        label_content = report_body.category.content
-        
-        if '성희롱' in label_title or '성희롱' in label_content:
+        label = report_body.category
+        print(label)
+        if '성희롱' in label:
             cell_label = table.cell(2, 4)
-        elif '협박' in label_title or '협박' in label_content:
+        elif '협박' in label:
             cell_label = table.cell(2, 2)
-        elif '악성' in label_title or '악성' in label_content: 
+        elif '폭언' in label or '욕설' in label: 
             cell_label = table.cell(2, 1)
         else:
             cell_label = table.cell(2, 8)
@@ -233,16 +221,15 @@ class MakeReport():
         run = paragraph.add_run("○")
         run.font.size = Pt(22)
         
-        prompt = self.report_prompt(post_body)
+        prompt = self.report_prompt(report_body)
         table.cell(6, 1).text = prompt
         
     def report_save(self):
-        time = datetime.datetime.now().strftime("%y%m%d_%H%M%S")
-        output_file = f"특이민원_보고서_{time}.docx"
-        report_file_path = os.path.join("C:/Users/User/Desktop/BigProject/", "tellMe/tellMe-reports/")
+        output_file = f"특이민원_보고서_{self.time}.docx"
+        report_file_path = os.path.join(self.path, "made_reported/")
         self.doc.save(report_file_path + output_file)
         print(f"문서가 {output_file}에 저장되었습니다.")
-        return time, output_file
+        return self.time, os.path.join(report_file_path, output_file)
 
 class LoadDocumentFile:
     def __init__(self):

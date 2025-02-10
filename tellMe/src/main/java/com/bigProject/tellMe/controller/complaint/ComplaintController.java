@@ -30,6 +30,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/complaint")
@@ -52,22 +53,24 @@ public class ComplaintController {
     }
 
     @PostMapping("/create")
-    @Transactional
     public String createComplaint(QuestionDTO questionDTO, @RequestParam("files") List<MultipartFile> multipartFiles) throws IOException {
-        Question question = questionService.save(questionDTO);
-        questionDTO = questionMapper.quToQuDTO(question);
-        Long questionId = questionDTO.getId();
-        System.out.println("================="+questionDTO.toString());
-        if(!multipartFiles.isEmpty()) {
-            String uploadDir = "tellMe/tellMe-uploadFile/question/" + questionId;
-            List<String> savedFiles = FileUpLoadUtil.saveFiles(uploadDir, multipartFiles);
+        if ((questionDTO.getTitle() != null && !questionDTO.getTitle().trim().isEmpty()) ||
+                (questionDTO.getContent() != null && !questionDTO.getContent().trim().isEmpty())) {
+            System.out.println("==============="+questionDTO);
+            Question question = questionService.save(questionDTO);
+            questionDTO = questionMapper.quToQuDTO(question);
+            questionService.filterApi(questionDTO);
+            Long questionId = questionDTO.getId();
+            if(multipartFiles != null && multipartFiles.stream().anyMatch(file -> !file.isEmpty())) {
+                String uploadDir = "tellMe/tellMe-uploadFile/question/" + questionId;
+                List<String> savedFiles = FileUpLoadUtil.saveFiles(uploadDir, multipartFiles);
 
-            if (savedFiles.size() > 0) questionDTO.setFile1(savedFiles.get(0));
-            if (savedFiles.size() > 1) questionDTO.setFile2(savedFiles.get(1));
-            if (savedFiles.size() > 2) questionDTO.setFile3(savedFiles.get(2));
+                if (savedFiles.size() > 0) questionDTO.setFile1(savedFiles.get(0));
+                if (savedFiles.size() > 1) questionDTO.setFile2(savedFiles.get(1));
+                if (savedFiles.size() > 2) questionDTO.setFile3(savedFiles.get(2));
 
-            System.out.println("============"+questionDTO.toString());
-            questionService.save(questionDTO);
+                questionService.save(questionDTO);
+            }
         }
 
         return "redirect:/complaint/question";

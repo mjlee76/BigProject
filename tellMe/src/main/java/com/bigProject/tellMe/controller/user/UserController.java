@@ -50,4 +50,9 @@ public class UserController {
         return "find_pw";
     }
 
+    @GetMapping("/terms")
+    public String terms() { return "terms";}
+
+    @GetMapping("/UseTerms")
+    public String use_terms() { return "use_terms";}
 }

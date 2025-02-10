@@ -1,20 +1,12 @@
-from typing import Union, List
-from fastapi import FastAPI, File, UploadFile, HTTPException, Body, Depends
-from pydantic import BaseModel
+from typing import List, Dict
+from fastapi import FastAPI, BackgroundTasks
+from pydantic import BaseModel, Field
 from langchain_chroma import Chroma
 from langchain_openai import OpenAIEmbeddings
 
-import json
-import shutil
 import os
-import requests
-import xml.etree.ElementTree as ET
-import pandas as pd
-import datetime
 import basic_module as bm
 import nsfw_detection as nd
-import aiofiles
-import asyncio
 import logging
 
 from basic_module import TextClassifier
@@ -40,7 +32,8 @@ async def startup_event():
     llm = await bm.selecting_model(api_key)
     
 model_path = "./20250204_roberta 파인튜닝"
-file_path = "./특이민원보고서_공직자응대매뉴얼.pdf"
+file_path = os.getcwd()
+
 UPLOAD_DIR = "./uploaded_images"
 FILE_PATH = "./uploaded_documents"
 os.makedirs(UPLOAD_DIR, exist_ok=True)
@@ -51,21 +44,13 @@ spam_detector = SpamDetector()
 classifier = TextClassifier()
 changetexter = ChangeText()
 report = MakeReport()
-
 docu_loader = LoadDocumentFile()
 logger = logging.getLogger("my_logger")
 
 #게시글 작성자 정보
 class UserInfo(BaseModel):
-    user_id : str
     user_name: str
-    gender : str
-    role : str
-    birth_date : str
     phone : str
-    address : str
-    email: str
-    create_date : str
     count : int
 
 # 게시글 정보
@@ -74,21 +59,17 @@ class PostBody(BaseModel):
     content: str
     user: UserInfo
 
-class Category(BaseModel):
-    title: str
-    content: str
-
 #DB로 넘길 report 정보
 class ReportBody(BaseModel):
-    category : Category
-    post_origin_data : str
-    report_path : str
-    create_date : str
+    category : List[str] = Field(default_factory=list)
+    post_origin_data : Dict[str, str] = Field(default_factory=dict)
+    report_path : str = ""
+    create_date : str = ""
     
 class CombinedModel(BaseModel):
     post_data: PostBody
     report_req: ReportBody
-
+    
 #spam_detect용 class 생성성
 class QuestionApiDTO(BaseModel):
     id: int
@@ -107,28 +88,32 @@ class SpamQuestionRequest(BaseModel):
     question_data: QuestionData
 
 #민원 악성탐지 및 순화
+# db에 저장할수있게 카테고리를 리스트안에 넣어서 해주세요
+# make report()가 안되는 거 수정해야됨
+
 @app.post("/filtered_module")
 async def update_item(data: CombinedModel):
+    #보고서 작성 플로우
     try:
         post_data = data.post_data
         report_req = data.report_req
 
         title = post_data.title
         content = post_data.content
-        post_origin_data = {"제목": title, "내용": content} # 원문데이터 저장용
+        post_origin_data = dict(제목=title, 내용=content) # 원문데이터 저장용
         report_req.post_origin_data = post_origin_data
-
+        
         # 분류
         title_label = classifier.classify_text(title)
         content_label = classifier.classify_text(content)
+        
         await changetexter.init()
         result = {}
-
         if title_label != '정상' or content_label != '정상':
             if title_label != '정상' and content_label == '정상':
                 title_changed = await changetexter.change_text(title)
                 post_data.title =  title_changed
-                report_req.category.title = title_label
+                report_req.category = list(title_label.split(","))
 
                 # 팝업 날릴거
                 result["제목"] = {"text": f"{title_changed}","경고문": f"{title_label} 감지"}
@@ -137,7 +122,7 @@ async def update_item(data: CombinedModel):
             elif title_label == '정상' and content_label != '정상':
                 content_changed = await changetexter.change_text(content)
                 post_data.content =  content_changed
-                report_req.category.content = content_label
+                report_req.category = list(content_label.split(","))
 
                 result["제목"] = {"text": title}
                 result["내용"] = {"text": f"{content_changed}","경고문": f"{content_label} 감지"}
@@ -145,26 +130,23 @@ async def update_item(data: CombinedModel):
                 title_changed = await changetexter.change_text(title)
                 post_data.title =  title_changed
                 content_changed = await changetexter.change_text(content)
-                post_data.content =  content_changed
-                report_req.category.title = title_label
-                report_req.category.content = content_label
+                post_data.content =  content_changed 
+                report_req.category = list(set(title_label.split(",") + content_label.split(",")))
                 result["제목"] = {"text": f"{title_changed}","경고문": f"{title_label} 감지"}
                 result["내용"] = {"text": f"{content_changed}","경고문": f"{content_label} 감지"}
             
-            # 보고서 생성
             return {
                 "valid": True,
-                "message": "악성 데이터 수신 및 처리 완료",
+                "message": "악성",
                 "post_data": post_data.model_dump(),
                 "report_req": report_req.model_dump()
             }
 
         else:
-            report_req.category.title = title_label
-            report_req.category.content = content_label
+            report_req.category = title_label
             return    {
                 "valid": True,
-                "message": "원문 데이터 수신 및 처리 완료",
+                "message": "원문",
                 "post_data": post_data.model_dump(),
                 "report_req": report_req.model_dump()
             }
@@ -175,48 +157,50 @@ async def update_item(data: CombinedModel):
             "valid": False,
             "message" : f"처리 실패: {str(e)}",
         }
-    
-
-#보고서 작성 플로우
-@app.post("/make_report")
+        
+@app.post("/make_report")        
 async def make_report(data: CombinedModel):
-    post_data = data.post_data
-    report_req = data.report_req
-    if report_req.category.title != '정상' or report_req.category.content != '정상':
-        await report.init()
-        report.report_prompt(post_data)
-        report.cell_fill(post_data, report_req)
-        time, output_file = report.report_save()
-        # formatted_time = time.strftime("%Y-%m-%d %H:%M:%S")
-        report_req.create_date = time
-        report_req.report_path = output_file
-
-    return {
-            "valid": True,
-            "message": "보고서 작성 완료",
-            "post_data": post_data.model_dump(),
-            "report_req": report_req.model_dump()
-    }
-
+        post_data, report_req = data.post_data, data.report_req
+        if report_req.category != "정상":
+            await report.init()
+            report.report_prompt(report_req)
+            report.cell_fill(post_data, report_req)
+            time, output_file = report.report_save()
+            report_req.create_date = time
+            report_req.report_path = output_file
+            
+        return {
+                "valid": True,
+                "message": "보고서 작성 완료",
+                "post_data": post_data.model_dump(),
+                "report_req": report_req.model_dump()
+        }        
+        
 @app.post("/check_spam")
 async def check_spam(request: SpamQuestionRequest):
     """
     게시글 스팸 여부를 확인하는 엔드포인트
     """
-    post = request.post_data
-    questions = request.question_data.question
-    await spam_detector.init()
-    filtered_id = await spam_detector.async_check_spam_and_store(post, questions)
-    return {
-        "valid" : True,
-        "status": "success",
-        "filtered_id": f"{filtered_id}",
-        "message": "게시글 처리 완료"
-    }
+    try:
+        post = request.post_data
+        questions = request.question_data.question
+        await spam_detector.init()
+        spam = await spam_detector.async_check_spam_and_store(post, questions)
+        return {
+            "valid" : True,
+            "spam": spam,
+            "message": "게시글 처리 완료"
+        }
+
+    except Exception as e:
+        logger.error(f"처리 실패: {str(e)}")
+        return {
+            "valid": False,
+            "spam": spam,
+            "message" : str(e),
+        }
 
 #이미지 탐지
-#임시파일 경로 저장 후 python으로 보냄
-#path 경로는 어떻게? ./uploaded_images 이런형태로?
 class FilePath(BaseModel):
     file_path : str
 
@@ -231,17 +215,18 @@ async def upload_image(file: FilePath):
     if file_name.lower().endswith((".jpg", ".jpeg", ".png", ".gif", ".bmp")):
         nsfw_score = None
         try:
-            image = nd.load_image(file_location)
+            image = nd.load_image(file_path)
             # 이미지가 손상되었는지 체크
             try : 
                 image.verify()
                 
             except Exception as e:
+                logger.error(f"처리 실패: {str(e)}")
                 return {
                     "valid": False,
                     "message" : "이미지 파일이 손상되었거나 유효하지 않습니다.",
                     "file_path" : file_path
-                    }
+                }
             
             result = image_classifier(image)
             for item in result:
@@ -258,7 +243,8 @@ async def upload_image(file: FilePath):
                 "file_path" : file_path
             }
 
-        except Exception as e: 
+        except Exception as e:
+            logger.error(f"처리 실패: {str(e)}")
             return {
                 "valid": False,
                 "message" : str(e),
