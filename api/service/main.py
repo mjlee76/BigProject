@@ -206,6 +206,7 @@ class FilePath(BaseModel):
 
 @app.post("/upload")
 async def upload_image(file: FilePath):
+    print(123)
     
     file_path = file.file_path
     filenames = os.listdir(file_path)

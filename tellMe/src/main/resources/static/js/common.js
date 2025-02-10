@@ -8,10 +8,15 @@ $(document).ready(function() {
 //알림종
 document.addEventListener("DOMContentLoaded", function () {
     const notificationIcon = document.getElementById("notification-icon");
-    const userId = notificationIcon.dataset.userid;
+    const userId = notificationIcon ? notificationIcon.dataset.userid : null;
     const notificationBox = document.getElementById("notification-box");
     const notificationList = document.getElementById("notification-list");
     const notificationCount = document.getElementById("notification-count");
+
+    if (!userId || userId === "anonymous") {
+        console.warn("⚠️ 사용자 ID가 없거나 로그인되지 않았습니다. 알림 기능을 실행하지 않습니다.");
+        return;
+    }
 
     // 알림 아이콘 클릭 시 알림 박스 토글
     notificationIcon.addEventListener("click", function (event) {
@@ -67,6 +72,7 @@ document.addEventListener("DOMContentLoaded", function () {
     async function fetchNotifications() {
         try {
             const response = await fetch(`/tellMe/api/${userId}`);
+            if (!response.ok) throw new Error(`HTTP 오류: ${response.status}`);
             const notifications = await response.json();
 
             notificationList.innerHTML = ""; // 기존 알림 초기화
