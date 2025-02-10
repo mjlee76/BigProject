@@ -157,7 +157,7 @@ public class ManagerController {
     public String statisticsBoard(Model model) {
         // 통계 데이터를 가져와서 뷰로 전달
         StatisticsDTO statisticsDTO = statisticsService.getStatistics();
-        // 악성 민원의 시간대별 데이터
+
 
         // 오늘의 민원 수와 악성 민원의 시간대별 데이터
         Map<String, List<Long>> questionsAndMaliciousByHour = statisticsService.getQuestionsAndMaliciousByHour();
@@ -173,17 +173,27 @@ public class ManagerController {
     public String todayQuestion(Model model) {
         // 통계 데이터를 가져와서 뷰로 전달
         StatisticsDTO statisticsDTO = statisticsService.getStatistics();
-        // 악성 민원의 시간대별 데이터
+
+        // 증감률 계산
+        double dailyChangeRate = statisticsService.calculateDailyChangeRate();
 
         // 오늘의 민원 수와 악성 민원의 시간대별 데이터
         Map<String, List<Long>> questionsAndMaliciousByHour = statisticsService.getQuestionsAndMaliciousByHour();
         model.addAttribute("statistics", statisticsDTO);
         model.addAttribute("questionsAndMaliciousByHour", questionsAndMaliciousByHour);
+        model.addAttribute("dailyChangeRate", dailyChangeRate);  // 증감률 추가
+
+
 
         return "manager/today-question";  // 통계 페이지
     }
 
 
 
+<<<<<<< HEAD
 >>>>>>> 13fde1d (실시간 민원 현황 상세페이지 기능 추가)
+=======
+
+
+>>>>>>> bc74830 (통계 추가)
 }

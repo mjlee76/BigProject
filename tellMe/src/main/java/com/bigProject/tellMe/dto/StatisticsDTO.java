@@ -16,4 +16,6 @@ public class StatisticsDTO {
     private double 악성민원비율;
     private double 평균처리시간;
     private long 일반민원수;
+    private long yesterdayQuestionCount; // 어제 민원 수 (추가)
+
 }

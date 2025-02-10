@@ -32,6 +32,9 @@ public class StatisticsService {
         // 전체 민원 수 (오늘만의 민원 수)
         long 전체민원수 = questionService.countTodayQuestions();
 
+        long yesterdayQuestionCount = questionService.countYesterdayQuestions();
+
+
         // 오늘의 악성 민원 수
         long 악성민원수 = questionService.countTodayCategoryNotNormal();
 
@@ -66,8 +69,12 @@ public class StatisticsService {
 >>>>>>> fe779d2 (실시간 민원 현황 - 모든 날짜 조회)
 =======
         // StatisticsDTO 객체에 일반민원수 추가
+<<<<<<< HEAD
         return new StatisticsDTO(접수중Count, 처리중Count, 답변완료Count, 미확인Count, 확인완료Count, 전체민원수, 악성민원수, 악성민원비율, 평균처리시간, 일반민원수);
 >>>>>>> 13fde1d (실시간 민원 현황 상세페이지 기능 추가)
+=======
+        return new StatisticsDTO(접수중Count, 처리중Count, 답변완료Count, 미확인Count, 확인완료Count, 전체민원수, 악성민원수, 악성민원비율, 평균처리시간, 일반민원수,yesterdayQuestionCount);
+>>>>>>> bc74830 (통계 추가)
     }
 
 
@@ -80,6 +87,20 @@ public class StatisticsService {
         LocalDate today = LocalDate.now();
         return questionService.countQuestionsAndMaliciousByHour(today);
     }
+
+    // StatisticsService 클래스에 추가
+    public double calculateDailyChangeRate() {
+        long todayQuestions = questionService.countTodayQuestions();
+        long yesterdayQuestions = questionService.countYesterdayQuestions();
+
+        // 어제 민원 수가 0일 경우에는 0으로 처리
+        if (yesterdayQuestions == 0) {
+            return todayQuestions == 0 ? 0 : 100;  // 오늘 민원 수가 0이면 변화율 0%, 아니면 100%
+        }
+
+        return ((double) (todayQuestions - yesterdayQuestions) / yesterdayQuestions);
+    }
+
 
 
 
