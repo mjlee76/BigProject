@@ -9,6 +9,8 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -26,7 +28,7 @@ public class Question {
     @Column(nullable = false)
     private String title;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String content;
 
     @ManyToOne
@@ -38,8 +40,8 @@ public class Question {
     private Answer answer;
 
     @OneToOne
-    @JoinColumn(name = "origin_id")
-    private filtered origin;
+    @JoinColumn(name = "filtered_id")
+    private Filtered filtered;
 
     @CreatedDate
     private LocalDateTime createDate;
@@ -55,6 +57,10 @@ public class Question {
     @Column(nullable = false)
     private Integer views;
 
+    @Column(nullable = false)
+    //@Enumerated(EnumType.STRING)
+    private String category;
+
     @Column
     private String file1;
 
@@ -64,14 +70,39 @@ public class Question {
     @Column
     private String file3;
 
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private Category category;
-
     @PrePersist
     public void setDefaultValues() {
         if(this.category == null) {
-            this.category = Category.정상;  // DB에 저장되기 전에 기본값 설정
+            this.category = "정상";  // DB에 저장되기 전에 기본값 설정
+        }
+        if(this.views == null) {
+            this.views = 0;  // DB에 저장되기 전에 기본값 설정
+        }
+        if(this.status == null) {
+            this.status = Status.필터링중;  // DB에 저장되기 전에 기본값 설정
         }
     }
+
+
+    public void incrementViews() {
+        this.views += 1;
+    }
+
+
+    public void changeStatusToProcessing() {
+        this.status = Status.처리중;
+    }
+
+
+    public void markAsAnswered(Answer answer) {
+        this.answer = answer;
+        this.status = Status.답변완료;
+    }
+
+    public void updateTitleAndContent(String title, String content) {
+        this.title = title;
+        this.content = content;
+    }
+
+
 }

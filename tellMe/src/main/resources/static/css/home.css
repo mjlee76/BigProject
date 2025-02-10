@@ -1,14 +1,16 @@
-.image.fit img {
-    width: 100%;
-    height: auto;
+@font-face {
+    font-family: 'Pretendard-Regular';
+    src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
 }
 
-*, *:before, *:after {
-    box-sizing: border-box;
-}
-
-html {
-    font-size: 13pt;
+body {
+    font-family: 'Pretendard-Regular', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #ffffff;
+    color: #333;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -16,259 +18,246 @@ h1, h2, h3, h4, h5, h6 {
     line-height: 1.5;
     margin: 0 0 1rem 0;
 }
-
 h1 {
     font-size: 1.7rem;
 }
 
-.box {
-    margin-bottom: 2rem;
-    background: #FFF;
+#home {
+    width: 100%;
+    height: 85vh;
+    overflow: hidden;
+    position: relative;
+}
+
+/* 슬라이더 */
+.slider {
     display: flex;
+    width: 300vw;
+    transition: transform 1s ease-in-out;
+}
+
+/* 슬라이드 개별 스타일 */
+.slide {
+    width: 90%;
+    height: 85vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     flex-direction: column;
-    justify-content: space-between; /* 위-아래 균등 배분 */
-    max-width: 100%; /* 🔥 부모 크기에 맞게 자동 확장 */
+}
+
+/* 슬라이드별 배경색 */
+.slide:nth-child(1) { background-color: #f4f4f9; }
+.slide:nth-child(2) { background-color: #e3e3ff; }
+.slide:nth-child(3) { background-color: #d0f0c0; }
+.slide:nth-child(4) { background-color: #f4f4f9; } /* 첫 번째 화면 복제 */
+
+.wrapper {
+    display: flex;
     width: 100%;
-    min-height: 800px;
-    height: 100%; /* 박스 높이를 늘려 동일하게 설정 */
+    height: 600px;
+    background-color: #fff;
+    box-sizing: border-box; /* 패딩 포함 계산 */
+    overflow: hidden; /* 가로 스크롤 제거 */
+    background: linear-gradient(to bottom, #2196F3, #0D47A1);
 }
 
-.box .image.fit {
-    margin: 0;
-}
 
-.box .image.fit img {
-    border-radius: 0;
-    width: 100%; /* 이미지를 박스에 맞게 조정 */
-    height: auto;
-    object-fit: cover; /* 이미지를 잘리지 않게 유지 */
-}
-
-.box header h1 {
-    margin-bottom: 2rem;
-    text-align: center;
-}
-
-.box header {
-    height: 120px;
-}
-
-.box header p {
-    text-transform: uppercase;
-    font-size: 0.75rem;
-    font-weight: 300;
-    margin: 0 0 0.25rem 0;
-    padding: 0 0 0.75rem 0;
-    letter-spacing: 0.25rem;
-    text-align: center;
-    position: relative;
-    color: #bbb;
-}
-
-.box header p:after {
-    content: '';
-    position: absolute;
-    margin: auto;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    width: 50%;
-    height: 1px;
-    background-color: rgba(0, 0, 0, 0.125);
-}
-
-.box .content {
-    padding: 2rem; /* 기존 3rem에서 줄여 균형 조정 */
-    flex: 1;
-}
-
-.box .content h1,
-.box .content h2 {
-    max-width: 100%; /* 🔥 전체 너비를 활용 */
-    word-break: keep-all; /* 🔥 단어가 부자연스럽게 끊어지지 않도록 설정 */
-    white-space: normal; /* 🔥 필요할 때만 줄 바꿈 */
-    text-align: center; /* 🔥 중앙 정렬 유지 */
-    font-size: 1.5rem; /* 🔥 크기 조정 */
-    line-height: 1.6; /* 🔥 줄 간격 조정 */
-}
-
-.box .content p {
-    max-width: 100%;
-    word-break: keep-all; /* 🔥 단어가 중간에서 끊기지 않도록 */
-    white-space: normal;
-    text-align: center;
-    line-height: 1.5;
-    color: #bbb; /* 🔥 기본 텍스트 색상 (기존보다 조금 더 강조) */
-}
-
-@media (max-width: 768px) {
-    .box .content h1,
-    .box .content h2 {
-        font-size: 1.3rem; /* 🔥 모바일에서는 약간 작게 */
-        line-height: 1.5;
-    }
-}
-
-input[type="button"], button, .button {
-    appearance: none;
-    transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
-    border-radius: 2px;
-    border: 0;
-    cursor: pointer;
-    display: inline-block;
-    font-weight: 300;
-    height: 2.85rem;
-    line-height: 2.95rem;
-    padding: 0 1.5rem;
-    text-align: center;
-    text-decoration: none;
-    text-transform: uppercase;
-    white-space: nowrap;
-}
-
-.menu-bar {
-    display: flex; /* 버튼을 Flexbox로 정렬 */
-    justify-content: center; /* 버튼을 가로로 중앙 정렬 */
-    gap: 1rem; /* 버튼 간 간격 추가 */
-    margin-top: 1rem; /* 상단 간격 추가 (필요하면 조정) */
-}
-
-.menu-button {
-    display: inline-flex; /* 버튼 안의 글자를 Flexbox로 정렬 */
-    align-items: center; /* 수직 중앙 정렬 */
-    justify-content: center; /* 가로 중앙 정렬 */
-    padding: 0.1rem 1.5rem; /* 버튼 내부 여백 설정 */
-    border: none;
-    background-color: #333;
-    color: #fff;
-    cursor: pointer;
-    font-size: 1rem;
-    border-radius: 5px; /* 버튼 모서리 둥글게 */
-    transition: background-color 0.3s ease;
-    height: auto; /* 높이를 내용에 맞게 조정 */
-    text-align: center; /* 텍스트 정렬 */
-    white-space: nowrap; /* 텍스트가 줄바꿈되지 않도록 */
-}
-
-.menu-button:hover {
-    background-color: #555; /* 호버 시 버튼 색 변경 */
-}
-
-.dynamic-content {
-    display: block; /* 반드시 표시되도록 설정 */
-    margin-top: 2rem;
-    padding: 1rem;
-}
-.dynamic-content h2 {
-    margin: 0 0 1rem 0;
-    text-align: center;
-}
-.dynamic-content p {
-    margin: 0;
-    text-align: center;
-}
-
-.background-container {
-    position: relative;
-    width: 100%;
-    height: 100vh; /* 전체 화면 높이 */
+.wrapper .area {
+    flex: 1; /* 동일한 너비로 좌우 배분 */
     display: flex;
     align-items: center;
     justify-content: center;
-    overflow: hidden;
+    font-size: 20px;
+    font-weight: bold;
 }
 
-/* 🔹 배경 이미지 설정 */
-.background-container img {
-    position: absolute;
+.wrapper .area.left {
+    margin: 20px;
+    border-radius: 20px;
+}
+
+.image.fit img {
+    width: 100%;
+    height: auto;
+}
+
+.wrapper .area.right {
+    text-align: center; /* 전체 중앙 정렬 */
+    margin: 20px;
+}
+
+/* ul 기본 스타일 제거 */
+.grid-container {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* 2개씩 정렬 */
+    gap: 40px;
+    margin: 20px;
+    padding: 10px;
+    margin-top: 20px;
+    list-style: none;
+}
+
+.box {
+    position: relative; /* 📌 부모에 relative 추가 */
+    overflow: hidden;
+    border-radius: 10px;
+    text-align: center;
+    font-size: 1.2rem;
+    font-weight: bold;
+    background-color: transparent;
+    /* 높이 지정이 필요할 수 있음 (예: height: 300px;) */
+}
+
+/* 배경 이미지 */
+.box .background-image {
+    position: absolute; /* 📌 absolute로 변경 */
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
     object-fit: cover;
-    z-index: -1; /* 배경을 뒤로 보냄 */
+    z-index: 1; /* 📌 z-index 조정 (텍스트보다 아래) */
 }
 
-.wrapper {
-    padding: 6rem 0 4rem 0;
-    position: relative;
-    margin: 0;
+/* 텍스트 컨테이너 */
+.box div {
+    position: relative; /* 📌 텍스트를 absolute 대신 relative로 */
+    z-index: 2; /* 📌 이미지보다 위에 오도록 */
+    padding: 20px; /* 📌 텍스트 패딩 추가 */
 }
 
-.wrapper > .inner {
-    margin: 0 auto;
-    width: 80rem;
+/* 첫 번째 p (제목) */
+.box div p:first-of-type {
+    font-size: 20px;
+    color: #fff; /* 📌 어두운 배경엔 흰색 */
+    text-align: left;
 }
 
-.wrapper.style2 {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -30%);
-    width: 90%;
-    max-width: 1300px; /* 🔥 최대 너비 조정 */
-    background: transparent;
-    padding: 30px;
-    display: flex;
-    justify-content: center; /* 🔥 중앙 정렬 */
+/* 두 번째 p (설명) */
+.box div p:last-of-type {
+    font-size: 24px;
+    color: #000 !important; /* 📌 밝은 회색 */
+    text-align: left;
 }
 
-
-.wrapper.style2 h1, .wrapper.style2 h2, .wrapper.style2 h3 {
+/* 박스 바깥 p */
+.box > p {
+    position: relative; /* 📌 z-index 적용을 위해 */
+    z-index: 2;
     color: #000;
 }
 
-.wrapper.style2 input[type="button"], .wrapper.style2 button, .wrapper.style2 .button {
-    background-color: #000;
-    color: #f2f2f2 !important;
+/* 📌 typeTwo 내부의 첫 번째 <p> */
+.typeTwo div p:first-of-type {
+    font-size: 20px;
+    font-weight: bold;
+    color: #00796b;
 }
 
-.wrapper.style2 input[type="button"].alt, .wrapper.style2 button.alt, .wrapper.style2 .button.alt {
-    background-color: transparent;
-    box-shadow: inset 0 0 0 2px rgba(0, 0, 0, 0.15);
-    color: #000 !important;
+/* 📌 typeTwo 내부의 두 번째 <p> */
+.typeTwo div p:last-of-type {
+    font-size: 17px;
+    color: #004d40;
+    text-align: left;
 }
 
-.wrapper.style2 input[type="button"].alt:hover, .wrapper.style2 button.alt:hover, .wrapper.style2 .button.alt:hover {
-    background-color: rgba(0, 0, 0, 0.075);
+/* 📌 typeTwo 바깥의 <p> */
+.typeTwo > p {
+    font-size: 15px;
+    font-weight: bold;
+    color: #00695c;
 }
 
-.grid-style {
+.wrapper2 {
     display: flex;
-    justify-content: center; /* 🔥 그리드 요소를 가운데 정렬 */
-    gap: 2rem;
     width: 100%;
-    max-width: 1400px; /* 🔥 최대 너비 설정 */
-    margin: 0 auto; /* 🔥 중앙 정렬 */
+    height: 600px;
+    background-color: #fff;
+    box-sizing: border-box; /* 패딩 포함 계산 */
+    overflow: hidden; /* 가로 스크롤 제거 */
+    background: linear-gradient(to bottom, #D5C5FF, #AFC3FF);
 }
 
-.grid-style > div {
-    flex: 1 1 calc(50% - 2rem); /* 각 박스가 50% 너비를 가지도록 설정 */
-    max-width: 700px;
-    display: flex; /* 내부 요소를 플렉스로 정렬 */
-    flex-direction: column; /* 세로 정렬 */
-    justify-content: space-between; /* 위/아래 간격 균등 배분 */
-}
-
-@media (max-width: 768px) {
-    .wrapper.style2 {
-        transform: translate(-50%, -20%);
-        width: 95%;
-        padding: 20px;
-    }
-
-    .grid-style {
-        flex-direction: column; /* 모바일에서 한 줄씩 */
-        align-items: center;
-    }
-
-    .grid-style > div {
-        flex: 1 1 100%;
-    }
-}
-
-footer.align-center {
+.wrapper2 .area {
     display: flex;
-    justify-content: center; /* 수평 중앙 정렬 */
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    font-weight: bold;
 }
 
+.wrapper2 .area.left {
+    flex: 2;
+    text-align: center; /* 전체 중앙 정렬 */
+    margin: 20px;
+    background-color: transparent;
+}
+
+.area.left h1 {
+    font-size: 40px; /* 큰 글씨 */
+    font-weight: bold; /* 굵게 강조 */
+    color: #fff;
+    margin-left: 10px;
+    text-align: left;
+}
+
+.area.left p {
+    font-size: 50px;
+    color: #666;
+    margin-top: 10px;
+    margin-left: 10px;
+    text-align: left;
+}
+
+.wrapper2 .area.right {
+    flex: 3;
+    margin: 20px;
+    border-radius: 20px;
+    background-color: transparent;
+}
+
+.wrapper2 .grid-container {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* 2개씩 정렬 */
+    gap: 40px;
+    margin: 20px;
+    padding: 10px;
+    margin-top: 20px;
+    list-style: none;
+}
+
+.wrapper2 .box {
+    position: relative; /* 📌 부모에 relative 추가 */
+    overflow: hidden;
+    border: 3px solid rgba(255, 255, 255, .8);
+    border-radius: 1.5rem;
+    text-align: center;
+    font-size: 1.2rem;
+    font-weight: bold;
+    background-color: transparent;
+    transition: transform 0.3s ease-in-out; /* 부드러운 애니메이션 효과 */
+    width: 300px;
+    height: 400px;
+    /* 높이 지정이 필요할 수 있음 (예: height: 300px;) */
+}
+
+/* 🔥 왼쪽 위 배치 */
+.box.left {
+    margin-bottom: 10px;
+    top: 150px;
+    left: 20px;
+    transform: rotate(-8deg);
+}
+
+/* 🔥 오른쪽 아래 배치 */
+.box.right {
+    margin-top: 10px;
+    bottom: 0px;
+    right: 20px;
+    transform: rotate(8deg);
+}

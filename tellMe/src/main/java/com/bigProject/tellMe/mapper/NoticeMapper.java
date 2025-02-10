@@ -6,6 +6,7 @@ import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
 public interface NoticeMapper {
+    NoticeDTO noTONoDTO(Notice notice);
     Notice noDTOToNo(NoticeDTO noticeDTO);
 }
 

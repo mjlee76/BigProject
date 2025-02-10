@@ -1,7 +1,10 @@
 package com.bigProject.tellMe.controller.customer;
 
+import com.bigProject.tellMe.config.FileUpLoadUtil;
 import com.bigProject.tellMe.dto.NoticeDTO;
 import com.bigProject.tellMe.entity.Notice;
+import com.bigProject.tellMe.entity.Question;
+import com.bigProject.tellMe.mapper.NoticeMapper;
 import com.bigProject.tellMe.service.NoticeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -10,8 +13,11 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -20,7 +26,7 @@ import java.util.Map;
 @RequestMapping("/customer")
 @RequiredArgsConstructor
 public class CustomerController {
-
+    private final NoticeMapper noticeMapper;
     private final NoticeService noticeService;
 
     @GetMapping("/service")
@@ -29,16 +35,26 @@ public class CustomerController {
     }
 
     @GetMapping("/write")
-    public String newNoticeForm() {
-        return "customer/write";
+    public String newNoticeForm(Model model) {
+        NoticeDTO noticeDTO = new NoticeDTO();
+        model.addAttribute("notice", noticeDTO);
+        return "manager/notice_write";
     }
 
     @PostMapping("/create")
-    public String createNotice(NoticeDTO noticeDTO) {
-        noticeDTO.setCreateDate(LocalDateTime.now());
-        noticeDTO.setViews(0);
+    public String createNotice(NoticeDTO noticeDTO, @RequestParam("image") List<MultipartFile> multipartFile) throws IOException {
+        Notice notice = noticeService.save(noticeDTO);
+        noticeDTO = noticeMapper.noTONoDTO(notice);
+        Long noticeId = noticeDTO.getId();
+        System.out.println("=============="+multipartFile.toString());
+        if(!multipartFile.isEmpty()) {
+            String uploadDir = "tellMe/tellMe-uploadFile/notice/" + noticeId;
+            List<String> savedFiles = FileUpLoadUtil.saveFiles(uploadDir, multipartFile);
 
-        Notice saved = noticeService.save(noticeDTO);
+            String fileName = savedFiles.get(0);
+            noticeDTO.setFile(fileName);
+            noticeService.save(noticeDTO);
+        }
         return "redirect:/customer/notice";
     }
 
@@ -47,7 +63,7 @@ public class CustomerController {
     public String paging(@PageableDefault(page = 1) Pageable pageable, Model model) {
         Page<NoticeDTO> noticeList = noticeService.paging(pageable);
 
-        int blockLimit = 5; // 화면에 보여지는 페이지 갯수
+        int blockLimit = 10; // 화면에 보여지는 페이지 갯수
         int startPage = (((int)(Math.ceil((double)pageable.getPageNumber() / blockLimit))) - 1) * blockLimit + 1;  // 1, 6, 11, ~
         int endPage = ((startPage + blockLimit - 1) < noticeList.getTotalPages()) ? startPage + blockLimit - 1 : noticeList.getTotalPages();
 
