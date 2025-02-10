@@ -206,7 +206,6 @@ class FilePath(BaseModel):
 
 @app.post("/upload")
 async def upload_image(file: FilePath):
-    print(123)
     
     file_path = file.file_path
     filenames = os.listdir(file_path)
@@ -272,7 +271,7 @@ async def upload_image(file: FilePath):
         llm_chain = await docu_loader.make_llm_text(data)
         combined_text = " ".join(llm_chain)
         
-        if not combined_text:  # ✅ 문서가 공백 또는 빈 문자열인지 확인
+        if not combined_text:
             return {
                 "valid": False,
                 "message": "문서 내용이 없습니다. 올바른 문서를 업로드하세요.",
@@ -294,9 +293,17 @@ async def upload_image(file: FilePath):
                 "message" : "악성",
                 "file_path" : file_path
             }
-
-        return {
-            "valid": True,
-            "message" : "정상",
-            "file_path" : file_path
-        }
+        else:
+            if file_name.lower().endswith((".hwp", ".hwpx", ".doc", ".docx", ".pdf")):
+                os.remove(file_location)
+            elif file_name.lower().endswith(".txt"):
+                file_path = file.file_path
+                filenames = os.listdir(file_path)
+                file_name = filenames[0]
+                file_location = os.path.join(file_path, file_name)
+                os.remove(file_location)
+            return {
+                "valid": True,
+                "message" : "정상",
+                "file_path" : file_path
+            }
