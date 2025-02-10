@@ -1,7 +1,9 @@
 package com.bigProject.tellMe.service;
 
+import ch.qos.logback.core.util.COWArrayList;
 import com.bigProject.tellMe.client.api.FastApiClient;
 import com.bigProject.tellMe.client.dto.QuestionApiDTO;
+import com.bigProject.tellMe.config.NotificationEvent;
 import com.bigProject.tellMe.controller.complaint.ComplaintRestController;
 import com.bigProject.tellMe.dto.FilteredDTO;
 import com.bigProject.tellMe.dto.QuestionDTO;
@@ -25,6 +27,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -47,6 +50,7 @@ public class QuestionService {
     @Lazy
     @Autowired
     private ComplaintRestController complaintRestController;
+    private final ApplicationEventPublisher eventPublisher;
 
     private final QuestionMapper questionMapper;
     private final FilteredMapper filteredMapper;
@@ -60,6 +64,9 @@ public class QuestionService {
     public Question save(QuestionDTO questionDTO) {
         Question question = questionMapper.quDTOToQu(questionDTO);
         return questionRepository.save(question);
+    }
+
+    public void uploadFileApi(String uploadDir, String fileName) {
     }
 
     public Map<String, Object> spamCheck(Map<String, String> request) {
@@ -167,16 +174,17 @@ public class QuestionService {
                     categoryString = String.join(",", responseCategories);
                     //가져오는 법 : Arrays.asList(question.getCategory().split(","))
                     questionDTO.setCategory(categoryString);
+                    System.out.println("========SSE TEST============"+userDTO.getUserId());
+                    System.out.println("========SSE TEST============"+categoryString);
+                    CompletableFuture.runAsync(() -> reportApi(responseBody));
+//                    complaintRestController.sendNotification(userDTO.getUserId(),
+//                                "악성민원이 감지되었습니다. 사유 : " + categoryString);
+                    eventPublisher.publishEvent(new NotificationEvent(userDTO.getUserId(), "악성민원이 감지되었습니다. 사유 : " + categoryString));
                 }
                 questionDTO.setStatus(Status.접수중);
                 questionRepository.save(questionMapper.quDTOToQu(questionDTO));
 
-                //complaintRestController.sendNotification(userDTO.getUserId(), "악성민원이 감지되어 게시글이 수정되었습니다. 사유 : " + categoryString);
-                complaintRestController.sendRefreshEvent();
-
-                if("악성".equals(responseBody.get("message"))) {
-                    CompletableFuture.runAsync(() -> reportApi(responseBody));
-                }
+                //complaintRestController.sendRefreshEvent();
             }
             return CompletableFuture.completedFuture(null);
         }catch (Exception e) {

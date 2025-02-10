@@ -83,6 +83,7 @@
                        application/vnd.openxmlformats-officedocument.wordprocessingml.document, text/plain"
                            class="file-input-field"/>
                     <button type="button" class="remove-file-button" th:onclick="'resetFileInput(' + ${i} + ')'">취소</button>
+                    <span class="upload-status" th:id="'uploadStatus' + ${i}"></span>
                 </div>
             </td>
         </tr>

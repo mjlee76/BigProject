@@ -89,6 +89,7 @@ $(document).ready(function () {
     $(".file-input-field").change(function () {
         const fileInput = $(this);
         const file = fileInput[0].files[0];
+        const fileIndex = fileInput.attr("id").replace("fileImage", "");
 
         if (file) {
             if (file.size > 10485760) { // 10MB 제한
@@ -97,9 +98,36 @@ $(document).ready(function () {
             } else {
                 fileInput[0].setCustomValidity("");
             }
+
+            // 파일을 API로 업로드
+            uploadFile(file, fileIndex)
         }
     });
 });
+
+// 파일 업로드 함수
+function uploadFile(file, index) {
+    let formData = new FormData();
+    formData.append("file", file);
+
+    $.ajax({
+        url: "/api/uploadFile",  // 백엔드 API 엔드포인트 설정
+        type: "POST",
+        data: formData,
+        contentType: false,
+        processData: false,
+        beforeSend: function () {
+            $("#uploadStatus" + index).text("업로드 중..."); // 상태 표시
+        },
+        success: function (response) {
+            $("#uploadStatus" + index).text("✅ 업로드 성공");
+        },
+        error: function (xhr) {
+            $("#uploadStatus" + index).text("❌ 업로드 실패");
+            console.error("업로드 실패: ", xhr.responseText);
+        }
+    });
+}
 
 // 파일 입력 초기화 (취소 버튼 기능)
 function resetFileInput(index) {
