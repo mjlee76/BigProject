@@ -90,6 +90,7 @@ main {
     font-size: 14px; /* 글씨 크기 */
     color: #333; /* 기본 글자색 */
     margin-left: 10px; /* 입력 필드 외부의 왼쪽 간격 추가 */
+    margin-bottom: 5px;
 }
 
 .search-input::placeholder {
@@ -147,7 +148,7 @@ main {
 .tabs {
     display: flex;
     border-bottom: 1px solid #e0e0e0;
-    margin-bottom: 80px;
+    margin-bottom: 63px;
     position: sticky; /* 스크롤 시 상단에 고정 */
     top: 0; /* 상단에서의 고정 위치 */
     z-index: 10; /* 다른 요소 위에 표시되도록 설정 */
@@ -315,9 +316,8 @@ a:-webkit-any-link {
     display: flex;
     justify-content: center; /* 가운데 정렬 */
     align-items: center; /* 세로 정렬 */
-    gap: 20px; /* 버튼 간 간격 */
     margin-top: 20px; /* 위쪽 여백 */
-    margin-bottom: 30px; /* 아래쪽 여백 */
+    margin-bottom: 20px; /* 아래쪽 여백 */
 
 }
 

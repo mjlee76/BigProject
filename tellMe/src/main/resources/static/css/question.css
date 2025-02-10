@@ -62,7 +62,7 @@ a:-webkit-any-link {
 
 /* 드롭다운 메뉴 */
 .search-bar select {
-    padding: 10px;
+    padding: 5px;
     border: 1px solid #ffffff;
     font-size: 14px;
 }
@@ -179,7 +179,7 @@ a:-webkit-any-link {
 .tabs {
     display: flex;
     border-bottom: 1px solid #e0e0e0;
-    margin-bottom: 80px;
+    margin-bottom: 60px;
     position: sticky; /* 스크롤 시 상단에 고정 */
     top: 0; /* 상단에서의 고정 위치 */
     z-index: 10; /* 다른 요소 위에 표시되도록 설정 */
