@@ -386,5 +386,7 @@ h1::after {
     color: white; /* 글씨 색상 */
     font-size: 2rem;
     font-weight: bold;
-    text-align: center;
+    text-align: left;
+    top: 100px;
+    left: 1600px;
 }
