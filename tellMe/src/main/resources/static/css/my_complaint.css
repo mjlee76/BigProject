@@ -334,6 +334,7 @@ input {
 }
 
 .post-table th, .post-table td {
+    white-space: nowrap;
     border-top: 1px solid #ddd; /* 가로 선만 남김 */
     border-bottom: 1px solid #ddd;
     padding: 10px; /* 셀 내부 여백을 늘림 */
