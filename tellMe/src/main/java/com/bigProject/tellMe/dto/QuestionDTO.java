@@ -63,9 +63,9 @@ public class QuestionDTO {
         questionDTO.setFile2(questionDTO.getFile2());
         questionDTO.setFile3(questionDTO.getFile3());
 
-//        if (question.getAnswer() != null) {
-//            questionDTO.setAnswer(AnswerDTO.toAnswerDTO(question.getAnswer()));
-//        }
+        if (question.getAnswer() != null) {
+            questionDTO.setAnswer(AnswerDTO.toAnswerDTO(question.getAnswer()));
+        }
 
         return questionDTO;
     }

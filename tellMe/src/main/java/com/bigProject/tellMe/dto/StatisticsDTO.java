@@ -11,4 +11,9 @@ public class StatisticsDTO {
     private long 답변완료Count;
     private long 미확인Count;
     private long 확인완료Count;
+    private long 전체민원수;
+    private long 악성민원수;
+    private double 악성민원비율;
+    private double 평균처리시간;
+    private long 일반민원수;
 }
