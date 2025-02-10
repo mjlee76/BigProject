@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.util.List;
 
 @Controller
-@RequestMapping("myPage")
+@RequestMapping("/myPage")
 @RequiredArgsConstructor
 public class MyPageController {
     private final UserService userService;
