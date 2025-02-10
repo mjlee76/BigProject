@@ -234,12 +234,12 @@ async def upload_image(file: FilePath):
                     nsfw_score = item.get("score")
                     break
             if nsfw_score is not None and nsfw_score > 0.7:
-                results = '악성'
-            else : results = '정상'
+                results = "악성"
+            else : results = "정상"
 
             return {
                 "valid": True,
-                "message" : f"이미지 탐지 결과: {results}",
+                "message" : results,
                 "file_path" : file_path
             }
 
@@ -278,7 +278,7 @@ async def upload_image(file: FilePath):
                 "file_path": file_location
             }
         
-        content_label = classifier.classify_text(combined_text)
+        content_label = await docu_loader.make_classify_text(combined_text)
         if content_label != '정상':
             if file_name.lower().endswith((".hwp", ".hwpx", ".doc", ".docx", ".pdf")):
                 os.remove(file_location)
@@ -289,13 +289,13 @@ async def upload_image(file: FilePath):
                 file_location = os.path.join(file_path, file_name)
                 os.remove(file_location)
             return {
-                "valid": False,
+                "valid": True,
                 "message" : "악성 파일로 판단되어 업로드가 차단되었습니다.",
                 "file_path" : file_path
             }
 
         return {
             "valid": True,
-            "message" : f"문서 탐지 결과: {content_label}",
+            "message" : "정상",
             "file_path" : file_path
         }
