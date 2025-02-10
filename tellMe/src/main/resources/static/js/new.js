@@ -108,19 +108,27 @@ $(document).ready(function () {
 // 파일 업로드 함수
 function uploadFile(file, index) {
     let formData = new FormData();
+    let csrfToken = document.querySelector('input[name="_csrf"]').value;
     formData.append("file", file);
 
     $.ajax({
-        url: "/api/uploadFile",  // 백엔드 API 엔드포인트 설정
+        url: "/tellMe/api/uploadFile",  // 백엔드 API 엔드포인트 설정
         type: "POST",
         data: formData,
         contentType: false,
         processData: false,
-        beforeSend: function () {
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader("X-CSRF-TOKEN", csrfToken);
             $("#uploadStatus" + index).text("업로드 중..."); // 상태 표시
         },
         success: function (response) {
-            $("#uploadStatus" + index).text("✅ 업로드 성공");
+            if(response.trim() === "정상") {
+                $("#uploadStatus" + index).text("파일이 정상으로 판단되어 업로드 가능합니다.");
+            }else if(response.trim() === "악성") {
+                $("#uploadStatus" + index).text("파일이 악성으로 감지되어 업로드되지 못합니다.");
+                resetFileInput(index);
+            }
+
         },
         error: function (xhr) {
             $("#uploadStatus" + index).text("❌ 업로드 실패");

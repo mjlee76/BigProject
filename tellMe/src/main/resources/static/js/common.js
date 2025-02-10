@@ -7,74 +7,102 @@ $(document).ready(function() {
 
 //알림종
 document.addEventListener("DOMContentLoaded", function () {
-    let notificationIcon = document.getElementById("notification-icon");
-    let userId = notificationIcon ? notificationIcon.dataset.userid : null;
+    const notificationIcon = document.getElementById("notification-icon");
+    const userId = notificationIcon.dataset.userid;
+    const notificationBox = document.getElementById("notification-box");
+    const notificationList = document.getElementById("notification-list");
+    const notificationCount = document.getElementById("notification-count");
 
-    if (!userId) {
-        console.warn("🔍 [SSE] 로그인된 사용자가 아닙니다. SSE 연결을 하지 않습니다.");
-        return; // 로그인하지 않은 사용자는 SSE 연결 X
+    // 알림 아이콘 클릭 시 알림 박스 토글
+    notificationIcon.addEventListener("click", function (event) {
+        event.stopPropagation(); // 클릭 이벤트 전파 방지
+
+        if (notificationBox.style.display === "none" || notificationBox.style.opacity === "0") {
+            // 박스 나타내기
+            notificationBox.style.display = "block";
+            setTimeout(() => {
+                notificationBox.style.opacity = "1";
+                notificationBox.style.transform = "translateY(0)"; // 부드러운 애니메이션 효과
+            }, 10);
+        } else {
+            // 박스 숨기기
+            notificationBox.style.opacity = "0";
+            notificationBox.style.transform = "translateY(-10px)";
+            setTimeout(() => {
+                notificationBox.style.display = "none";
+            }, 300); // 애니메이션이 끝난 후 display를 none으로 변경
+        }
+    });
+
+    // 문서 클릭 시 알림 박스 닫기
+    document.addEventListener("click", function (event) {
+        if (!notificationIcon.contains(event.target) && !notificationBox.contains(event.target)) {
+            notificationBox.style.opacity = "0";
+            notificationBox.style.transform = "translateY(-10px)";
+            setTimeout(() => {
+              notificationBox.style.display = "none";
+            }, 300);
+        }
+    });
+
+    // 알림 개수 표시 함수
+    function showNotificationBadge(count) {
+        if (count > 0) {
+            notificationCount.textContent = count;
+            notificationCount.style.display = "block";
+        } else {
+            notificationCount.style.display = "none";
+        }
     }
-    console.log("연결 시작 - userId:", userId);
 
-    function connectSSE() {
-        let eventSource = new EventSource(`/api/notiBell/${userId}`);
+    // 알림 추가 함수 (localStorage 반영)
+    function addNotificationToList(message) {
+        const newNotification = document.createElement("li");
+        newNotification.textContent = message;
+        newNotification.classList.add("new-notification");
+        notificationList.prepend(newNotification);
+    }
+
+    // 서버에서 알림 가져오기
+    async function fetchNotifications() {
+        try {
+            const response = await fetch(`/tellMe/api/${userId}`);
+            const notifications = await response.json();
+
+            notificationList.innerHTML = ""; // 기존 알림 초기화
+            notifications.forEach(addNotificationToList);
+            showNotificationBadge(notifications.length);
+        } catch (error) {
+            console.error("알림을 불러오는 중 오류 발생:", error);
+        }
+    }
+
+    // SSE 연결 (실시간 알림 받기)
+    if (userId) {
+        const eventSource = new EventSource(`/tellMe/api/notiBell/${userId}`);
 
         eventSource.onmessage = function (event) {
-            console.log("📢 [SSE] 메시지 수신:", event.data);
-            showNotification(event.data);
+            console.log("🔔 새 알림 수신: ", event.data);
+            location.reload();
         };
 
-        eventSource.onerror = function (event) {
-            console.error("🚨 [SSE 오류 발생] 연결 끊김");
-
-            if (event.target.readyState === EventSource.CLOSED) {
-                console.warn("🔄 [SSE] 서버가 닫힘. 5초 후 재연결 시도...");
-                setTimeout(() => {
-                    connectSSE();
-                }, 5000);
-            }
+        eventSource.onerror = function () {
+            console.error("SSE 연결 오류 발생");
+            eventSource.close();
+            setTimeout(() => {
+                eventSource = new EventSource(`/tellMe/api/notiBell/${userId}`);
+            }, 3000);
         };
     }
-
-    connectSSE();
-
-    function showNotification(message) {
-        let countElement = document.getElementById("notification-count");
-        let notificationList = document.getElementById("notification-list");
-
-        // ✅ 알림 숫자 업데이트
-        let currentCount = parseInt(countElement.textContent) || 0;
-        countElement.textContent = currentCount + 1;
-        countElement.style.display = "inline-block";
-
-        // ✅ 알림 리스트에 추가
-        let li = document.createElement("li");
-        li.textContent = message;
-        li.onclick = () => removeNotification(li);
-        notificationList.appendChild(li);
-
-        let box = document.getElementById("notification-box");
-        if (currentCount === 0) {
-            box.style.display = "block";
-        }
-    }
-
-    function removeNotification(element) {
-        element.remove();
-        let countElement = document.getElementById("notification-count");
-        let currentCount = parseInt(countElement.textContent) || 0;
-        countElement.textContent = Math.max(currentCount - 1, 0);
-        if (countElement.textContent == "0") {
-            countElement.style.display = "none";
-        }
-    }
-
-    // 🔔 아이콘 클릭 시 알림 창 토글
-    if (notificationIcon) {
-        notificationIcon.addEventListener("click", function () {
-            let box = document.getElementById("notification-box");
-            box.style.display = (box.style.display === "none") ? "block" : "none";
-        });
-    }
+    fetchNotifications();
 });
+
+//document.addEventListener("DOMContentLoaded", function () {
+//  const notificationCount = document.getElementById("notification-count");
+//
+//  function showNotificationBadge(count) {
+//      notificationCount.textContent = count;
+//      notificationCount.style.display = "block"; // 배지 표시
+//  }
+//});
 

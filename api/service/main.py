@@ -293,6 +293,7 @@ async def upload_image(file: FilePath):
                 "message" : "악성",
                 "file_path" : file_path
             }
+<<<<<<< HEAD
         else:
             if file_name.lower().endswith((".hwp", ".hwpx", ".doc", ".docx", ".pdf")):
                 os.remove(file_location)
@@ -307,3 +308,11 @@ async def upload_image(file: FilePath):
                 "message" : "정상",
                 "file_path" : file_path
             }
+=======
+
+        return {
+            "valid": True,
+            "message" : content_label,
+            "file_path" : file_path
+        }
+>>>>>>> ddf405e (success API)
