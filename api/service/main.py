@@ -234,8 +234,8 @@ async def upload_image(file: FilePath):
                     nsfw_score = item.get("score")
                     break
             if nsfw_score is not None and nsfw_score > 0.7:
-                results = '악성'
-            else : results = '정상'
+                results = "악성"
+            else : results = "정상"
 
             return {
                 "valid": True,
@@ -278,7 +278,7 @@ async def upload_image(file: FilePath):
                 "file_path": file_location
             }
         
-        content_label = classifier.classify_text(combined_text)
+        content_label = await docu_loader.make_classify_text(combined_text)
         if content_label != '정상':
             if file_name.lower().endswith((".hwp", ".hwpx", ".doc", ".docx", ".pdf")):
                 os.remove(file_location)
@@ -296,6 +296,6 @@ async def upload_image(file: FilePath):
 
         return {
             "valid": True,
-            "message" : content_label,
+            "message" : "정상",
             "file_path" : file_path
         }

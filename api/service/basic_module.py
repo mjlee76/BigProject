@@ -42,7 +42,7 @@ async def selecting_model(api_key):
 #3. 모델 프롬프트 출력
 class TextClassifier:
     def __init__(self):
-        model_path = "./20250204_roberta 파인튜닝"
+        model_path = "./20250204_roberta 파인튜닝_final"
         self.model = AutoModelForSequenceClassification.from_pretrained(model_path)
         self.tokenizer = AutoTokenizer.from_pretrained("klue/roberta-base")
 
@@ -238,11 +238,16 @@ class LoadDocumentFile:
     async def init(self):
         file_path = os.path.join(os.getcwd(), "api_key.txt")
         api_key = await load_api_key(file_path)
-        self.llm = await self.selecting_model(api_key)
+        self.llm_cla = await self.selecting_classify_model(api_key)
     
     async def selecting_model(self, api_key):
         os.environ["OPENAI_API_KEY"] = api_key
         llm = await asyncio.to_thread(ChatOpenAI, temperature=0, model_name="gpt-4")
+        return llm
+    
+    async def selecting_classify_model(self, api_key):
+        os.environ["OPENAI_API_KEY"] = api_key
+        llm = await asyncio.to_thread(ChatOpenAI, temperature=0, model_name="gpt-4o")
         return llm
     
     #loader로 data 저장하기
@@ -298,7 +303,37 @@ class LoadDocumentFile:
         # 결과 후처리: 개행, 공백 정리 등
         cleaned_results = [re.sub(r"\s+", " ", r.replace("\n", " ")).strip() for r in results]
         return cleaned_results
+    
+    async def make_classify_prompt(self):
+        return PromptTemplate(
+        input_variables=["cleaned_results", "label_mapping"],
+        template="""
+        당신은 악성민원을 탐지하는 AI 어시스턴트입니다.
+        다음 텍스트를 확인하고, 만약 **실제로 악의적/모욕적/차별적**이라면
+        아래 제공된 라벨 중 어느 것에 해당하는지 판단해주세요.
 
+        - 단순히 “폭언”, “협박”, “성희롱” 같은 단어를 언급하는 **양식/메뉴얼** 설명이거나, 
+        문서가 그런 표현을 **사례나 주의사항**으로 나열하는 것만으로는 악성으로 보지 않습니다.
+        - 텍스트가 **직접 공격적**이거나 **누군가를 모욕**, **차별**, **협박**, **성희롱**하고 있다면 해당 라벨을 골라주세요.
+        - 그 외에는 "정상"이라고 답변해주세요.
+        텍스트: {cleaned_results}
+        라벨 목록: {label_mapping}
+        
+        아래 형식으로 답변을 해주세요:
+        ※ 예) 결과 : 성희롱
+        """
+        )
+    
+    async def make_classify_text(self, cleaned_results):
+        # LLM 초기화 및 체인 생성
+        label_mapping = ["정상", "모욕","욕설", "외모차별", "장애인차별", "인종차별",
+                "종교차별", "지역차별","성차별", "나이차별", "협박", "성희롱"]
+        prompt = await self.make_classify_prompt()
+        llm_chain = LLMChain(llm=self.llm_cla, prompt=prompt)
+        result = asyncio.to_thread(llm_chain.run, {"cleaned_results": cleaned_results, "label_mapping": ", ".join(label_mapping)})
+        result_text = await result
+        label = str(result_text.split(':', 1)[1].strip())
+        return label
         
 
         
