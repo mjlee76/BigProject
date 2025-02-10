@@ -22,6 +22,8 @@
 }
 
 .logo {
+    display: flex; /* 이미지와 텍스트를 가로로 정렬 */
+    align-items: center; /* 세로 중앙 정렬 */
     margin-left: -20px;
     font-size: 3em;
     font-weight: 900;
@@ -30,6 +32,8 @@
 }
 
 .logo a {
+    display: flex; /* 이미지와 텍스트를 함께 정렬 */
+    align-items: center; /* 세로 정렬 */
     text-decoration: none; /* 밑줄 제거 */
     color: inherit; /* 부모 색상 상속 */
     outline: none; /* 클릭 시 하이라이트 제거 */
@@ -40,6 +44,12 @@
 .logo a:active {
     text-decoration: none; /* 호버, 포커스, 클릭 상태에서도 밑줄 제거 */
     color: inherit; /* 색상 유지 */
+}
+
+.logo-img {
+    width: 150px; /* 로고 이미지 크기 조절 */
+    height: auto;
+    margin-right: 10px; /* 이미지와 텍스트 사이 간격 */
 }
 
 .nav-menu {
@@ -85,17 +95,18 @@
 }
 
 .auth-buttons {
-    margin-right: -20px;
     display: flex;
+    justify-content: space-evenly;
     gap: 20px; /* 버튼 간격 */
 }
 
 .auth-buttons > div {
+    margin-right: 10px;
     display: flex;
-    gap: 20px;
 }
 
 .auth-link {
+    margin-right: 10px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -117,6 +128,78 @@
     font-weight: 900;
     font-size: 24px; /* 아이콘 크기 */
     margin-bottom: 5px;
+}
+
+/* 알림 컨테이너 */
+.notification-container {
+    display: flex;
+    align-items: center;
+    position: relative;
+    margin-right: 10px;
+}
+
+/* 알림 벨 스타일링 */
+.notification-bell {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 50px; /* 버튼 크기 통일 */
+    height: 50px;
+    background: #fff;
+    border-radius: 5px;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+/* 종 아이콘 */
+.notification-bell::before {
+    content: "\f0f3";
+    font-family: "Font Awesome 5 Free", sans-serif;
+    font-weight: 900;
+    font-size: 24px;
+    margin-bottom: 2px;
+}
+
+/* 알림 텍스트 */
+.notification-text {
+    font-size: 12px;
+    color: #333;
+    margin-top: 3px;
+}
+
+/* 알림 배지 */
+.badge {
+    background-color: red;
+    color: white;
+    font-size: 10px;
+    font-weight: bold;
+    padding: 3px 6px;
+    border-radius: 50%;
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    display: none; /* 초기 상태 숨김 */
+}
+
+/* 호버 효과 */
+.notification-bell:hover {
+    transform: scale(1.1);
+}
+
+/* 알림 배지 */
+.badge {
+    background-color: red;
+    color: white;
+    font-size: 10px;
+    font-weight: bold;
+    padding: 3px 6px;
+    border-radius: 50%;
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    display: none; /* 초기 상태 숨김 */
 }
 
 /* 각 버튼별 아이콘 설정 */

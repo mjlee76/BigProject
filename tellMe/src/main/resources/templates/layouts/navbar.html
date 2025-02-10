@@ -6,12 +6,18 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <script src="https://code.jquery.com/jquery-3.6.3.js"></script>
     <script type="text/javascript" th:src="@{/js/common.js}"></script>
+    <script type="text/javascript" th:src="@{/js/navbar.js}"></script>
 </head>
 <body>
 <header th:fragment="tellMe_header">
     <nav class="navbar">
         <div class="nav-container">
-            <div class="logo"><a th:href="@{/}">Aivle</a></div>
+            <div class="logo">
+                <a th:href="@{/}">
+                    <img th:src="@{/image/tellme.png}" class="logo-img">
+                    Aivle
+                </a>
+            </div>
             <div>
                 <ul class="nav-menu">
                     <li><a th:href="@{/}">홈</a></li>
@@ -25,6 +31,7 @@
                     </li>
                 </ul>
             </div>
+
 <!--            <div id="notification-icon" class="notification-bell" th:data-userid="${#authentication.name}">-->
 <!--                🔔 <span id="notification-count" class="badge">0</span>-->
 <!--            </div>-->
@@ -32,14 +39,30 @@
 <!--            <div id="notification-box" class="notification-box" style="display: none;">-->
 <!--                <ul id="notification-list"></ul>-->
 <!--            </div>-->
+<!--            -->
             <div class="auth-buttons">
                 <div sec:authorize="isAnonymous()">
                     <a th:href="@{/login}" class="auth-link login">로그인</a>
                     <a th:href="@{/user/signUp}" class="auth-link signup">회원가입</a>
                 </div>
                 <div sec:authorize="isAuthenticated()">
+                    <!-- 알림 영역 -->
+                    <div class="notification-container">
+                        <div id="notification-icon" class="notification-bell" th:data-userid="${#authentication.name}">
+                            <span id="notification-count" class="badge">0</span>
+                            <span class="notification-text">알림</span>
+                        </div>
+                        <!-- 알림 메시지 박스 -->
+                        <div id="notification-box" class="notification-box" style="display: none;">
+                            <ul id="notification-list">
+                                <li>새로운 알림이 없습니다.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- 마이페이지 & 로그아웃 -->
                     <a th:href="@{/myPage/editInfo}" class="auth-link mypage">마이 페이지</a>
-                    <form th:action="@{/logout}" method="post" th:hidden="true" name="logoutForm" >
+                    <form th:action="@{/logout}" method="post" th:hidden="true" name="logoutForm">
                         <input type="submit"/>
                     </form>
                     <a class="auth-link logout" id="logoutLink" href="">로그아웃</a>
