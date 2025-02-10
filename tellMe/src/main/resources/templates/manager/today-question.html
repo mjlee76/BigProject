@@ -36,6 +36,7 @@
         <div id="content-wrapper">
 
 
+
             <!-- 오늘 접수된 민원수 -->
             <div class="chart-container">
                 <div class ="chart-box">
@@ -45,6 +46,22 @@
                     </div>
                 </div>
             </div>
+
+
+            <div class="today-statistics">
+                <div class="today-text">
+                    <span>오늘</span>
+                </div>
+                <div class="count">
+                    <span th:text="${statistics.전체민원수}">39</span>건
+                </div>
+                <div class="change-rate">
+                    <span th:text="${dailyChangeRate > 0 ? '오늘 총 ' + statistics.전체민원수 + '건의 민원이 접수 되었습니다. 어제보다 ' + dailyChangeRate + '% 올랐습니다.' : '오늘 총 ' + statistics.전체민원수 + '건의 민원이 접수 되었습니다. 어제보다 ' + dailyChangeRate + '% 줄었습니다.'}"></span>
+                    <span class="icon" th:class="${dailyChangeRate > 0 ? 'increase' : 'decrease'}"></span>
+                </div>
+            </div>
+
+
             <!-- 실시간 민원 현황 -->
             <div class="chart-box">
                 <h2>실시간 민원 현황</h2>
@@ -76,7 +93,8 @@
         접수중Count: [[${statistics.접수중Count}]],
         처리중Count: [[${statistics.처리중Count}]],
         미확인Count: [[${statistics.미확인Count}]],
-        확인완료Count: [[${statistics.확인완료Count}]]
+        확인완료Count: [[${statistics.확인완료Count}]],
+        어제민원수: [[${statistics.yesterdayQuestionCount}]],
 
 
     };

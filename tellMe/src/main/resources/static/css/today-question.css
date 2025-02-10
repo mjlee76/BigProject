@@ -111,6 +111,49 @@ a:-webkit-any-link {
 }
 
 
+.today-statistics {
+    display: flex;
+    align-items: center;
+    background-color: #f8f9fa;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    justify-content: space-between;
+}
+
+.today-text {
+    font-size: 14px;
+    color: #6c757d;
+}
+
+.count {
+    font-size: 24px;
+    font-weight: bold;
+    color: #343a40;
+}
+
+.change-rate {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    color: #28a745;
+}
+
+.change-rate .icon {
+    margin-left: 5px;
+    width: 10px;
+    height: 10px;
+    display: inline-block;
+    border-radius: 50%;
+}
+
+.change-rate.increase .icon {
+    background-color: #28a745; /* 녹색 */
+}
+
+.change-rate.decrease .icon {
+    background-color: #dc3545; /* 빨간색 */
+}
 
 
 
