@@ -28,12 +28,15 @@ public class StatisticsService {
         // 보고서 상태별 통계
         long 미확인Count = reportService.countReportsByStatus(ReportStatus.미확인);
         long 확인완료Count = reportService.countReportsByStatus(ReportStatus.확인완료);
+
         // 전체 민원 수 (오늘만의 민원 수)
         long 전체민원수 = questionService.countTodayQuestions();
 
         // 오늘의 악성 민원 수
         long 악성민원수 = questionService.countTodayCategoryNotNormal();
 
+        // 일반 민원수 계산: 전체 민원수 - 악성 민원수
+        long 일반민원수 = 전체민원수 - 악성민원수;
 
 <<<<<<< HEAD
 //        // 민원 카테고리별 통계 - 리턴값 넣기
@@ -58,9 +61,15 @@ public class StatisticsService {
         // 평균 처리 시간 (예시로 1시간으로 설정)
         double 평균처리시간 = calculateAverageProcessingTime();
 
+<<<<<<< HEAD
         return new StatisticsDTO(접수중Count, 처리중Count, 답변완료Count, 미확인Count, 확인완료Count, 전체민원수, 악성민원수, 악성민원비율, 평균처리시간);
 >>>>>>> fe779d2 (실시간 민원 현황 - 모든 날짜 조회)
+=======
+        // StatisticsDTO 객체에 일반민원수 추가
+        return new StatisticsDTO(접수중Count, 처리중Count, 답변완료Count, 미확인Count, 확인완료Count, 전체민원수, 악성민원수, 악성민원비율, 평균처리시간, 일반민원수);
+>>>>>>> 13fde1d (실시간 민원 현황 상세페이지 기능 추가)
     }
+
 
     private double calculateAverageProcessingTime() {
         // 평균 처리 시간 계산 로직 (예시로 1시간 반환)
