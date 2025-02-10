@@ -38,7 +38,7 @@
                 <div sec:authorize="isAuthenticated()">
                     <!-- 알림 영역 -->
                     <div class="notification-container">
-                        <div id="notification-icon" class="notification-bell" th:data-userid="${#authentication.name}">
+                        <div id="notification-icon" class="notification-bell" th:data-userid="${#authentication.name ?: 'anonymous'}">
                             <span id="notification-count" class="badge">0</span>
                             <span class="notification-text">알림</span>
                         </div>
