@@ -22,12 +22,6 @@
     <div class="search-bar">
         <form id="search-form">
             <input type="text" placeholder="검색어를 입력하세요." id="search-input" name="query">
-            <!--            <select id="search-answer-status" name="answerStatus">-->
-            <!--                <option value="all">답변여부(전체)</option>-->
-            <!--                <option value="completed">답변완료</option>-->
-            <!--                <option value="transferred">이송이첩</option>-->
-            <!--                <option value="pending">대기중</option>-->
-            <!--            </select>-->
             <button type="submit" class="search-button">
                 <!-- 새로운 SVG 아이콘 -->
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search" viewBox="0 0 24 24">
@@ -40,11 +34,6 @@
     <table class="post-table">
         <thead>
         <tr>
-            <!--             🔹 번호 대신 체크박스로 변경될 칼럼-->
-            <!--            <th class="checkbox-header" style="display: none;">-->
-            <!--                <input type="checkbox" id="select-all-checkbox">-->
-            <!--            </th>-->
-            <!--            <th id="number-header" class="number-header" style="width: 5%;">번호</th>-->
             <th>번호</th>
             <th>제목</th>
             <th>작성일</th>
@@ -54,19 +43,11 @@
         <tbody id="table-body">
         <tr th:each="notice, iterStat : ${noticeList}">
             <!-- 🔹 번호 칼럼 (삭제 모드에서 체크박스로 변경) -->
-            <!--            <td class="number-column" style="text-align: center;">-->
-            <!--                <input type="checkbox" class="delete-checkbox" th:value="${notice.id}" style="display: none;">-->
-            <!--                <span class="notice-number"-->
-            <!--                      th:text="${(noticeList.number * noticeList.size) + iterStat.index + 1}">-->
-            <!--                </span>-->
-            <!--            </td>-->
             <td class="number-column" style="text-align: center;">
-                <div class="number-cell">
-                    <input type="checkbox" class="delete-checkbox" th:value="${notice.id}" style="display: none;">
-                    <span class="notice-number"
-                          th:text="${(noticeList.number * noticeList.size) + iterStat.index + 1}">
-                    </span>
-                </div>
+                <input type="checkbox" class="delete-checkbox" th:value="${notice.id}" style="display: none;">
+                <span class="notice-number"
+                      th:text="${(noticeList.number * noticeList.size) + iterStat.index + 1}">
+                </span>
             </td>
             <td class="post-title">
                 <a th:href="@{/customer/notice/{id}(id=${notice.id}, page=${noticeList.number + 1})}"
@@ -77,17 +58,6 @@
         </tr>
         </tbody>
     </table>
-    <!--    <div class="top-bar" sec:authorize="hasRole('ROLE_MANAGER')">-->
-    <!--        <div class="button-group">-->
-    <!--            <a class="write-button" th:href="@{/customer/write}">글쓰기</a>-->
-    <!--            <button id="select-button" class="delete-button">삭제</button>-->
-    <!--        </div>-->
-    <!--        <div class="button-group delete-mode-buttons" style="display: none;">-->
-    <!--            <button id="delete-button" class="delete-button">선택 삭제</button>-->
-    <!--            <button id="cancel-button" class="delete-button">취소</button>-->
-    <!--        </div>-->
-    <!--    </div>-->
-
     <!-- 첫번째 페이지로 이동 -->
     <!-- /notice/paging?page=1 -->
     <div class="pagination-container">
@@ -110,7 +80,6 @@
             <!-- 마지막 페이지로 이동 -->
             <a th:href="@{/customer/notice(page=${noticeList.totalPages})}">»</a>
         </div>
-
         <div class="top-bar" sec:authorize="hasRole('ROLE_MANAGER')">
             <div class="button-group">
                 <a class="write-button" th:href="@{/customer/write}">글쓰기</a>
@@ -121,10 +90,8 @@
                 <button id="cancel-button" class="delete-button">취소</button>
             </div>
         </div>
-
     </div>
 </main>
-
-</body>
 <div th:replace="layouts/footer::tellMe_footer"></div>
+</body>
 </html>

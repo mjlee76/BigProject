@@ -7,14 +7,11 @@ body {
     color: #333;
 }
 
-a:-webkit-any-link {
-    text-decoration: none;  /* 기본 밑줄 제거 */
-}
-
 /* 메인 영역
 main {
     position: relative;
         padding-bottom: 80px; /* 버튼 영역을 위한 여백 추가 */
+
 
 /* 공지사항 상단 제목 */
 .notice-header {
@@ -36,6 +33,10 @@ main {
 .notice-header p {
     font-size: 14px;
     color: #666;
+}
+
+#notice-board p {
+    display: none; /* <p> 태그 전체를 숨김 */
 }
 
 /* 게시글 목록 */
@@ -75,6 +76,7 @@ main {
     width: 100%; /* 전체 너비 */
     max-width: 600px; /* 최대 너비 */
     margin: 20px auto; /* 중앙 정렬 */
+    margin-top: 70px;
     border-bottom: 1px solid #333; /* 밑줄 */
 }
 
@@ -88,6 +90,7 @@ main {
     font-size: 14px; /* 글씨 크기 */
     color: #333; /* 기본 글자색 */
     margin-left: 10px; /* 입력 필드 외부의 왼쪽 간격 추가 */
+    margin-bottom: 5px;
 }
 
 .search-input::placeholder {
@@ -161,9 +164,9 @@ main {
 /* 활성화된 탭 스타일 */
 .tab.active {
     background-color: #ffffff;
-    color: #22A9FD;
+    color: #989EFF;
     font-weight: bold;
-    border-bottom: 2px solid #22A9FD;
+    border-bottom: 2px solid #989EFF;
 }
 
 .tab.active::after {
@@ -173,12 +176,12 @@ main {
     left: 0;
     width: 100%;
     height: 2px; /* 활성화된 탭의 밑줄 두께 */
-    background-color: #22A9FD; /* 밑줄 색상 */
+    background-color: #989EFF; /* 밑줄 색상 */
 }
 
 /* 탭 호버 효과 */
 .tab:hover {
-    color: #22A9FD;
+    color: #989EFF;
 }
 
 /* 탭 호버 가상환경경 */
@@ -189,7 +192,7 @@ main {
     left: 0;
     width: 100%;
     height: 1.7px; /* 호버 시 밑줄 두께 */
-    background-color: #22A9FD; /* 밑줄 색상 */
+    background-color: #989EFF; /* 밑줄 색상 */
 }
 
 
@@ -206,6 +209,7 @@ main {
 .post-table th, .post-table td {
     border-top: 1px solid #ddd; /* 가로 선만 남김 */
     border-bottom: 1px solid #ddd;
+    white-space: nowrap;
     padding: 10px; /* 셀 내부 여백을 늘림 */
     text-align: center; /* 모든 셀 중앙 정렬 */
 }
@@ -216,6 +220,7 @@ main {
 
 /* 제목의 링크 스타일 */
 .post-table td a {
+    white-space: nowrap;
     text-decoration: none; /* 밑줄 제거 */
     color: inherit; /* 기본 텍스트 색상 상속 */
 }
@@ -228,7 +233,7 @@ main {
 /* 테이블 맨 위 선 굵게 */
 .post-table thead tr th {
     border-top: 1px solid #333; /* 굵은 검은색 선 */
-    background-color: #F8FCFD ; /* 배경색 */
+    background-color: #FAF8FF ; /* 배경색 */
     padding: 15px;
 }
 
@@ -242,8 +247,9 @@ main {
     font-size: 13px; /* 글씨 크기 조절 */
     /* font-weight: bold; 굵게 */
     text-align: center; /* 중앙 정렬 */
+    white-space: nowrap;
     padding: 10px; /* 여백 */
-    background-color: #F8FCFD; /* 배경색 (필요 시) */
+    background-color: #FAF8FF; /* 배경색 (필요 시) */
     white-space: nowrap;
 
 }
@@ -261,6 +267,7 @@ main {
 .post-table td:nth-child(1) {
     width: 10%; /* 첫 번째 열 너비 */
     font-size: 13px; /* 글씨 크기 조절 */
+    white-space: nowrap;
     /* font-weight: bold; 굵게 */
     text-align: center; /* 중앙 정렬 */
     padding: 10px; /* 여백 */
@@ -271,26 +278,31 @@ main {
 /* 각 열의 너비 조정 */
 .post-table th:nth-child(1), /* 번호 */
 .post-table td:nth-child(1) {
+    white-space: nowrap;
     width: 5%; /* 첫 번째 열 너비 */
 }
 
 .post-table th:nth-child(2), /* 제목 */
 .post-table td:nth-child(2) {
+    white-space: nowrap;
     width: 60%; /* 두 번째 열 너비 */
 }
 
 .post-table th:nth-child(3), /* 작성일 */
 .post-table td:nth-child(3) {
+    white-space: nowrap;
     width: 20%; /* 세 번째 열 너비 */
 }
 
 .post-table th:nth-child(4), /* 조회수 */
 .post-table td:nth-child(4) {
+    white-space: nowrap;
     width: 10%; /* 네 번째 열 너비 */
 }
 
 /* 게시글 목록 스타일 */
 .post-table td {
+    white-space: nowrap;
     font-size: 14px; /* 게시글 목록 글씨 크기 */
     font-weight: normal; /* 목록 글씨 굵기 */
     text-align: center; /* 목록 중앙 정렬 */
@@ -463,7 +475,7 @@ body.delete-mode .notice-number {
     transition: background-color 0.3s ease;
     text-decoration: none;
     font-size: 14px;
-    color: blue;
+    color: #989EFF;
     border-radius: 4px;;
 }
 
@@ -551,6 +563,7 @@ body.delete-mode .delete-mode-buttons {
     color: #000;
 }
 
+
 /* 🔹 페이지네이션 컨테이너 스타일 */
 .pagination-container {
     display: flex;
@@ -567,6 +580,10 @@ body.delete-mode .delete-mode-buttons {
     left: 50%; /* 부모의 50% 위치로 이동 */
     transform: translateX(-50%); /* 정확한 중앙 정렬 */
     display: flex;
-    gap: 5px;
     align-items: center;
+    margin-left: 140px;
+}
+
+.feather feather-search {
+    margin-bottom: 10px;
 }

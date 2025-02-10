@@ -12,14 +12,38 @@ document.addEventListener("DOMContentLoaded", () => {
     const postsPerPage = 10; // 페이지당 표시할 게시글 수
     let filteredPosts = [...allRows]; // 필터링된 게시글 목록
 
+//    // ✅ 삭제 모드 활성화/비활성화 함수
+//    function toggleDeleteMode() {
+//        deleteMode = !deleteMode; // 상태 변경
+//        checkboxes().forEach(checkbox => checkbox.style.display = deleteMode ? "inline-block" : "none");
+//        checkboxColumns.forEach(column => column.style.display = deleteMode ? "table-cell" : "none");
+//        deleteButton.style.display = deleteMode ? "inline-block" : "none";
+//        selectButton.innerText = deleteMode ? "취소" : "삭제";
+//    }
     // ✅ 삭제 모드 활성화/비활성화 함수
     function toggleDeleteMode() {
-        deleteMode = !deleteMode; // 상태 변경
-        checkboxes().forEach(checkbox => checkbox.style.display = deleteMode ? "inline-block" : "none");
-        checkboxColumns.forEach(column => column.style.display = deleteMode ? "table-cell" : "none");
-        deleteButton.style.display = deleteMode ? "inline-block" : "none";
-        selectButton.innerText = deleteMode ? "취소" : "삭제";
+        deleteMode = !deleteMode;
+        document.body.classList.toggle("delete-mode");
+
+        // 체크박스 상태 업데이트
+        checkboxes().forEach(checkbox => {
+            checkbox.style.display = deleteMode ? "block" : "none";
+        });
+
+        // 버튼 그룹 전환 로직 유지
+        const buttonsContainer = document.querySelector('.delete-mode-buttons');
+        const normalButtons = document.querySelector('.button-group:not(.delete-mode-buttons)');
+        if (deleteMode) {
+            normalButtons.style.display = 'none';
+            buttonsContainer.style.display = 'flex';
+        } else {
+            normalButtons.style.display = 'flex';
+            buttonsContainer.style.display = 'none';
+        }
     }
+
+    // 초기화 시 삭제 모드 버튼 숨기기
+    document.querySelector('.delete-mode-buttons').style.display = 'none';
 
     // ✅ 선택된 공지사항 삭제 요청
     function deleteSelectedNotices() {
@@ -105,8 +129,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
         renderPagination(page, totalPages); // 페이지네이션 업데이트
     }
+    // 초기화 시 삭제 모드 버튼 숨기기
+    document.querySelector('.delete-mode-buttons').style.display = 'none';
 
     // ✅ 이벤트 리스너 추가
     selectButton.addEventListener("click", toggleDeleteMode);
     deleteButton.addEventListener("click", deleteSelectedNotices);
+    document.getElementById("cancel-button").addEventListener("click", toggleDeleteMode);
 });
