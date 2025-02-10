@@ -204,7 +204,7 @@ async def check_spam(request: SpamQuestionRequest):
 class FilePath(BaseModel):
     file_path : str
 
-@app.post("/upload/")
+@app.post("/upload")
 async def upload_image(file: FilePath):
     
     file_path = file.file_path
@@ -239,7 +239,7 @@ async def upload_image(file: FilePath):
 
             return {
                 "valid": True,
-                "message" : f"이미지 탐지 결과: {results}",
+                "message" : results,
                 "file_path" : file_path
             }
 
@@ -289,13 +289,13 @@ async def upload_image(file: FilePath):
                 file_location = os.path.join(file_path, file_name)
                 os.remove(file_location)
             return {
-                "valid": False,
-                "message" : "악성 파일로 판단되어 업로드가 차단되었습니다.",
+                "valid": True,
+                "message" : "악성",
                 "file_path" : file_path
             }
 
         return {
             "valid": True,
-            "message" : f"문서 탐지 결과: {content_label}",
+            "message" : content_label,
             "file_path" : file_path
         }

@@ -1,9 +1,7 @@
 package com.bigProject.tellMe.service;
 
-import ch.qos.logback.core.util.COWArrayList;
 import com.bigProject.tellMe.client.api.FastApiClient;
 import com.bigProject.tellMe.client.dto.QuestionApiDTO;
-import com.bigProject.tellMe.config.NotificationEvent;
 import com.bigProject.tellMe.controller.complaint.ComplaintRestController;
 import com.bigProject.tellMe.dto.FilteredDTO;
 import com.bigProject.tellMe.dto.QuestionDTO;
@@ -11,9 +9,7 @@ import com.bigProject.tellMe.dto.ReportDTO;
 import com.bigProject.tellMe.dto.UserDTO;
 import com.bigProject.tellMe.entity.Filtered;
 import com.bigProject.tellMe.entity.Question;
-import com.bigProject.tellMe.entity.Report;
 import com.bigProject.tellMe.entity.User;
-import com.bigProject.tellMe.enumClass.Category;
 import com.bigProject.tellMe.enumClass.Reveal;
 import com.bigProject.tellMe.enumClass.Status;
 import com.bigProject.tellMe.mapper.FilteredMapper;
@@ -27,7 +23,6 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -50,7 +45,6 @@ public class QuestionService {
     @Lazy
     @Autowired
     private ComplaintRestController complaintRestController;
-    private final ApplicationEventPublisher eventPublisher;
 
     private final QuestionMapper questionMapper;
     private final FilteredMapper filteredMapper;
@@ -60,13 +54,35 @@ public class QuestionService {
     private final ReportRepository reportRepository;
 
     private final UserService userService;
+    private final NotificationService notificationService;
 
     public Question save(QuestionDTO questionDTO) {
         Question question = questionMapper.quDTOToQu(questionDTO);
         return questionRepository.save(question);
     }
 
-    public void uploadFileApi(String uploadDir, String fileName) {
+    public String uploadFileApi(String uploadDir) {
+        Map<String, Object> requestBody = new HashMap<>();
+        requestBody.put("file_path", uploadDir);
+        System.out.println("===============uploadFileApi:requestBody"+requestBody);
+        Map<String, Object> responseBody = fastApiClient.getUploadFile(requestBody);
+        System.out.println("===============uploadFileApi:responseBody"+responseBody);
+        String response = "";
+
+        if (responseBody != null && Boolean.TRUE.equals(responseBody.get("valid"))) {
+            if("악성".equals(responseBody.get("message"))) {
+                response = "악성";
+            }else {
+                response = "정상";
+            }
+        }else {
+            if(responseBody.get("message") != null) {
+                response = (String) responseBody.get("message");
+            }else {
+                response = "검증 실패: 유효하지 않은 요청입니다.";
+            }
+        }
+        return response;
     }
 
     public Map<String, Object> spamCheck(Map<String, String> request) {
@@ -177,12 +193,14 @@ public class QuestionService {
                     System.out.println("========SSE TEST============"+userDTO.getUserId());
                     System.out.println("========SSE TEST============"+categoryString);
                     CompletableFuture.runAsync(() -> reportApi(responseBody));
+
 //                    complaintRestController.sendNotification(userDTO.getUserId(),
 //                                "악성민원이 감지되었습니다. 사유 : " + categoryString);
-                    eventPublisher.publishEvent(new NotificationEvent(userDTO.getUserId(), "악성민원이 감지되었습니다. 사유 : " + categoryString));
                 }
                 questionDTO.setStatus(Status.접수중);
                 questionRepository.save(questionMapper.quDTOToQu(questionDTO));
+                // 알림 저장
+                notificationService.createNotification(questionDTO.getUserId(), "악성민원이 감지되었습니다. 사유 : " + categoryString);
 
                 //complaintRestController.sendRefreshEvent();
             }
