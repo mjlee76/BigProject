@@ -377,10 +377,10 @@ public class QuestionService {
 
     public long countTodayCategoryNotNormal() {
         LocalDate today = LocalDate.now();
-        return questionRepository.countByCategoryNotAndCreateDateBetween(
-                Category.정상, today.atStartOfDay(), today.atTime(23, 59, 59)
-        );
+        return questionRepository.countByCategoryNotAndCreateDateBetween("정상", today.atStartOfDay(), today.atTime(23, 59, 59));
     }
+
+
 
     public Map<String, List<Long>> countQuestionsAndMaliciousByHour(LocalDate today) {
         List<Long> normalCounts = new ArrayList<>();
@@ -392,11 +392,11 @@ public class QuestionService {
 
 
             // 일반 민원 수 조회 (category가 정상인 경우)
-            long normalCount = questionRepository.countByCategoryAndCreateDateBetween(Category.정상, startOfHour, endOfHour);
+            long normalCount = questionRepository.countByCategoryAndCreateDateBetween("정상", startOfHour, endOfHour);
             normalCounts.add(normalCount);
 
             // 악성 민원 수 조회 (정상이 아닌 카테고리)
-            long maliciousCount = questionRepository.countByCategoryNotAndCreateDateBetween(Category.정상, startOfHour, endOfHour);
+            long maliciousCount = questionRepository.countByCategoryNotAndCreateDateBetween("정상", startOfHour, endOfHour);
             maliciousCounts.add(maliciousCount);
         }
 
