@@ -236,7 +236,7 @@ async def upload_image(file: FilePath):
             if nsfw_score is not None and nsfw_score > 0.7:
                 results = "악성"
             else : results = "정상"
-
+            os.remove(file_location)
             return {
                 "valid": True,
                 "message" : results,
