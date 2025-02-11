@@ -1,6 +1,6 @@
 package com.bigProject.tellMe.entity;
 
-import com.bigProject.tellMe.enumClass.Role;
+import com.bigProject.tellMe.enumClass.Status;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -15,48 +15,26 @@ import java.time.LocalDateTime;
 @Getter
 @ToString
 @EntityListeners(AuditingEntityListener.class) // TellMeApplication 에 EnableJpaAuditing 를 활용해서 Auditing 기능을 활성화 해줬지만 EntityListeners를 활용해서 이 클래스에서 활성화한다고 명시적으로 지정을 해줘야 한다.
-public class User {
+public class Notification {
 
-    @Id @GeneratedValue(strategy=GenerationType.IDENTITY)
-    @Column
+    @Id @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @Column(name = "notification_id")
     private Long id;
 
-    @Column(unique = true, nullable = false)
-    private String userId;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @Column(nullable = false)
-    private String userName;
+    private String message;
 
     @Column(nullable = false)
-    private String password;
-
-    @Column(unique = true, nullable = false)
-    private String email;
-
-    @Column(unique = true, nullable = false)
-    private String phone;
-
-    @Column(nullable = false)
-    private String address;
-
-    @Column(nullable = false)
-    private String gender;
-
-    @Column(nullable = false)
-    private String birthDate;
-
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private Role role;
+    private boolean isRead = false;
 
     @CreatedDate
     private LocalDateTime createDate;
 
-    @PrePersist
-    public void setDefaultValues() {
-
-        if(this.role == null) {
-            this.role = Role.ROLE_USER;
-        }
+    public void markAsRead() {
+        this.isRead = true;
     }
 }

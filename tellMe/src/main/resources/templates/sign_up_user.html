@@ -1,3 +1,146 @@
+<!--<!DOCTYPE html>-->
+<!--<html xmlns:th="http://www.thymeleaf.org">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">-->
+<!--    <title>signup</title>-->
+<!--    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">-->
+<!--    <link rel="stylesheet" type="text/css" th:href="@{/css/sign_up_user.css}" />-->
+<!--    <link rel="icon" type="image/x-icon" th:href="@{/image/favicon.png}">-->
+<!--    <script src="https://code.jquery.com/jquery-3.6.3.js"></script>-->
+<!--    <script type="text/javascript" th:src="@{/js/common.js}"></script>-->
+<!--    <script type="text/javascript" th:src="@{/js/sign_up_user.js}"></script>-->
+<!--    <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>-->
+<!--    <script type="text/javascript">-->
+<!--        function checkNameUnique(form){-->
+<!--          url = "[[@{/user/check/unique}]]";-->
+<!--          console.log(url);-->
+
+<!--          userId=$("#userId").val();-->
+<!--          password=$("#password").val();-->
+<!--          phone=$("#phone").val();-->
+<!--          email=$("#email").val();-->
+<!--          csrfValue=$("input[name='_csrf']").val();-->
+
+<!--          params={userId:userId,password:password,phone:phone,email:email,_csrf: csrfValue};-->
+
+<!--          $.post(url,params,function(response){-->
+<!--              if(response == "중복없음"){-->
+<!--                  form.submit();-->
+<!--              }else if(response == "아이디중복"){-->
+<!--                  showToast("Warning","아이디가 이미 존재합니다. 다른 아이디를 입력하세요!");-->
+<!--              }else if(response == "비밀번호중복"){-->
+<!--                  showToast("Warning","비밀번호가 이미 존재합니다. 다른 비밀번호를 입력하세요!");-->
+<!--              }else if(response == "핸드폰중복"){-->
+<!--                  showToast("Warning","핸드폰 번호가 이미 존재합니다. 다른 핸드폰 번호를 입력하세요!");-->
+<!--              }else if(response == "이메일중복"){-->
+<!--                   showToast("Warning","이메일이 이미 존재합니다. 다른 이메일을 입력하세요!");-->
+<!--              }else{-->
+<!--                  showToast("Error","Unknown response from server");-->
+<!--              }-->
+<!--          }).fail(function(){-->
+<!--              showToast("Error","Could not connect to the server");-->
+<!--          });-->
+<!--          return false;-->
+<!--        }-->
+<!--        function showToast(type, message) {-->
+<!--          const toast = document.getElementById("toastMessage");-->
+<!--          toast.textContent = message;  // 메시지 내용 설정-->
+<!--          toast.className = "toast show " + type;  // 타입에 따른 클래스 추가-->
+
+<!--          // 3초 후에 메시지 숨기기-->
+<!--          setTimeout(function() {-->
+<!--              toast.className = toast.className.replace("show", ""); // 숨기기-->
+<!--          }, 3000); // 3초 동안 표시-->
+<!--        }-->
+<!--    </script>-->
+
+<!--</head>-->
+<!--<body>-->
+<!--<div style="color:red;" id="toastMessage" class="toast"></div>-->
+<!--<div class="main-container">-->
+<!--    &lt;!&ndash; Left Section &ndash;&gt;-->
+<!--    &lt;!&ndash;  <div class="left-section">&ndash;&gt;-->
+<!--    &lt;!&ndash;    <img th:src = "@{/image/signup_image.jpg}">&ndash;&gt;-->
+<!--    &lt;!&ndash;  </div>&ndash;&gt;-->
+
+<!--    &lt;!&ndash; Right Section &ndash;&gt;-->
+<!--    <div class="right-section">-->
+<!--        <form th:action="@{/user/save}" th:object="${user}" method="post" onsubmit="return checkNameUnique(this)">-->
+<!--            <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>-->
+<!--            <input type="hidden" th:field="*{id}"/>-->
+<!--            <h2>회원가입</h2>-->
+<!--            <div class="form-group">-->
+<!--          <span class="icon">-->
+<!--            <img th:src = "@{/image/person_purple.png}">-->
+<!--          </span>-->
+<!--                <input type="text" placeholder = "아이디" th:field="*{userId}" minlength="4" maxlength="20" required>-->
+<!--            </div>-->
+<!--            <div class="form-group">-->
+<!--          <span class="icon">-->
+<!--            <img th:src = "@{/image/pw_purple2.png}">-->
+<!--          </span>-->
+<!--                <input type="password" placeholder="비밀번호" th:field="*{password}" minlength="4" maxlength="20" required>-->
+<!--            </div>-->
+<!--            <div class="form-group">-->
+<!--          <span class="icon">-->
+<!--            <img th:src = "@{/image/email_purple.png}">-->
+<!--          </span>-->
+<!--                <input type="text" placeholder="이메일" th:field="*{email}" required>-->
+<!--            </div>-->
+<!--            <div class="form-group">-->
+<!--          <span class="icon">-->
+<!--            <img th:src = "@{/image/person_purple.png}">-->
+<!--          </span>-->
+<!--                <input type="text" placeholder="이름" th:field="*{userName}" required>-->
+<!--            </div>-->
+<!--            <div class="form-group">-->
+<!--          <span class="icon">-->
+<!--            <img th:src = "@{/image/calendar_purple.png}">-->
+<!--          </span>-->
+<!--                <input type="text" th:field="*{birthDate}" placeholder="생년월일 8자리" minlength="8" maxlength="8" required>-->
+<!--            </div>-->
+<!--            <div class="form-group">-->
+<!--          <span class="icon">-->
+<!--            <img th:src = "@{/image/address_purple.png}">-->
+<!--          </span>-->
+<!--                <input type="text" id="address" th:field="*{address}" placeholder="주소" required readonly>-->
+<!--            </div>-->
+<!--            <div class="form-group">-->
+<!--          <span class="icon">-->
+<!--            <img th:src = "@{/image/arrow_purple.png}">-->
+<!--          </span>-->
+<!--                <input type="text_detail" placeholder="상세주소" required>-->
+<!--            </div>-->
+<!--            <div class="form-group gender-group">-->
+<!--                <input type="radio" th:field="*{gender}" name="gender" id="male" value="M">-->
+<!--                <label for="male">남성</label>-->
+<!--                <input type="radio" th:field="*{gender}" name="gender" id="female" value="W">-->
+<!--                <label for="female">여성</label>-->
+<!--            </div>-->
+<!--            <div class="form-group">-->
+<!--          <span class="icon">-->
+<!--            <img th:src = "@{/image/phone_purple.png}">-->
+<!--          </span>-->
+<!--                <input type="text" th:field="*{phone}" placeholder="전화번호 (' - '는 생략해주세요)" required>-->
+<!--            </div>-->
+<!--            <div class="terms-agreement">-->
+<!--                <input type="checkbox" id="agree" name="agree" required>-->
+<!--                <p class="terms">-->
+<!--                    서비스 <a th:href="@{/user/UseTerms}" target="_blank">이용약관</a> 및 <a th:href="@{/user/terms}" target="_blank">개인정보 처리방침</a>에 동의합니다.-->
+<!--                </p>-->
+<!--            </div>-->
+<!--            <button type="submit">회원가입</button>-->
+
+<!--        </form>-->
+<!--        <div class="link">-->
+<!--            <a th:href="@{/}">홈으로</a>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
+<!--</body>-->
+<!--</html>-->
+
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -83,33 +226,40 @@
                 <input type="password" placeholder="비밀번호" th:field="*{password}" minlength="4" maxlength="20" required>
             </div>
             <div class="form-group">
-          <span class="icon">
-            <img th:src = "@{/image/email_purple.png}">
-          </span>
-                <input type="text" placeholder="이메일" th:field="*{email}" required>
+                <span class="icon">
+                  <img th:src="@{/image/pw_purple2.png}">
+                </span>
+                <input type="password" id="confirmPassword" placeholder="비밀번호 확인" required>
+            </div>
+            <span id="passwordMismatch" class="error-message" style="display: none; color: red;">비밀번호가 일치하지 않습니다.</span>
+            <div class="form-group">
+                  <span class="icon">
+                    <img th:src = "@{/image/email_purple.png}">
+                  </span>
+                <input type="email" placeholder="이메일" th:field="*{email}" required>
             </div>
             <div class="form-group">
-          <span class="icon">
-            <img th:src = "@{/image/person_purple.png}">
-          </span>
+                  <span class="icon">
+                    <img th:src = "@{/image/person_purple.png}">
+                  </span>
                 <input type="text" placeholder="이름" th:field="*{userName}" required>
             </div>
             <div class="form-group">
-          <span class="icon">
-            <img th:src = "@{/image/calendar_purple.png}">
-          </span>
+                  <span class="icon">
+                    <img th:src = "@{/image/calendar_purple.png}">
+                  </span>
                 <input type="text" th:field="*{birthDate}" placeholder="생년월일 8자리" minlength="8" maxlength="8" required>
             </div>
             <div class="form-group">
-          <span class="icon">
-            <img th:src = "@{/image/address_purple.png}">
-          </span>
+                  <span class="icon">
+                    <img th:src = "@{/image/address_purple.png}">
+                  </span>
                 <input type="text" id="address" th:field="*{address}" placeholder="주소" required readonly>
             </div>
             <div class="form-group">
-          <span class="icon">
-            <img th:src = "@{/image/arrow_purple.png}">
-          </span>
+                  <span class="icon">
+                    <img th:src = "@{/image/arrow_purple.png}">
+                  </span>
                 <input type="text_detail" placeholder="상세주소" required>
             </div>
             <div class="form-group gender-group">
@@ -119,9 +269,9 @@
                 <label for="female">여성</label>
             </div>
             <div class="form-group">
-          <span class="icon">
-            <img th:src = "@{/image/phone_purple.png}">
-          </span>
+                  <span class="icon">
+                    <img th:src = "@{/image/phone_purple.png}">
+                  </span>
                 <input type="text" th:field="*{phone}" placeholder="전화번호 (' - '는 생략해주세요)" required>
             </div>
             <div class="terms-agreement">

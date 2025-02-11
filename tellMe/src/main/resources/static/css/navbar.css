@@ -173,6 +173,20 @@
     margin-top: 3px;
 }
 
+/* 알림 배지 */
+.badge {
+    background-color: red;
+    color: white;
+    font-size: 10px;
+    font-weight: bold;
+    padding: 3px 6px;
+    border-radius: 50%;
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    display: none; /* 초기 상태 숨김 */
+}
+
 /* 호버 효과 */
 .notification-bell:hover {
     transform: scale(1.1);
@@ -187,8 +201,8 @@
     padding: 3px 6px;
     border-radius: 50%;
     position: absolute;
-    top: 6px;
-    right: 6px;
+    top: 5px;
+    right: 5px;
     transform: translate(50%, -50%); /* 아이콘 오른쪽 위에 배치 */
     display: block; /* 항상 보이도록 설정 */
 }
@@ -224,6 +238,13 @@
     color: #333;
     padding: 10px;
     border-bottom: 1px solid #ddd;
+    cursor: pointer;
+}
+
+/* ✅ 읽음 상태일 때 어둡게 표시 */
+.notification-box ul li.read {
+    background: #e0e0e0;
+    color: #777;
 }
 
 .notification-box ul li:last-child {
@@ -232,7 +253,6 @@
 
 .notification-box ul li:hover {
     background: #f4f4f4;
-    cursor: pointer;
 }
 
 
@@ -257,4 +277,3 @@
 .auth-link:hover {
     transform: scale(1.1);
 }
-

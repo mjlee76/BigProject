@@ -8,7 +8,6 @@
     <link rel="icon" type="image/x-icon" th:href="@{/image/favicon.png}">
     <script src="https://code.jquery.com/jquery-3.6.3.js"></script>
     <script type="text/javascript" th:src="@{/js/common.js}"></script>
-    <script type="text/javascript" th:src="@{/js/navbar.js}"></script>
 </head>
 <body>
 <header th:fragment="tellMe_header">
@@ -39,19 +38,15 @@
                 </div>
                 <div sec:authorize="isAuthenticated()">
                     <!-- 알림 영역 -->
-                    <div class="notification-container" sec:authorize="hasRole('ROLE_USER')">
-                        <div id="notification-icon" class="notification-bell" th:data-userid="${#authentication.name}">
+                    <div class="notification-container">
+                        <div id="notification-icon" class="notification-bell" th:data-userid="${#authentication.name ?: 'anonymous'}">
                             <span id="notification-count" class="badge">0</span>
                             <span class="notification-text">알림</span>
                         </div>
                         <!-- 알림 메시지 박스 -->
                         <div id="notification-box" class="notification-box" style="display: none;">
                             <ul id="notification-list">
-                                <li>새로운 알림이 없습니다.</li>
-                                <li>새로운 알림이 없습니다.</li>
-                                <li>새로운 알림이 없습니다.</li>
-                                <li>새로운 알림이 없습니다.</li>
-                                <li>새로운 알림이 없습니다.</li>
+                                <li class="no-notification">새로운 알림이 없습니다.</li>
                             </ul>
                         </div>
                     </div>

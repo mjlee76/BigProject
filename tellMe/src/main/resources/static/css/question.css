@@ -61,10 +61,11 @@ a:-webkit-any-link {
 
 /* 드롭다운 메뉴 */
 .search-bar select {
-    padding: 5px;
+    padding: 0px 5px 5px 5px;
     border: 1px solid #ffffff;
     font-size: 14px;
 }
+
 .search-bar select option {
     padding: 10px; /* 리스트 아이템 간격 */
     background-color: #fff; /* 드롭다운 아이템 배경 */

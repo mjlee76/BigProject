@@ -23,5 +23,4 @@ public class UserDTO {
     private Role role;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createDate;
-    private Integer count;
 }

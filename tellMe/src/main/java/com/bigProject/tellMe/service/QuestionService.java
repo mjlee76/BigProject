@@ -9,9 +9,7 @@ import com.bigProject.tellMe.dto.ReportDTO;
 import com.bigProject.tellMe.dto.UserDTO;
 import com.bigProject.tellMe.entity.Filtered;
 import com.bigProject.tellMe.entity.Question;
-import com.bigProject.tellMe.entity.Report;
 import com.bigProject.tellMe.entity.User;
-import com.bigProject.tellMe.enumClass.Category;
 import com.bigProject.tellMe.enumClass.Reveal;
 import com.bigProject.tellMe.enumClass.Status;
 import com.bigProject.tellMe.mapper.FilteredMapper;
@@ -60,10 +58,35 @@ public class QuestionService {
     private final ReportRepository reportRepository;
 
     private final UserService userService;
+    private final NotificationService notificationService;
 
     public Question save(QuestionDTO questionDTO) {
         Question question = questionMapper.quDTOToQu(questionDTO);
         return questionRepository.save(question);
+    }
+
+    public String uploadFileApi(String uploadDir) {
+        Map<String, Object> requestBody = new HashMap<>();
+        requestBody.put("file_path", uploadDir);
+        System.out.println("===============uploadFileApi:requestBody"+requestBody);
+        Map<String, Object> responseBody = fastApiClient.getUploadFile(requestBody);
+        System.out.println("===============uploadFileApi:responseBody"+responseBody);
+        String response = "";
+
+        if (responseBody != null && Boolean.TRUE.equals(responseBody.get("valid"))) {
+            if("악성".equals(responseBody.get("message"))) {
+                response = "악성";
+            }else {
+                response = "정상";
+            }
+        }else {
+            if(responseBody.get("message") != null) {
+                response = (String) responseBody.get("message");
+            }else {
+                response = "검증 실패: 유효하지 않은 요청입니다.";
+            }
+        }
+        return response;
     }
 
     public Map<String, Object> spamCheck(Map<String, String> request) {
@@ -127,7 +150,7 @@ public class QuestionService {
             ObjectNode userNode = objectMapper.createObjectNode();
             userNode.put("user_name", userDTO.getUserName());
             userNode.put("phone", userDTO.getPhone());
-            userNode.put("count", userDTO.getCount());
+            //userNode.put("count", userDTO.getCount());
             //ObjectNode를 `Map<String, Object>`로 변환
             Map<String, Object> userMap = objectMapper.convertValue(userNode, Map.class);
 
@@ -171,16 +194,19 @@ public class QuestionService {
                     categoryString = String.join(",", responseCategories);
                     //가져오는 법 : Arrays.asList(question.getCategory().split(","))
                     questionDTO.setCategory(categoryString);
+                    System.out.println("========SSE TEST============"+userDTO.getUserId());
+                    System.out.println("========SSE TEST============"+categoryString);
+                    CompletableFuture.runAsync(() -> reportApi(responseBody));
+
+//                    complaintRestController.sendNotification(userDTO.getUserId(),
+//                                "악성민원이 감지되었습니다. 사유 : " + categoryString);
                 }
                 questionDTO.setStatus(Status.접수중);
                 questionRepository.save(questionMapper.quDTOToQu(questionDTO));
+                // 알림 저장
+                notificationService.createNotification(questionDTO.getUserId(), "악성민원이 감지되었습니다. 사유 : " + categoryString);
 
-                //complaintRestController.sendNotification(userDTO.getUserId(), "악성민원이 감지되어 게시글이 수정되었습니다. 사유 : " + categoryString);
-                complaintRestController.sendRefreshEvent();
-
-                if("악성".equals(responseBody.get("message"))) {
-                    CompletableFuture.runAsync(() -> reportApi(responseBody));
-                }
+                //complaintRestController.sendRefreshEvent();
             }
             return CompletableFuture.completedFuture(null);
         }catch (Exception e) {
@@ -236,7 +262,13 @@ public class QuestionService {
             questionRepository.save(question); // 변경된 엔티티 저장
 
             // Question를 QuestionDTO로 변환
-            return QuestionDTO.toQuestionDTO(question); // 문의 조회를 위한 DTO반환
+            QuestionDTO questionDTO = QuestionDTO.toQuestionDTO(question);
+            if(question.getFiltered().getId() != null) {
+                questionDTO.setFilterTitle(question.getFiltered().getTitle());
+                questionDTO.setFilterContent(question.getFiltered().getContent());
+            }
+
+            return questionDTO; // 문의 조회를 위한 DTO반환
         } else {
             throw new IllegalArgumentException("Question not found with ID: " + id);
         }
@@ -291,7 +323,9 @@ public class QuestionService {
                 question.getCreateDate(),
                 question.getViews(),
                 question.getUser().getUserName(),
-                question.getStatus()
+                question.getStatus(),
+                question.getFiltered() != null ? question.getFiltered().getTitle() : null,  // ✅ filtered가 null이면 null 반환
+                question.getFiltered() != null ? question.getFiltered().getContent() : null // ✅ filtered가 null이면 null 반환
         ));
     }
 
