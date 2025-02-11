@@ -247,33 +247,13 @@ main {
     font-size: 13px; /* 글씨 크기 조절 */
     /* font-weight: bold; 굵게 */
     text-align: center; /* 중앙 정렬 */
-    white-space: nowrap;
     padding: 10px; /* 여백 */
     background-color: #FAF8FF; /* 배경색 (필요 시) */
     white-space: nowrap;
 
 }
 /* 각 열의 너비 조정 */
-.post-table th:nth-child(1) {
-    width: 10%; /* 첫 번째 열 너비 */
-    font-size: 13px; /* 글씨 크기 조절 */
-    /* font-weight: bold; 굵게 */
-    text-align: center; /* 중앙 정렬 */
-    padding: 10px; /* 여백 */
-    background-color: #F8FCFD; /* 배경색 (필요 시) */
 
-}
-
-.post-table td:nth-child(1) {
-    width: 10%; /* 첫 번째 열 너비 */
-    font-size: 13px; /* 글씨 크기 조절 */
-    white-space: nowrap;
-    /* font-weight: bold; 굵게 */
-    text-align: center; /* 중앙 정렬 */
-    padding: 10px; /* 여백 */
-    background-color: #fff; /* 배경색 (필요 시) */
-
-}
 
 /* 각 열의 너비 조정 */
 .post-table th:nth-child(1), /* 번호 */
