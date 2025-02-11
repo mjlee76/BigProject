@@ -185,6 +185,7 @@ class MakeReport():
         prompt = (
             "당신은 민원에 대한 처리를 하는 상담사입니다. 특이민원이 발생하여 이에 대한 보고서를 작성해야합니다."
             "다음 문장을 보고 특이민원 발생요지에 대해서 6하원칙에 따라 핵심내용 위주만 간략하게 작성해주세요"
+            "예) 폭언, 욕설이 담겨져있는 내용 민원글 작성"
             f"판단할 내용 : {full_text}"
             )
         try:
@@ -272,12 +273,7 @@ class LoadDocumentFile:
         elif ext in [".doc", ".docx"]:
             loader = Docx2txtLoader(docu_path)
         elif ext == ".txt":
-            text_loader_kwargs = {"autodetect_encoding": True}
-            loader = DirectoryLoader(docu_file_path, glob="**/*.txt",
-                    loader_cls=TextLoader,
-                    silent_errors=True,
-                    loader_kwargs=text_loader_kwargs,
-                    )
+            loader = TextLoader(docu_path, autodetect_encoding=True)
         else: 
             raise ValueError(f"지원되지 않는 파일 형식: {ext}")
         data = loader.load()

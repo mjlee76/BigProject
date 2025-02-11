@@ -23,13 +23,6 @@ def read_root():
     return {"Hello": "World"}
 
 # Setting environment
-@app.on_event("startup")
-async def startup_event():
-    global api_key, llm
-    path = "./api_key.txt"
-    api_key = await bm.load_api_key(path)
-    os.environ["OPENAI_API_KEY"] = api_key
-    llm = await bm.selecting_model(api_key)
     
 model_path = "./20250204_roberta 파인튜닝"
 file_path = os.getcwd()
@@ -47,11 +40,22 @@ report = MakeReport()
 docu_loader = LoadDocumentFile()
 logger = logging.getLogger("my_logger")
 
+@app.on_event("startup")
+async def startup_event():
+    global api_key, llm
+    path = "./api_key.txt"
+    api_key = await bm.load_api_key(path)
+    os.environ["OPENAI_API_KEY"] = api_key
+    llm = await bm.selecting_model(api_key)
+    await docu_loader.init()
+    await changetexter.init()
+    await spam_detector.init()
+    await report.init()
+
 #게시글 작성자 정보
 class UserInfo(BaseModel):
     user_name: str
     phone : str
-    count : int
 
 # 게시글 정보
 class PostBody(BaseModel):
@@ -97,7 +101,6 @@ async def update_item(data: CombinedModel):
     try:
         post_data = data.post_data
         report_req = data.report_req
-
         title = post_data.title
         content = post_data.content
         post_origin_data = dict(제목=title, 내용=content) # 원문데이터 저장용
@@ -107,7 +110,7 @@ async def update_item(data: CombinedModel):
         title_label = classifier.classify_text(title)
         content_label = classifier.classify_text(content)
         
-        await changetexter.init()
+        # await changetexter.init()
         result = {}
         if title_label != '정상' or content_label != '정상':
             if title_label != '정상' and content_label == '정상':
@@ -162,7 +165,6 @@ async def update_item(data: CombinedModel):
 async def make_report(data: CombinedModel):
         post_data, report_req = data.post_data, data.report_req
         if report_req.category != "정상":
-            await report.init()
             report.report_prompt(report_req)
             report.cell_fill(post_data, report_req)
             time, output_file = report.report_save()
@@ -184,7 +186,6 @@ async def check_spam(request: SpamQuestionRequest):
     try:
         post = request.post_data
         questions = request.question_data.question
-        await spam_detector.init()
         spam = await spam_detector.async_check_spam_and_store(post, questions)
         return {
             "valid" : True,
@@ -262,15 +263,12 @@ async def upload_image(file: FilePath):
                 "message" : "유효한 문서 파일이 아닙니다.",
                 "file_path" : file_path
                 }
-        elif file_name.lower().endswith(".txt"):
-             file_location = file_path
 
         chroma = Chroma("fewshot_chat", OpenAIEmbeddings())
         data = await docu_loader.select_loader(file_location)
-        await docu_loader.init()
         llm_chain = await docu_loader.make_llm_text(data)
         combined_text = " ".join(llm_chain)
-        
+        print(combined_text)
         if not combined_text:
             return {
                 "valid": False,
@@ -280,13 +278,7 @@ async def upload_image(file: FilePath):
         
         content_label = await docu_loader.make_classify_text(combined_text)
         if content_label != '정상':
-            if file_name.lower().endswith((".hwp", ".hwpx", ".doc", ".docx", ".pdf")):
-                os.remove(file_location)
-            elif file_name.lower().endswith(".txt"):
-                file_path = file.file_path
-                filenames = os.listdir(file_path)
-                file_name = filenames[0]
-                file_location = os.path.join(file_path, file_name)
+            if file_name.lower().endswith((".hwp", ".hwpx", ".doc", ".docx", ".pdf",".txt")):
                 os.remove(file_location)
             return {
                 "valid": True,
@@ -294,14 +286,7 @@ async def upload_image(file: FilePath):
                 "file_path" : file_path
             }
         else:
-            if file_name.lower().endswith((".hwp", ".hwpx", ".doc", ".docx", ".pdf")):
-                os.remove(file_location)
-            elif file_name.lower().endswith(".txt"):
-                file_path = file.file_path
-                filenames = os.listdir(file_path)
-                file_name = filenames[0]
-                file_location = os.path.join(file_path, file_name)
-                os.remove(file_location)
+            os.remove(file_location)
             return {
                 "valid": True,
                 "message" : "정상",
