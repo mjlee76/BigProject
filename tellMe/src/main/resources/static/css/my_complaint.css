@@ -33,7 +33,6 @@ body {
 /* 사이드바 */
 .sidebar {
     width: 280px;
-    height: 320px;
     background: var(--sidebar-bg);
     padding: 20px;
     margin-left: 150px;
