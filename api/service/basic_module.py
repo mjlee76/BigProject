@@ -42,7 +42,7 @@ async def selecting_model(api_key):
 #3. 모델 프롬프트 출력
 class TextClassifier:
     def __init__(self):
-        model_path = "./20250204_roberta 파인튜닝_final"
+        model_path = "./20250204_roberta 파인튜닝"
         self.model = AutoModelForSequenceClassification.from_pretrained(model_path)
         self.tokenizer = AutoTokenizer.from_pretrained("klue/roberta-base")
 
