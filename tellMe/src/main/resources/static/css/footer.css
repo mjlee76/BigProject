@@ -1,3 +1,7 @@
+a:-webkit-any-link {
+    text-decoration: none;  /* 기본 밑줄 제거 */
+}
+
 .footer {
     width: 100vw; /* 뷰포트 전체 너비 */
     display: flex;
