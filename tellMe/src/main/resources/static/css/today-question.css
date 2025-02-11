@@ -10,7 +10,7 @@ body {
     text-align: left; /* 중앙 정렬 */
     margin-bottom: 30px; /* 아래 간격 */
     padding: 30px 10%; /* 상하 여백과 좌우 패딩 */
-    background-color: #f4f4f4; /* 배경색 */
+    background-color: white; /* 배경색 */
 }
 
 .report-header h1 {
@@ -28,7 +28,7 @@ body {
 .tabs {
     display: flex;
     border-bottom: 1px solid #e0e0e0;
-    margin-bottom: 63px;
+
     position: sticky; /* 스크롤 시 상단에 고정 */
     top: 0; /* 상단에서의 고정 위치 */
     z-index: 10; /* 다른 요소 위에 표시되도록 설정 */
