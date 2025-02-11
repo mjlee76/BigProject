@@ -5,7 +5,8 @@
 <head th:replace="layouts/footer::tellMe_foot"/>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title th:text="${question.title}"></title>
+    <title th:if="${question.filterTitle.isEmpty()}" th:text="${question.title}"></title>
+    <title th:if="${!question.filterTitle.isEmpty()}" th:text="${question.filterTitle}"></title>
     <link rel="stylesheet" type="text/css" th:href="@{/css/question-detail.css}" />
     <script th:src="@{/js/question-detail.js}" defer></script>
 </head>
@@ -19,8 +20,11 @@
             <th>번호</th>
             <td th:text="${question.id}"></td>
             <th>제목</th>
-            <td colspan="3">
+            <td colspan="3" th:if="${question.filterTitle.isEmpty()}">
                 <span th:text="${question.title}"></span>
+            </td>
+            <td colspan="3" th:if="${!question.filterTitle.isEmpty()}">
+                <span th:text="${question.filterTitle}"></span>
             </td>
         </tr>
         <tr>
@@ -80,8 +84,11 @@
             </td>
         </tr>
         <tr>
-            <td colspan="6">
+            <td colspan="6" th:if="${question.filterContent.isEmpty()}">
                 <span th:text="${question.content}" class="content-text">게시글 내용을 불러오는 중...</span>
+            </td>
+            <td colspan="6" th:if="${!question.filterContent.isEmpty()}">
+                <span th:text="${question.filterContent}" class="content-text">게시글 내용을 불러오는 중...</span>
             </td>
         </tr>
     </table>

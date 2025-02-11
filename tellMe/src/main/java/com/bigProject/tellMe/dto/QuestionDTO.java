@@ -56,7 +56,7 @@ public class QuestionDTO {
         QuestionDTO questionDTO = new QuestionDTO();
         questionDTO.setId(question.getId());
         questionDTO.setUserId(question.getUser().getId()); // ?
-        //questionDTO.setUserName(question.getUser().getUserName()); // userName 설정
+        questionDTO.setUserName(question.getUser().getUserName()); // userName 설정
         questionDTO.setTitle(question.getTitle());
         questionDTO.setContent(question.getContent());
         questionDTO.setCreateDate(question.getCreateDate());
