@@ -1,6 +1,7 @@
 package com.bigProject.tellMe.controller.complaint;
 
 import com.bigProject.tellMe.config.FileUpLoadUtil;
+import com.bigProject.tellMe.dto.NotificationDTO;
 import com.bigProject.tellMe.dto.UserDTO;
 import com.bigProject.tellMe.entity.User;
 import com.bigProject.tellMe.service.NotificationService;
@@ -73,9 +74,10 @@ public class ComplaintRestController {
     }
 
     @GetMapping("/{userId}")
-    public List<String> getNotifications(@PathVariable String userId) {
+    public ResponseEntity<List<NotificationDTO>> getNotifications(@PathVariable String userId) {
         UserDTO user = userService.findByUserId(userId);
-        return notificationService.getNotificationsForUser(user.getId());
+        List<NotificationDTO> notifications = notificationService.getNotificationsForUser(user.getId());
+        return ResponseEntity.ok(notifications);
 //        SseEmitter emitter = new SseEmitter(60 * 1000L); // 1분 타임아웃
 //
 //        emitter.onCompletion(() -> emitters.remove(userId, emitter));
@@ -98,4 +100,13 @@ public class ComplaintRestController {
 //            }
 //        }
 //    }
+
+
+    // ✅ 알림 클릭 시 isRead 값을 true로 변경
+    @PostMapping("/markAsRead")
+    public ResponseEntity<Void> markAsRead(@RequestBody NotificationDTO notificationDTO) {
+        System.out.println("===========markAsRead : "+notificationDTO);
+        notificationService.markAsRead(notificationDTO);
+        return ResponseEntity.ok().build();
+    }
 }
