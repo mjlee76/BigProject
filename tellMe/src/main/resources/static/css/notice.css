@@ -8,6 +8,11 @@ body {
     color: #333;
 }
 
+<<<<<<< HEAD
+a:-webkit-any-link {
+    text-decoration: none;  /* 기본 밑줄 제거 */
+}
+
 /* 공지사항 상단 제목 */
 .notice-header {
     display: flex;
@@ -246,6 +251,7 @@ body {
 
 }
 /* 각 열의 너비 조정 */
+<<<<<<< HEAD
 .post-table th:nth-child(1) {
     width: 10%; /* 첫 번째 열 너비 */
     font-size: 13px; /* 글씨 크기 조절 */
@@ -262,6 +268,9 @@ body {
     text-align: center; /* 중앙 정렬 */
     padding: 10px; /* 여백 */
 }
+=======
+
+>>>>>>> 04596d2 (통계 csv 다운 기능 추가)
 
 /* 각 열의 너비 조정 */
 .post-table th:nth-child(1), /* 번호 */

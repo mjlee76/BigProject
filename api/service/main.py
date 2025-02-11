@@ -206,6 +206,7 @@ class FilePath(BaseModel):
 
 @app.post("/upload")
 async def upload_image(file: FilePath):
+    print(123)
     
     file_path = file.file_path
     filenames = os.listdir(file_path)
@@ -293,17 +294,8 @@ async def upload_image(file: FilePath):
                 "message" : "악성",
                 "file_path" : file_path
             }
-        else:
-            if file_name.lower().endswith((".hwp", ".hwpx", ".doc", ".docx", ".pdf")):
-                os.remove(file_location)
-            elif file_name.lower().endswith(".txt"):
-                file_path = file.file_path
-                filenames = os.listdir(file_path)
-                file_name = filenames[0]
-                file_location = os.path.join(file_path, file_name)
-                os.remove(file_location)
-            return {
-                "valid": True,
-                "message" : "정상",
-                "file_path" : file_path
-            }
+        return {
+            "valid": True,
+            "message" : content_label,
+            "file_path" : file_path
+        }

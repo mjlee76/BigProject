@@ -3,13 +3,13 @@
 <html lang="ko">
 <head th:replace="layouts/navbar::tellMe_head"/>
 <head th:replace="layouts/footer::tellMe_foot"/>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title th:if="${question.filterTitle == null or question.filterTitle.isEmpty()}" th:text="${question.title}"></title>
-    <title th:if="${question.filterTitle != null and !question.filterTitle.isEmpty()}" th:text="${question.filterTitle}"></title>
-    <link rel="stylesheet" type="text/css" th:href="@{/css/question-detail.css}" />
-    <link href="https://cdn.jsdelivr.net/gh/sun-typeface/SUIT@2/fonts/static/woff2/SUIT.css" rel="stylesheet">
-    <script th:src="@{/js/question-detail.js}" defer></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title th:if="${question.filterTitle == null or question.filterTitle.isEmpty()}" th:text="${question.title}"></title>
+<title th:if="${question.filterTitle != null and !question.filterTitle.isEmpty()}" th:text="${question.filterTitle}"></title>
+<link rel="stylesheet" type="text/css" th:href="@{/css/question-detail.css}" />
+<link href="https://cdn.jsdelivr.net/gh/sun-typeface/SUIT@2/fonts/static/woff2/SUIT.css" rel="stylesheet">
+<script th:src="@{/js/question-detail.js}" defer></script>
 </head>
 <body>
 <div th:replace="layouts/navbar::tellMe_header"></div>

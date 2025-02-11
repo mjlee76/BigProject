@@ -1,6 +1,7 @@
 package com.bigProject.tellMe.service;
 
 import com.bigProject.tellMe.dto.StatisticsDTO;  // 통계 DTO
+import com.bigProject.tellMe.enumClass.Category;
 import com.bigProject.tellMe.enumClass.ReportStatus;
 import com.bigProject.tellMe.enumClass.Status;
 import lombok.RequiredArgsConstructor;

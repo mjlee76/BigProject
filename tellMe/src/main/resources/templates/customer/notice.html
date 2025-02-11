@@ -45,11 +45,19 @@
         <tbody id="table-body">
         <tr th:each="notice, iterStat : ${noticeList}">
             <!-- 🔹 번호 칼럼 (삭제 모드에서 체크박스로 변경) -->
+            <!--            <td class="number-column" style="text-align: center;">-->
+            <!--                <input type="checkbox" class="delete-checkbox" th:value="${notice.id}" style="display: none;">-->
+            <!--                <span class="notice-number"-->
+            <!--                      th:text="${(noticeList.number * noticeList.size) + iterStat.index + 1}">-->
+            <!--                </span>-->
+            <!--            </td>-->
             <td class="number-column" style="text-align: center;">
-                <input type="checkbox" class="delete-checkbox" th:value="${notice.id}" style="display: none;">
-                <span class="notice-number"
-                      th:text="${(noticeList.number * noticeList.size) + iterStat.index + 1}">
-                </span>
+                <div class="number-cell">
+                    <input type="checkbox" class="delete-checkbox" th:value="${notice.id}" style="display: none;">
+                    <span class="notice-number"
+                          th:text="${(noticeList.number * noticeList.size) + iterStat.index + 1}">
+                    </span>
+                </div>
             </td>
             <td class="post-title">
                 <a th:href="@{/customer/notice/{id}(id=${notice.id}, page=${noticeList.number + 1})}"

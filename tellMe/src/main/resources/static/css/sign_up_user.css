@@ -160,3 +160,26 @@ button:hover {
     margin-bottom: 6px;
     display: block;
 }
+
+.terms-agreement {
+    display: flex;
+    align-items: center;
+  }
+
+  .terms-agreement input[type="checkbox"] {
+    vertical-align: middle; /* 체크박스 정렬 */
+    margin-right: 4px; /* 체크박스와 텍스트 사이 간격 조절 */
+  }
+
+  .terms-agreement a {
+    color: #007BFF;
+    text-decoration: none;
+  }
+
+  .terms {
+    font-size: 14px;
+  }
+
+  .terms-agreement a:hover {
+    text-decoration: underline;
+  }
