@@ -52,14 +52,9 @@ public class User {
     @CreatedDate
     private LocalDateTime createDate;
 
-    @Column(nullable = false)
-    private Integer count;
-
     @PrePersist
     public void setDefaultValues() {
-        if(this.count == null) {
-            this.count = 0;  // DB에 저장되기 전에 기본값 설정
-        }
+
         if(this.role == null) {
             this.role = Role.ROLE_USER;
         }

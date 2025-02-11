@@ -12,6 +12,7 @@ import com.bigProject.tellMe.mapper.QuestionMapper;
 import com.bigProject.tellMe.service.AnswerService;
 import com.bigProject.tellMe.service.QuestionService;
 import com.bigProject.tellMe.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -97,16 +98,18 @@ public class ComplaintController {
 
         // 현재 사용자의 역할 확인
         String role = "ROLE_USER";
+        Long userId = 0L;
         if (auth != null && auth.isAuthenticated()) {
             UserDTO user = userService.findByUserId(auth.getName());
             role = String.valueOf(user.getRole());
+            userId = user.getId();
         }
 
         // Pageable 객체 생성
         Pageable pageable = PageRequest.of(page - 1, size, Sort.by(Sort.Direction.DESC, "id"));
 
         // 검색 및 필터링 결과 조회
-        Page<QuestionDTO> questionList = questionService.searchAndFilter(query, status, category, role, pageable);
+        Page<QuestionDTO> questionList = questionService.searchAndFilter(query, status, category, role, userId, pageable);
 
         // 페이징 정보 계산
         int blockLimit = 5; // 화면에 보여질 페이지 번호 개수
@@ -126,16 +129,41 @@ public class ComplaintController {
         return "complaint/question";
     }
 
-    // 문의 제목을 클릭하여 상세페이지 표출 메서드
+//    // 문의 제목을 클릭하여 상세페이지 표출 메서드
+//    @GetMapping("/question/{id}")
+//    public String getQuestion(@PathVariable Long id,
+//                              @RequestParam(required = false, defaultValue = "1")int page,
+//                              Model model) {
+//        QuestionDTO questionDTO = questionService.getQuestion(id);
+//        model.addAttribute("question", questionDTO);
+//        model.addAttribute("page", page);
+//        return "complaint/question-detail";
+//    }
+
     @GetMapping("/question/{id}")
     public String getQuestion(@PathVariable Long id,
-                              @RequestParam(required = false, defaultValue = "1")int page,
+                              @RequestParam(required = false, defaultValue = "1") int page,
+                              Authentication auth, // 🔹 로그인한 사용자 정보 가져오기
                               Model model) {
         QuestionDTO questionDTO = questionService.getQuestion(id);
+
+        // 현재 로그인한 사용자 정보 가져오기
+        Long currentUserId = null;
+        if (auth != null && auth.isAuthenticated()) {
+            UserDTO userDTO = userService.findByUserId(auth.getName());
+            currentUserId = userDTO.getId();
+        }
+
+        // 모델에 현재 로그인한 사용자 ID 추가
         model.addAttribute("question", questionDTO);
-        model.addAttribute("page", page);
+        model.addAttribute("currentUserId", currentUserId); // 로그인한 유저 ID    model.addAttribute("page", page);
+
         return "complaint/question-detail";
     }
+
+
+
+
 
     // 접수중을 처리중으로 변경하는 메서드
     @PostMapping("/question/{id}/status")
@@ -166,10 +194,23 @@ public class ComplaintController {
         return "redirect:/myPage/editInfo";
     }
 
+//    @PostMapping("/delete/{id}")
+//    public String delete(@PathVariable Long id) {
+//        questionService.deleteQuestion(id);
+//        return "redirect:/myPage/editInfo";
+//    }
+
     @PostMapping("/delete/{id}")
-    public String delete(@PathVariable Long id) {
+    public String delete(@PathVariable Long id, @RequestParam(required = false) String from) {
         questionService.deleteQuestion(id);
-        return "redirect:/myPage/editInfo";
+
+        // from 파라미터에 따라 리다이렉트 경로 결정
+        if ("myPage".equals(from)) {
+            return "redirect:/myPage/myComplaint";
+        } else {
+            return "redirect:/complaint/question";
+        }
     }
+
 
 }

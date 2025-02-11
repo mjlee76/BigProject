@@ -1,14 +1,12 @@
 /* 기본 설정 */
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'SUIT', sans-serif;
     margin: 0;
     padding: 0;
     background-color: #ffffff;
+    padding-top: 60px;
     color: #333;
 }
-
-
-
 
 /* 메인 영역
 main {
@@ -19,24 +17,28 @@ main {
     border-radius: 4px;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
 } */
-/* 공지사항 상단 제목 */
+
+/* 문의게시판 상단 제목 */
 .report-header {
+    display: flex;
     text-align: left; /* 중앙 정렬 */
-    margin-bottom: 30px; /* 아래 간격 */
-    padding: 30px 10%; /* 상하 여백과 좌우 패딩 */
-    background-color: #f4f4f4; /* 배경색 */
+    align-items: center;
+    gap: 20px;
+    padding: 55px 180px 0px 180px; /* 상하 여백과 좌우 패딩 */
+    background-color: #fff; /* 배경색 */
 }
 
 .report-header h1 {
-    font-size: 24px;
+    font-size: 28px;
     font-weight: bold;
     color: #333;
-    margin-bottom: 10px; /* 제목과 페이지 정보 간격 */
+    margin: 10px 10px 10px 10px; /* 제목과 페이지 정보 간격 */
 }
 
 .report-header p {
-    font-size: 14px;
+    font-size: 16px;
     color: #666;
+    margin: 10px 10px 0px 10px;
 }
 
 /* 게시글 목록 */
@@ -90,6 +92,7 @@ main {
     font-size: 14px; /* 글씨 크기 */
     color: #333; /* 기본 글자색 */
     margin-left: 10px; /* 입력 필드 외부의 왼쪽 간격 추가 */
+    margin-bottom: 5px;
 }
 
 .search-input::placeholder {
@@ -147,9 +150,10 @@ main {
 .tabs {
     display: flex;
     border-bottom: 1px solid #e0e0e0;
-    margin-bottom: 80px;
+    margin-top: 30px;
+    margin-bottom: 60px;
     position: sticky; /* 스크롤 시 상단에 고정 */
-    top: 0; /* 상단에서의 고정 위치 */
+    top: 53px; /* 상단에서의 고정 위치 */
     z-index: 10; /* 다른 요소 위에 표시되도록 설정 */
     padding: 0 10%; /* 탭 컨테이너의 좌우 여백 */
 }
@@ -170,26 +174,26 @@ main {
 
 /* 활성화된 탭 스타일 */
 .tab.active {
-    color: #22A9FD;
+    color: #5E64E0;
     font-weight: bold;
     bottom: -1px; /* 같은 위치에서 밑줄 생성 */
-    border-bottom: 1px solid #22A9FD;
+    border-bottom: 1px solid #989EFF;
 }
 /* 탭 호버 효과 */
 .tab:hover {
-    color: #22A9FD;
+    color: #989EFF;
 }
 
 .tab.active::after,
 .tab:hover::after {
-    color: #22A9FD;
+    color: #989EFF;
     content: '';
     position: absolute;
     bottom: -1px; /* 같은 위치에서 밑줄 생성 */
     left: 0;
     width: 100%;
     height: 2px; /* 같은 두께 적용 */
-    background-color: #22A9FD;
+    background-color: #989EFF;
 }
 
 /* 모든 링크에 대해 밑줄 제거 */
@@ -203,7 +207,7 @@ a:-webkit-any-link {
     margin: 0 auto; /* 가운데 정렬 */
     border-collapse: collapse;
     margin-top: 20px;
-    margin-bottom: 20px; /* 테이블 하단 여백 추가 */
+    /* margin-bottom: 20px; 테이블 하단 여백 추가 */
 }
 
 .post-table th, .post-table td {
@@ -213,7 +217,6 @@ a:-webkit-any-link {
     text-align: center; /* 모든 셀 중앙 정렬 */
 }
 .post-table td a:hover {
-
     color: #1674C3; /* 호버 시 색상 변경 (선택 사항) */
 }
 
@@ -231,7 +234,7 @@ a:-webkit-any-link {
 /* 테이블 맨 위 선 굵게 */
 .post-table thead tr th {
     border-top: 1px solid #333; /* 굵은 검은색 선 */
-    background-color: #F8FCFD ; /* 배경색 */
+    background-color: #FAF8FF ; /* 배경색 */
     padding: 15px;
 }
 
@@ -246,6 +249,7 @@ a:-webkit-any-link {
     /* font-weight: bold; 굵게 */
     text-align: center; /* 중앙 정렬 */
     padding: 10px; /* 여백 */
+    white-space: nowrap;
     background-color: #f4f4f4; /* 배경색 (필요 시) */
 
 }
@@ -315,9 +319,8 @@ a:-webkit-any-link {
     display: flex;
     justify-content: center; /* 가운데 정렬 */
     align-items: center; /* 세로 정렬 */
-    gap: 20px; /* 버튼 간 간격 */
     margin-top: 20px; /* 위쪽 여백 */
-    margin-bottom: 30px; /* 아래쪽 여백 */
+    margin-bottom: 20px; /* 아래쪽 여백 */
 
 }
 
@@ -345,8 +348,8 @@ a:-webkit-any-link {
     transition: background-color 0.3s ease;
     text-decoration: none;
     font-size: 14px;
-    color: #22A9FD;
-    border-radius: 4px;;
+    color: #989EFF;
+    border-radius: 4px;
 }
 
 /* 비활성화된 링크 스타일 (첫 페이지, 마지막 페이지 비활성화 시) */

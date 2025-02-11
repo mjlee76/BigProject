@@ -31,11 +31,15 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.util.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
+import java.time.LocalDateTime;
+
 
 @Service
 @RequiredArgsConstructor
@@ -146,7 +150,7 @@ public class QuestionService {
             ObjectNode userNode = objectMapper.createObjectNode();
             userNode.put("user_name", userDTO.getUserName());
             userNode.put("phone", userDTO.getPhone());
-            userNode.put("count", userDTO.getCount());
+            //userNode.put("count", userDTO.getCount());
             //ObjectNode를 `Map<String, Object>`로 변환
             Map<String, Object> userMap = objectMapper.convertValue(userNode, Map.class);
 
@@ -200,7 +204,7 @@ public class QuestionService {
                 questionDTO.setStatus(Status.접수중);
                 questionRepository.save(questionMapper.quDTOToQu(questionDTO));
                 // 알림 저장
-                notificationService.createNotification(questionDTO.getUserId(), "악성민원이 감지되었습니다. 사유 : " + categoryString);
+                notificationService.createNotification(questionDTO.getUserId(),  "게시글 "+ questionDTO.getId() + "번의 사유 : [" + categoryString + "] 악성민원이 감지되어 수정됐습니다.");
 
                 //complaintRestController.sendRefreshEvent();
             }
@@ -270,7 +274,7 @@ public class QuestionService {
         }
     }
 
-    public Page<QuestionDTO> searchAndFilter(String query, Status status, String category, String role, Pageable pageable) {
+    public Page<QuestionDTO> searchAndFilter(String query, Status status, String category, String role, Long userId, Pageable pageable) {
         // 동적 쿼리를 위한 조건 생성
         Specification<Question> spec = Specification.where(null);
 
@@ -281,7 +285,16 @@ public class QuestionService {
 
         // 상태 필터링
         if (status != null) {
-            spec = spec.and((root, cq, criteriaBuilder) -> criteriaBuilder.equal(root.get("status"), status));
+            if (status == Status.필터링중) {
+                spec = spec.and((root, cq, criteriaBuilder) ->
+                        criteriaBuilder.or(
+                                criteriaBuilder.equal(root.get("status"), status),  // ✅ 상태가 필터링중인 경우
+                                criteriaBuilder.equal(root.get("user").get("id"), userId) // ✅ 작성자 본인이면 볼 수 있음
+                        )
+                );
+            }else {
+                spec = spec.and((root, cq, criteriaBuilder) -> criteriaBuilder.equal(root.get("status"), status));
+            }
         }
 
         // 검색어 필터링
@@ -320,8 +333,8 @@ public class QuestionService {
                 question.getViews(),
                 question.getUser().getUserName(),
                 question.getStatus(),
-                question.getFiltered().getTitle(),
-                question.getFiltered().getContent()
+                question.getFiltered() != null ? question.getFiltered().getTitle() : null,  // ✅ `filtered`가 `null`이면 `null` 반환
+                question.getFiltered() != null ? question.getFiltered().getContent() : null // ✅ `filtered`가 `null`이면 `null` 반환
         ));
     }
 
@@ -395,4 +408,63 @@ public class QuestionService {
     public long countByStatus(Status status) {
         return questionRepository.countByStatus(status);
     }
+
+    // QuestionService에 오늘의 민원 수와 악성 민원 수를 조회하는 메서드 추가
+    public long countTodayQuestions() {
+        // 오늘 날짜에 해당하는 민원 수를 조회하는 쿼리 작성
+        LocalDate today = LocalDate.now();
+        return questionRepository.countByCreateDateBetween(
+                today.atStartOfDay(), today.atTime(23, 59, 59)
+        );
+    }
+
+    public long countTodayCategoryNotNormal() {
+        LocalDate today = LocalDate.now();
+        return questionRepository.countByCategoryNotAndCreateDateBetween("정상", today.atStartOfDay(), today.atTime(23, 59, 59));
+    }
+    // 어제 민원 조회
+    public long countYesterdayQuestions() {
+        LocalDate yesterday = LocalDate.now().minusDays(1);
+        return questionRepository.countByCreateDateBetween(
+                yesterday.atStartOfDay(),
+                yesterday.atTime(23, 59, 59)
+        );
+    }
+
+
+
+    public Map<String, List<Long>> countQuestionsAndMaliciousByHour(LocalDate today) {
+        List<Long> normalCounts = new ArrayList<>();
+        List<Long> maliciousCounts = new ArrayList<>();
+
+        for (int hour = 0; hour < 24; hour++) {
+            LocalDateTime startOfHour = today.atTime(hour, 0);
+            LocalDateTime endOfHour = today.atTime(hour, 59, 59);
+
+
+            // 일반 민원 수 조회 (category가 정상인 경우)
+            long normalCount = questionRepository.countByCategoryAndCreateDateBetween("정상", startOfHour, endOfHour);
+            normalCounts.add(normalCount);
+
+            // 악성 민원 수 조회 (정상이 아닌 카테고리)
+            long maliciousCount = questionRepository.countByCategoryNotAndCreateDateBetween("정상", startOfHour, endOfHour);
+            maliciousCounts.add(maliciousCount);
+        }
+
+        // 결과를 Map으로 반환하여 일반 민원과 악성 민원의 시간대별 데이터를 한 번에 반환
+        Map<String, List<Long>> result = new HashMap<>();
+        result.put("normal", normalCounts);
+        result.put("malicious", maliciousCounts);
+
+        return result;
+    }
+
+
+
+
+
+//    // 민원 악성 카테고리별 카운트
+//    public long countByCategory(Category category) {
+//        return questionRepository.countByCategory(category);
+//    }
 }

@@ -5,6 +5,7 @@
     <link rel="stylesheet" type="text/css" th:href="@{/css/navbar.css}" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" type="image/x-icon" th:href="@{/image/favicon.png}">
     <script src="https://code.jquery.com/jquery-3.6.3.js"></script>
     <script type="text/javascript" th:src="@{/js/common.js}"></script>
 </head>
@@ -14,7 +15,7 @@
         <div class="nav-container">
             <div class="logo">
                 <a th:href="@{/}">
-                    <img th:src="@{/image/tellme.png}" class="logo-img">
+                    <img th:src="@{/image/logo.png}" class="logo-img">
                 </a>
             </div>
             <div>
@@ -22,9 +23,9 @@
                     <li><a th:href="@{/}">홈</a></li>
                     <li><a th:href="@{/customer/notice}">공지사항</a></li>
                     <li><a th:href="@{/complaint/question}">문의게시판</a></li>
-                    <li sec:authorize="hasRole('ROLE_MANAGER')">
-                        <a th:href="@{/manager/statistics}">문의통계</a>
-                    </li>
+<!--                    <li sec:authorize="hasRole('ROLE_MANAGER')">-->
+<!--                        <a th:href="@{/manager/statistics}">문의통계</a>-->
+<!--                    </li>-->
                     <li sec:authorize="hasRole('ROLE_MANAGER')">
                         <a th:href="@{/manager/report}">보고서관리</a>
                     </li>
