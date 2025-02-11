@@ -44,9 +44,9 @@
                     <li><a th:href="@{/}">홈</a></li>
                     <li><a th:href="@{/customer/notice}">공지사항</a></li>
                     <li><a th:href="@{/complaint/question}">문의게시판</a></li>
-                    <li sec:authorize="hasRole('ROLE_MANAGER')">
-                        <a th:href="@{/manager/statistics}">문의통계</a>
-                    </li>
+<!--                    <li sec:authorize="hasRole('ROLE_MANAGER')">-->
+<!--                        <a th:href="@{/manager/statistics}">문의통계</a>-->
+<!--                    </li>-->
                     <li sec:authorize="hasRole('ROLE_MANAGER')">
                         <a th:href="@{/manager/report}">보고서관리</a>
                     </li>
