@@ -36,7 +36,7 @@ public class QuestionDTO {
         this.title = title;
         this.createDate = createDate;
         this.views = views;
-        //this.userName = userName;
+        this.userName = userName;
         this.status = status;
     }
 
@@ -51,7 +51,7 @@ public class QuestionDTO {
         QuestionDTO questionDTO = new QuestionDTO();
         questionDTO.setId(question.getId());
         questionDTO.setUserId(question.getUser().getId()); // ?
-        //questionDTO.setUserName(question.getUser().getUserName()); // userName 설정
+        questionDTO.setUserName(question.getUser().getUserName()); // userName 설정
         questionDTO.setTitle(question.getTitle());
         questionDTO.setContent(question.getContent());
         questionDTO.setCreateDate(question.getCreateDate());

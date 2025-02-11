@@ -379,6 +379,14 @@ public class QuestionService {
         LocalDate today = LocalDate.now();
         return questionRepository.countByCategoryNotAndCreateDateBetween("정상", today.atStartOfDay(), today.atTime(23, 59, 59));
     }
+    // 어제 민원 조회
+    public long countYesterdayQuestions() {
+        LocalDate yesterday = LocalDate.now().minusDays(1);
+        return questionRepository.countByCreateDateBetween(
+                yesterday.atStartOfDay(),
+                yesterday.atTime(23, 59, 59)
+        );
+    }
 
 
 

@@ -260,8 +260,6 @@ main {
     /* font-weight: bold; 굵게 */
     text-align: center; /* 중앙 정렬 */
     padding: 10px; /* 여백 */
-    background-color: #F8FCFD; /* 배경색 (필요 시) */
-
 }
 
 .post-table td:nth-child(1) {
@@ -271,8 +269,6 @@ main {
     /* font-weight: bold; 굵게 */
     text-align: center; /* 중앙 정렬 */
     padding: 10px; /* 여백 */
-    background-color: #fff; /* 배경색 (필요 시) */
-
 }
 
 /* 각 열의 너비 조정 */

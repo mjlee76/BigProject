@@ -38,7 +38,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function resetInterval() {
         clearInterval(interval);
-        interval = setInterval(() => moveSlide(currentIndex + 1), 4000);
+        interval = setInterval(() => moveSlide(currentIndex + 1), 500000);
     }
 
     function goToSlide(index) {

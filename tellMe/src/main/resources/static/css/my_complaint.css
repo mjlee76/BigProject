@@ -32,7 +32,6 @@ body {
 /* 사이드바 */
 .sidebar {
     width: 280px;
-    height: 320px;
     background: var(--sidebar-bg);
     padding: 20px;
     margin-left: 150px;
@@ -512,7 +511,7 @@ a:visited {
 
 /* 활성화된 페이지 */
 .pagination .current {
-    color: #22A9FD;
+    color: #989EFF;
     font-weight: bold;
 }
 
