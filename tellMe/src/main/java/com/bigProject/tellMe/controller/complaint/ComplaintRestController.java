@@ -25,7 +25,7 @@ import java.util.concurrent.*;
 @RequestMapping("/api")
 @RequiredArgsConstructor
 public class ComplaintRestController {
-    private final Map<String, SseEmitter> emitters = new ConcurrentHashMap<>();
+    private final Map<Long, SseEmitter> emitters = new ConcurrentHashMap<>();
     private final CopyOnWriteArrayList<SseEmitter> refreshEmitters = new CopyOnWriteArrayList<>();
     private final QuestionService questionService;
     private final UserService userService;
@@ -65,6 +65,39 @@ public class ComplaintRestController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("valid", false, "message", "서버 오류 발생: " + e.getMessage()));
         }
 
+    }
+
+    // ✅ SSE 구독 (알림 + 새로고침 통합)
+    @GetMapping("/sse/{userId}")
+    public SseEmitter subscribe(@PathVariable Long userId) {
+        SseEmitter emitter = new SseEmitter(60 * 1000L); // 1분 타임아웃
+        emitters.put(userId, emitter);
+
+        // 연결 종료 처리
+        emitter.onCompletion(() -> emitters.remove(userId));
+        emitter.onTimeout(() -> emitters.remove(userId));
+
+        return emitter;
+    }
+
+
+
+    // ✅ 특정 사용자에게 이벤트 전송 (알림 또는 새로고침)
+    @PostMapping("/triggerEvent/{userId}")
+    public void triggerEvent(@PathVariable Long userId, @RequestParam String type, @RequestBody(required = false) String message) {
+        SseEmitter emitter = emitters.get(userId);
+        if (emitter != null) {
+            try {
+                if ("notification".equals(type)) {
+                    emitter.send(SseEmitter.event().name("notification").data(message));
+                } else if ("refresh".equals(type)) {
+                    emitter.send(SseEmitter.event().name("refresh").data("reload"));
+                }
+            } catch (IOException e) {
+                emitter.complete();
+                emitters.remove(userId);
+            }
+        }
     }
 
     // ✅ SSE 구독 - 실시간 알림 받기
