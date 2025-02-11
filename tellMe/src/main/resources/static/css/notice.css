@@ -4,9 +4,11 @@ body {
     margin: 0;
     padding: 0;
     background-color: #ffffff;
+    padding-top: 60px;
     color: #333;
 }
 
+<<<<<<< HEAD
 a:-webkit-any-link {
     text-decoration: none;  /* 기본 밑줄 제거 */
 }
@@ -20,30 +22,29 @@ main {
 
 =======
 >>>>>>> a599846 (home수정)
+=======
+>>>>>>> 2f9bf03 (전체적인 css 수정)
 /* 공지사항 상단 제목 */
 .notice-header {
+    display: flex;
     text-align: left; /* 중앙 정렬 */
-    margin-bottom: 30px; /* 아래 간격 */
-    padding: 30px 10%; /* 상하 여백과 좌우 패딩 */
-
-    background-color: #f4f4f4; /* 배경색 */
-
+    align-items: center;
+    gap: 20px;
+    padding: 55px 180px 0px 180px; /* 상하 여백과 좌우 패딩 */
+    background-color: #fff; /* 배경색 */
 }
 
 .notice-header h1 {
-    font-size: 24px;
+    font-size: 28px;
     font-weight: bold;
     color: #333;
-    margin-bottom: 10px; /* 제목과 페이지 정보 간격 */
+    margin: 10px 10px 10px 10px; /* 제목과 페이지 정보 간격 */
 }
 
 .notice-header p {
-    font-size: 14px;
+    font-size: 16px;
     color: #666;
-}
-
-#notice-board p {
-    display: none; /* <p> 태그 전체를 숨김 */
+    margin: 10px 10px 0px 10px;
 }
 
 /* 게시글 목록 */
@@ -83,7 +84,7 @@ main {
     width: 100%; /* 전체 너비 */
     max-width: 600px; /* 최대 너비 */
     margin: 20px auto; /* 중앙 정렬 */
-    margin-top: 70px;
+    margin-top: 20px;
     border-bottom: 1px solid #333; /* 밑줄 */
 }
 
@@ -264,8 +265,6 @@ main {
     /* font-weight: bold; 굵게 */
     text-align: center; /* 중앙 정렬 */
     padding: 10px; /* 여백 */
-    background-color: #F8FCFD; /* 배경색 (필요 시) */
-
 }
 
 .post-table td:nth-child(1) {

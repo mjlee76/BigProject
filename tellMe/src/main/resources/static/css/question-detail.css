@@ -9,12 +9,9 @@ body {
     margin: 0;
     padding: 0;
     background-color: #ffffff;
+    padding-top: 60px;
     color: #333;
 <<<<<<< HEAD
-}
-
-* {
-    box-sizing: border-box;
 }
 
 a:-webkit-any-link {
@@ -166,7 +163,11 @@ button.delete-button:hover {
 .answer-form button:hover {
     background-color: #e6e6e6;
     color: #000;
+<<<<<<< HEAD
 }
 =======
 ```
 >>>>>>> a18053f (내 페이지 수정.)
+=======
+}
+>>>>>>> 2f9bf03 (전체적인 css 수정)
