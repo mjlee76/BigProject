@@ -38,7 +38,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function resetInterval() {
         clearInterval(interval);
-        interval = setInterval(() => moveSlide(currentIndex + 1), 500000);
+        interval = setInterval(() => moveSlide(currentIndex + 1), 4000);
     }
 
     function goToSlide(index) {
@@ -59,7 +59,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // 자동 슬라이드 시작
-    interval = setInterval(() => moveSlide(currentIndex + 1), 500000);
+    interval = setInterval(() => moveSlide(currentIndex + 1), 4000);
 
     // 웹 시작 시 첫 번째 버튼 활성화
     updateActiveButton();

@@ -4,39 +4,31 @@ body {
     margin: 0;
     padding: 0;
     background-color: #ffffff;
+    padding-top: 60px;
     color: #333;
 }
-
-/* 메인 영역
-main {
-    position: relative;
-        padding-bottom: 80px; /* 버튼 영역을 위한 여백 추가 */
-
 
 /* 공지사항 상단 제목 */
 .notice-header {
+    display: flex;
     text-align: left; /* 중앙 정렬 */
-    margin-bottom: 30px; /* 아래 간격 */
-    padding: 30px 10%; /* 상하 여백과 좌우 패딩 */
-
-    background-color: #f4f4f4; /* 배경색 */
-
+    align-items: center;
+    gap: 20px;
+    padding: 55px 180px 0px 180px; /* 상하 여백과 좌우 패딩 */
+    background-color: #fff; /* 배경색 */
 }
 
 .notice-header h1 {
-    font-size: 24px;
+    font-size: 28px;
     font-weight: bold;
     color: #333;
-    margin-bottom: 10px; /* 제목과 페이지 정보 간격 */
+    margin: 10px 10px 10px 10px; /* 제목과 페이지 정보 간격 */
 }
 
 .notice-header p {
-    font-size: 14px;
+    font-size: 16px;
     color: #666;
-}
-
-#notice-board p {
-    display: none; /* <p> 태그 전체를 숨김 */
+    margin: 10px 10px 0px 10px;
 }
 
 /* 게시글 목록 */
@@ -76,7 +68,7 @@ main {
     width: 100%; /* 전체 너비 */
     max-width: 600px; /* 최대 너비 */
     margin: 20px auto; /* 중앙 정렬 */
-    margin-top: 70px;
+    margin-top: 20px;
     border-bottom: 1px solid #333; /* 밑줄 */
 }
 
@@ -239,7 +231,7 @@ main {
 
 /* 제목 셀만 좌측 정렬 */
 .post-table .post-title {
-    text-align: left; /* 제목은 왼쪽 정렬 */
+    text-align: center; /* 제목은 왼쪽 정렬 */
 }
 
 /* 테이블 헤더 스타일 */
@@ -370,7 +362,7 @@ body.delete-mode .notice-number {
 }
 
 .post-title a:hover {
-    text-decoration: underline;
+    text-decoration: none;
 }
 
 /* 🔹 글쓰기 버튼 */

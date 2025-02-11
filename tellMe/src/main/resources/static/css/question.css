@@ -4,36 +4,35 @@ body {
     margin: 0;
     padding: 0;
     background-color: #ffffff;
+    padding-top: 60px;
     color: #333;
 }
-
-/* 메인 영역 */
-/* main {
-    max-width: 1000px;
-    margin: 100px auto;
-    background: white;
-    padding: 50px;
-    border-radius: 4px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-} */
 
 a:-webkit-any-link {
     text-decoration: none;  /* 기본 밑줄 제거 */
 }
 
+/* 문의게시판 상단 제목 */
 .inquiry-header {
+    display: flex;
     text-align: left; /* 중앙 정렬 */
-    margin-bottom: 30px; /* 아래 간격 */
-    padding: 30px 10%; /* 상하 여백과 좌우 패딩 */
-
-    background-color: #f4f4f4; /* 배경색 */
-
+    align-items: center;
+    gap: 20px;
+    padding: 55px 180px 0px 180px; /* 상하 여백과 좌우 패딩 */
+    background-color: #fff; /* 배경색 */
 }
+
 .inquiry-header h1 {
-    font-size: 24px;
+    font-size: 28px;
     font-weight: bold;
     color: #333;
-    margin-bottom: 10px; /* 제목과 페이지 정보 간격 */
+    margin: 10px 10px 10px 10px; /* 제목과 페이지 정보 간격 */
+}
+
+.inquiry-header p {
+    font-size: 16px;
+    color: #666;
+    margin: 10px 10px 0px 10px;
 }
 
 /* 검색 폼 스타일 */
@@ -179,6 +178,7 @@ a:-webkit-any-link {
 .tabs {
     display: flex;
     border-bottom: 1px solid #e0e0e0;
+    margin-top: 30px;
     margin-bottom: 60px;
     position: sticky; /* 스크롤 시 상단에 고정 */
     top: 0; /* 상단에서의 고정 위치 */
@@ -481,10 +481,6 @@ a:-webkit-any-link {
 .write-button:hover {
     background-color: #0056b3;
     box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
-}
-
-#inquiry-board p {
-    display: none; /* <p> 태그 전체를 숨김 */
 }
 
 #inquiry-board .footer {
