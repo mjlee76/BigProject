@@ -33,4 +33,8 @@ public class Notification {
 
     @CreatedDate
     private LocalDateTime createDate;
+
+    public void markAsRead() {
+        this.isRead = true;
+    }
 }

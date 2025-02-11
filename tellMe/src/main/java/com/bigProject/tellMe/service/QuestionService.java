@@ -313,7 +313,9 @@ public class QuestionService {
                 question.getCreateDate(),
                 question.getViews(),
                 question.getUser().getUserName(),
-                question.getStatus()
+                question.getStatus(),
+                question.getFiltered().getTitle(),
+                question.getFiltered().getContent()
         ));
     }
 

@@ -51,20 +51,62 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     // 알림 개수 표시 함수
-    function showNotificationBadge(count) {
-        if (count > 0) {
-            notificationCount.textContent = count;
+    function showNotificationBadge(notifications) {
+        const unreadCount = notifications.filter(n => !n.isRead).length;
+        if (unreadCount > 0) {
+            notificationCount.textContent = unreadCount ;
             notificationCount.style.display = "block";
         } else {
             notificationCount.style.display = "none";
         }
     }
 
-    // 알림 추가 함수 (localStorage 반영)
-    function addNotificationToList(message) {
+    // ✅ 알림 클릭 시 읽음 상태 업데이트
+    async function markAsRead(notificationId) {
+        try{
+            const response = await fetch(`/tellMe/api/markAsRead`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    id: notificationId,
+                    isRead: true
+                })
+            });
+
+            if (response.ok) {
+                console.log(`✅ 알림(${notificationId})을 읽음 상태로 변경`);
+                await fetchNotifications(); // ✅ DB 변경 후 즉시 UI 반영
+            } else {
+                console.error("❌ 알림 상태 변경 실패");
+            }
+
+            // ✅ UI에서 읽음 상태 반영
+            //element.classList.add("read");
+        }catch (error) {
+            console.error("❌ 알림 읽음 처리 실패:", error);
+        }
+    }
+
+    // 알림 추가 함수 (읽음 상태   반영)
+    function addNotificationToList(notification) {
         const newNotification = document.createElement("li");
-        newNotification.textContent = message;
-        newNotification.classList.add("new-notification");
+        newNotification.textContent = notification.message;
+        newNotification.classList.add("notification-item");
+
+        // ✅ isRead가 true이면 어둡게 표시
+        if (notification.isRead) {
+            newNotification.classList.add("read");
+        }
+
+        // ✅ 알림 클릭 시 읽음 처리
+        newNotification.addEventListener("click", function () {
+            if (!notification.isRead) {
+                markAsRead(notification.id);
+            }
+        });
+
         notificationList.prepend(newNotification);
     }
 
@@ -77,7 +119,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             notificationList.innerHTML = ""; // 기존 알림 초기화
             notifications.forEach(addNotificationToList);
-            showNotificationBadge(notifications.length);
+            showNotificationBadge(notifications);
         } catch (error) {
             console.error("알림을 불러오는 중 오류 발생:", error);
         }
@@ -87,9 +129,11 @@ document.addEventListener("DOMContentLoaded", function () {
     if (userId) {
         const eventSource = new EventSource(`/tellMe/api/notiBell/${userId}`);
 
-        eventSource.onmessage = function (event) {
+        eventSource.onmessage = async function (event) {
             console.log("🔔 새 알림 수신: ", event.data);
-            location.reload();
+            // ✅ 새 알림 데이터 가져오기
+            await fetchNotifications();
+            //location.reload();
         };
 
         eventSource.onerror = function () {

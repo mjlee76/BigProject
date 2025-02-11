@@ -1,5 +1,6 @@
 package com.bigProject.tellMe.dto;
 
+import com.bigProject.tellMe.entity.Filtered;
 import com.bigProject.tellMe.entity.Question;
 import com.bigProject.tellMe.enumClass.Category;
 import com.bigProject.tellMe.enumClass.Reveal;
@@ -22,6 +23,8 @@ public class QuestionDTO {
     private LocalDateTime createDate;
     private String userName;
     private Long filteredId;
+    private String filterTitle;
+    private String filterContent;
     private Reveal reveal;
     private Status status;
     private Integer views;
@@ -31,13 +34,15 @@ public class QuestionDTO {
     private String file3;
     private AnswerDTO answer;
 
-    public QuestionDTO(Long id, String title, LocalDateTime createDate, Integer views, String userName, Status status) {
+    public QuestionDTO(Long id, String title, LocalDateTime createDate, Integer views, String userName, Status status, String filterTitle, String filterContent) {
         this.id = id;
         this.title = title;
         this.createDate = createDate;
         this.views = views;
-        //this.userName = userName;
+        this.userName = userName;
         this.status = status;
+        this.filterTitle = filterTitle;
+        this.filterContent = filterContent;
     }
 
 //    public QuestionDTO(Long id, String title, String content) {
