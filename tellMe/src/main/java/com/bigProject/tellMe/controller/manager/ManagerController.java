@@ -3,9 +3,9 @@ package com.bigProject.tellMe.controller.manager;
 import com.bigProject.tellMe.dto.ReportDTO;
 import com.bigProject.tellMe.dto.StatisticsDTO;
 import com.bigProject.tellMe.enumClass.ReportStatus;
-import com.bigProject.tellMe.enumClass.Status;
 import com.bigProject.tellMe.service.ReportService;
 import com.bigProject.tellMe.service.StatisticsService;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
@@ -22,12 +22,15 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 
+import java.io.IOException;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -160,7 +163,7 @@ public class ManagerController {
 
 
         // 오늘의 민원 수와 악성 민원의 시간대별 데이터
-        Map<String, List<Long>> questionsAndMaliciousByHour = statisticsService.getQuestionsAndMaliciousByHour();
+        Map<String, List<Long>> questionsAndMaliciousByHour = statisticsService.getQuestionsAndMaliciousByHour(LocalDate.now());
         model.addAttribute("statistics", statisticsDTO);
         model.addAttribute("questionsAndMaliciousByHour", questionsAndMaliciousByHour);
 
@@ -178,7 +181,7 @@ public class ManagerController {
         double dailyChangeRate = statisticsService.calculateDailyChangeRate();
 
         // 오늘의 민원 수와 악성 민원의 시간대별 데이터
-        Map<String, List<Long>> questionsAndMaliciousByHour = statisticsService.getQuestionsAndMaliciousByHour();
+        Map<String, List<Long>> questionsAndMaliciousByHour = statisticsService.getQuestionsAndMaliciousByHour(LocalDate.now());
         model.addAttribute("statistics", statisticsDTO);
         model.addAttribute("questionsAndMaliciousByHour", questionsAndMaliciousByHour);
         model.addAttribute("dailyChangeRate", dailyChangeRate);  // 증감률 추가
@@ -187,6 +190,27 @@ public class ManagerController {
 
         return "manager/today-question";  // 통계 페이지
     }
+
+    // ManagerController.java
+
+    @GetMapping("/download-csv")
+    public void downloadStatisticsCsv(HttpServletResponse response) throws IOException {
+        // CSV 데이터 생성
+        String csvData = statisticsService.generateStatisticsCsv();
+
+        // 응답 설정
+        response.setContentType("text/csv");
+        response.setCharacterEncoding("UTF-8");
+        response.setHeader("Content-Disposition", "attachment; filename=statistics.csv");
+
+        // 데이터 쓰기
+        try (OutputStream outputStream = response.getOutputStream()) {
+            outputStream.write(csvData.getBytes(StandardCharsets.UTF_8));
+        }
+    }
+
+
+
 
 
 

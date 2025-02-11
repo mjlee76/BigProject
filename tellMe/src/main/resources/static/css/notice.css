@@ -259,6 +259,7 @@ main {
 
 }
 /* 각 열의 너비 조정 */
+<<<<<<< HEAD
 .post-table th:nth-child(1) {
     width: 10%; /* 첫 번째 열 너비 */
     font-size: 13px; /* 글씨 크기 조절 */
@@ -276,6 +277,9 @@ main {
     background-color: #fff; /* 배경색 (필요 시) */
 
 }
+=======
+
+>>>>>>> 04596d2 (통계 csv 다운 기능 추가)
 
 /* 각 열의 너비 조정 */
 .post-table th:nth-child(1), /* 번호 */

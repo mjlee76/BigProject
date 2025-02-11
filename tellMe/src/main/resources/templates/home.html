@@ -17,6 +17,9 @@
 <<<<<<< HEAD
 
 <div id="home" class="section">
+    <div class="write-button-container">
+        <a th:href="@{/complaint/new}"  class="write-button" sec:authorize="hasRole('ROLE_USER')">시작하기</a>
+    </div>
     <div class="slider">
         <div class="slide">
             <div class="wrapper">
@@ -72,12 +75,27 @@
                 <div class="image-left">
                     <img th:src="@{/image/filter.png}">
                 </div>
+<<<<<<< HEAD
                 <div class="content">
                     <h2>유해 이미지 및 파일<br>
                         자동 필터링</h2>
                     <p>폭력적이거나 부적절한 이미지는 AI가 실시간 차단<br>
                     음란물, 혐오 표현이 포함된 이미지 즉시 차단<br>
                     부적절한 이미지가 포함된 게시물에겐 경고!</p>
+=======
+                <div class="area right">
+                    <div class="circle"></div>
+                </div>
+            </div>
+        </div>
+        <div class="slide">
+            <div class="wrapper3">
+                <div class="area left">
+                    <div>
+                        <h1>깨끗하고 원활한 민원 접수,<br>안심하세요!</h1>
+                        <p>신고하고 싶은 글?<br>AI 필터가 먼저 차단해요!</p>
+                    </div>
+>>>>>>> 04596d2 (통계 csv 다운 기능 추가)
                     <div class="button">
                         <a th:href="@{/complaint/new}" class="btn">
                             <span>시작하기</span>

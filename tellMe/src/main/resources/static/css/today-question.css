@@ -24,16 +24,17 @@ body {
     font-size: 14px;
     color: #666;
 }
-
+/* 탭 컨테이너 스타일 */
 .tabs {
     display: flex;
     border-bottom: 1px solid #e0e0e0;
+    margin-bottom: 63px;
     position: sticky; /* 스크롤 시 상단에 고정 */
     top: 0; /* 상단에서의 고정 위치 */
     z-index: 10; /* 다른 요소 위에 표시되도록 설정 */
     padding: 0 10%; /* 탭 컨테이너의 좌우 여백 */
-    background-color: #ffffff;
 }
+
 /* 개별 탭 버튼 스타일 */
 .tab {
     flex: 1;
@@ -50,26 +51,26 @@ body {
 
 /* 활성화된 탭 스타일 */
 .tab.active {
-    color: #22A9FD;
+    color: #5E64E0;
     font-weight: bold;
     bottom: -1px; /* 같은 위치에서 밑줄 생성 */
-    border-bottom: 1px solid #22A9FD;
+    border-bottom: 1px solid #989EFF;
 }
 /* 탭 호버 효과 */
 .tab:hover {
-    color: #22A9FD;
+    color: #989EFF;
 }
 
 .tab.active::after,
 .tab:hover::after {
-    color: #22A9FD;
+    color: #989EFF;
     content: '';
     position: absolute;
     bottom: -1px; /* 같은 위치에서 밑줄 생성 */
     left: 0;
     width: 100%;
     height: 2px; /* 같은 두께 적용 */
-    background-color: #22A9FD;
+    background-color: #989EFF;
 }
 /* 모든 링크에 대해 밑줄 제거 */
 a:-webkit-any-link {
@@ -80,7 +81,7 @@ a:-webkit-any-link {
 #wrapper {
     display: flex;
     min-height: 100vh;
-    background-color: #f7f9fc;
+    background-color: #FAF8FF;
     padding: 20px;
 
     padding-left:10%;
@@ -92,7 +93,7 @@ a:-webkit-any-link {
     padding: 20px;
     width: calc(100% - 250px);
     display: flex;
-    flex-direction: column;
+    justify-content: space-between;
     gap: 20px;
     background-color: white; /* 파란색 배경 */
     border-radius: 10px; /* 모서리 둥글게 처리 */
@@ -147,13 +148,6 @@ a:-webkit-any-link {
     border-radius: 50%;
 }
 
-.change-rate.increase .icon {
-    background-color: #28a745; /* 녹색 */
-}
-
-.change-rate.decrease .icon {
-    background-color: #dc3545; /* 빨간색 */
-}
 
 
 
@@ -166,6 +160,34 @@ a:-webkit-any-link {
     margin-bottom: 20px;
     text-align: center;
 }
+.chart-box h3 {
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 20px;
+    text-align: left;
+}
+.count {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    font-size: 24px;
+    font-weight: bold;
+    color: #ff5733;
+    border-radius: 8px; /* 모서리 둥글게 */
+}
+
+.count span {
+    font-size: 24px; /* 글자 크기 */
+    font-weight: bold; /* 글자 굵기 */
+    color: #ff5733; /* 글자 색상 */
+}
+.change-rate {
+    justify-content: flex-end;
+    align-items: center;
+    font-size: 24px;
+
+
+}
 
 /* ✅ 차트 컨테이너 중앙 정렬 */
 .chart-wrapper {
@@ -174,6 +196,8 @@ a:-webkit-any-link {
     align-items: center;
     width: 100%;
 }
+
+
 
 /* ✅ 차트 크기 설정 */
 canvas {
@@ -185,8 +209,9 @@ canvas {
 /* ✅ 차트 사이드에 배치된 박스들을 정렬 */
 .chart-container {
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
     gap: 20px;
+    flex: 1; /* 왼쪽 공간 차지 */
 }
 
 /* ✅ 각 차트 박스 스타일 */
