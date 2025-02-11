@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -136,5 +137,9 @@ public class UserService {
     public UserDTO findById(Long id) {
         User user = userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("User not found"));
         return userMapper.userToUserDTO(user);
+    }
+
+    public List<Long> getAllUserIds() {
+        return userRepository.findAll().stream().map(User::getId).collect(Collectors.toList());
     }
 }

@@ -197,16 +197,23 @@ public class QuestionService {
                     System.out.println("========SSE TEST============"+userDTO.getUserId());
                     System.out.println("========SSE TEST============"+categoryString);
                     CompletableFuture.runAsync(() -> reportApi(responseBody));
-
-//                    complaintRestController.sendNotification(userDTO.getUserId(),
-//                                "악성민원이 감지되었습니다. 사유 : " + categoryString);
                 }
                 questionDTO.setStatus(Status.접수중);
                 questionRepository.save(questionMapper.quDTOToQu(questionDTO));
-                // 알림 저장
-                notificationService.createNotification(questionDTO.getUserId(),  "게시글 "+ questionDTO.getId() + "번의 사유 : [" + categoryString + "] 악성민원이 감지되어 수정됐습니다.");
 
-                //complaintRestController.sendRefreshEvent();
+                System.out.println("SSE TEST - userId: " + questionDTO.getUserId());
+                // ✅ 만약 category가 '악성'이면, 작성자에게 알림 전송
+                if ("악성".equals(responseBody.get("message"))) {
+                    String notifiMessage = "게시글 "+ questionDTO.getId() + "번의 사유 : [" + categoryString + "] 악성민원이 감지되어 수정됐습니다.";
+                    notificationService.createNotification(questionDTO.getUserId(),  notifiMessage);
+                    complaintRestController.triggerEvent(questionDTO.getUserId(), "notification", notifiMessage);
+                }
+
+                // ✅ 모든 사용자에게 새로고침 이벤트 전송
+                List<Long> allUserIds = userService.getAllUserIds(); // 전체 사용자 ID 조회
+                for (Long userIds : allUserIds) {
+                    complaintRestController.triggerEvent(userIds, "refresh", null);
+                }
             }
             return CompletableFuture.completedFuture(null);
         }catch (Exception e) {
@@ -253,21 +260,22 @@ public class QuestionService {
     }
 
     public QuestionDTO getQuestion(Long id) {
+        System.out.println("=============1");
         Optional<Question> optionalQuestion = questionRepository.findById(id);
-
+        System.out.println("=============2");
         if (optionalQuestion.isPresent()) {
             Question question = optionalQuestion.get();
 
             question.incrementViews(); // 조회수 증가 메서드 호출
             questionRepository.save(question); // 변경된 엔티티 저장
-
+            System.out.println("=============3");
             // Question를 QuestionDTO로 변환
             QuestionDTO questionDTO = QuestionDTO.toQuestionDTO(question);
-            if(question.getFiltered().getId() != null) {
+            if(question.getFiltered() != null) {
                 questionDTO.setFilterTitle(question.getFiltered().getTitle());
                 questionDTO.setFilterContent(question.getFiltered().getContent());
             }
-
+            System.out.println("=============4");
             return questionDTO; // 문의 조회를 위한 DTO반환
         } else {
             throw new IllegalArgumentException("Question not found with ID: " + id);
