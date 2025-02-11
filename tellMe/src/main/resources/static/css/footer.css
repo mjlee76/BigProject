@@ -13,8 +13,8 @@ a:-webkit-any-link {
     display: flex;
     justify-content: center;
     border-top: 1px solid #eeeeee;
-    padding: 10px 0;
-    gap: 100px;
+    padding: 10px 0 10px 0;
+    gap: 50px;
     background: #f2f2f2;
 }
 
@@ -22,14 +22,13 @@ a:-webkit-any-link {
 }
 
 .footer .container .left h3 {
-    font-size: 16px;
-    line-height: 28px;
+    font-size: 14px;
+    line-height: 24px;
 }
 
 .footer .container .left h2 {
-    padding-bottom: 10px;
-    font-size: 27px;
-    line-height: 50px;
+    font-size: 22px;
+    line-height: 32px;
     font-weight: bold;
 }
 
@@ -42,15 +41,14 @@ a:-webkit-any-link {
 .footer .container .left .btnContent {
     display: flex;
     align-items: center;
-    margin-bottom: 15px;
 }
 
 .footer .container .left .btnContent span {
     width: 110px;
-    height: 40px;
+    height: 32px;
     border: 1px solid #e2e2e2;
     border-radius: 3px;
-    line-height: 40px;
+    line-height: 32px;
     text-align: center;
     margin-right: 12px;
     font-size: 12px;
@@ -65,8 +63,8 @@ a:-webkit-any-link {
 
 .footer .container .right .bar {
     display: flex;
-    margin-bottom: 25px;
-    gap: 25px;
+    margin-bottom: 15px;
+    gap: 15px;
     line-height: 28px;
     list-style: none; /* 🔥 리스트 점 제거 */
     padding: 0; /* 🔥 리스트 기본 padding 제거 */
@@ -104,8 +102,8 @@ a:-webkit-any-link {
 /* SNS 아이콘 리스트 */
 .footer .container .right .sns {
     display: flex;
-    margin-top: 35px;
-    gap: 35px; /* 아이콘 간격 */
+    margin-top: 20px;
+    gap: 20px; /* 아이콘 간격 */
     list-style: none; /* 기본 마커 제거 */
     padding: 0;
     align-items: center;
@@ -132,7 +130,7 @@ a:-webkit-any-link {
 }
 
 .footer .container .right .sns li a i {
-    font-size: 30px; /* 아이콘 크기 */
+    font-size: 1.5em;
     color: rgb(95, 0, 128); /* 아이콘 색상 */
     transition: transform 0.3s ease;
     text-decoration: none; /* 하이퍼링크 밑줄 제거 */
@@ -147,10 +145,11 @@ a:-webkit-any-link {
 }
 
 .copy {
-	background: #000;
-    color: #bbb;
+	background: #F2F2F2;
+    color: #333333;
     font-size: 0.9rem;
-    padding: 0 0 2rem 0;
+    margin: 0px;
+    padding: 0.3rem 0 1rem 0;
     text-align: center;
 }
 
