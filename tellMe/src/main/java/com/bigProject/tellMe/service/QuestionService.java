@@ -204,7 +204,7 @@ public class QuestionService {
                 questionDTO.setStatus(Status.접수중);
                 questionRepository.save(questionMapper.quDTOToQu(questionDTO));
                 // 알림 저장
-                notificationService.createNotification(questionDTO.getUserId(), "악성민원이 감지되었습니다. 사유 : " + categoryString);
+                notificationService.createNotification(questionDTO.getUserId(),  "게시글 "+ questionDTO.getId() + "번의 사유 : [" + categoryString + "] 악성민원이 감지되어 수정됐습니다.");
 
                 //complaintRestController.sendRefreshEvent();
             }
@@ -274,7 +274,7 @@ public class QuestionService {
         }
     }
 
-    public Page<QuestionDTO> searchAndFilter(String query, Status status, String category, String role, Pageable pageable) {
+    public Page<QuestionDTO> searchAndFilter(String query, Status status, String category, String role, Long userId, Pageable pageable) {
         // 동적 쿼리를 위한 조건 생성
         Specification<Question> spec = Specification.where(null);
 
@@ -285,7 +285,16 @@ public class QuestionService {
 
         // 상태 필터링
         if (status != null) {
-            spec = spec.and((root, cq, criteriaBuilder) -> criteriaBuilder.equal(root.get("status"), status));
+            if (status == Status.필터링중) {
+                spec = spec.and((root, cq, criteriaBuilder) ->
+                        criteriaBuilder.or(
+                                criteriaBuilder.equal(root.get("status"), status),  // ✅ 상태가 필터링중인 경우
+                                criteriaBuilder.equal(root.get("user").get("id"), userId) // ✅ 작성자 본인이면 볼 수 있음
+                        )
+                );
+            }else {
+                spec = spec.and((root, cq, criteriaBuilder) -> criteriaBuilder.equal(root.get("status"), status));
+            }
         }
 
         // 검색어 필터링
@@ -324,8 +333,8 @@ public class QuestionService {
                 question.getViews(),
                 question.getUser().getUserName(),
                 question.getStatus(),
-                question.getFiltered() != null ? question.getFiltered().getTitle() : null,  // ✅ filtered가 null이면 null 반환
-                question.getFiltered() != null ? question.getFiltered().getContent() : null // ✅ filtered가 null이면 null 반환
+                question.getFiltered() != null ? question.getFiltered().getTitle() : null,  // ✅ `filtered`가 `null`이면 `null` 반환
+                question.getFiltered() != null ? question.getFiltered().getContent() : null // ✅ `filtered`가 `null`이면 `null` 반환
         ));
     }
 
