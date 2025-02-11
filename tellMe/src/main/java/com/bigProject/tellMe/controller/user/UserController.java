@@ -31,9 +31,6 @@ public class UserController {
         //userDTO.setRole(Role.ROLE_ADMIN);
         //userDTO.setRole(Role.ROLE_MANAGER);
         //userDTO.setRole(Role.ROLE_COUNSELOR);
-//        userDTO.setRole(Role.ROLE_USER);
-        System.out.println("======================================");
-        System.out.println(userDTO.toString());
         userService.save(userDTO);
         return "login";
     }
@@ -48,4 +45,13 @@ public class UserController {
         return "find_pw";
     }
 
+    @GetMapping("/terms")
+    public String terms() {
+        return "terms";
+    }
+
+    @GetMapping("/UseTerms")
+    public String use_terms() {
+        return "use_terms";
+    }
 }

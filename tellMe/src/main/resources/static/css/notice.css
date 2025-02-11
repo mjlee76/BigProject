@@ -1,41 +1,34 @@
 /* 기본 설정 */
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'SUIT', sans-serif;
     margin: 0;
     padding: 0;
     background-color: #ffffff;
+    padding-top: 60px;
     color: #333;
 }
 
-/* 메인 영역
-main {
-    max-width: 1000px;
-    margin: 100px auto;
-    background: white;
-    padding: 50px;
-    border-radius: 4px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-} */
 /* 공지사항 상단 제목 */
 .notice-header {
+    display: flex;
     text-align: left; /* 중앙 정렬 */
-    margin-bottom: 30px; /* 아래 간격 */
-    padding: 30px 10%; /* 상하 여백과 좌우 패딩 */
-
-    background-color: #f4f4f4; /* 배경색 */
-
+    align-items: center;
+    gap: 20px;
+    padding: 55px 180px 0px 180px; /* 상하 여백과 좌우 패딩 */
+    background-color: #fff; /* 배경색 */
 }
 
 .notice-header h1 {
-    font-size: 24px;
+    font-size: 28px;
     font-weight: bold;
     color: #333;
-    margin-bottom: 10px; /* 제목과 페이지 정보 간격 */
+    margin: 10px 10px 10px 10px; /* 제목과 페이지 정보 간격 */
 }
 
 .notice-header p {
-    font-size: 14px;
+    font-size: 16px;
     color: #666;
+    margin: 10px 10px 0px 10px;
 }
 
 /* 게시글 목록 */
@@ -75,6 +68,7 @@ main {
     width: 100%; /* 전체 너비 */
     max-width: 600px; /* 최대 너비 */
     margin: 20px auto; /* 중앙 정렬 */
+    margin-top: 20px;
     border-bottom: 1px solid #333; /* 밑줄 */
 }
 
@@ -88,6 +82,7 @@ main {
     font-size: 14px; /* 글씨 크기 */
     color: #333; /* 기본 글자색 */
     margin-left: 10px; /* 입력 필드 외부의 왼쪽 간격 추가 */
+    margin-bottom: 5px;
 }
 
 .search-input::placeholder {
@@ -111,13 +106,6 @@ main {
     color: #1674C3; /* 호버 시 색상 변경 */
 }
 
-
-/* 페이지네이션 */
-.pagination {
-    display: flex;
-    justify-content: center;
-    margin-top: 20px;
-}
 
 .pagination button {
     border: 1px solid #ddd;
@@ -168,9 +156,9 @@ main {
 /* 활성화된 탭 스타일 */
 .tab.active {
     background-color: #ffffff;
-    color: #22A9FD;
+    color: #989EFF;
     font-weight: bold;
-    border-bottom: 2px solid #22A9FD;
+    border-bottom: 2px solid #989EFF;
 }
 
 .tab.active::after {
@@ -180,12 +168,12 @@ main {
     left: 0;
     width: 100%;
     height: 2px; /* 활성화된 탭의 밑줄 두께 */
-    background-color: #22A9FD; /* 밑줄 색상 */
+    background-color: #989EFF; /* 밑줄 색상 */
 }
 
 /* 탭 호버 효과 */
 .tab:hover {
-    color: #22A9FD;
+    color: #989EFF;
 }
 
 /* 탭 호버 가상환경경 */
@@ -196,7 +184,7 @@ main {
     left: 0;
     width: 100%;
     height: 1.7px; /* 호버 시 밑줄 두께 */
-    background-color: #22A9FD; /* 밑줄 색상 */
+    background-color: #989EFF; /* 밑줄 색상 */
 }
 
 
@@ -213,6 +201,7 @@ main {
 .post-table th, .post-table td {
     border-top: 1px solid #ddd; /* 가로 선만 남김 */
     border-bottom: 1px solid #ddd;
+    white-space: nowrap;
     padding: 10px; /* 셀 내부 여백을 늘림 */
     text-align: center; /* 모든 셀 중앙 정렬 */
 }
@@ -223,6 +212,7 @@ main {
 
 /* 제목의 링크 스타일 */
 .post-table td a {
+    white-space: nowrap;
     text-decoration: none; /* 밑줄 제거 */
     color: inherit; /* 기본 텍스트 색상 상속 */
 }
@@ -235,13 +225,13 @@ main {
 /* 테이블 맨 위 선 굵게 */
 .post-table thead tr th {
     border-top: 1px solid #333; /* 굵은 검은색 선 */
-    background-color: #F8FCFD ; /* 배경색 */
+    background-color: #FAF8FF ; /* 배경색 */
     padding: 15px;
 }
 
 /* 제목 셀만 좌측 정렬 */
 .post-table .post-title {
-    text-align: left; /* 제목은 왼쪽 정렬 */
+    text-align: center; /* 제목은 왼쪽 정렬 */
 }
 
 /* 테이블 헤더 스타일 */
@@ -249,8 +239,9 @@ main {
     font-size: 13px; /* 글씨 크기 조절 */
     /* font-weight: bold; 굵게 */
     text-align: center; /* 중앙 정렬 */
+    white-space: nowrap;
     padding: 10px; /* 여백 */
-    background-color: #F8FCFD; /* 배경색 (필요 시) */
+    background-color: #FAF8FF; /* 배경색 (필요 시) */
     white-space: nowrap;
 
 }
@@ -261,43 +252,45 @@ main {
     /* font-weight: bold; 굵게 */
     text-align: center; /* 중앙 정렬 */
     padding: 10px; /* 여백 */
-    background-color: #F8FCFD; /* 배경색 (필요 시) */
-
 }
 
 .post-table td:nth-child(1) {
     width: 10%; /* 첫 번째 열 너비 */
     font-size: 13px; /* 글씨 크기 조절 */
+    white-space: nowrap;
     /* font-weight: bold; 굵게 */
     text-align: center; /* 중앙 정렬 */
     padding: 10px; /* 여백 */
-    background-color: #fff; /* 배경색 (필요 시) */
-
 }
 
 /* 각 열의 너비 조정 */
 .post-table th:nth-child(1), /* 번호 */
 .post-table td:nth-child(1) {
+    white-space: nowrap;
     width: 5%; /* 첫 번째 열 너비 */
 }
 
 .post-table th:nth-child(2), /* 제목 */
 .post-table td:nth-child(2) {
+    white-space: nowrap;
     width: 60%; /* 두 번째 열 너비 */
 }
 
 .post-table th:nth-child(3), /* 작성일 */
 .post-table td:nth-child(3) {
+    white-space: nowrap;
     width: 20%; /* 세 번째 열 너비 */
 }
 
 .post-table th:nth-child(4), /* 조회수 */
 .post-table td:nth-child(4) {
+    white-space: nowrap;
     width: 10%; /* 네 번째 열 너비 */
 }
 
 /* 게시글 목록 스타일 */
 .post-table td {
+    white-space: nowrap;
     font-size: 14px; /* 게시글 목록 글씨 크기 */
     font-weight: normal; /* 목록 글씨 굵기 */
     text-align: center; /* 목록 중앙 정렬 */
@@ -321,10 +314,40 @@ body.delete-mode .checkbox-column {
     display: table-cell;
 }
 
-/* 🔹 삭제 모드일 때 번호 칼럼 숨김 */
+/* 🔹 삭제 모드일 때 번호 칼럼 숨김
 body.delete-mode .number-column,
 body.delete-mode #number-header {
     display: none;
+}
+*/
+
+/* 새로 추가할 스타일 */
+.number-column {
+    position: relative;
+    width: 5% !important;
+}
+
+.notice-number {
+    display: block;
+    position: relative;
+    z-index: 1;
+}
+
+.delete-checkbox {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+    display: none;
+}
+
+body.delete-mode .delete-checkbox {
+    display: block;
+}
+
+body.delete-mode .notice-number {
+    visibility: hidden;
 }
 
 /* 🔹 체크박스 스타일 */
@@ -339,7 +362,7 @@ body.delete-mode #number-header {
 }
 
 .post-title a:hover {
-    text-decoration: underline;
+    text-decoration: none;
 }
 
 /* 🔹 글쓰기 버튼 */
@@ -360,13 +383,30 @@ body.delete-mode #number-header {
     color: #000; /* 버튼 hover 글자색 */
 }
 
+/* 🔹 삭제 버튼 스타일 (글쓰기 버튼과 동일하게 적용) */
+#select-button, #delete-button, #cancel-button {
+    text-decoration: none;  /* 밑줄 제거 */
+    padding: 10px 20px;
+    border: 1px solid #ccc; /* 버튼 테두리 색상 */
+    background-color: #f4f4f4; /* 버튼 배경색 통일 */
+    color: #333; /* 버튼 글자 색상 */
+    cursor: pointer;
+    font-size: 14px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+#select-button:hover, #delete-button:hover, #cancel-button:hover {
+    background-color: #e6e6e6; /* 버튼 hover 배경색 */
+    color: #000; /* 버튼 hover 글자색 */
+}
+
 /* 🔹 상단 바 (글쓰기 버튼 + 삭제 버튼) */
 .top-bar {
+    position: absolute;
+    right: 10%; /* 오른쪽 끝 정렬 */
     display: flex;
-    justify-content: flex-end; /* 🔥 버튼들을 오른쪽 정렬 */
-    align-items: center;
-    gap: 15px; /* 버튼 간 간격 */
-    padding: 10px 10%; /* 좌우 여백 */
+    gap: 10px;
 }
 
 /* 🔹 삭제 버튼 스타일 */
@@ -398,14 +438,6 @@ body.delete-mode #number-header {
     color: #1674C3;
 }
 
-/* 페이지네이션 컨테이너 */
-.pagination {
-    display: flex;
-    justify-content: center; /* 중앙 정렬 */
-    margin-top: 20px; /* 위쪽 여백 */
-    margin-bottom: 20px;
-    align-items: center;
-}
 
 /* 페이지네이션 버튼 스타일 */
 .pagination a, .pagination button {
@@ -431,7 +463,7 @@ body.delete-mode #number-header {
     transition: background-color 0.3s ease;
     text-decoration: none;
     font-size: 14px;
-    color: blue;
+    color: #989EFF;
     border-radius: 4px;;
 }
 
@@ -442,4 +474,104 @@ body.delete-mode #number-header {
     color: #aaa;
     cursor: not-allowed;
     border: 1px solid #ddd;
+}
+
+
+/* 공지사항 이슈 수정 */
+/* 번호 셀 내부 정렬 */
+/* 번호 셀 내부 정렬 */
+.number-cell {
+    position: relative;
+    min-width: 40px;
+    text-align: center; /*번호중앙정렬*/
+}
+
+.notice-number {
+    display: inline-block;
+    width: 100%;
+    visibility: visible; /*항상 보이도록 설정*/
+}
+
+.delete-checkbox {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    display: none; /* 초기 상태: 숨김 */
+    z-index: 1;
+}
+
+/* 🔹 삭제 모드에서 체크박스 표시 */
+body.delete-mode .delete-checkbox {
+    display: block; /* 체크박스 표시 */
+}
+
+body.delete-mode .notice-number {
+    visibility: hidden; /* 번호 숨김 */
+}
+
+.button-group {
+    display: flex;
+    gap: 10px;
+}
+
+.delete-mode-buttons {
+    display: none; /* 초기 상태: 숨김 */
+    gap: 10px;
+}
+
+/* 🔹 삭제 모드에서 버튼 그룹 전환 */
+body.delete-mode .button-group {
+    display: none; /* 일반 버튼 그룹 숨김 */
+}
+
+body.delete-mode .delete-mode-buttons {
+    display: flex; /* 삭제 모드 버튼 그룹 표시 */
+}
+
+/* 🔹 취소 버튼 스타일 */
+#cancel-button {
+    display: inline-block; /* 항상 표시 */
+}
+
+/* 🔹 삭제 버튼 스타일 */
+#delete-button, #select-delete-button, #cancel-button {
+    padding: 10px 20px;
+    border: 1px solid #ccc;
+    background-color: #f4f4f4;
+    color: #333;
+    cursor: pointer;
+    font-size: 14px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+#delete-button:hover, #select-delete-button:hover, #cancel-button:hover {
+    background-color: #e6e6e6;
+    color: #000;
+}
+
+
+/* 🔹 페이지네이션 컨테이너 스타일 */
+.pagination-container {
+    display: flex;
+    justify-content: center; /* 페이지네이션과 버튼을 양쪽으로 분리 */
+    align-items: center; /* 세로 중앙 정렬 */
+    position: relative; /* 상대 위치 지정 */
+    margin-top: 20px; /* 위쪽 여백 */
+    margin-bottom: 20px; /* 아래쪽 여백 */
+    padding: 0 10%; /* 좌우 여백 */
+}
+
+/* 🔹 페이지네이션 스타일 */
+.pagination {
+    left: 50%; /* 부모의 50% 위치로 이동 */
+    transform: translateX(-50%); /* 정확한 중앙 정렬 */
+    display: flex;
+    align-items: center;
+    margin-left: 140px;
+}
+
+.feather feather-search {
+    margin-bottom: 10px;
 }

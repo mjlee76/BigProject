@@ -72,8 +72,8 @@ public class NotificationService {
 
     // ✅ 알림을 읽음 상태로 변경하는 기능
     @Transactional
-    public void markAsRead(NotificationDTO notificationDTO) {
-        Optional<Notification> optionalNotification = notificationRepository.findById(notificationDTO.getId());
+    public void markAsRead(Long notificationId) {
+        Optional<Notification> optionalNotification = notificationRepository.findById(notificationId);
 
         optionalNotification.ifPresent(notification -> {
             // ✅ 읽음 상태 변경 (Setter 없이 Dirty Checking 활용)

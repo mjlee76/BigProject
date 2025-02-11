@@ -26,6 +26,7 @@ import java.util.concurrent.*;
 @RequiredArgsConstructor
 public class ComplaintRestController {
     private final Map<String, SseEmitter> emitters = new ConcurrentHashMap<>();
+    private final CopyOnWriteArrayList<SseEmitter> refreshEmitters = new CopyOnWriteArrayList<>();
     private final QuestionService questionService;
     private final UserService userService;
     private final NotificationService notificationService;
@@ -39,9 +40,9 @@ public class ComplaintRestController {
         List<MultipartFile> files = new ArrayList<>();
         files.add(file);
         try {
-            String uploadDir = "tellMe/apiCheck-uploadFile";
+            String uploadDir = System.getProperty("user.dir") + "/apiCheck-uploadFile";
             FileUpLoadUtil.saveFiles(uploadDir, files);
-            uploadDir = "C:/Users/User/Desktop/BigProject/tellMe/apiCheck-uploadFile";
+            uploadDir = System.getProperty("user.dir") + "/apiCheck-uploadFile";
             String response = questionService.uploadFileApi(uploadDir);
             return ResponseEntity.ok().body(response);
         } catch (Exception e) {
@@ -104,9 +105,32 @@ public class ComplaintRestController {
 
     // ✅ 알림 클릭 시 isRead 값을 true로 변경
     @PostMapping("/markAsRead")
-    public ResponseEntity<Void> markAsRead(@RequestBody NotificationDTO notificationDTO) {
-        System.out.println("===========markAsRead : "+notificationDTO);
-        notificationService.markAsRead(notificationDTO);
+    public ResponseEntity<Void> markAsRead(@RequestBody Map<String, Long> requestBody) {
+        Long notificationId = requestBody.get("id");
+        System.out.println("===========markAsRead : "+notificationId);
+        notificationService.markAsRead(notificationId);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/sendRefresh")
+    public SseEmitter streamEvents() {
+        SseEmitter emitter = new SseEmitter(0L);
+        refreshEmitters.add(emitter);
+
+        emitter.onCompletion(() -> refreshEmitters.remove(emitter));
+        emitter.onTimeout(() -> refreshEmitters.remove(emitter));
+
+        return emitter;
+    }
+
+    public void sendRefreshEvent() {
+        for (SseEmitter emitter : refreshEmitters) {
+            try {
+                emitter.send(SseEmitter.event().name("refresh").data("reload"));
+            } catch (IOException e) {
+                emitter.complete();
+                refreshEmitters.remove(emitter);
+            }
+        }
     }
 }

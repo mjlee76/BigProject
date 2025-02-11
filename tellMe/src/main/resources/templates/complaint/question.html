@@ -8,16 +8,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>문의게시판</title>
     <link rel="stylesheet" type="text/css" th:href="@{/css/question.css}" />
+    <link href="https://cdn.jsdelivr.net/gh/sun-typeface/SUIT@2/fonts/static/woff2/SUIT.css" rel="stylesheet">
     <script type="text/javascript" th:src="@{/js/question.js}"></script>
 </head>
 <body>
 <div th:replace="layouts/navbar::tellMe_header"></div>
 <main id="inquiry-board">
-
     <div class="inquiry-header">
         <h1>문의게시판</h1>
+        <p>궁금한 점이 있다면 언제든 문의해주세요 😊</p>
     </div>
-
     <div class="tabs">
         <a class="tab" th:href="@{/complaint/question(query=${query}, category=${category}, status=null, page=1, size=${questionList.size})}"
            th:classappend="${status == 'all' or status == null} ? 'active' : ''" data-status="all">전체</a>
@@ -70,10 +70,10 @@
         <!-- 데이터가 있는 경우 -->
         <tr th:each="question : ${questionList}">
             <td th:text="${question.id}"></td>
-            <td th:if="${question.filterTitle.isEmpty()}">
+            <td th:if="${question.filterTitle == null or question.filterTitle.isEmpty()}">
                 <a th:href="@{/complaint/question/{id}(id=${question.id}, page=${questionList.number + 1})}" th:text="${question.Title}"></a>
             </td>
-            <td th:if="${!question.filterTitle.isEmpty()}">
+            <td th:if="${question.filterTitle != null and !question.filterTitle.isEmpty()}">
                 <a th:href="@{/complaint/question/{id}(id=${question.id}, page=${questionList.number + 1})}" th:text="${question.filterTitle}"></a>
             </td>
             <td th:text="${question.userName}"></td>
@@ -129,7 +129,7 @@
                th:classappend="${currentPage == totalPages} ? 'disabled' : ''">»</a>
         </div>
         <div class="write-button-container">
-            <a th:href="@{/complaint/new}" class="write-button">글쓰기</a>
+            <a th:href="@{/complaint/new}" class="write-button" sec:authorize="hasRole('ROLE_USER')">글쓰기</a>
         </div>
 </main>
 <div th:replace="layouts/footer::tellMe_footer"></div>

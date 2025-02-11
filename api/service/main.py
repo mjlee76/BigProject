@@ -268,7 +268,7 @@ async def upload_image(file: FilePath):
         data = await docu_loader.select_loader(file_location)
         llm_chain = await docu_loader.make_llm_text(data)
         combined_text = " ".join(llm_chain)
-        print(combined_text)
+        
         if not combined_text:
             return {
                 "valid": False,

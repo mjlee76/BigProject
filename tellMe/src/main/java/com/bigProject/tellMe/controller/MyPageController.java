@@ -79,11 +79,6 @@ public class MyPageController {
         return email; // 유효하지 않은 이메일은 그대로 반환
     }
 
-//    @GetMapping("/editPassword")
-//    public String editInfo() {
-//        return "mypage/edit_password";
-//    }
-
     @GetMapping("/editPassword")
     public String editInfo(Authentication auth, Model model) {
 
@@ -100,6 +95,7 @@ public class MyPageController {
 
         return "mypage/edit_password";
     }
+
 
     @GetMapping("/editInfo")
     public String mycomplaint(Authentication auth, Model model) {
