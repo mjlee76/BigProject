@@ -170,8 +170,6 @@ public class ManagerController {
         return "manager/statistics";  // 통계 페이지
     }
 
-<<<<<<< HEAD
-=======
     @GetMapping("/today-question")
     public String todayQuestion(Model model) {
         // 통계 데이터를 가져와서 뷰로 전달
@@ -208,16 +206,4 @@ public class ManagerController {
             outputStream.write(csvData.getBytes(StandardCharsets.UTF_8));
         }
     }
-
-
-
-
-
-
-<<<<<<< HEAD
->>>>>>> 13fde1d (실시간 민원 현황 상세페이지 기능 추가)
-=======
-
-
->>>>>>> bc74830 (통계 추가)
 }

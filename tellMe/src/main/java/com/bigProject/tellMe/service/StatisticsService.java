@@ -55,26 +55,12 @@ public class StatisticsService {
 //        long 외모Count = questionService.countByCategory(Category.외모차별);
 //        long 지역Count = questionService.countByCategory(Category.지역차별);
 //        long 나이Count = questionService.countByCategory(Category.나이차별);
-
-        return new StatisticsDTO(접수중Count, 처리중Count, 답변완료Count, 미확인Count, 확인완료Count);
-=======
         // 악성 민원 비율
         double 악성민원비율 = 전체민원수 == 0 ? 0 : (double) 악성민원수 / 전체민원수 * 100;
 
         // 평균 처리 시간 (예시로 1시간으로 설정)
         double 평균처리시간 = calculateAverageProcessingTime();
-
-<<<<<<< HEAD
-        return new StatisticsDTO(접수중Count, 처리중Count, 답변완료Count, 미확인Count, 확인완료Count, 전체민원수, 악성민원수, 악성민원비율, 평균처리시간);
->>>>>>> fe779d2 (실시간 민원 현황 - 모든 날짜 조회)
-=======
-        // StatisticsDTO 객체에 일반민원수 추가
-<<<<<<< HEAD
-        return new StatisticsDTO(접수중Count, 처리중Count, 답변완료Count, 미확인Count, 확인완료Count, 전체민원수, 악성민원수, 악성민원비율, 평균처리시간, 일반민원수);
->>>>>>> 13fde1d (실시간 민원 현황 상세페이지 기능 추가)
-=======
         return new StatisticsDTO(접수중Count, 처리중Count, 답변완료Count, 미확인Count, 확인완료Count, 전체민원수, 악성민원수, 악성민원비율, 평균처리시간, 일반민원수,yesterdayQuestionCount);
->>>>>>> bc74830 (통계 추가)
     }
 
 

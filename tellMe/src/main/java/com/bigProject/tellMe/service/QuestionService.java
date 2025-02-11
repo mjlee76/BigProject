@@ -31,21 +31,14 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-<<<<<<< HEAD
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
-=======
 import java.time.LocalDate;
-<<<<<<< HEAD
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
->>>>>>> 458bc89 (실시간 민원 현황 - 오늘만으로 날짜 변경)
-=======
-import java.util.*;
->>>>>>> 2f58b01 (실시간 민원 현황 - 시간대별 그래프 기능 완성)
 import java.util.stream.Collectors;
 import java.time.LocalDateTime;
 
@@ -417,35 +410,33 @@ public class QuestionService {
     public long countByStatus(Status status) {
         return questionRepository.countByStatus(status);
     }
-<<<<<<< HEAD
-<<<<<<< HEAD
 
 //    // 민원 악성 카테고리별 카운트
 //    public long countByCategory(Category category) {
 //        return questionRepository.countByCategory(category);
 //    }
-=======
     // 전체 민원 수
     public long countAllQuestions() {
         return questionRepository.count();
-=======
 
     // QuestionService에 오늘의 민원 수와 악성 민원 수를 조회하는 메서드 추가
-    public long countTodayQuestions() {
+    long countTodayQuestions;
+        {
         // 오늘 날짜에 해당하는 민원 수를 조회하는 쿼리 작성
         LocalDate today = LocalDate.now();
         return questionRepository.countByCreateDateBetween(
                 today.atStartOfDay(), today.atTime(23, 59, 59)
         );
->>>>>>> 458bc89 (실시간 민원 현황 - 오늘만으로 날짜 변경)
     }
 
-    public long countTodayCategoryNotNormal() {
+    long countTodayCategoryNotNormal;
+        {
         LocalDate today = LocalDate.now();
         return questionRepository.countByCategoryNotAndCreateDateBetween("정상", today.atStartOfDay(), today.atTime(23, 59, 59));
     }
     // 어제 민원 조회
-    public long countYesterdayQuestions() {
+    long countYesterdayQuestions;
+        {
         LocalDate yesterday = LocalDate.now().minusDays(1);
         return questionRepository.countByCreateDateBetween(
                 yesterday.atStartOfDay(),
@@ -455,7 +446,7 @@ public class QuestionService {
 
 
 
-    public Map<String, List<Long>> countQuestionsAndMaliciousByHour(LocalDate today) {
+    Map<String, List<Long>> countQuestionsAndMaliciousByHour;(LocalDate today) {
         List<Long> normalCounts = new ArrayList<>();
         List<Long> maliciousCounts = new ArrayList<>();
 
@@ -481,8 +472,4 @@ public class QuestionService {
         return result;
     }
 
-
-
-
->>>>>>> fe779d2 (실시간 민원 현황 - 모든 날짜 조회)
 }

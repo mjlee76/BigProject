@@ -23,20 +23,10 @@ public interface QuestionRepository extends JpaRepository<Question, Long>, JpaSp
     List<Question> findByUser(User user);
 
     long countByStatus(Status status);
-
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
     long countByCategory(Category category);
-=======
     // 악성 민원 수 (정상이 아닌 카테고리의 민원 수)
     @Query("SELECT COUNT(q) FROM Question q WHERE q.category <> :category")
     long countByCategoryNot(Category category);
->>>>>>> fe779d2 (실시간 민원 현황 - 모든 날짜 조회)
-=======
-=======
-
->>>>>>> 87aaf80 (enum 삭제)
     // QuestionRepository에 오늘 날짜와 관련된 쿼리 메서드 추가
     @Query("SELECT COUNT(q) FROM Question q WHERE q.createDate BETWEEN :start AND :end")
     long countByCreateDateBetween(LocalDateTime start, LocalDateTime end);
@@ -50,11 +40,4 @@ public interface QuestionRepository extends JpaRepository<Question, Long>, JpaSp
 
     @Query("SELECT COUNT(q) FROM Question q WHERE q.category <> :category AND q.createDate BETWEEN :start AND :end")
     long countByCategoryNotAndCreateDateBetween(String category, LocalDateTime start, LocalDateTime end);
-
-<<<<<<< HEAD
->>>>>>> 458bc89 (실시간 민원 현황 - 오늘만으로 날짜 변경)
-=======
-
-
->>>>>>> 2f58b01 (실시간 민원 현황 - 시간대별 그래프 기능 완성)
 }
