@@ -51,7 +51,7 @@ logger = logging.getLogger("my_logger")
 class UserInfo(BaseModel):
     user_name: str
     phone : str
-    count : int
+    #count : int
 
 # 게시글 정보
 class PostBody(BaseModel):

@@ -1,39 +1,38 @@
 /* 기본 설정 */
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'SUIT', sans-serif;
     margin: 0;
     padding: 0;
     background-color: #ffffff;
+    padding-top: 60px;
     color: #333;
 }
-
-/* 메인 영역 */
-/* main {
-    max-width: 1000px;
-    margin: 100px auto;
-    background: white;
-    padding: 50px;
-    border-radius: 4px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-} */
 
 a:-webkit-any-link {
     text-decoration: none;  /* 기본 밑줄 제거 */
 }
 
+/* 문의게시판 상단 제목 */
 .inquiry-header {
+    display: flex;
     text-align: left; /* 중앙 정렬 */
-    margin-bottom: 30px; /* 아래 간격 */
-    padding: 30px 10%; /* 상하 여백과 좌우 패딩 */
-
-    background-color: #f4f4f4; /* 배경색 */
-
+    align-items: center;
+    gap: 20px;
+    padding: 55px 180px 0px 180px; /* 상하 여백과 좌우 패딩 */
+    background-color: #fff; /* 배경색 */
 }
+
 .inquiry-header h1 {
-    font-size: 24px;
+    font-size: 28px;
     font-weight: bold;
     color: #333;
-    margin-bottom: 10px; /* 제목과 페이지 정보 간격 */
+    margin: 10px 10px 10px 10px; /* 제목과 페이지 정보 간격 */
+}
+
+.inquiry-header p {
+    font-size: 16px;
+    color: #666;
+    margin: 10px 10px 0px 10px;
 }
 
 /* 검색 폼 스타일 */
@@ -62,10 +61,11 @@ a:-webkit-any-link {
 
 /* 드롭다운 메뉴 */
 .search-bar select {
-    padding: 10px;
+    padding: 0px 5px 5px 5px;
     border: 1px solid #ffffff;
     font-size: 14px;
 }
+
 .search-bar select option {
     padding: 10px; /* 리스트 아이템 간격 */
     background-color: #fff; /* 드롭다운 아이템 배경 */
@@ -179,9 +179,10 @@ a:-webkit-any-link {
 .tabs {
     display: flex;
     border-bottom: 1px solid #e0e0e0;
-    margin-bottom: 80px;
+    margin-top: 30px;
+    margin-bottom: 60px;
     position: sticky; /* 스크롤 시 상단에 고정 */
-    top: 0; /* 상단에서의 고정 위치 */
+    top: 53px; /* 상단에서의 고정 위치 */
     z-index: 10; /* 다른 요소 위에 표시되도록 설정 */
     padding: 0 10%; /* 탭 컨테이너의 좌우 여백 */
 }
@@ -202,15 +203,15 @@ a:-webkit-any-link {
 
 /* 활성화된 탭 스타일 */
 .tab.active {
-    color: #22A9FD !important;
+    color: #5E64E0 !important;
     font-weight: bold !important;
     bottom: -1px !important; /* 같은 위치에서 밑줄 생성 */
-    border-bottom: 1px solid #22A9FD !important;
+    border-bottom: 1px solid #989EFF !important;
 }
 
 /* 탭 호버 효과 */
 .tab:hover {
-    color: #22A9FD;
+    color: #989EFF;
 }
 
 /* 탭 호버 가상환경 */
@@ -222,7 +223,7 @@ a:-webkit-any-link {
     left: 0;
     width: 100%;
     height: 1.7px; /* 호버 시 밑줄 두께 */
-    background-color: #22A9FD; /* 밑줄 색상 */
+    background-color: #989EFF; /* 밑줄 색상 */
 }
 
 /* 테이블 기본 스타일 */
@@ -258,7 +259,7 @@ a:-webkit-any-link {
 /* 테이블 맨 위 선 굵게 */
 .post-table thead tr th {
     border-top: 1px solid #333; /* 굵은 검은색 선 */
-    background-color: #F8FCFD ; /* 배경색 */
+    background-color: #FAF8FF ; /* 배경색 */
     padding: 15px;
 }
 
@@ -441,7 +442,7 @@ a:-webkit-any-link {
     transition: background-color 0.3s ease;
     text-decoration: none;
     font-size: 14px;
-    color: #22A9FD;
+    color: #989EFF;
     border-radius: 4px;;
 }
 
@@ -454,8 +455,33 @@ a:-webkit-any-link {
     border: 1px solid #ddd;
 }
 
-#inquiry-board p {
-    display: none; /* <p> 태그 전체를 숨김 */
+/* 글쓰기 버튼 컨테이너 */
+.write-button-container {
+    position: fixed;  /* 화면 고정 */
+    bottom: 50px;  /* 하단에서 50px 위 */
+    right: 50px;  /* 우측에서 50px */
+    z-index: 1000;  /* 다른 요소 위에 배치 */
+}
+
+/* 글쓰기 버튼 */
+.write-button {
+    display: inline-block;
+    padding: 12px 20px;
+    background-color: #AE93F6;  /* 파란색 배경 */
+    color: white;  /* 흰색 글씨 */
+    font-size: 14px;
+    font-weight: bold;
+    border-radius: 5px;
+    text-align: center;
+    text-decoration: none;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* 마우스 오버 효과 */
+.write-button:hover {
+    background-color: #9678F2;
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
 }
 
 #inquiry-board .footer {
