@@ -1,44 +1,44 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-  <title>home</title>
-  <link rel="stylesheet" type="text/css" th:href="@{/css/login.css}" />
-  <link rel="icon" type="image/x-icon" th:href="@{/image/favicon.png}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <title>home</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/login.css}" />
+    <link rel="icon" type="image/x-icon" th:href="@{/image/favicon.png}">
 </head>
 <body>
-  <div class="container">
+<div class="container">
     <div class="login-card">
-      <h1>로그인</h1>
-      <form th:action="@{/login}" method="post">
-        <div th:if="${param.error}">
-          <p style="color: red;" class="text-danger" th:text="${session.loginErrorMessage}"></p>
-        </div>
-        <div class="input-group">
+        <h1>로그인</h1>
+        <form th:action="@{/login}" method="post">
+            <div th:if="${param.error}">
+                <p style="color: red;" class="text-danger" th:text="${session.loginErrorMessage}"></p>
+            </div>
+            <div class="input-group">
           <span class="icon">
-            <img th:src = "@{/image/person.png}">
+            <img th:src = "@{/image/person_purple.png}">
           </span>
-          <input type="text" placeholder="아이디를 입력하세요." name = "userId" required>
-        </div>
-        <div class="input-group">
+                <input type="text" placeholder="아이디를 입력하세요." name = "userId" required>
+            </div>
+            <div class="input-group">
           <span class="icon">
-            <img th:src = "@{/image/pw1.png}">
+            <img th:src = "@{/image/pw_purple2.png}">
           </span>
-          <input type="password" placeholder="비밀번호를 입력하세요." name = "password" required>
+                <input type="password" placeholder="비밀번호를 입력하세요." name = "password" required>
+            </div>
+            <button type="submit" class="btn" id = "loginBtn" disabled>로그인</button>
+        </form>
+        <div class="back-link">
+            <a href="/tellMe">홈으로 돌아가기</a>
         </div>
-        <button type="submit" class="btn" id = "loginBtn" disabled>로그인</button>
-      </form>
-      <div class="back-link">
-        <a href="/tellMe">홈으로 돌아가기</a>
-      </div>
     </div>
     <div class="reset-password">
-      <a th:href="@{/user/find/id}">아이디 찾기</a> <span> | </span>
-      <a th:href="@{/user/find/pw}">비밀번호 찾기</a> <span> | </span>
-      <a th:href="@{/user/signUp}">회원가입</a>
+        <a th:href="@{/user/find/id}">아이디 찾기</a> <span> | </span>
+        <a th:href="@{/user/find/pw}">비밀번호 찾기</a> <span> | </span>
+        <a th:href="@{/user/signUp}">회원가입</a>
     </div>
-  </div>
-  <script type="text/javascript" th:src="@{/js/login.js}"></script>
+</div>
+<script type="text/javascript" th:src="@{/js/login.js}"></script>
 </body>
 </html>

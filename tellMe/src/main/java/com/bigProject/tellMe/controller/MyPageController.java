@@ -96,38 +96,6 @@ public class MyPageController {
         return "mypage/edit_password";
     }
 
-    @GetMapping("/MyComplaint")
-    public String mycomplaint(Authentication auth, Model model) {
-
-        UserDTO userDTO = userService.findByUserId(auth.getName());
-        userDTO.setPhone(maskPhNum(userDTO.getPhone()));
-        userDTO.setEmail(maskEmail(userDTO.getEmail()));
-
-        User user = userService.findUserById(userDTO.getId());
-        List<QuestionDTO> questions = questionService.findQuestionsByUser(user);
-
-        model.addAttribute("user", userDTO);
-        model.addAttribute("questions", questions);
-
-        return "mypage/my_complaint.html";
-    }
-
-    @GetMapping("/editPassword")
-    public String editInfo(Authentication auth, Model model) {
-
-        UserDTO userDTO = userService.findByUserId(auth.getName());
-        userDTO.setPhone(maskPhNum(userDTO.getPhone()));
-        userDTO.setEmail(maskEmail(userDTO.getEmail()));
-
-        User user = userService.findUserById(userDTO.getId());
-        List<QuestionDTO> questions = questionService.findQuestionsByUser(user);
-
-        model.addAttribute("user", userDTO);
-        model.addAttribute("questions", questions);
-
-
-        return "mypage/edit_password";
-    }
 
     @GetMapping("/editInfo")
     public String mycomplaint(Authentication auth, Model model) {

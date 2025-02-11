@@ -1,5 +1,6 @@
 //document.addEventListener("DOMContentLoaded", () => {
 <<<<<<< HEAD
+<<<<<<< HEAD
 //    const menuItems = document.querySelectorAll(".menu-item");
 //    const sections = document.querySelectorAll(".content-section");
 //
@@ -28,6 +29,8 @@
 //document.addEventListener("DOMContentLoaded", () => {
 =======
 >>>>>>> f149090 (내 페이지 수정.)
+=======
+>>>>>>> f1d798452247949a8bf40fcbd756920b276ec629
 //    const profileUpload = document.getElementById("profile-upload");
 //    const profilePic = document.getElementById("profile-pic");
 //

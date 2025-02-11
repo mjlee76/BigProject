@@ -8,103 +8,65 @@
     <title th:text="${notice.title}"></title>
     <script th:src="@{/js/notice-detail.js}" defer></script>
     <link rel="stylesheet" type="text/css" th:href="@{/css/notice-detail.css}" />
-<<<<<<< HEAD
     <link href="https://cdn.jsdelivr.net/gh/sun-typeface/SUIT@2/fonts/static/woff2/SUIT.css" rel="stylesheet">
-=======
-    <script th:src="@{/js/notice-detail.js}"></script>
-
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            document.querySelectorAll(".download-link").forEach(function (element) {
-                element.addEventListener("click", function (event) {
-                    event.preventDefault(); // 기본 동작 막기
-                    let filePath = this.getAttribute("data-filepath");
-                    downloadFile(filePath);
-                });
-            });
-        });
-
-        function downloadFile(filePath) {
-            if (!filePath) {
-                alert("파일 경로가 존재하지 않습니다.");
-                return;
-            }
-
-            const link = document.createElement("a");
-            link.href = filePath;
-            link.download = filePath.split("/").pop(); // 파일명 추출
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        }
-    </script>
->>>>>>> a18053f (내 페이지 수정.)
 </head>
 <body>
 <div th:replace="layouts/navbar::tellMe_header"></div>
 
-<main class="content">
-    <h1>공지사항</h1>
-    <table>
-        <tr class="border-top">
-            <th>번호</th>
-            <td th:text="${notice.id}"></td>
-<<<<<<< HEAD
-=======
-            <th>제목</th>
-            <td>
-                <span th:text="${notice.title}"></span>
-            </td>
-        </tr>
-        <tr>
-            <th>작성일</th>
-            <td>
-                <span th:text="${#temporals.format(notice.createDate, 'yyyy-MM-dd')}">2025-01-17 18:00:00</span>
-            </td>
->>>>>>> a18053f (내 페이지 수정.)
-            <th>조회수</th>
-            <td>
-                <span th:text="${notice.views}">0</span>
-            </td>
-            <th>작성일</th>
-            <td>
-                <span th:text="${#temporals.format(notice.createDate, 'yyyy-MM-dd')}">2025-01-17 18:00:00</span>
-            </td>
-        </tr>
-        <tr>
-            <th>제목</th>
-            <td colspan="5">
-                <span th:text="${notice.title}"></span>
-            </td>
-        </tr>
-        <tr>
-            <th>첨부파일</th>
-            <td colspan="5">
+<main>
+    <div class="notice-header">
+        <h1>공지사항</h1>
+        <p>중요한 소식과 공지를 확인하세요! 😎</p>
+    </div>
+    <div class="content">
+        <table>
+            <tr class="border-top">
+                <th>번호</th>
+                <td th:text="${notice.id}"></td>
+                <th>조회수</th>
+                <td>
+                    <span th:text="${notice.views}">0</span>
+                </td>
+                <th>작성일</th>
+                <td>
+                    <span th:text="${#temporals.format(notice.createDate, 'yyyy-MM-dd')}">2025-01-17 18:00:00</span>
+                </td>
+            </tr>
+            <tr>
+                <th>제목</th>
+                <td colspan="5">
+                    <span th:text="${notice.title}"></span>
+                </td>
+            </tr>
+            <tr>
+                <th>첨부파일</th>
+                <td colspan="5">
             <span th:if="${notice.file != null}">
             <a href="" class="download-link" th:data-filepath="@{'/tellMe/tellMe-image/notice/' + ${notice.id} + '/' + ${notice.file}}" title="첨부파일 다운로드">
                 <img th:src = "@{/image/attachment.jpg}" alt="첨부파일 아이콘" style="width: 16px; height: 16px; vertical-align: middle; margin-right: 5px;">
                 <span th:text="${notice.file}"></span>
             </a>
             </span>
-                <span th:if="${notice.file == null}">없음</span>
-            </td>
-        </tr>
-        <tr>
-            <td colspan="6">
-                <span th:text="${notice.content}" class="content-text">게시글 내용을 불러오는 중...</span>
-            </td>
-        </tr>
-    </table>
+                    <span th:if="${notice.file == null}">없음</span>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="6">
+                    <span th:text="${notice.content}" class="content-text">게시글 내용을 불러오는 중...</span>
+                </td>
+            </tr>
+        </table>
 
-    <!-- 🔹 Hidden Input Fields (자바스크립트에서 Thymeleaf 변수 사용을 위해 추가) -->
-    <input type="hidden" id="page" th:value="${page}" /> <!-- 현재 페이지 번호 -->
-    <input type="hidden" id="noticeId" th:value="${notice.id}" /> <!-- 공지사항 ID -->
+        <!-- 🔹 Hidden Input Fields (자바스크립트에서 Thymeleaf 변수 사용을 위해 추가) -->
+        <input type="hidden" id="page" th:value="${page}" /> <!-- 현재 페이지 번호 -->
+        <input type="hidden" id="noticeId" th:value="${notice.id}" /> <!-- 공지사항 ID -->
 
-    <!-- 버튼 -->
-    <div class="buttons">
-        <button class="list-button" th:onclick="detailListReq()">목록보기</button>
-        <button class="prev-button" th:onclick="updateReq()" sec:authorize="hasRole('ROLE_MANAGER')">수정하기</button>
-        <button class="prev-button" th:onclick="deleteReq()" sec:authorize="hasRole('ROLE_MANAGER')">삭제하기</button>
+        <!-- 버튼 -->
+        <div class="buttons">
+            <button class="list-button" th:onclick="detailListReq()">목록보기</button>
+            <button class="prev-button" th:onclick="updateReq()" sec:authorize="hasRole('ROLE_MANAGER')">수정하기</button>
+            <button class="prev-button" th:onclick="deleteReq()" sec:authorize="hasRole('ROLE_MANAGER')">삭제하기</button>
+        </div>
     </div>
 </main>
 <div th:replace="layouts/footer::tellMe_footer"></div>

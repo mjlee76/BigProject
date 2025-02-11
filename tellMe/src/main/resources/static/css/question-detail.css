@@ -1,11 +1,7 @@
 ```css
 /* 공통 스타일 */
 body {
-<<<<<<< HEAD
     font-family: 'SUIT', sans-serif;
-=======
-    font-family: Arial, sans-serif;
->>>>>>> a18053f (내 페이지 수정.)
     margin: 0;
     padding: 0;
     background-color: #ffffff;
@@ -16,8 +12,6 @@ body {
 
 a:-webkit-any-link {
     text-decoration: none;  /* 기본 밑줄 제거 */
-=======
->>>>>>> a18053f (내 페이지 수정.)
 }
 
 /* 테이블 스타일 */
@@ -163,11 +157,4 @@ button.delete-button:hover {
 .answer-form button:hover {
     background-color: #e6e6e6;
     color: #000;
-<<<<<<< HEAD
 }
-=======
-```
->>>>>>> a18053f (내 페이지 수정.)
-=======
-}
->>>>>>> 2f9bf03 (전체적인 css 수정)

@@ -5,28 +5,28 @@
     --text-color: #333;
     --sidebar-bg: #fff;
     --content-bg: #fff;
-    --button-bg: #3b82f6;
-    --button-hover: #2563eb;
+    --button-bg: #B6ABFF;
+    --button-hover: #95BBFA;
     --border-radius: 8px;
 }
 
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'SUIT', sans-serif;
     margin: 0;
     padding: 0;
     background-color: #ffffff;
     padding-top: 60px;
     color: #333;
-    display: block; /* display: flex 제거 */
 }
 
 .container {
     display: flex;
-    align-items: stretch; /* 자식요소들의 높이를 container의 전체 높이에 맞춤 */
-    width: 100%;
-    max-width: 1200px;
+    align-items: stretch;
+    width: 100%; /* 기존 코드 유지 */
+    max-width: 100%; /* 기존 max-width: 1200px; 제거 */
     margin: auto;
     margin-top: 80px;
+    flex: 1; /* 내용이 부족해도 footer가 하단에 고정 */
 }
 
 
@@ -35,6 +35,7 @@ body {
     width: 280px;
     background: var(--sidebar-bg);
     padding: 20px;
+    margin-left: 150px;
     border-radius: var(--border-radius);
     box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
     /* position, top, left 제거 */
@@ -49,6 +50,7 @@ body {
 
 .user-name {
     margin: 10px 0 5px;
+    font-weight: bold;
 }
 
 .user-email {
@@ -88,8 +90,11 @@ body {
     background: var(--content-bg);
     padding: 30px;
     border-radius: var(--border-radius);
-    margin-left: 20px; /* sidebar와 간격 조정 */
+    margin-left: 20px;
+    margin-right: 150px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%; /* 추가: 전체 너비 차지 */
+    height : 300px;
 }
 
 .section-title {

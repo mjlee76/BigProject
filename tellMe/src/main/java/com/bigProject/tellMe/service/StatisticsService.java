@@ -41,25 +41,13 @@ public class StatisticsService {
         // 일반 민원수 계산: 전체 민원수 - 악성 민원수
         long 일반민원수 = 전체민원수 - 악성민원수;
 
-<<<<<<< HEAD
-//        // 민원 카테고리별 통계 - 리턴값 넣기
-//        long 모욕Count = questionService.countByCategory(Category.모욕);
-//        long 협박Count = questionService.countByCategory(Category.협박);
-//        long 욕설Count = questionService.countByCategory(Category.욕설);
-//        long 인종Count = questionService.countByCategory(Category.인종차별);
-//        long 성차Count = questionService.countByCategory(Category.성차별);
-//        long 성희Count = questionService.countByCategory(Category.성희롱);
-//        long 장애Count = questionService.countByCategory(Category.장애인차별);
-//        long 혐오Count = questionService.countByCategory(Category.혐오발언);
-//        long 종교Count = questionService.countByCategory(Category.종교차별);
-//        long 외모Count = questionService.countByCategory(Category.외모차별);
-//        long 지역Count = questionService.countByCategory(Category.지역차별);
-//        long 나이Count = questionService.countByCategory(Category.나이차별);
         // 악성 민원 비율
         double 악성민원비율 = 전체민원수 == 0 ? 0 : (double) 악성민원수 / 전체민원수 * 100;
 
         // 평균 처리 시간 (예시로 1시간으로 설정)
         double 평균처리시간 = calculateAverageProcessingTime();
+
+        // StatisticsDTO 객체에 일반민원수 추가
         return new StatisticsDTO(접수중Count, 처리중Count, 답변완료Count, 미확인Count, 확인완료Count, 전체민원수, 악성민원수, 악성민원비율, 평균처리시간, 일반민원수,yesterdayQuestionCount);
     }
 

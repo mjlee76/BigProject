@@ -7,9 +7,13 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <<<<<<< HEAD
+<<<<<<< HEAD
     <link rel="icon" type="image/x-icon" th:href="@{/image/favicon.png}">
 =======
 >>>>>>> ddf405e (success API)
+=======
+    <link rel="icon" type="image/x-icon" th:href="@{/image/favicon.png}">
+>>>>>>> f1d798452247949a8bf40fcbd756920b276ec629
     <script src="https://code.jquery.com/jquery-3.6.3.js"></script>
     <script type="text/javascript" th:src="@{/js/common.js}"></script>
     <script type="text/javascript" th:src="@{/js/navbar.js}"></script>
@@ -20,11 +24,15 @@
         <div class="nav-container">
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> f1d798452247949a8bf40fcbd756920b276ec629
             <div class="logo">
                 <a th:href="@{/}">
                     <img th:src="@{/image/logo.png}" class="logo-img">
                 </a>
             </div>
+<<<<<<< HEAD
 =======
             <div class="logo"><a th:href="@{/}"><img class = "image" th:src = "@{/image/tellme.png}"></a></div>
 >>>>>>> bd7ce89 (내 페이지 수정.)
@@ -35,6 +43,8 @@
                 </a>
             </div>
 >>>>>>> ddf405e (success API)
+=======
+>>>>>>> f1d798452247949a8bf40fcbd756920b276ec629
             <div>
 =======
     <!-- 상단 내비게이션 바 -->
@@ -67,6 +77,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 =======
 >>>>>>> 56b639f (fail alarm)
@@ -83,6 +94,8 @@
 >>>>>>> 56b639f (fail alarm)
 =======
 >>>>>>> ddf405e (success API)
+=======
+>>>>>>> f1d798452247949a8bf40fcbd756920b276ec629
             <div class="auth-buttons">
                 <div sec:authorize="isAnonymous()">
                     <a th:href="@{/login}" class="auth-link login">로그인</a>
@@ -90,6 +103,7 @@
                 </div>
                 <div sec:authorize="isAuthenticated()">
                     <!-- 알림 영역 -->
+<<<<<<< HEAD
 <<<<<<< HEAD
                     <div class="notification-container" sec:authorize="hasRole('ROLE_USER')">
 =======
@@ -100,6 +114,10 @@
 =======
                         <div id="notification-icon" class="notification-bell" th:data-userid="${#authentication.name ?: 'anonymous'}">
 >>>>>>> 48147ce (uploadAPI ing...)
+=======
+                    <div class="notification-container">
+                        <div id="notification-icon" class="notification-bell" th:data-userid="${#authentication.name ?: 'anonymous'}">
+>>>>>>> f1d798452247949a8bf40fcbd756920b276ec629
                             <span id="notification-count" class="badge">0</span>
                             <span class="notification-text">알림</span>
                         </div>

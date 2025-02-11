@@ -42,7 +42,7 @@ public class ComplaintRestController {
         try {
             String uploadDir = "tellMe/apiCheck-uploadFile";
             FileUpLoadUtil.saveFiles(uploadDir, files);
-            uploadDir = "C:/Users/User/Desktop/BigProject/tellMe/apiCheck-uploadFile";
+            uploadDir = "C:/Users/User/BigProject/tellMe/apiCheck-uploadFile";
             String response = questionService.uploadFileApi(uploadDir);
             return ResponseEntity.ok().body(response);
         } catch (Exception e) {

@@ -31,6 +31,8 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.util.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -152,7 +154,7 @@ public class QuestionService {
             ObjectNode userNode = objectMapper.createObjectNode();
             userNode.put("user_name", userDTO.getUserName());
             userNode.put("phone", userDTO.getPhone());
-            userNode.put("count", userDTO.getCount());
+            //userNode.put("count", userDTO.getCount());
             //ObjectNode를 `Map<String, Object>`로 변환
             Map<String, Object> userMap = objectMapper.convertValue(userNode, Map.class);
 
@@ -411,17 +413,8 @@ public class QuestionService {
         return questionRepository.countByStatus(status);
     }
 
-//    // 민원 악성 카테고리별 카운트
-//    public long countByCategory(Category category) {
-//        return questionRepository.countByCategory(category);
-//    }
-    // 전체 민원 수
-    public long countAllQuestions() {
-        return questionRepository.count();
-
     // QuestionService에 오늘의 민원 수와 악성 민원 수를 조회하는 메서드 추가
-    long countTodayQuestions;
-        {
+    public long countTodayQuestions() {
         // 오늘 날짜에 해당하는 민원 수를 조회하는 쿼리 작성
         LocalDate today = LocalDate.now();
         return questionRepository.countByCreateDateBetween(
@@ -429,14 +422,12 @@ public class QuestionService {
         );
     }
 
-    long countTodayCategoryNotNormal;
-        {
+    public long countTodayCategoryNotNormal() {
         LocalDate today = LocalDate.now();
         return questionRepository.countByCategoryNotAndCreateDateBetween("정상", today.atStartOfDay(), today.atTime(23, 59, 59));
     }
     // 어제 민원 조회
-    long countYesterdayQuestions;
-        {
+    public long countYesterdayQuestions() {
         LocalDate yesterday = LocalDate.now().minusDays(1);
         return questionRepository.countByCreateDateBetween(
                 yesterday.atStartOfDay(),
@@ -446,7 +437,7 @@ public class QuestionService {
 
 
 
-    Map<String, List<Long>> countQuestionsAndMaliciousByHour;(LocalDate today) {
+    public Map<String, List<Long>> countQuestionsAndMaliciousByHour(LocalDate today) {
         List<Long> normalCounts = new ArrayList<>();
         List<Long> maliciousCounts = new ArrayList<>();
 
@@ -472,4 +463,12 @@ public class QuestionService {
         return result;
     }
 
+
+
+
+
+//    // 민원 악성 카테고리별 카운트
+//    public long countByCategory(Category category) {
+//        return questionRepository.countByCategory(category);
+//    }
 }

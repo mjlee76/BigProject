@@ -1,11 +1,7 @@
 ```css
 /* 공통 스타일 */
 body {
-<<<<<<< HEAD
     font-family: 'SUIT', sans-serif;
-=======
-    font-family: Arial, sans-serif;
->>>>>>> a18053f (내 페이지 수정.)
     margin: 0;
     padding: 0;
     background-color: #ffffff;
@@ -16,8 +12,29 @@ body {
 
 a:-webkit-any-link {
     text-decoration: none;  /* 기본 밑줄 제거 */
-=======
->>>>>>> a18053f (내 페이지 수정.)
+}
+
+/* 공지사항 상단 제목 */
+.notice-header {
+    display: flex;
+    text-align: left; /* 중앙 정렬 */
+    align-items: center;
+    gap: 20px;
+    padding: 55px 180px 0px 180px; /* 상하 여백과 좌우 패딩 */
+    background-color: #fff; /* 배경색 */
+}
+
+.notice-header h1 {
+    font-size: 28px;
+    font-weight: bold;
+    color: #333;
+    margin: 10px 10px 10px 10px; /* 제목과 페이지 정보 간격 */
+}
+
+.notice-header p {
+    font-size: 16px;
+    color: #666;
+    margin: 10px 10px 0px 10px;
 }
 
 /* 테이블 스타일 */

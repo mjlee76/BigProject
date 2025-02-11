@@ -12,6 +12,7 @@
     <link rel="stylesheet" type="text/css" th:href="@{/css/notice.css}"/>
     <link href="https://cdn.jsdelivr.net/gh/sun-typeface/SUIT@2/fonts/static/woff2/SUIT.css" rel="stylesheet">
     <script th:src="@{/js/notice.js}" defer></script>
+    <link rel="icon" type="image/png" th:href="@{/image/tellme_icon.png}">
 </head>
 <body>
 <div th:replace="layouts/navbar::tellMe_header"></div>
@@ -20,23 +21,9 @@
         <h1>공지사항</h1>
         <p>중요한 소식과 공지를 확인하세요! 😎</p>
     </div>
-<!--    <div class="tabs">-->
-<!--        <button class="tab" data-category="all">전체</button>-->
-<!--        <button class="tab" data-category="공고">공고</button>-->
-<!--        <button class="tab" data-category="행사">행사</button>-->
-<!--        <button class="tab" data-category="업데이트">업데이트</button>-->
-<!--        <button class="tab" data-category="기타">기타</button>-->
-<!--    </div>-->
-
     <div class="search-bar">
         <form id="search-form">
             <input type="text" placeholder="검색어를 입력하세요." id="search-input" name="query">
-            <!--            <select id="search-answer-status" name="answerStatus">-->
-            <!--                <option value="all">답변여부(전체)</option>-->
-            <!--                <option value="completed">답변완료</option>-->
-            <!--                <option value="transferred">이송이첩</option>-->
-            <!--                <option value="pending">대기중</option>-->
-            <!--            </select>-->
             <button type="submit" class="search-button">
                 <!-- 새로운 SVG 아이콘 -->
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search" viewBox="0 0 24 24">
@@ -49,11 +36,6 @@
     <table class="post-table">
         <thead>
         <tr>
-            <!--             🔹 번호 대신 체크박스로 변경될 칼럼-->
-            <!--            <th class="checkbox-header" style="display: none;">-->
-            <!--                <input type="checkbox" id="select-all-checkbox">-->
-            <!--            </th>-->
-            <!--            <th id="number-header" class="number-header" style="width: 5%;">번호</th>-->
             <th>번호</th>
             <th>제목</th>
             <th>작성일</th>
@@ -86,40 +68,9 @@
         </tr>
         </tbody>
     </table>
-<<<<<<< HEAD
-<!--    <div class="top-bar" sec:authorize="hasRole('ROLE_MANAGER')">-->
-<!--        <div class="button-group">-->
-<!--            <a class="write-button" th:href="@{/customer/write}">글쓰기</a>-->
-<!--            <button id="select-button" class="delete-button">삭제</button>-->
-<!--        </div>-->
-<!--        <div class="button-group delete-mode-buttons" style="display: none;">-->
-<!--            <button id="delete-button" class="delete-button">선택 삭제</button>-->
-<!--            <button id="cancel-button" class="delete-button">취소</button>-->
-<!--        </div>-->
-<!--    </div>-->
-
-    <!-- 첫번째 페이지로 이동 -->
-    <!-- /notice/paging?page=1 -->
-<<<<<<< HEAD
-=======
-    <div class="pagination-container">
->>>>>>> 8e087ac (공지사항 삭제, 선택삭제 최종수정완료, 공,민,보 게시판 css 조정)
-=======
-    <!--    <div class="top-bar" sec:authorize="hasRole('ROLE_MANAGER')">-->
-    <!--        <div class="button-group">-->
-    <!--            <a class="write-button" th:href="@{/customer/write}">글쓰기</a>-->
-    <!--            <button id="select-button" class="delete-button">삭제</button>-->
-    <!--        </div>-->
-    <!--        <div class="button-group delete-mode-buttons" style="display: none;">-->
-    <!--            <button id="delete-button" class="delete-button">선택 삭제</button>-->
-    <!--            <button id="cancel-button" class="delete-button">취소</button>-->
-    <!--        </div>-->
-    <!--    </div>-->
-
     <!-- 첫번째 페이지로 이동 -->
     <!-- /notice/paging?page=1 -->
     <div class="pagination-container">
->>>>>>> a599846 (home수정)
         <div class="pagination">
             <!-- 첫번째 페이지로 이동 -->
             <a th:href="@{/customer/notice(page=1)}">«</a>
@@ -139,12 +90,6 @@
             <!-- 마지막 페이지로 이동 -->
             <a th:href="@{/customer/notice(page=${noticeList.totalPages})}">»</a>
         </div>
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
->>>>>>> a599846 (home수정)
-
         <div class="top-bar" sec:authorize="hasRole('ROLE_MANAGER')">
             <div class="button-group">
                 <a class="write-button" th:href="@{/customer/write}">글쓰기</a>
@@ -155,12 +100,7 @@
                 <button id="cancel-button" class="delete-button">취소</button>
             </div>
         </div>
-
     </div>
-<<<<<<< HEAD
->>>>>>> 8e087ac (공지사항 삭제, 선택삭제 최종수정완료, 공,민,보 게시판 css 조정)
-=======
->>>>>>> a599846 (home수정)
 </main>
 <div th:replace="layouts/footer::tellMe_footer"></div>
 </body>
