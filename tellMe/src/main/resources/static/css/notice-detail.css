@@ -4,11 +4,8 @@ body {
     margin: 0;
     padding: 0;
     background-color: #ffffff;
+    padding-top: 60px;
     color: #333;
-}
-
-* {
-    box-sizing: border-box;
 }
 
 a:-webkit-any-link {
