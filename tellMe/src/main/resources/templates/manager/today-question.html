@@ -22,16 +22,12 @@
         <h1>보고서 관리</h1>
     </div>
 
-    <!-- 탭 -->
     <div class="tabs">
         <!-- 기존 탭 클릭 시 status 값 전달 -->
-        <a class="tab" th:href="@{/manager/report(query=${query}, status='all', page=1)}"
-           th:classappend="${status == 'all'} ? 'active' : ''" data-filter="all">실시간 민원 현황</a>
-        <a class="tab" th:href="@{/manager/report(query=${query}, status='확인완료', page=1)}"
-           th:classappend="${status == '확인완료'} ? 'active' : ''" data-filter="확인완료">처리 대기중 민원 현황</a>
-        <a class="tab" th:href="@{/manager/report(query=${query}, status='미확인', page=1)}"
-           th:classappend="${status == '미확인'} ? 'active' : ''" data-filter="미확인">보고서 상태별 현황</a>
+        <a class="tab" th:href="@{/manager/statistics}">실시간 민원 현황</a>
+        <a class="tab" th:href="@{/manager/today-question}">오늘 접수된 민원 현황</a>
     </div>
+
     <div id="wrapper">
         <div id="content-wrapper">
 
@@ -40,26 +36,25 @@
             <!-- 오늘 접수된 민원수 -->
             <div class="chart-container">
                 <div class ="chart-box">
-                <h2>오늘 접수된 민원수</h2>
+                    <h3>전일 대비 민원 증감률</h3>
+                    <div class="count">
+                        <span th:text="${statistics.전체민원수}"></span>건
+                    </div>
+                    <div class="change-rate">
+                        <span th:text="${dailyChangeRate > 0 ? '+' + dailyChangeRate + '%' : '-' + dailyChangeRate + '%'}"></span>
+                        <span class="icon" th:class="${dailyChangeRate > 0 ? 'increase' : 'decrease'}"></span>
+                    </div>
+                </div>
+                <div class ="chart-box">
+                    <h3>오늘 접수된 민원수</h3>
                     <div class="chart-wrapper">
                     <canvas id="statusChart"></canvas>
                     </div>
                 </div>
+
             </div>
 
 
-            <div class="today-statistics">
-                <div class="today-text">
-                    <span>오늘</span>
-                </div>
-                <div class="count">
-                    <span th:text="${statistics.전체민원수}">39</span>건
-                </div>
-                <div class="change-rate">
-                    <span th:text="${dailyChangeRate > 0 ? '오늘 총 ' + statistics.전체민원수 + '건의 민원이 접수 되었습니다. 어제보다 ' + dailyChangeRate + '% 올랐습니다.' : '오늘 총 ' + statistics.전체민원수 + '건의 민원이 접수 되었습니다. 어제보다 ' + dailyChangeRate + '% 줄었습니다.'}"></span>
-                    <span class="icon" th:class="${dailyChangeRate > 0 ? 'increase' : 'decrease'}"></span>
-                </div>
-            </div>
 
 
             <!-- 실시간 민원 현황 -->

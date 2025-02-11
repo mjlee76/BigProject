@@ -56,7 +56,7 @@ public class StatisticsService {
         return 1.0; // 실제로는 데이터베이스에서 처리 시간을 계산하여 반환
     }
 
-    public Map<String, List<Long>> getQuestionsAndMaliciousByHour() {
+    public Map<String, List<Long>> getQuestionsAndMaliciousByHour(LocalDate now) {
         LocalDate today = LocalDate.now();
         return questionService.countQuestionsAndMaliciousByHour(today);
     }
@@ -72,6 +72,37 @@ public class StatisticsService {
         }
 
         return ((double) (todayQuestions - yesterdayQuestions) / yesterdayQuestions);
+    }
+
+    // StatisticsService.java
+
+    public String generateStatisticsCsv() {
+        StatisticsDTO stats = getStatistics();
+        Map<String, List<Long>> hourlyData = getQuestionsAndMaliciousByHour(LocalDate.now());
+
+        StringBuilder csv = new StringBuilder();
+
+        // 기본 통계
+        csv.append("Category,Value\n");
+        csv.append("Total Questions,").append(stats.get전체민원수()).append("\n");
+        csv.append("Malicious Ratio,").append(stats.get악성민원비율()).append("%\n");
+        csv.append("Pending,").append(stats.get접수중Count()).append("\n");
+        csv.append("Processing,").append(stats.get처리중Count()).append("\n");
+        csv.append("Unconfirmed Reports,").append(stats.get미확인Count()).append("\n");
+        csv.append("Confirmed Reports,").append(stats.get확인완료Count()).append("\n\n");
+
+        // 시간대별 데이터
+        csv.append("Hour,Normal,Malicious\n");
+        for(int hour=0; hour<24; hour++){
+            csv.append(String.format("%02d:00", hour))
+                    .append(",")
+                    .append(hourlyData.get("normal").get(hour))
+                    .append(",")
+                    .append(hourlyData.get("malicious").get(hour))
+                    .append("\n");
+        }
+
+        return csv.toString();
     }
 
 

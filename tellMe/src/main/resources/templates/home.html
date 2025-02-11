@@ -15,6 +15,9 @@
 <div th:replace="layouts/navbar::tellMe_header"></div>
 
 <div id="home" class="section">
+    <div class="write-button-container">
+        <a th:href="@{/complaint/new}"  class="write-button" sec:authorize="hasRole('ROLE_USER')">시작하기</a>
+    </div>
     <div class="slider">
         <div class="slide">
             <div class="wrapper">
