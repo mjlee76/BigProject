@@ -5,19 +5,16 @@
     font-style: normal;
 }
 
-@font-face {
-    font-family: 'SUIT-Regular';
-    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_suit@1.0/SUIT-Regular.woff2') format('woff2');
-    font-weight: 900;
-    font-style: normal;
-}
-
 body {
     font-family: 'SUIT', sans-serif;
     margin: 0;
     padding: 0;
     background-color: #ffffff;
     color: #333;
+}
+
+a:-webkit-any-link {
+    text-decoration: none;  /* 기본 밑줄 제거 */
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -31,7 +28,7 @@ h1 {
 
 #home {
     width: 100%;
-    height: 700px;
+    height: calc(100vh - 60px);
     overflow: hidden;
     position: relative;
 }
@@ -46,7 +43,7 @@ h1 {
 /* 슬라이드 개별 스타일 */
 .slide {
     width: 100%;
-    height: 700px;
+    height: calc(100vh - 60px);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -54,274 +51,9 @@ h1 {
 }
 
 /* 슬라이드별 배경색 */
-.slide:nth-child(1) { background: linear-gradient(to right, #7FB3FF, #989EFF); }
-
-.slide:nth-child(3) { background: linear-gradient(to right, #C9B3FF, #7FB3FF); }
-
-.slide:nth-child(4) { background: linear-gradient(to right, #7FB3FF, #989EFF); }
-
-.wrapper {
-    display: flex;
-    width: 100%;
-    height: 600px;
-    background-color: #fff;
-    box-sizing: border-box; /* 패딩 포함 계산 */
-    overflow: hidden; /* 가로 스크롤 제거 */
-    background: linear-gradient(to bottom, #2196F3, #0D47A1);
-}
-
-
-.wrapper .area {
-    flex: 1; /* 동일한 너비로 좌우 배분 */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 20px;
-    font-weight: bold;
-}
-
-.wrapper .area.left {
-    margin: 20px;
-    border-radius: 20px;
-}
-
-.image.fit img {
-    width: 100%;
-    height: auto;
-}
-
-.wrapper .area.right {
-    text-align: center; /* 전체 중앙 정렬 */
-    margin: 20px;
-}
-
-/* ul 기본 스타일 제거 */
-.grid-container {
-    width: 100%;
-    height: 100%;
-    display: grid;
-    grid-template-columns: repeat(2, 1fr); /* 2개씩 정렬 */
-    gap: 40px;
-    margin: 20px;
-    padding: 10px;
-    margin-top: 20px;
-    list-style: none;
-}
-
-.box {
-    position: relative; /* 📌 부모에 relative 추가 */
-    overflow: hidden;
-    border-radius: 10px;
-    text-align: center;
-    font-size: 1.2rem;
-    font-weight: bold;
-    background-color: transparent;
-    /* 높이 지정이 필요할 수 있음 (예: height: 300px;) */
-}
-
-/* 배경 이미지 */
-.box .background-image {
-    position: absolute; /* 📌 absolute로 변경 */
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    z-index: 1; /* 📌 z-index 조정 (텍스트보다 아래) */
-}
-
-/* 텍스트 컨테이너 */
-.box div {
-    position: relative; /* 📌 텍스트를 absolute 대신 relative로 */
-    z-index: 2; /* 📌 이미지보다 위에 오도록 */
-    padding: 20px; /* 📌 텍스트 패딩 추가 */
-}
-
-/* 첫 번째 p (제목) */
-.box div p:first-of-type {
-    font-size: 20px;
-    color: #fff; /* 📌 어두운 배경엔 흰색 */
-    text-align: left;
-}
-
-/* 두 번째 p (설명) */
-.box div p:last-of-type {
-    font-size: 24px;
-    color: #000 !important; /* 📌 밝은 회색 */
-    text-align: left;
-}
-
-/* 박스 바깥 p */
-.box > p {
-    position: relative; /* 📌 z-index 적용을 위해 */
-    z-index: 2;
-    color: #000;
-}
-
-/* 📌 typeTwo 내부의 첫 번째 <p> */
-.typeTwo div p:first-of-type {
-    font-size: 20px;
-    font-weight: bold;
-    color: #00796b;
-}
-
-/* 📌 typeTwo 내부의 두 번째 <p> */
-.typeTwo div p:last-of-type {
-    font-size: 17px;
-    color: #004d40;
-    text-align: left;
-}
-
-/* 📌 typeTwo 바깥의 <p> */
-.typeTwo > p {
-    font-size: 15px;
-    font-weight: bold;
-    color: #00695c;
-}
-
-.wrapper2 {
-    display: flex;
-    width: 100%;
-    height: 700px;
-    background-color: #fff;
-    box-sizing: border-box; /* 패딩 포함 계산 */
-    overflow: hidden; /* 가로 스크롤 제거 */
-    background: transparent;
-}
-
-.wrapper2 .area {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 20px;
-    font-weight: bold;
-}
-
-.wrapper2 .area.left {
-    flex-direction: column;
-    flex: 2;
-    text-align: center; /* 전체 중앙 정렬 */
-    margin: 20px;
-    background-color: transparent;
-}
-
-.area.left h1 {
-    font-size: 40px; /* 큰 글씨 */
-    font-weight: bold; /* 굵게 강조 */
-    color: #fff;
-    margin-left: 10px;
-    text-align: left;
-}
-
-h1::after {
-    content: "";
-    display: block;
-    width: 80px; /* 가로줄 길이 */
-    height: 3px; /* 줄 두께 */
-    background: #ddd; /* 줄 색상 */
-    margin: 10px auto; /* 상하 간격 & 가운데 정렬 */
-}
-
-.area.left p {
-    font-weight: 850;
-    font-size: 50px;
-    margin-top: 10px;
-    margin-left: 10px;
-    text-align: left;
-    background: linear-gradient(90deg, #5650FF 0%, #AF4BFF 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
-
-.wrapper2 .area.right {
-    flex: 3;
-    margin: 20px;
-    border-radius: 20px;
-    background-color: transparent;
-}
-
-.wrapper2 .grid-container {
-    width: 100%;
-    height: 100%;
-    display: grid;
-    grid-template-columns: repeat(2, 1fr); /* 2개씩 정렬 */
-    gap: 40px;
-    margin: 20px;
-    padding: 10px;
-    margin-top: 20px;
-    list-style: none;
-}
-
-.wrapper2 .box {
-    position: relative; /* 📌 부모에 relative 추가 */
-    overflow: hidden;
-    border: 3px solid rgba(255, 255, 255, .8);
-    border-radius: 1.5rem;
-    text-align: center;
-    font-size: 1.2rem;
-    font-weight: bold;
-    background-color: transparent;
-    transition: transform 0.3s ease-in-out; /* 부드러운 애니메이션 효과 */
-    width: 300px;
-    height: 400px;
-    /* 높이 지정이 필요할 수 있음 (예: height: 300px;) */
-}
-
-/* 🔥 왼쪽 위 배치 */
-.box.left {
-    margin-bottom: 0px;
-    top: 150px;
-    left: 20px;
-    transform: rotate(-8deg);
-}
-
-/* 🔥 오른쪽 아래 배치 */
-.box.right {
-    margin-top: 50px;
-    bottom: 0px;
-    right: 20px;
-    transform: rotate(8deg);
-}
-
-.button {
-    display: flex;
-    justify-content: flex-start; /* 왼쪽 정렬 */
-    width: 100%; /* 부모 너비를 꽉 채워서 왼쪽 정렬 유지 */
-    margin-top: 20px; /* 버튼과 텍스트 사이 여백 */
-}
-
-/* 버튼 스타일 */
-.btn {
-    margin-left: 40px;
-    position: relative;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 12rem;
-    padding: 12px 24px;
-    border-radius: 30px;
-    font-size: 1.2rem;
-    font-weight: 800;
-    text-align: center;
-    text-decoration: none;
-    color: white;
-    background: linear-gradient(90deg, #5650ff, #7d70ff);
-    border: none;
-    cursor: pointer;
-    transition: all 0.3s ease-in-out;
-}
-
-/* 버튼 안의 텍스트 (span) */
-.btn span {
-    display: block;
-    padding: 5px 0;
-}
-
-/* 버튼 호버 효과 */
-.btn:hover {
-    background: linear-gradient(90deg, #7d70ff, #5650ff);
-    transform: scale(1.05);
-}
+.slide:nth-child(1) { background: linear-gradient(to right, #989EFF, #C9B3FF); }
+.slide:nth-child(3) { background: linear-gradient(to right, #7FB3FF, #989EFF); }
+.slide:nth-child(4) { background: linear-gradient(to right, #989EFF, #C9B3FF); } /* 첫 번째 화면 복제 */
 
 /* 컨트롤 버튼 */
 .controls {
@@ -356,37 +88,277 @@ h1::after {
     box-shadow: 0 0 5px rgba(255, 255, 255, 0.7);
 }
 
-.video-container {
-    position: relative; /* 부모 요소 기준 */
+.image.fit img {
     width: 100%;
-    height: 100%;
-    z-index: -1;
+    height: auto;
 }
 
-.video-container video {
+.wrapper {
+    display: flex;
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    box-sizing: border-box; /* 패딩 포함 계산 */
+    background: transparent;
 }
 
-.video-container::after {
-    content: "";  /* 반드시 필요! */
-    position: absolute; /* 부모 기준으로 덮어씌우기 */
+.wrapper .area {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.wrapper .area.left {
+    height: 100%;
+    flex-direction: column;
+    flex: 2;
+    text-align: center; /* 전체 중앙 정렬 */
+    margin: 0px 20px 0px 20px;
+    background-color: transparent;
+}
+
+.area.left h1 {
+    margin-top: 15px;
+    font-size: 40px; /* 큰 글씨 */
+    font-weight: bold; /* 굵게 강조 */
+    color: #fff;
+    margin-left: 10px;
+    text-align: left;
+}
+
+.area.left p {
+    font-weight: 850;
+    font-size: 50px;
+    margin-top: 10px;
+    margin-left: 10px;
+    margin-bottom: 10px;
+    text-align: left;
+    background: linear-gradient(90deg, #5650FF 0%, #AF4BFF 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.image-container {
+    display: flex;
+    justify-content: center;
+}
+
+.image-container img {
+    margin-left: 60px;
+    max-width: 100%; /* 반응형 설정 */
+    height: auto;
+}
+
+.wrapper .area.right {
+    flex: 3;
+    margin: 20px;
+    border-radius: 20px;
+    background-color: transparent;
+}
+
+.wrapper .grid-container {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* 2개씩 정렬 */
+    gap: 40px;
+    margin: 20px;
+    padding: 10px;
+    margin-top: 20px;
+    list-style: none;
+}
+
+.wrapper .box {
+    position: relative; /* 📌 부모에 relative 추가 */
+    overflow: hidden;
+    border: 3px solid rgba(255, 255, 255, .8);
+    border-radius: 1.5rem;
+    text-align: center;
+    font-size: 1.2rem;
+    font-weight: bold;
+    background-color: transparent;
+    transition: transform 0.3s ease-in-out; /* 부드러운 애니메이션 효과 */
+    width: 300px;
+    height: 400px;
+    /* 높이 지정이 필요할 수 있음 (예: height: 300px;) */
+}
+
+.wrapper .box.left:hover {
+    transform: rotate(-8deg) scale(1.05);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.wrapper .box.right:hover {
+    transform: rotate(8deg) scale(1.05);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+
+/* 🔥 왼쪽 위 배치 */
+.box.left {
+    margin-bottom: 0px;
+    top: 130px;
+    left: 20px;
+    transform: rotate(-8deg);
+}
+
+/* 🔥 오른쪽 아래 배치 */
+.box.right {
+    margin-top: 50px;
+    bottom: 0px;
+    right: 20px;
+    transform: rotate(8deg);
+}
+
+/* 텍스트 컨테이너 */
+.box div {
+    position: relative; /* 📌 텍스트를 absolute 대신 relative로 */
+    z-index: 2; /* 📌 이미지보다 위에 오도록 */
+    padding: 10px 10px 20px 10px; /* 📌 텍스트 패딩 추가 */
+}
+
+/* 첫 번째 p (제목) */
+.icon-container p {
+    white-space: nowrap;
+    font-size: 24px;
+    color: #fff;
+    text-align: left;
+}
+
+.icon-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    position: relative;
+}
+
+.icon-container .icon {
+    margin-bottom: 1rem;
+}
+
+.icon-container .icon img {
+    height: auto;
+    width:40px;
+    height: 40px;
+}
+
+.box .description {
+    text-align: left;
+    margin: -10px 10px 0px 10px;
+    font-size: 18px; /* 글자 크기 조절 */
+    color: #333; /* 색상 변경 (파란색 예시) */
+}
+
+.box p:not(:last-child)::after {
+    content: "";
+    display: flex;
+    width: 100%;
+    height: 1px; /* 줄 두께 */
+    background-color: #fff; /* 줄 색상 */
+    margin: 8px 0; /* 위아래 간격 */
+}
+
+.button {
+    display: flex;
+    justify-content: flex-start; /* 왼쪽 정렬 */
+    width: 100%; /* 부모 너비를 꽉 채워서 왼쪽 정렬 유지 */
+    margin-top: 20px; /* 버튼과 텍스트 사이 여백 */
+}
+
+/* 버튼 스타일 */
+.btn {
+    margin-top: -10px;
+    margin-left: 40px;
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 12rem;
+    padding: 12px 24px;
+    border-radius: 30px;
+    font-size: 1.2rem;
+    font-weight: 800;
+    text-align: center;
+    text-decoration: none;
+    color: white;
+    background: linear-gradient(90deg, #5650ff, #7d70ff);
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+}
+
+/* 버튼 안의 텍스트 (span) */
+.btn span {
+    display: block;
+    padding: 5px 0;
+}
+
+/* 버튼 호버 효과 */
+.btn:hover {
+    background: linear-gradient(90deg, #7d70ff, #5650ff);
+    transform: scale(1.05);
+}
+
+
+
+.circle {
+    width: 450px; /* 원 크기 */
+    height: 450px;
+    background-color: transparent; /* 원 색상 */
+    border: 3px solid rgba(255, 255, 255, .8);
+    border-radius: 50%; /* 동그란 모양 */
+}
+
+
+
+/* .wrapper2 스타일 설정 */
+.wrapper2 {
+    position: relative; /* 내부 요소 배치를 위한 relative */
+    width: 100%;
+    height: 100vh; /* 화면 전체 높이 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden; /* 넘치는 부분 감춤 */
+}
+
+/* 비디오 컨테이너 */
+.wrapper2 .video-container {
+    position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.5); /* 어두운 효과 */
-    z-index: 0; /* 비디오보다 위 */
+    z-index: -1; /* 배경으로 이동 */
 }
 
-.video-content {
+/* 비디오 스타일 */
+.wrapper2 .video-container video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* 비율 유지하면서 화면을 꽉 채움 */
+}
+
+/* 어두운 오버레이 */
+.wrapper2 .video-container::after {
+    content: "";
     position: absolute;
-    z-index: 1; /* 텍스트가 비디오와 오버레이 위에 보이도록 */
-    color: white; /* 글씨 색상 */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5); /* 반투명한 어두운 효과 */
+    z-index: 0; /* 비디오 위에 배치 */
+}
+
+/* 텍스트 스타일 */
+.wrapper2 .video-content {
+    position: relative;
+    z-index: 1; /* 텍스트가 비디오와 오버레이보다 위로 */
+    color: white;
     font-size: 2rem;
     font-weight: bold;
-    text-align: left;
-    top: 100px;
-    left: 1600px;
+    text-align: center;
 }

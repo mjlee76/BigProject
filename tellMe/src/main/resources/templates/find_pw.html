@@ -7,6 +7,7 @@
     <script src="https://code.jquery.com/jquery-3.6.3.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <link rel="stylesheet" type="text/css" th:href="@{/css/find_pw.css}" />
+    <link rel="icon" type="image/png" th:href="@{/image/tellme_icon.png}">
     <script type="text/javascript">
         function checkId(form) {
             url = "[[@{/user/check_id}]]";
@@ -67,7 +68,7 @@
         <form th:action="@{/login}" method="post" onsubmit="return checkId(this)">
             <div class="input-group">
                 <span class="icon">
-                    <img th:src="@{/image/person.png}" alt="사진 업로드 실패용">
+                    <img th:src="@{/image/person_purple.png}" alt="사진 업로드 실패용">
                 </span>
                 <input type="text" placeholder="아이디" id="userId" name="userId" minlength="4" maxlength="20">
             </div>
@@ -88,13 +89,13 @@
         <form th:action="@{/login}" method="post" onsubmit="return findPassword(this)">
             <div class="input-group">
                 <span class="icon">
-                    <img th:src="@{/image/person.png}" alt="사진 업로드 실패용">
+                    <img th:src="@{/image/person_purple.png}" alt="사진 업로드 실패용">
                 </span>
                 <input type="text" id="userName" placeholder="이름을 입력하세요" required>
             </div>
             <div class="input-group">
                 <span class="icon">
-                    <img th:src="@{/image/phone.png}" alt="비밀번호">
+                    <img th:src="@{/image/phone_purple.png}" alt="비밀번호">
                 </span>
                 <input type="text" id="phone" placeholder="핸드폰 번호" required>
             </div>

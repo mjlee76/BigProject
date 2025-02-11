@@ -361,4 +361,9 @@ public class QuestionService {
     public long countByStatus(Status status) {
         return questionRepository.countByStatus(status);
     }
+
+//    // 민원 악성 카테고리별 카운트
+//    public long countByCategory(Category category) {
+//        return questionRepository.countByCategory(category);
+//    }
 }

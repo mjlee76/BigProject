@@ -1,14 +1,11 @@
 /* 기본 설정 */
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'SUIT', sans-serif;
     margin: 0;
     padding: 0;
     background-color: #ffffff;
     color: #333;
 }
-
-
-
 
 /* 메인 영역
 main {
@@ -90,6 +87,7 @@ main {
     font-size: 14px; /* 글씨 크기 */
     color: #333; /* 기본 글자색 */
     margin-left: 10px; /* 입력 필드 외부의 왼쪽 간격 추가 */
+    margin-bottom: 5px;
 }
 
 .search-input::placeholder {
@@ -147,7 +145,7 @@ main {
 .tabs {
     display: flex;
     border-bottom: 1px solid #e0e0e0;
-    margin-bottom: 80px;
+    margin-bottom: 63px;
     position: sticky; /* 스크롤 시 상단에 고정 */
     top: 0; /* 상단에서의 고정 위치 */
     z-index: 10; /* 다른 요소 위에 표시되도록 설정 */
@@ -170,26 +168,26 @@ main {
 
 /* 활성화된 탭 스타일 */
 .tab.active {
-    color: #22A9FD;
+    color: #5E64E0;
     font-weight: bold;
     bottom: -1px; /* 같은 위치에서 밑줄 생성 */
-    border-bottom: 1px solid #22A9FD;
+    border-bottom: 1px solid #989EFF;
 }
 /* 탭 호버 효과 */
 .tab:hover {
-    color: #22A9FD;
+    color: #989EFF;
 }
 
 .tab.active::after,
 .tab:hover::after {
-    color: #22A9FD;
+    color: #989EFF;
     content: '';
     position: absolute;
     bottom: -1px; /* 같은 위치에서 밑줄 생성 */
     left: 0;
     width: 100%;
     height: 2px; /* 같은 두께 적용 */
-    background-color: #22A9FD;
+    background-color: #989EFF;
 }
 
 /* 모든 링크에 대해 밑줄 제거 */
@@ -231,7 +229,7 @@ a:-webkit-any-link {
 /* 테이블 맨 위 선 굵게 */
 .post-table thead tr th {
     border-top: 1px solid #333; /* 굵은 검은색 선 */
-    background-color: #F8FCFD ; /* 배경색 */
+    background-color: #FAF8FF ; /* 배경색 */
     padding: 15px;
 }
 
@@ -315,9 +313,8 @@ a:-webkit-any-link {
     display: flex;
     justify-content: center; /* 가운데 정렬 */
     align-items: center; /* 세로 정렬 */
-    gap: 20px; /* 버튼 간 간격 */
     margin-top: 20px; /* 위쪽 여백 */
-    margin-bottom: 30px; /* 아래쪽 여백 */
+    margin-bottom: 20px; /* 아래쪽 여백 */
 
 }
 
@@ -345,7 +342,7 @@ a:-webkit-any-link {
     transition: background-color 0.3s ease;
     text-decoration: none;
     font-size: 14px;
-    color: #22A9FD;
+    color: #989EFF;
     border-radius: 4px;;
 }
 
