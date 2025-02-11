@@ -9,9 +9,7 @@ import com.bigProject.tellMe.dto.ReportDTO;
 import com.bigProject.tellMe.dto.UserDTO;
 import com.bigProject.tellMe.entity.Filtered;
 import com.bigProject.tellMe.entity.Question;
-import com.bigProject.tellMe.entity.Report;
 import com.bigProject.tellMe.entity.User;
-import com.bigProject.tellMe.enumClass.Category;
 import com.bigProject.tellMe.enumClass.Reveal;
 import com.bigProject.tellMe.enumClass.Status;
 import com.bigProject.tellMe.mapper.FilteredMapper;
@@ -33,11 +31,15 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.util.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
+import java.time.LocalDateTime;
+
 
 @Service
 @RequiredArgsConstructor
@@ -56,10 +58,35 @@ public class QuestionService {
     private final ReportRepository reportRepository;
 
     private final UserService userService;
+    private final NotificationService notificationService;
 
     public Question save(QuestionDTO questionDTO) {
         Question question = questionMapper.quDTOToQu(questionDTO);
         return questionRepository.save(question);
+    }
+
+    public String uploadFileApi(String uploadDir) {
+        Map<String, Object> requestBody = new HashMap<>();
+        requestBody.put("file_path", uploadDir);
+        System.out.println("===============uploadFileApi:requestBody"+requestBody);
+        Map<String, Object> responseBody = fastApiClient.getUploadFile(requestBody);
+        System.out.println("===============uploadFileApi:responseBody"+responseBody);
+        String response = "";
+
+        if (responseBody != null && Boolean.TRUE.equals(responseBody.get("valid"))) {
+            if("악성".equals(responseBody.get("message"))) {
+                response = "악성";
+            }else {
+                response = "정상";
+            }
+        }else {
+            if(responseBody.get("message") != null) {
+                response = (String) responseBody.get("message");
+            }else {
+                response = "검증 실패: 유효하지 않은 요청입니다.";
+            }
+        }
+        return response;
     }
 
     public Map<String, Object> spamCheck(Map<String, String> request) {
@@ -123,7 +150,7 @@ public class QuestionService {
             ObjectNode userNode = objectMapper.createObjectNode();
             userNode.put("user_name", userDTO.getUserName());
             userNode.put("phone", userDTO.getPhone());
-            userNode.put("count", userDTO.getCount());
+            //userNode.put("count", userDTO.getCount());
             //ObjectNode를 `Map<String, Object>`로 변환
             Map<String, Object> userMap = objectMapper.convertValue(userNode, Map.class);
 
@@ -167,16 +194,19 @@ public class QuestionService {
                     categoryString = String.join(",", responseCategories);
                     //가져오는 법 : Arrays.asList(question.getCategory().split(","))
                     questionDTO.setCategory(categoryString);
+                    System.out.println("========SSE TEST============"+userDTO.getUserId());
+                    System.out.println("========SSE TEST============"+categoryString);
+                    CompletableFuture.runAsync(() -> reportApi(responseBody));
+
+//                    complaintRestController.sendNotification(userDTO.getUserId(),
+//                                "악성민원이 감지되었습니다. 사유 : " + categoryString);
                 }
                 questionDTO.setStatus(Status.접수중);
                 questionRepository.save(questionMapper.quDTOToQu(questionDTO));
+                // 알림 저장
+                notificationService.createNotification(questionDTO.getUserId(),  "게시글 "+ questionDTO.getId() + "번의 사유 : [" + categoryString + "] 악성민원이 감지되어 수정됐습니다.");
 
-                //complaintRestController.sendNotification(userDTO.getUserId(), "악성민원이 감지되어 게시글이 수정되었습니다. 사유 : " + categoryString);
-                complaintRestController.sendRefreshEvent();
-
-                if("악성".equals(responseBody.get("message"))) {
-                    CompletableFuture.runAsync(() -> reportApi(responseBody));
-                }
+                //complaintRestController.sendRefreshEvent();
             }
             return CompletableFuture.completedFuture(null);
         }catch (Exception e) {
@@ -232,13 +262,19 @@ public class QuestionService {
             questionRepository.save(question); // 변경된 엔티티 저장
 
             // Question를 QuestionDTO로 변환
-            return QuestionDTO.toQuestionDTO(question); // 문의 조회를 위한 DTO반환
+            QuestionDTO questionDTO = QuestionDTO.toQuestionDTO(question);
+            if(question.getFiltered().getId() != null) {
+                questionDTO.setFilterTitle(question.getFiltered().getTitle());
+                questionDTO.setFilterContent(question.getFiltered().getContent());
+            }
+
+            return questionDTO; // 문의 조회를 위한 DTO반환
         } else {
             throw new IllegalArgumentException("Question not found with ID: " + id);
         }
     }
 
-    public Page<QuestionDTO> searchAndFilter(String query, Status status, String category, String role, Pageable pageable) {
+    public Page<QuestionDTO> searchAndFilter(String query, Status status, String category, String role, Long userId, Pageable pageable) {
         // 동적 쿼리를 위한 조건 생성
         Specification<Question> spec = Specification.where(null);
 
@@ -249,7 +285,16 @@ public class QuestionService {
 
         // 상태 필터링
         if (status != null) {
-            spec = spec.and((root, cq, criteriaBuilder) -> criteriaBuilder.equal(root.get("status"), status));
+            if (status == Status.필터링중) {
+                spec = spec.and((root, cq, criteriaBuilder) ->
+                        criteriaBuilder.or(
+                                criteriaBuilder.equal(root.get("status"), status),  // ✅ 상태가 필터링중인 경우
+                                criteriaBuilder.equal(root.get("user").get("id"), userId) // ✅ 작성자 본인이면 볼 수 있음
+                        )
+                );
+            }else {
+                spec = spec.and((root, cq, criteriaBuilder) -> criteriaBuilder.equal(root.get("status"), status));
+            }
         }
 
         // 검색어 필터링
@@ -287,7 +332,9 @@ public class QuestionService {
                 question.getCreateDate(),
                 question.getViews(),
                 question.getUser().getUserName(),
-                question.getStatus()
+                question.getStatus(),
+                question.getFiltered() != null ? question.getFiltered().getTitle() : null,  // ✅ `filtered`가 `null`이면 `null` 반환
+                question.getFiltered() != null ? question.getFiltered().getContent() : null // ✅ `filtered`가 `null`이면 `null` 반환
         ));
     }
 
@@ -361,6 +408,60 @@ public class QuestionService {
     public long countByStatus(Status status) {
         return questionRepository.countByStatus(status);
     }
+
+    // QuestionService에 오늘의 민원 수와 악성 민원 수를 조회하는 메서드 추가
+    public long countTodayQuestions() {
+        // 오늘 날짜에 해당하는 민원 수를 조회하는 쿼리 작성
+        LocalDate today = LocalDate.now();
+        return questionRepository.countByCreateDateBetween(
+                today.atStartOfDay(), today.atTime(23, 59, 59)
+        );
+    }
+
+    public long countTodayCategoryNotNormal() {
+        LocalDate today = LocalDate.now();
+        return questionRepository.countByCategoryNotAndCreateDateBetween("정상", today.atStartOfDay(), today.atTime(23, 59, 59));
+    }
+    // 어제 민원 조회
+    public long countYesterdayQuestions() {
+        LocalDate yesterday = LocalDate.now().minusDays(1);
+        return questionRepository.countByCreateDateBetween(
+                yesterday.atStartOfDay(),
+                yesterday.atTime(23, 59, 59)
+        );
+    }
+
+
+
+    public Map<String, List<Long>> countQuestionsAndMaliciousByHour(LocalDate today) {
+        List<Long> normalCounts = new ArrayList<>();
+        List<Long> maliciousCounts = new ArrayList<>();
+
+        for (int hour = 0; hour < 24; hour++) {
+            LocalDateTime startOfHour = today.atTime(hour, 0);
+            LocalDateTime endOfHour = today.atTime(hour, 59, 59);
+
+
+            // 일반 민원 수 조회 (category가 정상인 경우)
+            long normalCount = questionRepository.countByCategoryAndCreateDateBetween("정상", startOfHour, endOfHour);
+            normalCounts.add(normalCount);
+
+            // 악성 민원 수 조회 (정상이 아닌 카테고리)
+            long maliciousCount = questionRepository.countByCategoryNotAndCreateDateBetween("정상", startOfHour, endOfHour);
+            maliciousCounts.add(maliciousCount);
+        }
+
+        // 결과를 Map으로 반환하여 일반 민원과 악성 민원의 시간대별 데이터를 한 번에 반환
+        Map<String, List<Long>> result = new HashMap<>();
+        result.put("normal", normalCounts);
+        result.put("malicious", maliciousCounts);
+
+        return result;
+    }
+
+
+
+
 
 //    // 민원 악성 카테고리별 카운트
 //    public long countByCategory(Category category) {

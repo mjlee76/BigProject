@@ -51,7 +51,7 @@ logger = logging.getLogger("my_logger")
 class UserInfo(BaseModel):
     user_name: str
     phone : str
-    count : int
+    #count : int
 
 # 게시글 정보
 class PostBody(BaseModel):
@@ -204,7 +204,7 @@ async def check_spam(request: SpamQuestionRequest):
 class FilePath(BaseModel):
     file_path : str
 
-@app.post("/upload/")
+@app.post("/upload")
 async def upload_image(file: FilePath):
     
     file_path = file.file_path
@@ -234,12 +234,12 @@ async def upload_image(file: FilePath):
                     nsfw_score = item.get("score")
                     break
             if nsfw_score is not None and nsfw_score > 0.7:
-                results = '악성'
-            else : results = '정상'
+                results = "악성"
+            else : results = "정상"
 
             return {
                 "valid": True,
-                "message" : f"이미지 탐지 결과: {results}",
+                "message" : results,
                 "file_path" : file_path
             }
 
@@ -256,30 +256,54 @@ async def upload_image(file: FilePath):
                 os.remove(file_location)
     
     else:
-        if not file_name.lower().endswith((".hwp", ".hwpx", ".doc", ".docx", ".pdf")):
+        if not file_name.lower().endswith((".hwp", ".hwpx", ".doc", ".docx", ".pdf", ".txt")):
             return {
                 "valid": False,
                 "message" : "유효한 문서 파일이 아닙니다.",
                 "file_path" : file_path
                 }
+        elif file_name.lower().endswith(".txt"):
+             file_location = file_path
 
         chroma = Chroma("fewshot_chat", OpenAIEmbeddings())
         data = await docu_loader.select_loader(file_location)
         await docu_loader.init()
         llm_chain = await docu_loader.make_llm_text(data)
         combined_text = " ".join(llm_chain)
-        content_label = classifier.classify_text(combined_text)
-        print(content_label)
-        if content_label != '정상':
-            os.remove(file_location)
-            return{
+        
+        if not combined_text:
+            return {
                 "valid": False,
-                "message" : "악성 파일로 판단되어 업로드가 차단되었습니다.",
+                "message": "문서 내용이 없습니다. 올바른 문서를 업로드하세요.",
+                "file_path": file_location
+            }
+        
+        content_label = await docu_loader.make_classify_text(combined_text)
+        if content_label != '정상':
+            if file_name.lower().endswith((".hwp", ".hwpx", ".doc", ".docx", ".pdf")):
+                os.remove(file_location)
+            elif file_name.lower().endswith(".txt"):
+                file_path = file.file_path
+                filenames = os.listdir(file_path)
+                file_name = filenames[0]
+                file_location = os.path.join(file_path, file_name)
+                os.remove(file_location)
+            return {
+                "valid": True,
+                "message" : "악성",
                 "file_path" : file_path
             }
-
-        return {
-            "valid": True,
-            "message" : f"문서 탐지 결과: {content_label}",
-            "file_path" : file_path
-        }
+        else:
+            if file_name.lower().endswith((".hwp", ".hwpx", ".doc", ".docx", ".pdf")):
+                os.remove(file_location)
+            elif file_name.lower().endswith(".txt"):
+                file_path = file.file_path
+                filenames = os.listdir(file_path)
+                file_name = filenames[0]
+                file_location = os.path.join(file_path, file_name)
+                os.remove(file_location)
+            return {
+                "valid": True,
+                "message" : "정상",
+                "file_path" : file_path
+            }

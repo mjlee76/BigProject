@@ -8,128 +8,84 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 <link rel="stylesheet" type="text/css" th:href="@{/css/statistics.css}" />
 <link rel="stylesheet" type="text/css" th:href="@{/css/sidebar.css}" />
-<link href="https://cdn.jsdelivr.net/gh/sun-typeface/SUIT@2/fonts/static/woff2/SUIT.css" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script> <!-- Ensure this plugin is loaded -->
-<script th:src="@{/js/statistics.js}"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.0.0/dist/chart.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.00"></script>
+<!-- 버전 2 (최신) -->
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+<script th:src="@{/js/statistics.js}" defer></script>
 </head>
 <body>
 <div th:replace="layouts/navbar::tellMe_header"></div>
+<main class="container">
+    <div class="report-header">
+        <h1>문의 통계</h1>
+    </div>
+    <!-- 탭 -->
+    <div class="tabs">
+        <!-- 기존 탭 클릭 시 status 값 전달 -->
+        <a class="tab" th:href="@{/manager/statistics}">실시간 민원 현황</a>
+        <a class="tab" th:href="@{/manager/today-question}">오늘 접수된 민원 현황</a>
+    </div>
 
-<!-- ✅ 사이드바 -->
-<div id="wrapper">
-    <!-- Sidebar -->
-    <ul class="sidebar bg-primary sidebar-dark" id="sidebar">
-        <!-- Sidebar Content -->
-    </ul>
-    <!-- End of Sidebar -->
 
-    <!-- Content Wrapper -->
-    <div id="content-wrapper">
-        <!-- 처리 대기중 민원수 -->
-        <div id="status-content" style="display: block;">
-            <h2 class="text-center">처리 대기중 민원수</h2>
-            <div class="chart-wrapper">
-                <canvas id="statusChart"></canvas>
+    <div id="wrapper">
+        <div id="content-wrapper">
+            <!-- 실시간 민원 현황 -->
+            <div class="chart-box">
+                <div class="chart-header">
+                    <h2>실시간 민원 현황</h2>
+                    <a th:href="@{/manager/download-realtime}" class="download-btn">
+                        <i class="fas fa-file-csv"></i>
+                    </a>
+                </div>
+                <div class="chart-wrapper">
+                    <canvas id="realTimeChart"></canvas>
+                </div>
             </div>
-        </div>
 
-        <!-- 보고서 확인 상태별 통계 -->
-        <div id="reportstatus-content" style="display: block;">
-            <h2 class="text-center">보고서 상태별 통계</h2>
-            <div class="chart-wrapper">
-                <canvas id="reportstatusChart"></canvas>
+            <!-- 파이차트 2개를 같은 줄에 배치 -->
+            <div class="chart-container">
+                <!-- 처리 대기중 민원수 -->
+                <div class="chart-box">
+                    <h2>처리 대기중 민원수</h2>
+                    <div class="chart-wrapper">
+                        <canvas id="statusChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- 보고서 확인 상태별 통계 -->
+                <div class="chart-box">
+                    <h2>보고서 상태별 통계</h2>
+                    <div class="chart-wrapper">
+                        <canvas id="reportstatusChart"></canvas>
+                    </div>
+                </div>
             </div>
         </div>
 
     </div>
-
-</div>
-
+</main>
 <div th:replace="layouts/footer::tellMe_footer"></div>
 
-<script>
-    // 민원 처리 상태별 파이 차트
-    var ctx = document.getElementById('statusChart').getContext('2d');
-    var statusChart = new Chart(ctx, {
-        type: 'pie',
-        data: {
-            labels: ['접수중', '처리중'],
-            datasets: [{
-                label: '민원 수',
-                data: [
-                    /* 통계 데이터 (서버에서 전달된 값으로 대체됨) */
-                    [[${statistics.접수중Count}]],
-                    [[${statistics.처리중Count}]]
-                ],
-                backgroundColor: [
-                    'rgba(255, 99, 132, 0.2)',
-                    'rgba(54, 162, 235, 0.2)'
-                ],
-                borderColor: [
-                    'rgba(255, 99, 132, 1)',
-                    'rgba(54, 162, 235, 1)'
-                ],
-                borderWidth: 1
-            }]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                datalabels: {
-                    color: 'white', // 라벨의 텍스트 색상
-                    font: {
-                        size: 14, // 폰트 크기
-                        weight: 'bold' // 폰트 두께
-                    },
-                    formatter: function(value) {
-                        return value;  // 백분율 대신 값만 표시
-                    }
-                }
-            }
-        }
-    });
+<!-- Thymeleaf를 사용하여 데이터를 JavaScript로 전달 -->
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    var statistics = {
+        전체민원수: [[${statistics.전체민원수}]],
+        악성민원비율: [[${statistics.악성민원비율}]],
+        접수중Count: [[${statistics.접수중Count}]],
+        처리중Count: [[${statistics.처리중Count}]],
+        미확인Count: [[${statistics.미확인Count}]],
+        확인완료Count: [[${statistics.확인완료Count}]]
+    };
 
-    // 보고서 상태별 파이 차트
-    var reportCtx = document.getElementById('reportstatusChart').getContext('2d');
-    var reportstatusChart = new Chart(reportCtx, {
-        type: 'pie',
-        data: {
-            labels: ['미확인', '확인완료'],
-            datasets: [{
-                label: '보고서 수',
-                data: [
-                    /* 통계 데이터 (서버에서 전달된 값으로 대체됨) */
-                    [[${statistics.미확인Count}]],
-                    [[${statistics.확인완료Count}]]
-                ],
-                backgroundColor: [
-                    'rgba(255, 159, 64, 0.2)',
-                    'rgba(75, 192, 192, 0.2)'
-                ],
-                borderColor: [
-                    'rgba(255, 159, 64, 1)',
-                    'rgba(75, 192, 192, 1)'
-                ],
-                borderWidth: 1
-            }]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                datalabels: {
-                    color: 'white', // 라벨의 텍스트 색상
-                    font: {
-                        size: 14, // 폰트 크기
-                        weight: 'bold' // 폰트 두께
-                    },
-                    formatter: function(value) {
-                        return value;  // 백분율 대신 값만 표시
-                    }
-                }
-            }
-        }
-    });
+    var questionsAndMaliciousByHour = {
+        normal: [[${questionsAndMaliciousByHour['normal']}]],
+        malicious: [[${questionsAndMaliciousByHour['malicious']}]]
+    };
+    /*]]>*/
 </script>
+
+
 </body>
 </html>

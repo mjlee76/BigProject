@@ -96,7 +96,7 @@ h1 {
 }
 
 .btn:disabled {
-    background-color: gray;
+    background-color: #EBE1FD;
     cursor: pointer;
     box-shadow: none;
 }

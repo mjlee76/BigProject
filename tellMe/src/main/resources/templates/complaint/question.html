@@ -70,7 +70,12 @@
         <!-- 데이터가 있는 경우 -->
         <tr th:each="question : ${questionList}">
             <td th:text="${question.id}"></td>
-            <td><a th:href="@{/complaint/question/{id}(id=${question.id}, page=${questionList.number + 1})}" th:text="${question.Title}"></a></td>
+            <td th:if="${question.filterTitle == null or question.filterTitle.isEmpty()}">
+                <a th:href="@{/complaint/question/{id}(id=${question.id}, page=${questionList.number + 1})}" th:text="${question.Title}"></a>
+            </td>
+            <td th:if="${question.filterTitle != null and !question.filterTitle.isEmpty()}">
+                <a th:href="@{/complaint/question/{id}(id=${question.id}, page=${questionList.number + 1})}" th:text="${question.filterTitle}"></a>
+            </td>
             <td th:text="${question.userName}"></td>
             <td th:text="*{#temporals.format(question.createDate, 'yyyy-MM-dd')}"></td>
             <td th:text="${question.status}"></td>
