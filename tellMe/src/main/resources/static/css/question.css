@@ -61,7 +61,7 @@ a:-webkit-any-link {
 
 /* 드롭다운 메뉴 */
 .search-bar select {
-    padding: 5px;
+    padding: 0px 5px 5px 5px;
     border: 1px solid #ffffff;
     font-size: 14px;
 }
@@ -181,7 +181,7 @@ a:-webkit-any-link {
     margin-top: 30px;
     margin-bottom: 60px;
     position: sticky; /* 스크롤 시 상단에 고정 */
-    top: 0; /* 상단에서의 고정 위치 */
+    top: 55px; /* 상단에서의 고정 위치 */
     z-index: 10; /* 다른 요소 위에 표시되도록 설정 */
     padding: 0 10%; /* 탭 컨테이너의 좌우 여백 */
 }
