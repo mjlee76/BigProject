@@ -37,6 +37,7 @@ a:-webkit-any-link {
 >>>>>>> a18053f (내 페이지 수정.)
 }
 
+<<<<<<< HEAD
 =======
 >>>>>>> f149090 (내 페이지 수정.)
 h1, h2, h3, h4, h5, h6 {
@@ -50,6 +51,8 @@ h1 {
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+=======
+>>>>>>> 65a8391 (전체적인 css 수정)
 #home {
     width: 100%;
     height: calc(100vh - 60px);
@@ -585,7 +588,7 @@ footer.align-center {
 }
 
 .image-left img {
-    width: 80%; /* 컨테이너 내에서 비율 조정 */
+    width: 100%; /* 컨테이너 내에서 비율 조정 */
     height: auto;
     max-width: 400px; /* 최대 너비 제한 */
 }
@@ -613,11 +616,12 @@ footer.align-center {
 
 /* 오른쪽 스택 이미지 컨테이너 */
 .img-stack {
-    height: 200px; /* 높이 고정 */
+    height: 230px; /* 높이 고정 */
 }
+
 .img-stack .img {
-    width: 30%; /* 이미지 크기 조정 */
-    max-width: 150px; /* 최대 너비 제한 */
+    width: 70%; /* 이미지 크기 조정 */
+    max-width: 230px; /* 최대 너비 제한 */
     position: absolute;
     transition: transform 0.3s ease-in-out;
 }
