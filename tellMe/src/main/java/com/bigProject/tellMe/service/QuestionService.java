@@ -271,7 +271,13 @@ public class QuestionService {
             questionRepository.save(question); // 변경된 엔티티 저장
 
             // Question를 QuestionDTO로 변환
-            return QuestionDTO.toQuestionDTO(question); // 문의 조회를 위한 DTO반환
+            QuestionDTO questionDTO = QuestionDTO.toQuestionDTO(question);
+            if(question.getFiltered().getId() != null) {
+                questionDTO.setFilterTitle(question.getFiltered().getTitle());
+                questionDTO.setFilterContent(question.getFiltered().getContent());
+            }
+
+            return questionDTO; // 문의 조회를 위한 DTO반환
         } else {
             throw new IllegalArgumentException("Question not found with ID: " + id);
         }
