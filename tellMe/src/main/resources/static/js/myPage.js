@@ -1,36 +1,4 @@
 //document.addEventListener("DOMContentLoaded", () => {
-<<<<<<< HEAD
-<<<<<<< HEAD
-//    const menuItems = document.querySelectorAll(".menu-item");
-//    const sections = document.querySelectorAll(".content-section");
-//
-//    // 메뉴 클릭 시 활성화
-//    menuItems.forEach(item => {
-//        item.addEventListener("click", () => {
-//            menuItems.forEach(i => i.classList.remove("active"));
-//            item.classList.add("active");
-//
-//            const target = item.getAttribute("data-target");
-//            sections.forEach(section => {
-//                section.classList.remove("active");
-//                if (section.id === target) section.classList.add("active");
-//            });
-//        });
-//    });
-//
-//    // 프로필 수정 버튼 클릭 시 알림
-//    document.querySelectorAll(".edit-btn").forEach(button => {
-//        button.addEventListener("click", () => {
-//            alert("수정 기능은 아직 구현되지 않았습니다.");
-//        });
-//    });
-//});
-//
-//document.addEventListener("DOMContentLoaded", () => {
-=======
->>>>>>> f149090 (내 페이지 수정.)
-=======
->>>>>>> f1d798452247949a8bf40fcbd756920b276ec629
 //    const profileUpload = document.getElementById("profile-upload");
 //    const profilePic = document.getElementById("profile-pic");
 //

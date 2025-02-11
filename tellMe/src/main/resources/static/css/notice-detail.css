@@ -1,4 +1,3 @@
-```css
 /* 공통 스타일 */
 body {
     font-family: 'SUIT', sans-serif;
@@ -7,7 +6,6 @@ body {
     background-color: #ffffff;
     padding-top: 60px;
     color: #333;
-<<<<<<< HEAD
 }
 
 a:-webkit-any-link {
@@ -134,9 +132,4 @@ button.delete-button {
 
 button.delete-button:hover {
     background-color: #f4a3a2; /* 삭제 버튼 hover 색상 */
-<<<<<<< HEAD
 }
-=======
-}
-```
->>>>>>> a18053f (내 페이지 수정.)

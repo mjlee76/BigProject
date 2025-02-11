@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 <!-- 상단 내비게이션 바 -->
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
@@ -6,96 +5,32 @@
     <link rel="stylesheet" type="text/css" th:href="@{/css/navbar.css}" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<<<<<<< HEAD
-<<<<<<< HEAD
     <link rel="icon" type="image/x-icon" th:href="@{/image/favicon.png}">
-=======
->>>>>>> ddf405e (success API)
-=======
-    <link rel="icon" type="image/x-icon" th:href="@{/image/favicon.png}">
->>>>>>> f1d798452247949a8bf40fcbd756920b276ec629
     <script src="https://code.jquery.com/jquery-3.6.3.js"></script>
     <script type="text/javascript" th:src="@{/js/common.js}"></script>
-    <script type="text/javascript" th:src="@{/js/navbar.js}"></script>
 </head>
 <body>
 <header th:fragment="tellMe_header">
     <nav class="navbar">
         <div class="nav-container">
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> f1d798452247949a8bf40fcbd756920b276ec629
             <div class="logo">
                 <a th:href="@{/}">
                     <img th:src="@{/image/logo.png}" class="logo-img">
                 </a>
             </div>
-<<<<<<< HEAD
-=======
-            <div class="logo"><a th:href="@{/}"><img class = "image" th:src = "@{/image/tellme.png}"></a></div>
->>>>>>> bd7ce89 (내 페이지 수정.)
-=======
-            <div class="logo">
-                <a th:href="@{/}">
-                    <img th:src="@{/image/tellme.png}" class="logo-img">
-                </a>
-            </div>
->>>>>>> ddf405e (success API)
-=======
->>>>>>> f1d798452247949a8bf40fcbd756920b276ec629
             <div>
-=======
-    <!-- 상단 내비게이션 바 -->
-    <!DOCTYPE html>
-    <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
-    <head th:fragment="tellMe_head">
-        <link rel="stylesheet" type="text/css" th:href="@{/css/navbar.css}" />
-        <script src="https://code.jquery.com/jquery-3.6.3.js"></script>
-        <script type="text/javascript" th:src="@{/js/common.js}"></script>
-    </head>
-    <body>
-    <header th:fragment="tellMe_header">
-        <nav class="navbar">
-            <div class="nav-container">
-                <div class="logo"><a th:href="@{/}">Aivle</a></div>
->>>>>>> a18053f (내 페이지 수정.)
                 <ul class="nav-menu">
                     <li><a th:href="@{/}">홈</a></li>
                     <li><a th:href="@{/customer/notice}">공지사항</a></li>
                     <li><a th:href="@{/complaint/question}">문의게시판</a></li>
-<!--                    <li sec:authorize="hasRole('ROLE_MANAGER')">-->
-<!--                        <a th:href="@{/manager/statistics}">문의통계</a>-->
-<!--                    </li>-->
+                    <!--                    <li sec:authorize="hasRole('ROLE_MANAGER')">-->
+                    <!--                        <a th:href="@{/manager/statistics}">문의통계</a>-->
+                    <!--                    </li>-->
                     <li sec:authorize="hasRole('ROLE_MANAGER')">
                         <a th:href="@{/manager/report}">보고서관리</a>
                     </li>
                 </ul>
-<<<<<<< HEAD
             </div>
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
->>>>>>> 56b639f (fail alarm)
-            <div id="notification-icon" class="notification-bell" th:data-userid="${#authentication.name}">
-                🔔 <span id="notification-count" class="badge">0</span>
-            </div>
-            <!-- 알림 메시지 박스 -->
-            <div id="notification-box" class="notification-box" style="display: none;">
-                <ul id="notification-list"></ul>
-            </div>
-<<<<<<< HEAD
->>>>>>> bd7ce89 (내 페이지 수정.)
-=======
->>>>>>> 56b639f (fail alarm)
-=======
->>>>>>> ddf405e (success API)
-=======
->>>>>>> f1d798452247949a8bf40fcbd756920b276ec629
             <div class="auth-buttons">
                 <div sec:authorize="isAnonymous()">
                     <a th:href="@{/login}" class="auth-link login">로그인</a>
@@ -103,21 +38,8 @@
                 </div>
                 <div sec:authorize="isAuthenticated()">
                     <!-- 알림 영역 -->
-<<<<<<< HEAD
-<<<<<<< HEAD
-                    <div class="notification-container" sec:authorize="hasRole('ROLE_USER')">
-=======
-                    <div class="notification-container">
-<<<<<<< HEAD
->>>>>>> ddf405e (success API)
-                        <div id="notification-icon" class="notification-bell" th:data-userid="${#authentication.name}">
-=======
-                        <div id="notification-icon" class="notification-bell" th:data-userid="${#authentication.name ?: 'anonymous'}">
->>>>>>> 48147ce (uploadAPI ing...)
-=======
                     <div class="notification-container">
                         <div id="notification-icon" class="notification-bell" th:data-userid="${#authentication.name ?: 'anonymous'}">
->>>>>>> f1d798452247949a8bf40fcbd756920b276ec629
                             <span id="notification-count" class="badge">0</span>
                             <span class="notification-text">알림</span>
                         </div>
@@ -134,25 +56,12 @@
                         <input type="submit"/>
                     </form>
                     <a class="auth-link logout" id="logoutLink" href="">로그아웃</a>
-=======
-                <div class="auth-buttons">
-                    <div sec:authorize="isAnonymous()">
-                        <a th:href="@{/login}" class="auth-link login">로그인</a>
-                        <a th:href="@{/user/signUp}" class="auth-link signup">회원가입</a>
-                    </div>
-                    <div sec:authorize="isAuthenticated()">
-                        <a th:href="@{/myPage/editInfo}" class="auth-link mypage">마이 페이지</a>
-                        <form th:action="@{/logout}" method="post" th:hidden="true" name="logoutForm" >
-                            <input type="submit"/>
-                        </form>
-                        <a class="auth-link logout" id="logoutLink" href="">로그아웃</a>
-                    </div>
->>>>>>> a18053f (내 페이지 수정.)
                 </div>
             </div>
-        </nav>
-    </header>
+        </div>
+    </nav>
+</header>
 
-    </body>
-    </html>
-    </html>
+</body>
+</html>
+</html>

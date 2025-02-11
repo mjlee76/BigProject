@@ -3,21 +3,13 @@
 <html lang="ko">
 <head th:replace="layouts/navbar::tellMe_head"/>
 <head th:replace="layouts/footer::tellMe_foot"/>
-<<<<<<< HEAD
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title th:if="${question.filterTitle == null or question.filterTitle.isEmpty()}" th:text="${question.title}"></title>
-    <title th:if="${question.filterTitle != null and !question.filterTitle.isEmpty()}" th:text="${question.filterTitle}"></title>
-    <link rel="stylesheet" type="text/css" th:href="@{/css/question-detail.css}" />
-    <link href="https://cdn.jsdelivr.net/gh/sun-typeface/SUIT@2/fonts/static/woff2/SUIT.css" rel="stylesheet">
-    <script th:src="@{/js/question-detail.js}" defer></script>
-=======
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title th:text="${question.title}"></title>
+<title th:if="${question.filterTitle == null or question.filterTitle.isEmpty()}" th:text="${question.title}"></title>
+<title th:if="${question.filterTitle != null and !question.filterTitle.isEmpty()}" th:text="${question.filterTitle}"></title>
 <link rel="stylesheet" type="text/css" th:href="@{/css/question-detail.css}" />
+<link href="https://cdn.jsdelivr.net/gh/sun-typeface/SUIT@2/fonts/static/woff2/SUIT.css" rel="stylesheet">
 <script th:src="@{/js/question-detail.js}" defer></script>
->>>>>>> e3adacd (목록보기 버튼을 "접근한 경로"에 따라 다르게 동작하도록 구현/ 통계 js, html 분리)
 </head>
 <body>
 <div th:replace="layouts/navbar::tellMe_header"></div>
@@ -54,59 +46,32 @@
         <tr>
             <th>첨부파일1</th>
             <td>
-<<<<<<< HEAD
-            <span th:if="${question.file1 != null}">
-                <a th:href="@{/files/{fileName}(fileName=${question.file})}" title="첨부파일 다운로드">
-                    <img th:src = "@{/image/attachment.jpg}" alt="첨부파일 아이콘" style="width: 16px; height: 16px; vertical-align: middle; margin-right: 5px;">
-                    <span th:text="${question.file}"></span>
-                </a>
-            </span>
-=======
                 <span th:if="${question.file1 != null}">
                     <a th:href="@{/files/{fileName}(fileName=${question.file})}" title="첨부파일 다운로드">
                         <img th:src = "@{/image/attachment.jpg}" alt="첨부파일 아이콘" style="width: 16px; height: 16px; vertical-align: middle; margin-right: 5px;">
                         <span th:text="${question.file}"></span>
                     </a>
                 </span>
->>>>>>> a18053f (내 페이지 수정.)
                 <span th:if="${question.file1 == null}">없음</span>
             </td>
             <th>첨부파일2</th>
             <td>
-<<<<<<< HEAD
-            <span th:if="${question.file2 != null}">
-                <a th:href="@{/files/{fileName}(fileName=${question.file})}" title="첨부파일 다운로드">
-                    <img th:src = "@{/image/attachment.jpg}" alt="첨부파일 아이콘" style="width: 16px; height: 16px; vertical-align: middle; margin-right: 5px;">
-                    <span th:text="${question.file}"></span>
-                </a>
-            </span>
-=======
                 <span th:if="${question.file2 != null}">
                     <a th:href="@{/files/{fileName}(fileName=${question.file})}" title="첨부파일 다운로드">
                         <img th:src = "@{/image/attachment.jpg}" alt="첨부파일 아이콘" style="width: 16px; height: 16px; vertical-align: middle; margin-right: 5px;">
                         <span th:text="${question.file}"></span>
                     </a>
                 </span>
->>>>>>> a18053f (내 페이지 수정.)
                 <span th:if="${question.file2 == null}">없음</span>
             </td>
             <th>첨부파일3</th>
             <td>
-<<<<<<< HEAD
-            <span th:if="${question.file3 != null}">
-                <a th:href="@{/files/{fileName}(fileName=${question.file})}" title="첨부파일 다운로드">
-                    <img th:src = "@{/image/attachment.jpg}" alt="첨부파일 아이콘" style="width: 16px; height: 16px; vertical-align: middle; margin-right: 5px;">
-                    <span th:text="${question.file}"></span>
-                </a>
-            </span>
-=======
                 <span th:if="${question.file3 != null}">
                     <a th:href="@{/files/{fileName}(fileName=${question.file})}" title="첨부파일 다운로드">
                         <img th:src = "@{/image/attachment.jpg}" alt="첨부파일 아이콘" style="width: 16px; height: 16px; vertical-align: middle; margin-right: 5px;">
                         <span th:text="${question.file}"></span>
                     </a>
                 </span>
->>>>>>> a18053f (내 페이지 수정.)
                 <span th:if="${question.file3 == null}">없음</span>
             </td>
         </tr>
@@ -165,9 +130,6 @@
 
     <input type="hidden" id="page" th:value="${page}" /> <!-- 현재 페이지 번호 -->
     <input type="hidden" id="questionId" th:value="${question.id}" /> <!-- 문의 ID -->
-    <input type="hidden" id="currentUserId" th:value="${currentUserId}" /> <!-- 로그인한 유저 ID -->
-    <input type="hidden" id="questionUserId" th:value="${question.userId}" /> <!-- 글 작성자 ID -->
-
 
     <!-- 버튼 -->
     <div class="buttons">
@@ -183,8 +145,6 @@
             <button type="submit" sec:authorize="hasRole('ROLE_USER')">삭제하기</button>
         </form>
     </div>
-
-
 </main>
 <div th:replace="layouts/footer::tellMe_footer"></div>
 </body>
