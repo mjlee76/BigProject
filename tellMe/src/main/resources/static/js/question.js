@@ -1,5 +1,5 @@
 // SSE 연결
-let eventSource = new EventSource("/tellMe/api/events");
+let eventSource = new EventSource("/tellMe/api/sendRefresh");
 
 eventSource.addEventListener("refresh", function(event) {
     console.log("🔄 새로고침 이벤트 수신!");
@@ -10,12 +10,9 @@ eventSource.onerror = function() {
     console.error("❌ SSE 연결 오류. 재연결 시도 중...");
     eventSource.close();
     setTimeout(() => {
-        eventSource = new EventSource("/tellMe/api/events");
+        eventSource = new EventSource("/tellMe/api/sendRefresh");
     }, 3000); // 3초 후 재연결 시도
 };
-
-
-
 
 //document.addEventListener('DOMContentLoaded', function() {
 //    const searchForm = document.getElementById('search-form');

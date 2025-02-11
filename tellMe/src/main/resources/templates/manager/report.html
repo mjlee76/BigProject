@@ -8,6 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>보고서 관리</title>
     <link rel="stylesheet" type="text/css" th:href="@{/css/report.css}" />
+    <link href="https://cdn.jsdelivr.net/gh/sun-typeface/SUIT@2/fonts/static/woff2/SUIT.css" rel="stylesheet">
     <script type="text/javascript" th:src="@{/js/report.js}"></script>
 </head>
 <body>
@@ -15,6 +16,7 @@
 <main class="container">
     <div class="report-header">
         <h1>보고서 관리</h1>
+        <p>처리 중인 민원 보고서를 효율적으로 정리하고 관리하세요.</p>
     </div>
     <!-- 탭 -->
     <div class="tabs">
@@ -67,16 +69,15 @@
             <td>
                 <!-- 보고서 제목 클릭 시 웹뷰어에서 열기 -->
 
-                <a th:href="@{/manager/report/view/{id}(id=${report.id})}" target="_blank">
-                    <span th:text="${report.report}"></span>
-                </a>
+                <a th:href="@{/manager/report/view/{id}(id=${report.id})}" target="_blank" th:text="${report.report}"></a>
+
             </td>
             <td th:text="${#temporals.format(report.createDate, 'yyyy-MM-dd')}"></td>
             <td th:text="${report.category}"></td>
             <td th:text="${report.reportStatus}" th:classappend="${report.reportStatus == '미확인' ? 'unchecked' : 'checked'}"></td>
             <td>
                 <a th:href="@{/manager/report/view/{id}(id=${report.id})}" class="download-link" data-report-id="${report.id}">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-download" viewBox="0 0 24 24">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-download" viewBox="0 0 24 24">
                         <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                         <polyline points="7 10 12 15 17 10"></polyline>
                         <line x1="12" y1="15" x2="12" y2="3"></line>

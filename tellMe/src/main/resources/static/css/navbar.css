@@ -1,11 +1,11 @@
 /* 내비게이션 바 스타일 */
 .navbar {
+    width: 100%;
+    height: 50px;
     background-color: white;
-    border-top: 8px solid #ddd;
-    border-bottom: 8px solid #ddd;
     color: white;
     padding: 5px 10px;
-    position: stickyf;
+    position: fixed;
     top: 0;
     z-index: 1000;
     display: flex;
@@ -22,13 +22,18 @@
 }
 
 .logo {
+    display: flex; /* 이미지와 텍스트를 가로로 정렬 */
+    align-items: center; /* 세로 중앙 정렬 */
+    margin-left: -20px;
     font-size: 3em;
-    font-weight: bold;
+    font-weight: 900;
     color: black;
     text-decoration: none;
 }
 
 .logo a {
+    display: flex; /* 이미지와 텍스트를 함께 정렬 */
+    align-items: center; /* 세로 정렬 */
     text-decoration: none; /* 밑줄 제거 */
     color: inherit; /* 부모 색상 상속 */
     outline: none; /* 클릭 시 하이라이트 제거 */
@@ -41,6 +46,12 @@
     color: inherit; /* 색상 유지 */
 }
 
+.logo-img {
+    width: 170px; /* 로고 이미지 크기 조절 */
+    height: auto;
+    margin-right: 10px; /* 이미지와 텍스트 사이 간격 */
+}
+
 .nav-menu {
     display: flex;
     list-style: none;
@@ -49,7 +60,20 @@
 }
 
 .nav-menu li {
+    position: relative;
     margin: 0 50px;
+}
+
+/* 세로줄 추가 */
+.nav-menu li:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    right: -50px; /* margin 값과 동일하게 조정 */
+    top: 50%;
+    transform: translateY(-50%);
+    width: 1px;
+    height: 60%; /* 세로줄 높이 조정 */
+    background-color: rgba(0, 0, 0, 0.2); /* 회색 세로줄 */
 }
 
 .nav-menu li a {
@@ -58,79 +82,198 @@
     font-size: 1.2em;
     font-weight: bold;
     padding: 5px 10px;
-    transition: background-color 0.3s ease;
+    transition: all 0.3s ease;
     white-space: nowrap;
+    display: inline-block;
+    position: relative;
+    z-index: 1;
 }
 
 .nav-menu li a:hover {
-    background-color: #9f9f9f;
-    border-radius: 4px;
+    transform: scale(1.15);
+    z-index: 2;
 }
 
-/* 로그인/회원가입 버튼 스타일 */
 .auth-buttons {
-    display: flex; /* 버튼을 가로로 정렬 */
-    gap: 15px; /* 버튼 간 간격 */
-    align-items: center; /* 세로 가운데 정렬 */
-    flex-wrap: nowrap; /* 줄바꿈 방지 */
+    display: flex;
+    justify-content: space-evenly;
+    gap: 20px; /* 버튼 간격 */
 }
 
-.auth-buttons div {
-    display: flex; /* 내부 버튼 정렬 */
-    gap: 10px; /* 내부 버튼 간 간격 */
-    align-items: center; /* 세로 가운데 정렬 */
+.auth-buttons > div {
+    margin-right: 10px;
+    display: flex;
 }
 
 .auth-link {
-    color: black;
+    margin-right: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     text-decoration: none;
-    font-size: 1.2em;
+    color: #333;
+    font-size: 12px; /* 글자 크기 */
     font-weight: bold;
-    padding: 8px 15px;
-    border-radius: 4px;
-    transition: background-color 0.3s ease, color 0.3s ease;
-    white-space: nowrap; /* 버튼 텍스트 줄바꿈 방지 */
+    border-radius: 5px;
+    transition: all 0.3s ease;
+    width: 50px; /* 버튼 크기 */
+    height: 50px;
+    background: #fff;
+    white-space: nowrap;
 }
 
-/* 로그인 버튼 */
-.auth-link.login {
-    background-color: white;
-    border: 1px solid #ddd;
+.auth-link::before {
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    font-size: 24px; /* 아이콘 크기 */
+    margin-bottom: 5px;
 }
 
-.auth-link.login:hover {
-    background-color: #f0f0f0;
+/* 알림 컨테이너 */
+.notification-container {
+    display: flex;
+    align-items: center;
+    position: relative;
+    margin-right: 10px;
 }
 
-/* 회원가입 버튼 */
-.auth-link.signup {
-    background-color: black;
+/* 알림 벨 스타일링 */
+.notification-bell {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    color: #333;
+    font-size: 12px; /* 글자 크기 */
+    font-weight: bold;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+    width: 50px; /* 버튼 크기 */
+    height: 50px;
+    background: #fff;
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+/* 종 아이콘 */
+.notification-bell::before {
+    content: "\f0f3";
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    font-size: 24px;
+    margin-bottom: 2px;
+}
+
+/* 알림 텍스트 */
+.notification-text {
+    font-size: 12px;
+    color: #333;
+    margin-top: 3px;
+}
+
+/* 알림 배지 */
+.badge {
+    background-color: red;
     color: white;
-    border: 1px solid black;
+    font-size: 10px;
+    font-weight: bold;
+    padding: 3px 6px;
+    border-radius: 50%;
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    display: none; /* 초기 상태 숨김 */
 }
 
-.auth-link.signup:hover {
-    background-color: #444;
+/* 호버 효과 */
+.notification-bell:hover {
+    transform: scale(1.1);
 }
 
-/* 마이페이지 버튼 */
-.auth-link.mypage {
-    background-color: #ddd;
-    color: black;
-    border: 1px solid #bbb;
+/* 알림 개수 (빨간 배지) */
+.badge {
+    background-color: red;
+    color: white;
+    font-size: 0.75em;
+    font-weight: bold;
+    padding: 3px 6px;
+    border-radius: 50%;
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    transform: translate(50%, -50%); /* 아이콘 오른쪽 위에 배치 */
+    display: block; /* 항상 보이도록 설정 */
 }
 
-.auth-link.mypage:hover {
-    background-color: #bbb;
+
+/* 알림 박스 스타일 */
+.notification-box {
+    position: absolute;
+    top: 50px; /* 종 모양 아래에 위치 */
+    right: 0;
+    width: 250px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    padding: 10px;
+    z-index: 1000;
+    display: none; /* 초기 상태에서는 숨김 */
+
+    /* 애니메이션 효과 */
+    opacity: 0;
+    transform: translateY(-10px); /* 위쪽에서 내려오는 효과 */
+    transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
-/* 로그아웃 버튼 */
-.auth-link.logout {
-    background-color: transparent;
-    color: black;
-    border: 1px solid transparent;
+/* 알림 리스트 */
+.notification-box ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
 }
 
-.auth-link.logout:hover {
-    text-decoration: underline;
+.notification-box ul li {
+    color: #333;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    cursor: pointer;
+}
+
+/* ✅ 읽음 상태일 때 어둡게 표시 */
+.notification-box ul li.read {
+    background: #e0e0e0;
+    color: #777;
+}
+
+.notification-box ul li:last-child {
+    border-bottom: none;
+}
+
+.notification-box ul li:hover {
+    background: #f4f4f4;
+}
+
+
+/* 각 버튼별 아이콘 설정 */
+.login::before {
+    content: "\f2f6"; /* 로그인 (user-circle) */
+}
+
+.signup::before {
+    content: "\f234"; /* 회원가입 (user-plus) */
+}
+
+.mypage::before {
+    content: "\f007"; /* 마이페이지 (user) */
+}
+
+.logout::before {
+    content: "\f2f5"; /* 로그아웃 (sign-out-alt) */
+}
+
+/* 호버 효과 */
+.auth-link:hover {
+    transform: scale(1.1);
 }

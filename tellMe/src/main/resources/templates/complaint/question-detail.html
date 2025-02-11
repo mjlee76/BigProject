@@ -5,8 +5,10 @@
 <head th:replace="layouts/footer::tellMe_foot"/>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title th:text="${question.title}"></title>
+    <title th:if="${question.filterTitle == null or question.filterTitle.isEmpty()}" th:text="${question.title}"></title>
+    <title th:if="${question.filterTitle != null and !question.filterTitle.isEmpty()}" th:text="${question.filterTitle}"></title>
     <link rel="stylesheet" type="text/css" th:href="@{/css/question-detail.css}" />
+    <link href="https://cdn.jsdelivr.net/gh/sun-typeface/SUIT@2/fonts/static/woff2/SUIT.css" rel="stylesheet">
     <script th:src="@{/js/question-detail.js}" defer></script>
 </head>
 <body>
@@ -18,9 +20,13 @@
         <tr class="border-top">
             <th>번호</th>
             <td th:text="${question.id}"></td>
-            <th>제목</th>
-            <td colspan="3">
-                <span th:text="${question.title}"></span>
+            <th>작성자</th>
+            <td>
+                <span th:text="${question.userName}"></span>
+            </td>
+            <th>작성일</th>
+            <td>
+                <span th:text="${#temporals.format(question.createDate, 'yyyy-MM-dd')}">2025-01-17 18:00:00</span>
             </td>
         </tr>
         <tr>
@@ -28,22 +34,12 @@
             <td>
                 <span th:text="${question.reveal}"></span>
             </td>
-            <th>작성자</th>
-            <td>
-                <span th:text="${question.userName}"></span>
-            </td>
             <th>답변여부</th>
             <td>
                 <span th:text="${question.status}"></span>
             </td>
-        </tr>
-        <tr>
-            <th>작성일</th>
-            <td colspan="2">
-                <span th:text="${#temporals.format(question.createDate, 'yyyy-MM-dd')}">2025-01-17 18:00:00</span>
-            </td>
             <th>조회수</th>
-            <td colspan="2">
+            <td>
                 <span th:text="${question.views}">0</span>
             </td>
         </tr>
@@ -80,23 +76,34 @@
             </td>
         </tr>
         <tr>
-            <td colspan="6">
+            <th>제목</th>
+            <td colspan="5" th:if="${question.filterTitle == null or question.filterTitle.isEmpty()}">
+                <span th:text="${question.title}"></span>
+            </td>
+            <td colspan="5" th:if="${question.filterTitle != null and !question.filterTitle.isEmpty()}">
+                <span th:text="${question.filterTitle}"></span>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="6" th:if="${question.filterContent == null or question.filterContent.isEmpty()}">
                 <span th:text="${question.content}" class="content-text">게시글 내용을 불러오는 중...</span>
+            </td>
+            <td colspan="6" th:if="${question.filterContent != null and !question.filterContent.isEmpty()}">
+                <span th:text="${question.filterContent}" class="content-text">게시글 내용을 불러오는 중...</span>
             </td>
         </tr>
     </table>
-
     <!-- 답변 표시 섹션 -->
     <div th:if="${question.answer != null}">
         <h1>답변</h1>
         <table>
             <tr class="border-top">
                 <th>답변자</th>
-                <td>
+                <td colspan="3">
                     <span th:text="${question.answer.userName}">답변자 이름</span>
                 </td>
                 <th>답변일</th>
-                <td>
+                <td colspan="3">
                     <span th:text="${#temporals.format(question.answer.createDate, 'yyyy-MM-dd')}">2025-01-17</span>
                 </td>
             </tr>
@@ -130,7 +137,13 @@
         <form th:action="@{/complaint/question/{id}/status(id=${question.id})}" method="post">
             <button th:onclick="updateQuestionStatus()" sec:authorize="hasRole('ROLE_MANAGER')">처리중으로 변경</button>
         </form>
-
+        <!-- 삭제 버튼: 로그인한 사용자가 해당 게시글 작성자일 경우에만 표시 -->
+        <form th:if="${currentUserId == question.userId}"
+              th:action="@{/complaint/delete/{id}(id=${question.id})}"
+              method="post"
+              onsubmit="return handleDeleteFormSubmit(this);">
+            <button type="submit" sec:authorize="hasRole('ROLE_USER')">삭제하기</button>
+        </form>
     </div>
 </main>
 <div th:replace="layouts/footer::tellMe_footer"></div>
