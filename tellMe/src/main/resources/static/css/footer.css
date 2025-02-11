@@ -1,3 +1,7 @@
+a:-webkit-any-link {
+    text-decoration: none;  /* 기본 밑줄 제거 */
+}
+
 .footer {
     width: 100%;
     display: flex;

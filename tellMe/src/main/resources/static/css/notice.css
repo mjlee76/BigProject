@@ -231,7 +231,7 @@ body {
 
 /* 제목 셀만 좌측 정렬 */
 .post-table .post-title {
-    text-align: left; /* 제목은 왼쪽 정렬 */
+    text-align: center; /* 제목은 왼쪽 정렬 */
 }
 
 /* 테이블 헤더 스타일 */
@@ -364,7 +364,7 @@ body.delete-mode .notice-number {
 }
 
 .post-title a:hover {
-    text-decoration: underline;
+    text-decoration: none;
 }
 
 /* 🔹 글쓰기 버튼 */
