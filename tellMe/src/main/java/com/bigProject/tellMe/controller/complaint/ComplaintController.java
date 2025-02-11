@@ -97,16 +97,18 @@ public class ComplaintController {
 
         // 현재 사용자의 역할 확인
         String role = "ROLE_USER";
+        Long userId = 0L;
         if (auth != null && auth.isAuthenticated()) {
             UserDTO user = userService.findByUserId(auth.getName());
             role = String.valueOf(user.getRole());
+            userId = user.getId();
         }
 
         // Pageable 객체 생성
         Pageable pageable = PageRequest.of(page - 1, size, Sort.by(Sort.Direction.DESC, "id"));
 
         // 검색 및 필터링 결과 조회
-        Page<QuestionDTO> questionList = questionService.searchAndFilter(query, status, category, role, pageable);
+        Page<QuestionDTO> questionList = questionService.searchAndFilter(query, status, category, role, userId, pageable);
 
         // 페이징 정보 계산
         int blockLimit = 5; // 화면에 보여질 페이지 번호 개수

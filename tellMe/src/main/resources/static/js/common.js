@@ -70,8 +70,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
-                    id: notificationId,
-                    isRead: true
+                    id: notificationId
                 })
             });
 
@@ -89,7 +88,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    // 알림 추가 함수 (읽음 상태   반영)
+    // 알림 추가 함수 (읽음 상태 반영)
     function addNotificationToList(notification) {
         const newNotification = document.createElement("li");
         newNotification.textContent = notification.message;
