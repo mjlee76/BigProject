@@ -271,7 +271,7 @@ async def upload_image(file: FilePath):
         llm_chain = await docu_loader.make_llm_text(data)
         combined_text = " ".join(llm_chain)
         
-        if not combined_text: 
+        if not combined_text:
             return {
                 "valid": False,
                 "message": "문서 내용이 없습니다. 올바른 문서를 업로드하세요.",
