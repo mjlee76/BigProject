@@ -102,10 +102,14 @@ public class CustomerController {
     }
 
     // 공지사항 상세페이지에서 삭제
-    @GetMapping("/delete/{id}")
-    public String deleteNotice(@PathVariable Long id, Model model) {
+    @PostMapping("/delete")
+    public ResponseEntity<Void> deleteNotice(@RequestBody Map<String, Long> request) {
+        Long id = request.get("id");
+        if (id == null) {
+            return ResponseEntity.badRequest().build(); // 요청 데이터가 없을 경우 400 반환
+        }
         noticeService.delete(id);
-        return "redirect:/customer/notice";
+        return ResponseEntity.ok().build();
     }
 
     // delete-notices POST 요청을 받아 선택된 공지사항들을 삭제
