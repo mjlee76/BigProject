@@ -64,7 +64,7 @@ class PostBody(BaseModel):
 class ReportBody(BaseModel):
     category : List[str] = Field(default_factory=list)
     post_origin_data : Dict[str, str] = Field(default_factory=dict)
-    report_path : str = ""
+    file_name : str = ""
     create_date : str = ""
     
 class CombinedModel(BaseModel):
@@ -159,23 +159,22 @@ async def update_item(data: CombinedModel):
             "message" : f"처리 실패: {str(e)}",
         }
         
-@app.post("/make_report")        
+@app.post("/make_report")
 async def make_report(data: CombinedModel):
         post_data, report_req = data.post_data, data.report_req
         if report_req.category != "정상":
-            await report.init()
             report.report_prompt(report_req)
             report.cell_fill(post_data, report_req)
-            time, output_file = report.report_save()
+            time, output_file = report.report_save(post_data)
             report_req.create_date = time
-            report_req.report_path = output_file
-            
+            report_req.file_name = output_file
+
         return {
                 "valid": True,
                 "message": "보고서 작성 완료",
                 "post_data": post_data.model_dump(),
                 "report_req": report_req.model_dump()
-        }        
+        }     
         
 @app.post("/check_spam")
 async def check_spam(request: SpamQuestionRequest):

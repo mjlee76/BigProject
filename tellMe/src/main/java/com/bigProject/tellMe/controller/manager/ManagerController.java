@@ -41,7 +41,7 @@ import java.util.Map;
 @Slf4j // ✅ Lombok의 Slf4j 추가
 public class ManagerController {
     private final ReportService reportService;
-    private static final String REPORT_BASE_PATH = "C:/Users/User/BigProject/tellMe/tellMe-reports/";
+    private static final String REPORT_BASE_PATH = "C:/Users/User/Desktop/BigProject/tellMe/tellMe-reports/";
 
     // ✅ 보고서 목록 조회 (페이지네이션 적용)
     @GetMapping("/report")

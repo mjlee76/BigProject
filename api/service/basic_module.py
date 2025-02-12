@@ -135,6 +135,7 @@ class UserInfo(BaseModel):
 
 # 게시글 정보
 class PostBody(BaseModel):
+    question_id : int
     title: str
     content: str
     user: UserInfo
@@ -143,7 +144,7 @@ class PostBody(BaseModel):
 class ReportBody(BaseModel):
     category : list
     post_origin_data : dict
-    report_path : str
+    file_name : str = ""
     create_date : str
     
 class CombinedModel(BaseModel):
@@ -224,10 +225,10 @@ class MakeReport():
         prompt = self.report_prompt(report_body)
         table.cell(6, 1).text = prompt
         
-    def report_save(self):
-        output_file = f"특이민원_보고서_{self.time}.docx"
-        report_file_path = os.path.join(self.path, "made_reported/")
-        self.doc.save(report_file_path + output_file)
+    def report_save(self, post_body : PostBody):
+        output_file = f"{post_body.question_id}_특이민원_보고서.docx"
+        report_file_path = "C:/Users/User/Desktop/BigProject/tellMe/tellMe-reports"
+        self.doc.save(f"{report_file_path}" + f"/{output_file}")
         print(f"문서가 {output_file}에 저장되었습니다.")
         return self.time, output_file
 
