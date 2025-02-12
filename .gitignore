@@ -3,3 +3,9 @@
 # Python cache files
 __pycache__/
 *.pyc
+api_key.txt
+/tellMe/tellMe-reports/
+/tellMe/tellMe-uploadFile/
+/api/service/made_reported/
+/api/service/20250204_roberta 파인튜닝_final/
+/api/service/nsfw_model/

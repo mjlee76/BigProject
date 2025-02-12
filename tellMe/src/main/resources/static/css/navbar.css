@@ -47,7 +47,7 @@
 }
 
 .logo-img {
-    width: 170px; /* 로고 이미지 크기 조절 */
+    width: 100px; /* 로고 이미지 크기 조절 */
     height: auto;
     margin-right: 10px; /* 이미지와 텍스트 사이 간격 */
 }
