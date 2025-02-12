@@ -208,6 +208,7 @@ class FilePath(BaseModel):
 
 @app.post("/upload")
 async def upload_image(file: FilePath):
+    print(123)
     
     file_path = file.file_path
     filenames = os.listdir(file_path)
@@ -253,9 +254,6 @@ async def upload_image(file: FilePath):
                 "file_path" : file_name
                 }
         
-        finally : 
-            if nsfw_score is not None and nsfw_score < 0.7 :
-                shutil.rmtree(file_path)
     else:
         if not file_name.lower().endswith((".hwp", ".hwpx", ".doc", ".docx", ".pdf", ".txt")):
             return {

@@ -11,6 +11,7 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
@@ -32,7 +33,8 @@ public class ComplaintRestController {
     private final NotificationService notificationService;
 
     @PostMapping("/uploadFile")
-    public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile file) {
+    public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile file, Authentication auth) {
+        UserDTO userDTO = userService.findByUserId(auth.getName());
         System.out.println("===========uploadFile" + file);
         if (file.isEmpty()) {
             return ResponseEntity.badRequest().body("파일이 비어 있습니다.");
@@ -40,9 +42,9 @@ public class ComplaintRestController {
         List<MultipartFile> files = new ArrayList<>();
         files.add(file);
         try {
-            String uploadDir = "tellMe/apiCheck-uploadFile";
+            String uploadDir = "tellMe/apiCheck-uploadFile/"+userDTO.getId();
             FileUpLoadUtil.saveFiles(uploadDir, files);
-            uploadDir = "C:/Users/User/Desktop/BigProject/tellMe/apiCheck-uploadFile";
+            uploadDir = "C:/Users/User/Desktop/BigProject/tellMe/apiCheck-uploadFile/"+userDTO.getId();
             String response = questionService.uploadFileApi(uploadDir);
             return ResponseEntity.ok().body(response);
         } catch (Exception e) {
