@@ -62,6 +62,7 @@ class PostBody(BaseModel):
     title: str
     content: str
     user: UserInfo
+    question_id: int = 0
 
 #DB로 넘길 report 정보
 class ReportBody(BaseModel):

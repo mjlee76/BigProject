@@ -230,7 +230,7 @@ class MakeReport():
         report_file_path = os.path.join(self.path, "made_reported/")
         self.doc.save(report_file_path + output_file)
         print(f"문서가 {output_file}에 저장되었습니다.")
-        return self.time, os.path.join(report_file_path, output_file)
+        return self.time, output_file
 
 class LoadDocumentFile:
     def __init__(self):

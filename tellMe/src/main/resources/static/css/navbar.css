@@ -47,7 +47,7 @@
 }
 
 .logo-img {
-    width: 170px; /* 로고 이미지 크기 조절 */
+    width: 100px; /* 로고 이미지 크기 조절 */
     height: auto;
     margin-right: 10px; /* 이미지와 텍스트 사이 간격 */
 }
@@ -174,7 +174,7 @@
 }
 
 /* 알림 배지 */
-.badge {
+/*.badge {
     background-color: red;
     color: white;
     font-size: 10px;
@@ -184,8 +184,8 @@
     position: absolute;
     top: 8px;
     right: 8px;
-    display: none; /* 초기 상태 숨김 */
-}
+    display: block; /* 항상 보이도록 설정 */
+}*/
 
 /* 호버 효과 */
 .notification-bell:hover {
@@ -204,7 +204,7 @@
     top: 5px;
     right: 5px;
     transform: translate(50%, -50%); /* 아이콘 오른쪽 위에 배치 */
-    display: block; /* 항상 보이도록 설정 */
+    display: none; /* 초기 상태 숨김 */
 }
 
 
@@ -232,6 +232,8 @@
     list-style: none;
     padding: 0;
     margin: 0;
+    max-height: 250px;
+    overflow-y: auto; /* ✅ 스크롤 추가 */
 }
 
 .notification-box ul li {
@@ -239,6 +241,7 @@
     padding: 10px;
     border-bottom: 1px solid #ddd;
     cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
 /* ✅ 읽음 상태일 때 어둡게 표시 */

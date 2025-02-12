@@ -90,7 +90,7 @@
         </script>
     </table>
     <div class="content-area"></div>
-        <div class="pagination" th:if="${not questionList.isEmpty()}">
+        <div class="pagination">
             <!-- 첫 번째 페이지로 이동 버튼 (<<) -->
             <a th:href="@{/complaint/question(query=${query}, category=${category}, status=${status}, page=1, size=10)}"
                th:classappend="${currentPage == 1} ? 'disabled' : ''">«</a>

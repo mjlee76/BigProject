@@ -25,8 +25,8 @@ import java.util.concurrent.*;
 @RequestMapping("/api")
 @RequiredArgsConstructor
 public class ComplaintRestController {
-    private final Map<String, SseEmitter> emitters = new ConcurrentHashMap<>();
-    private final CopyOnWriteArrayList<SseEmitter> refreshEmitters = new CopyOnWriteArrayList<>();
+    private final Map<Long, SseEmitter> emitters = new ConcurrentHashMap<>();
+    //private final CopyOnWriteArrayList<SseEmitter> refreshEmitters = new CopyOnWriteArrayList<>();
     private final QuestionService questionService;
     private final UserService userService;
     private final NotificationService notificationService;
@@ -67,41 +67,50 @@ public class ComplaintRestController {
 
     }
 
-    // ✅ SSE 구독 - 실시간 알림 받기
-    @GetMapping("/notiBell/{userId}")
+    // ✅ SSE 구독 (알림 + 새로고침 통합)
+    @GetMapping("/sse/{userId}")
     public SseEmitter subscribe(@PathVariable String userId) {
         UserDTO user = userService.findByUserId(userId);
-        return notificationService.subscribe(user.getId());
+        Long id = user.getId();
+        SseEmitter emitter = new SseEmitter(60 * 1000L); // 1분 타임아웃
+        emitters.put(id, emitter);
+
+        // 연결 종료 처리
+        emitter.onCompletion(() -> emitters.remove(id));
+        emitter.onTimeout(() -> emitters.remove(id));
+
+        return emitter;
     }
 
-    @GetMapping("/{userId}")
+    // ✅ 특정 사용자에게 이벤트 전송 (알림 또는 새로고침)
+    public void triggerEvent(@PathVariable Long userId, @RequestParam String type, @RequestBody(required = false) String message) {
+        SseEmitter emitter = emitters.get(userId);
+        if(emitter == null) {
+            emitter = new SseEmitter(60 * 1000L);
+            emitters.put(userId, emitter);
+        }
+        try {
+            if ("notification".equals(type)) {
+                emitter.send(SseEmitter.event().name(type).data(message));
+            } else if ("refresh".equals(type)) {
+                emitter.send(SseEmitter.event().name(type).data("reload"));
+            }
+            //emitter.send(SseEmitter.event().data(message));
+        } catch (IOException e) {
+            emitter.complete();
+            emitters.remove(userId);
+        }
+    }
+
+    //알림내역 불러오기 5개만
+    @GetMapping("/notifiList/{userId}")
     public ResponseEntity<List<NotificationDTO>> getNotifications(@PathVariable String userId) {
+        System.out.println("======================notifiList : " + userId);
         UserDTO user = userService.findByUserId(userId);
         List<NotificationDTO> notifications = notificationService.getNotificationsForUser(user.getId());
+        System.out.println("======================notifiList" + notifications);
         return ResponseEntity.ok(notifications);
-//        SseEmitter emitter = new SseEmitter(60 * 1000L); // 1분 타임아웃
-//
-//        emitter.onCompletion(() -> emitters.remove(userId, emitter));
-//        emitter.onTimeout(() -> emitters.remove(userId, emitter));
-//
-//        emitters.put(userId, emitter);
-//        return emitter;
     }
-
-    // 🚀 서버에서 필터링 완료 후 알림 전송
-//    @PostMapping("/send")
-//    public void sendNotification(@RequestParam String userId, @RequestParam String message) {
-//        SseEmitter emitter = emitters.get(userId);
-//        if (emitter != null) {
-//            try {
-//                emitter.send(SseEmitter.event().data(message));
-//            } catch (IOException e) {
-//                emitter.completeWithError(e);
-//                emitters.remove(userId);
-//            }
-//        }
-//    }
-
 
     // ✅ 알림 클릭 시 isRead 값을 true로 변경
     @PostMapping("/markAsRead")
@@ -110,27 +119,5 @@ public class ComplaintRestController {
         System.out.println("===========markAsRead : "+notificationId);
         notificationService.markAsRead(notificationId);
         return ResponseEntity.ok().build();
-    }
-
-    @GetMapping("/sendRefresh")
-    public SseEmitter streamEvents() {
-        SseEmitter emitter = new SseEmitter(0L);
-        refreshEmitters.add(emitter);
-
-        emitter.onCompletion(() -> refreshEmitters.remove(emitter));
-        emitter.onTimeout(() -> refreshEmitters.remove(emitter));
-
-        return emitter;
-    }
-
-    public void sendRefreshEvent() {
-        for (SseEmitter emitter : refreshEmitters) {
-            try {
-                emitter.send(SseEmitter.event().name("refresh").data("reload"));
-            } catch (IOException e) {
-                emitter.complete();
-                refreshEmitters.remove(emitter);
-            }
-        }
     }
 }
