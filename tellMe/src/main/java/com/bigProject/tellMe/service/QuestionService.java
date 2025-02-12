@@ -263,7 +263,7 @@ public class QuestionService {
 
             // Question를 QuestionDTO로 변환
             QuestionDTO questionDTO = QuestionDTO.toQuestionDTO(question);
-            if(question.getFiltered().getId() != null) {
+            if (question.getFiltered() != null) {
                 questionDTO.setFilterTitle(question.getFiltered().getTitle());
                 questionDTO.setFilterContent(question.getFiltered().getContent());
             }
@@ -368,7 +368,18 @@ public class QuestionService {
         }
 
         Page<Question> questions = questionRepository.findAll(spec, pageable);
-        return questions.map(QuestionDTO::toQuestionDTO);
+
+        // Question 엔티티를 QuestionDTO로 변환
+        return questions.map(question -> new QuestionDTO(
+                question.getId(),
+                question.getTitle(),
+                question.getCreateDate(),
+                question.getViews(),
+                question.getUser().getUserName(),
+                question.getStatus(),
+                question.getFiltered() != null ? question.getFiltered().getTitle() : null,  // ✅ filtered가 null이면 null 반환
+                question.getFiltered() != null ? question.getFiltered().getContent() : null // ✅ filtered가 null이면 null 반환
+        ));
     }
 
     // 접수중을 처리중으로 변경

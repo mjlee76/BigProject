@@ -42,7 +42,6 @@ body {
     overflow-y: auto;
 }
 
-
 .profile-header {
     text-align: center;
     margin-bottom: 20px;
@@ -167,7 +166,6 @@ input {
 
 /* 검색 입력 필드 */
 .search-bar input[type="text"] {
-
     flex: 1; /* 남은 공간 채우기 */
     border: 1px solid #ffffff; /* 테두리 설정 */
     outline: none; /* 포커스 시 외곽선 제거 */
@@ -175,7 +173,6 @@ input {
     color: #333; /* 기본 글자색 */
     margin-left: 10px; /* 입력 필드 외부의 왼쪽 간격 추가 */
 }
-
 
 /* 드롭다운 메뉴 */
 .search-bar select {
@@ -264,7 +261,6 @@ input {
 }
 
 
-
 /* 탭 컨테이너 스타일 */
 .tabs {
     display: flex;
@@ -289,8 +285,6 @@ input {
     transition:color 0.3s;
     position: relative; /* 탭 버튼의 위치를 조정 가능하게 설정 */
 }
-
-
 
 /* 활성화된 탭 스타일 */
 .tab.active {

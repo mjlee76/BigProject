@@ -146,12 +146,12 @@ document.addEventListener("DOMContentLoaded", function () {
     fetchNotifications();
 });
 
-//document.addEventListener("DOMContentLoaded", function () {
-//  const notificationCount = document.getElementById("notification-count");
-//
-//  function showNotificationBadge(count) {
-//      notificationCount.textContent = count;
-//      notificationCount.style.display = "block"; // 배지 표시
-//  }
-//});
+document.addEventListener("DOMContentLoaded", function () {
+  const notificationCount = document.getElementById("notification-count");
+
+  function showNotificationBadge(count) {
+      notificationCount.textContent = count;
+      notificationCount.style.display = "block"; // 배지 표시
+  }
+});
 

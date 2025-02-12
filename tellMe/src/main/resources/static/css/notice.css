@@ -106,26 +106,6 @@ body {
     color: #1674C3; /* 호버 시 색상 변경 */
 }
 
-
-.pagination button {
-    border: 1px solid #ddd;
-    background-color: #f9f9f9;
-    padding: 5px 10px;
-    margin: 0 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.pagination button:hover {
-    background-color: #eee;
-}
-
-.pagination button.current {
-    font-weight: bold;
-    background-color: #333;
-    color: white;
-}
-
 /* 탭 컨테이너 스타일 */
 .tabs {
     display: flex;
@@ -438,45 +418,6 @@ body.delete-mode .notice-number {
     color: #1674C3;
 }
 
-
-/* 페이지네이션 버튼 스타일 */
-.pagination a, .pagination button {
-    padding: 5px 5px;
-    margin: 0 3px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    text-decoration: none;
-    font-size: 14px;
-    color: #333;
-    border-radius: 4px;
-}
-
-/* 페이지네이션 버튼 hover 효과 */
-.pagination a:hover, .pagination button:hover {
-    background-color: #eee;
-}
-
-/* 현재 페이지 스타일 */
-.pagination .current {
-    padding: 5px 5px;
-    margin: 0 3px;
-    transition: background-color 0.3s ease;
-    text-decoration: none;
-    font-size: 14px;
-    color: #989EFF;
-    border-radius: 4px;;
-}
-
-/* 비활성화된 링크 스타일 (첫 페이지, 마지막 페이지 비활성화 시) */
-.pagination a[disabled], .pagination a:disabled,
-.pagination button[disabled], .pagination button:disabled {
-    background-color: #f0f0f0;
-    color: #aaa;
-    cursor: not-allowed;
-    border: 1px solid #ddd;
-}
-
-
 /* 공지사항 이슈 수정 */
 /* 번호 셀 내부 정렬 */
 /* 번호 셀 내부 정렬 */
@@ -570,6 +511,62 @@ body.delete-mode .delete-mode-buttons {
     display: flex;
     align-items: center;
     margin-left: 140px;
+}
+
+.pagination button {
+    border: 1px solid #ddd;
+    background-color: #f9f9f9;
+    padding: 5px 10px;
+    margin: 0 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.pagination button:hover {
+    background-color: #eee;
+}
+
+.pagination button.current {
+    font-weight: bold;
+    background-color: #333;
+    color: white;
+}
+
+/* 페이지네이션 버튼 스타일 */
+.pagination a, .pagination button {
+    padding: 5px 5px;
+    margin: 0 3px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    text-decoration: none;
+    font-size: 14px;
+    color: #333;
+    border-radius: 4px;
+}
+
+/* 페이지네이션 버튼 hover 효과 */
+.pagination a:hover, .pagination button:hover {
+    background-color: #eee;
+}
+
+/* 현재 페이지 스타일 */
+.pagination .current {
+    padding: 5px 5px;
+    margin: 0 3px;
+    transition: background-color 0.3s ease;
+    text-decoration: none;
+    font-size: 14px;
+    color: #989EFF;
+    border-radius: 4px;;
+}
+
+/* 비활성화된 링크 스타일 (첫 페이지, 마지막 페이지 비활성화 시) */
+.pagination a[disabled], .pagination a:disabled,
+.pagination button[disabled], .pagination button:disabled {
+    background-color: #f0f0f0;
+    color: #aaa;
+    cursor: not-allowed;
+    border: 1px solid #ddd;
 }
 
 .feather feather-search {
