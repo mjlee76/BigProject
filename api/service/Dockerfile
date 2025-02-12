@@ -2,7 +2,7 @@
 FROM python:3.11
 
 # 작업 디렉토리 설정
-WORKDIR /app
+WORKDIR /api
 
 # 필수 시스템 패키지 설치 (PyTorch 및 기타 패키지 의존성)
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -26,8 +26,7 @@ RUN pip install --no-cache-dir torch torchvision torchaudio --index-url https://
 RUN pip install --no-cache-dir -r /tmp/requirements.txt
 
 # 애플리케이션 코드 복사
-COPY . /app
-
+COPY . /api
 # 포트 노출
 EXPOSE 8000
 

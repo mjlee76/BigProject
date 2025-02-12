@@ -4,6 +4,7 @@ from pydantic import BaseModel, Field
 from langchain_chroma import Chroma
 from langchain_openai import OpenAIEmbeddings
 
+import shutil
 import os
 import basic_module as bm
 import nsfw_detection as nd
@@ -59,6 +60,7 @@ class UserInfo(BaseModel):
 
 # 게시글 정보
 class PostBody(BaseModel):
+    question_id : int = 0
     title: str
     content: str
     user: UserInfo
@@ -167,7 +169,7 @@ async def make_report(data: CombinedModel):
         if report_req.category != "정상":
             report.report_prompt(report_req)
             report.cell_fill(post_data, report_req)
-            time, output_file = report.report_save()
+            time, output_file = report.report_save(post_data)
             report_req.create_date = time
             report_req.report_path = output_file
             
@@ -226,7 +228,7 @@ async def upload_image(file: FilePath):
                 return {
                     "valid": False,
                     "message" : "이미지 파일이 손상되었거나 유효하지 않습니다.",
-                    "file_path" : file_path
+                    "file_path" : file_name
                 }
             
             result = image_classifier(image)
@@ -237,11 +239,11 @@ async def upload_image(file: FilePath):
             if nsfw_score is not None and nsfw_score > 0.7:
                 results = "악성"
             else : results = "정상"
-            os.remove(file_location)
+            shutil.rmtree(file_path)
             return {
                 "valid": True,
                 "message" : results,
-                "file_path" : file_path
+                "file_path" : file_name
             }
 
         except Exception as e:
@@ -249,19 +251,19 @@ async def upload_image(file: FilePath):
             return {
                 "valid": False,
                 "message" : str(e),
-                "file_path" : file_path
+                "file_path" : file_name
                 }
         
         finally : 
             if nsfw_score is not None and nsfw_score < 0.7 :
-                os.remove(file_location)
+                shutil.rmtree(file_path)
     
     else:
         if not file_name.lower().endswith((".hwp", ".hwpx", ".doc", ".docx", ".pdf", ".txt")):
             return {
                 "valid": False,
                 "message" : "유효한 문서 파일이 아닙니다.",
-                "file_path" : file_path
+                "file_path" : file_name
                 }
 
         chroma = Chroma("fewshot_chat", OpenAIEmbeddings())
@@ -273,22 +275,22 @@ async def upload_image(file: FilePath):
             return {
                 "valid": False,
                 "message": "문서 내용이 없습니다. 올바른 문서를 업로드하세요.",
-                "file_path": file_location
+                "file_path": file_name
             }
         
         content_label = await docu_loader.make_classify_text(combined_text)
         if content_label != '정상':
             if file_name.lower().endswith((".hwp", ".hwpx", ".doc", ".docx", ".pdf",".txt")):
-                os.remove(file_location)
+                shutil.rmtree(file_path)
             return {
                 "valid": True,
                 "message" : "악성",
-                "file_path" : file_path
+                "file_path" : file_name
             }
         else:
-            os.remove(file_location)
+            shutil.rmtree(file_path)
             return {
                 "valid": True,
                 "message" : "정상",
-                "file_path" : file_path
+                "file_path" : file_name
             }
