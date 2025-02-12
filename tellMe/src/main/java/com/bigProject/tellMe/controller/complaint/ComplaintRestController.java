@@ -40,7 +40,7 @@ public class ComplaintRestController {
         List<MultipartFile> files = new ArrayList<>();
         files.add(file);
         try {
-            String uploadDir = "tellMe/apiCheck-uploadFile";
+            String uploadDir = System.getProperty("user.dir") + "/apiCheck-uploadFile";
             FileUpLoadUtil.saveFiles(uploadDir, files);
             uploadDir = "C:/Users/User/Desktop/BigProject/tellMe/apiCheck-uploadFile";
             String response = questionService.uploadFileApi(uploadDir);
