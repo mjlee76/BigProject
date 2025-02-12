@@ -88,10 +88,6 @@ public class ManagerController {
     }
 
 
-
-
-
-
     // ✅ 특정 보고서 열기
     @GetMapping("report/view/{id}")
     public String viewReport(@PathVariable Long id) throws UnsupportedEncodingException {

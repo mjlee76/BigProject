@@ -46,8 +46,9 @@ public class CustomerController {
         Notice notice = noticeService.save(noticeDTO);
         noticeDTO = noticeMapper.noTONoDTO(notice);
         Long noticeId = noticeDTO.getId();
-        System.out.println("=============="+multipartFile.toString());
-        if(!multipartFile.isEmpty()) {
+        System.out.println("==============createNotice");
+        //System.out.println("=============="+multipartFile.toString());
+        if(multipartFile != null && multipartFile.stream().anyMatch(file -> !file.isEmpty())) {
             String uploadDir = "tellMe/tellMe-uploadFile/notice/" + noticeId;
             List<String> savedFiles = FileUpLoadUtil.saveFiles(uploadDir, multipartFile);
 
@@ -55,6 +56,8 @@ public class CustomerController {
             noticeDTO.setFile(fileName);
             noticeService.save(noticeDTO);
         }
+
+        System.out.println("==============createNotice"+123);
         return "redirect:/customer/notice";
     }
 

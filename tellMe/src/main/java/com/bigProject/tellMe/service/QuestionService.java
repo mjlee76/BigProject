@@ -196,6 +196,8 @@ public class QuestionService {
                     questionDTO.setCategory(categoryString);
                     System.out.println("========SSE TEST============"+userDTO.getUserId());
                     System.out.println("========SSE TEST============"+categoryString);
+                    post_data.put("question_id", questionDTO.getId());
+                    responseBody.put("post_data", post_data);
                     CompletableFuture.runAsync(() -> reportApi(responseBody));
                 }
                 questionDTO.setStatus(Status.접수중);
