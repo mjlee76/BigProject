@@ -70,6 +70,7 @@ class PostBody(BaseModel):
 class ReportBody(BaseModel):
     category : List[str] = Field(default_factory=list)
     post_origin_data : Dict[str, str] = Field(default_factory=dict)
+    file_name : str = ""
     report_path : str = ""
     create_date : str = ""
     
@@ -170,9 +171,9 @@ async def make_report(data: CombinedModel):
         if report_req.category != "정상":
             report.report_prompt(report_req)
             report.cell_fill(post_data, report_req)
-            time, output_file = report.report_save(post_data)
+            time, output_file, report_req.report_path = report.report_save(post_data, report_req)
             report_req.create_date = time
-            report_req.report_path = output_file
+            report_req.file_name = output_file
             
         return {
                 "valid": True,
