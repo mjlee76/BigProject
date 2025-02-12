@@ -21,6 +21,8 @@ import com.bigProject.tellMe.repository.ReportRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.JoinType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -274,51 +276,235 @@ public class QuestionService {
         }
     }
 
+//    public Page<QuestionDTO> searchAndFilter(String query, Status status, String category, String role, Long userId, Pageable pageable) {
+//        // 동적 쿼리를 위한 조건 생성
+//        Specification<Question> spec = Specification.where(null);
+//
+//        // 역할에 따른 공개 여부 필터링
+//        if (!role.equals("ROLE_MANAGER") && !role.equals("ROLE_ADMIN")) {
+//            spec = spec.and((root, cq, criteriaBuilder) -> criteriaBuilder.equal(root.get("reveal"), Reveal.공개));
+//        }
+//
+//        // 상태 필터링
+//        if (status != null) {
+//            if (status == Status.필터링중) {
+//                spec = spec.and((root, cq, criteriaBuilder) ->
+//                        criteriaBuilder.or(
+//                                criteriaBuilder.equal(root.get("status"), status),  // ✅ 상태가 필터링중인 경우
+//                                criteriaBuilder.equal(root.get("user").get("id"), userId) // ✅ 작성자 본인이면 볼 수 있음
+//                        )
+//                );
+//            }else {
+//                spec = spec.and((root, cq, criteriaBuilder) -> criteriaBuilder.equal(root.get("status"), status));
+//            }
+//        }
+//
+//        // 검색어 필터링
+//        if (query != null && !query.isEmpty()) {
+//            if (category == null || "all".equals(category)) {
+//                // 전체 검색 (제목, 작성자, 내용)
+//                spec = spec.and((root, cq, criteriaBuilder) -> criteriaBuilder.or(
+//                        criteriaBuilder.like(root.get("title"), "%" + query + "%"),
+//                        criteriaBuilder.like(root.get("user").get("userName"), "%" + query + "%"),
+//                        criteriaBuilder.like(root.get("content"), "%" + query + "%")
+//                ));
+//            } else {
+//                // 카테고리별 검색
+//                switch (category) {
+//                    case "title":
+//                        spec = spec.and((root, cq, criteriaBuilder) -> criteriaBuilder.like(root.get("title"), "%" + query + "%"));
+//                        break;
+//                    case "author":
+//                        spec = spec.and((root, cq, criteriaBuilder) -> criteriaBuilder.like(root.get("user").get("userName"), "%" + query + "%"));
+//                        break;
+//                    case "content":
+//                        spec = spec.and((root, cq, criteriaBuilder) -> criteriaBuilder.like(root.get("content"), "%" + query + "%"));
+//                        break;
+//                }
+//            }
+//        }
+//
+//        // 페이징 처리
+//        Page<Question> questions = questionRepository.findAll(spec, pageable);
+//
+//        // Question 엔티티를 QuestionDTO로 변환
+//        return questions.map(question -> new QuestionDTO(
+//                question.getId(),
+//                question.getTitle(),
+//                question.getCreateDate(),
+//                question.getViews(),
+//                question.getUser().getUserName(),
+//                question.getStatus(),
+//                question.getFiltered() != null ? question.getFiltered().getTitle() : null,  // ✅ `filtered`가 `null`이면 `null` 반환
+//                question.getFiltered() != null ? question.getFiltered().getContent() : null // ✅ `filtered`가 `null`이면 `null` 반환
+//        ));
+//    }
     public Page<QuestionDTO> searchAndFilter(String query, Status status, String category, String role, Long userId, Pageable pageable) {
-        // 동적 쿼리를 위한 조건 생성
         Specification<Question> spec = Specification.where(null);
 
-        // 역할에 따른 공개 여부 필터링
         if (!role.equals("ROLE_MANAGER") && !role.equals("ROLE_ADMIN")) {
-            spec = spec.and((root, cq, criteriaBuilder) -> criteriaBuilder.equal(root.get("reveal"), Reveal.공개));
+            spec = spec.and((root, cq, cb) -> cb.equal(root.get("reveal"), Reveal.공개));
         }
 
-        // 상태 필터링
         if (status != null) {
             if (status == Status.필터링중) {
-                spec = spec.and((root, cq, criteriaBuilder) ->
-                        criteriaBuilder.or(
-                                criteriaBuilder.equal(root.get("status"), status),  // ✅ 상태가 필터링중인 경우
-                                criteriaBuilder.equal(root.get("user").get("id"), userId) // ✅ 작성자 본인이면 볼 수 있음
+                spec = spec.and((root, cq, cb) ->
+                        cb.or(
+                                cb.equal(root.get("status"), status),
+                                cb.equal(root.get("user").get("id"), userId)
                         )
                 );
-            }else {
-                spec = spec.and((root, cq, criteriaBuilder) -> criteriaBuilder.equal(root.get("status"), status));
+            } else {
+                spec = spec.and((root, cq, cb) -> cb.equal(root.get("status"), status));
             }
         }
 
-        // 검색어 필터링
         if (query != null && !query.isEmpty()) {
             if (category == null || "all".equals(category)) {
-                // 전체 검색 (제목, 작성자, 내용)
-                spec = spec.and((root, cq, criteriaBuilder) -> criteriaBuilder.or(
-                        criteriaBuilder.like(root.get("title"), "%" + query + "%"),
-                        criteriaBuilder.like(root.get("user").get("userName"), "%" + query + "%"),
-                        criteriaBuilder.like(root.get("content"), "%" + query + "%")
-                ));
+                spec = spec.and((root, cq, cb) -> {
+                    cq.distinct(true); // 중복 제거
+                    Join<Question, Filtered> filteredJoin = root.join("filtered", JoinType.LEFT);
+                    return cb.or(
+                            cb.like(root.get("title"), "%" + query + "%"),
+                            cb.like(root.get("user").get("userName"), "%" + query + "%"),
+                            cb.like(root.get("content"), "%" + query + "%"),
+                            cb.like(filteredJoin.get("title"), "%" + query + "%"),
+                            cb.like(filteredJoin.get("content"), "%" + query + "%")
+                    );
+                });
             } else {
-                // 카테고리별 검색
                 switch (category) {
                     case "title":
-                        spec = spec.and((root, cq, criteriaBuilder) -> criteriaBuilder.like(root.get("title"), "%" + query + "%"));
+                        spec = spec.and((root, cq, cb) -> {
+                            cq.distinct(true);
+                            Join<Question, Filtered> filteredJoin = root.join("filtered", JoinType.LEFT);
+                            return cb.or(
+                                    cb.like(root.get("title"), "%" + query + "%"),
+                                    cb.like(filteredJoin.get("title"), "%" + query + "%")
+                            );
+                        });
                         break;
                     case "author":
-                        spec = spec.and((root, cq, criteriaBuilder) -> criteriaBuilder.like(root.get("user").get("userName"), "%" + query + "%"));
+                        spec = spec.and((root, cq, cb) ->
+                                cb.like(root.get("user").get("userName"), "%" + query + "%"));
                         break;
                     case "content":
-                        spec = spec.and((root, cq, criteriaBuilder) -> criteriaBuilder.like(root.get("content"), "%" + query + "%"));
+                        spec = spec.and((root, cq, cb) -> {
+                            cq.distinct(true);
+                            Join<Question, Filtered> filteredJoin = root.join("filtered", JoinType.LEFT);
+                            return cb.or(
+                                    cb.like(root.get("content"), "%" + query + "%"),
+                                    cb.like(filteredJoin.get("content"), "%" + query + "%")
+                            );
+                        });
                         break;
                 }
+            }
+        }
+
+        Page<Question> questions = questionRepository.findAll(spec, pageable);
+
+        return questions.map(question -> new QuestionDTO(
+                question.getId(),
+                question.getTitle(),
+                question.getCreateDate(),
+                question.getViews(),
+                question.getUser().getUserName(),
+                question.getStatus(),
+                question.getFiltered() != null ? question.getFiltered().getTitle() : null,
+                question.getFiltered() != null ? question.getFiltered().getContent() : null
+        ));
+    }
+
+//    // MyPage 내 민원 조회 - 카테고리별 검색 로직 추가
+//    public Page<QuestionDTO> searchUserQuestions(User user, String query, Status status, String category, Pageable pageable) {
+//        Specification<Question> spec = Specification.where((root, cq, cb) ->
+//                cb.equal(root.get("user"), user)
+//        );
+//
+//        // 상태 필터링
+//        if (status != null) {
+//            spec = spec.and((root, cq, cb) -> cb.equal(root.get("status"), status));
+//        }
+//
+//        // 검색어 및 카테고리 필터링
+//        if (query != null && !query.isEmpty()) {
+//            switch (category) {
+//                case "title":
+//                    spec = spec.and((root, cq, cb) ->
+//                            cb.like(root.get("title"), "%" + query + "%"));
+//                    break;
+//                case "content":
+//                    spec = spec.and((root, cq, cb) ->
+//                            cb.like(root.get("content"), "%" + query + "%"));
+//                    break;
+//                default: // 전체 검색
+//                    spec = spec.and((root, cq, cb) -> cb.or(
+//                            cb.like(root.get("title"), "%" + query + "%"),
+//                            cb.like(root.get("content"), "%" + query + "%")));
+//            }
+//        }
+//
+//        Page<Question> questions = questionRepository.findAll(spec, pageable);
+//
+//        // Question 엔티티를 QuestionDTO로 변환
+//        return questions.map(question -> new QuestionDTO(
+//                question.getId(),
+//                question.getTitle(),
+//                question.getCreateDate(),
+//                question.getViews(),
+//                question.getUser().getUserName(),
+//                question.getStatus(),
+//                question.getFiltered() != null ? question.getFiltered().getTitle() : null,  // ✅ `filtered`가 `null`이면 `null` 반환
+//                question.getFiltered() != null ? question.getFiltered().getContent() : null // ✅ `filtered`가 `null`이면 `null` 반환
+//        ));
+//    }
+    public Page<QuestionDTO> searchUserQuestions(User user, String query, Status status, String category, Pageable pageable) {
+        // 기본 조건: 현재 사용자의 문의만 조회
+        Specification<Question> spec = Specification.where((root, cq, cb) ->
+                cb.equal(root.get("user"), user)
+        );
+
+        // 상태 필터링
+        if (status != null) {
+            spec = spec.and((root, cq, cb) -> cb.equal(root.get("status"), status));
+        }
+
+        // 검색어 및 카테고리 필터링
+        if (query != null && !query.isEmpty()) {
+            switch (category) {
+                case "title":
+                    spec = spec.and((root, cq, cb) -> {
+                        cq.distinct(true); // 중복 제거
+                        Join<Question, Filtered> filteredJoin = root.join("filtered", JoinType.LEFT);
+                        return cb.or(
+                                cb.like(root.get("title"), "%" + query + "%"),
+                                cb.like(filteredJoin.get("title"), "%" + query + "%")
+                        );
+                    });
+                    break;
+                case "content":
+                    spec = spec.and((root, cq, cb) -> {
+                        cq.distinct(true); // 중복 제거
+                        Join<Question, Filtered> filteredJoin = root.join("filtered", JoinType.LEFT);
+                        return cb.or(
+                                cb.like(root.get("content"), "%" + query + "%"),
+                                cb.like(filteredJoin.get("content"), "%" + query + "%")
+                        );
+                    });
+                    break;
+                default: // 전체 검색
+                    spec = spec.and((root, cq, cb) -> {
+                        cq.distinct(true); // 중복 제거
+                        Join<Question, Filtered> filteredJoin = root.join("filtered", JoinType.LEFT);
+                        return cb.or(
+                                cb.like(root.get("title"), "%" + query + "%"),
+                                cb.like(root.get("content"), "%" + query + "%"),
+                                cb.like(filteredJoin.get("title"), "%" + query + "%"),
+                                cb.like(filteredJoin.get("content"), "%" + query + "%")
+                        );
+                    });
+                    break;
             }
         }
 
@@ -333,52 +519,8 @@ public class QuestionService {
                 question.getViews(),
                 question.getUser().getUserName(),
                 question.getStatus(),
-                question.getFiltered() != null ? question.getFiltered().getTitle() : null,  // ✅ `filtered`가 `null`이면 `null` 반환
-                question.getFiltered() != null ? question.getFiltered().getContent() : null // ✅ `filtered`가 `null`이면 `null` 반환
-        ));
-    }
-
-    // MyPage 내 민원 조회 - 카테고리별 검색 로직 추가
-    public Page<QuestionDTO> searchUserQuestions(User user, String query, Status status, String category, Pageable pageable) {
-        Specification<Question> spec = Specification.where((root, cq, cb) ->
-                cb.equal(root.get("user"), user)
-        );
-
-        // 상태 필터링
-        if (status != null) {
-            spec = spec.and((root, cq, cb) -> cb.equal(root.get("status"), status));
-        }
-
-        // 검색어 및 카테고리 필터링
-        if (query != null && !query.isEmpty()) {
-            switch (category) {
-                case "title":
-                    spec = spec.and((root, cq, cb) ->
-                            cb.like(root.get("title"), "%" + query + "%"));
-                    break;
-                case "content":
-                    spec = spec.and((root, cq, cb) ->
-                            cb.like(root.get("content"), "%" + query + "%"));
-                    break;
-                default: // 전체 검색
-                    spec = spec.and((root, cq, cb) -> cb.or(
-                            cb.like(root.get("title"), "%" + query + "%"),
-                            cb.like(root.get("content"), "%" + query + "%")));
-            }
-        }
-
-        Page<Question> questions = questionRepository.findAll(spec, pageable);
-
-        // Question 엔티티를 QuestionDTO로 변환
-        return questions.map(question -> new QuestionDTO(
-                question.getId(),
-                question.getTitle(),
-                question.getCreateDate(),
-                question.getViews(),
-                question.getUser().getUserName(),
-                question.getStatus(),
-                question.getFiltered() != null ? question.getFiltered().getTitle() : null,  // ✅ `filtered`가 `null`이면 `null` 반환
-                question.getFiltered() != null ? question.getFiltered().getContent() : null // ✅ `filtered`가 `null`이면 `null` 반환
+                question.getFiltered() != null ? question.getFiltered().getTitle() : null,
+                question.getFiltered() != null ? question.getFiltered().getContent() : null
         ));
     }
 
