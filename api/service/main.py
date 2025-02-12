@@ -64,14 +64,12 @@ class PostBody(BaseModel):
     title: str
     content: str
     user: UserInfo
-    question_id: int = 0
 
 #DB로 넘길 report 정보
 class ReportBody(BaseModel):
     category : List[str] = Field(default_factory=list)
     post_origin_data : Dict[str, str] = Field(default_factory=dict)
     file_name : str = ""
-    report_path : str = ""
     create_date : str = ""
     
 class CombinedModel(BaseModel):
@@ -96,8 +94,6 @@ class SpamQuestionRequest(BaseModel):
     question_data: QuestionData
 
 #민원 악성탐지 및 순화
-# db에 저장할수있게 카테고리를 리스트안에 넣어서 해주세요
-# make report()가 안되는 거 수정해야됨
 
 @app.post("/filtered_module")
 async def update_item(data: CombinedModel):
@@ -171,7 +167,7 @@ async def make_report(data: CombinedModel):
         if report_req.category != "정상":
             report.report_prompt(report_req)
             report.cell_fill(post_data, report_req)
-            time, output_file, report_req.report_path = report.report_save(post_data, report_req)
+            time, output_file = report.report_save(post_data)
             report_req.create_date = time
             report_req.file_name = output_file
             
@@ -259,7 +255,6 @@ async def upload_image(file: FilePath):
         finally : 
             if nsfw_score is not None and nsfw_score < 0.7 :
                 shutil.rmtree(file_path)
-    
     else:
         if not file_name.lower().endswith((".hwp", ".hwpx", ".doc", ".docx", ".pdf", ".txt")):
             return {
