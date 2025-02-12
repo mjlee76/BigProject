@@ -50,33 +50,33 @@
             <tr>
                 <th>첨부파일1</th>
                 <td>
-                <span th:if="${question.file1 != null}">
+                <span th:if="${question.file1 != null and question.file1 != ''}">
                     <a th:href="@{'/tellMe/tellMe-uploadFile/question/' + ${question.id} + '/' + ${question.file1}}" title="첨부파일 다운로드" download>
                         <img th:src = "@{/image/attachment.jpg}" alt="첨부파일 아이콘" style="width: 16px; height: 16px; vertical-align: middle; margin-right: 5px;">
                         <span th:text="${question.file1}"></span>
                     </a>
                 </span>
-                    <span th:if="${question.file1 == null}">없음</span>
+                    <span th:if="${question.file1 == null or question.file1 == ''}">없음</span>
                 </td>
                 <th>첨부파일2</th>
                 <td>
-                <span th:if="${question.file2 != null}">
+                <span th:if="${question.file2 != null and question.file2 != ''}">
                     <a th:href="@{'/tellMe/tellMe-uploadFile/question/' + ${question.id} + '/' + ${question.file2}}" title="첨부파일 다운로드" download>
                         <img th:src = "@{/image/attachment.jpg}" alt="첨부파일 아이콘" style="width: 16px; height: 16px; vertical-align: middle; margin-right: 5px;">
                         <span th:text="${question.file2}"></span>
                     </a>
                 </span>
-                    <span th:if="${question.file2 == null}">없음</span>
+                    <span th:if="${question.file2 == null or question.file2 == ''}">없음</span>
                 </td>
                 <th>첨부파일3</th>
                 <td>
-                <span th:if="${question.file3 != null}">
+                <span th:if="${question.file3 != null and question.file3 != ''}">
                     <a th:href="@{'/tellMe/tellMe-uploadFile/question/' + ${question.id} + '/' + ${question.file3}}" title="첨부파일 다운로드" download>
                         <img th:src = "@{/image/attachment.jpg}" alt="첨부파일 아이콘" style="width: 16px; height: 16px; vertical-align: middle; margin-right: 5px;">
                         <span th:text="${question.file3}"></span>
                     </a>
                 </span>
-                    <span th:if="${question.file3 == null}">없음</span>
+                    <span th:if="${question.file3 == null or question.file3 == ''}">없음</span>
                 </td>
             </tr>
             <tr>

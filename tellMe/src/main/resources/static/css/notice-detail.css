@@ -41,22 +41,21 @@ table {
     border-collapse: collapse;
     margin-bottom: 20px;
     background-color: #fff;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* 테이블을 더 깔끔하게 보이도록 그림자 추가 */
 }
 
 .border-top th, .border-top td {
-    border-top: 2px solid #0067A3;
+    border-top: 2px solid #333;
 }
 
 th, td {
-    border: 1px solid #ccc; /* 테두리 색상 통일 */
+    border: 1px solid #ddd; /* 테두리 색상 통일 */
     padding: 10px;
     text-align: left;
 }
 
 th {
-    background-color: #f4f4f4; /* 테이블 헤더 배경색 통일 */
-    font-weight: bold;
+    font-weight: normal;
+    background-color: #FAF8FF; /* 테이블 헤더 배경색 통일 */
 }
 
 table tr th:nth-child(1), table tr td:nth-child(1) { width: 10%; }
@@ -117,12 +116,8 @@ button:hover {
 }
 
 /* 버튼 종류별 스타일 */
-button.list-button {
-    background-color: #ddd; /* 목록 버튼 기본 색상 */
-}
-
 button.list-button:hover {
-    background-color: #ccc; /* 목록 버튼 hover 색상 */
+    background-color: #f9d6d5; /* 목록 버튼 hover 색상 */
 }
 
 button.delete-button {
@@ -131,5 +126,5 @@ button.delete-button {
 }
 
 button.delete-button:hover {
-    background-color: #f4a3a2; /* 삭제 버튼 hover 색상 */
+    background-color: #f9d6d5; /* 삭제 버튼 hover 색상 */
 }
