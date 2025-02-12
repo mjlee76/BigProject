@@ -26,7 +26,7 @@ import java.util.concurrent.*;
 @RequiredArgsConstructor
 public class ComplaintRestController {
     private final Map<Long, SseEmitter> emitters = new ConcurrentHashMap<>();
-    private final CopyOnWriteArrayList<SseEmitter> refreshEmitters = new CopyOnWriteArrayList<>();
+    //private final CopyOnWriteArrayList<SseEmitter> refreshEmitters = new CopyOnWriteArrayList<>();
     private final QuestionService questionService;
     private final UserService userService;
     private final NotificationService notificationService;
@@ -42,7 +42,7 @@ public class ComplaintRestController {
         try {
             String uploadDir = "tellMe/apiCheck-uploadFile";
             FileUpLoadUtil.saveFiles(uploadDir, files);
-            uploadDir = "C:/Users/User/Desktop/BigProject/tellMe/apiCheck-uploadFile";
+            uploadDir = "C:/Users/User/BigProject/tellMe/apiCheck-uploadFile";
             String response = questionService.uploadFileApi(uploadDir);
             return ResponseEntity.ok().body(response);
         } catch (Exception e) {
