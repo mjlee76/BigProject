@@ -24,9 +24,10 @@ public class UserRestController {
 
     //태식 : 회원가입할 때 userId랑 phone, email이 중복되는지 체크
     @PostMapping("/user/check/unique")
-    public String checkIdDuplicate(@RequestParam("userId") String userId, @RequestParam("password") String password,
-                                   @RequestParam("phone") String phoneNum, @RequestParam("email") String eMail) {
-        return userService.checkUnique(userId, password, phoneNum, eMail);
+    public String checkIdDuplicate(@RequestParam("userId") String userId,
+                                   @RequestParam("phone") String phoneNum,
+                                   @RequestParam("email") String eMail) {
+        return userService.checkUnique(userId, phoneNum, eMail);
     }
 
     //태식 : 아이디 찾기
