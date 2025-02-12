@@ -19,16 +19,15 @@ body {
     color: #333;
 }
 
+/* 컨테이너 */
 .container {
     display: flex;
-    align-items: stretch;
-    width: 100%; /* 기존 코드 유지 */
-    max-width: 100%; /* 기존 max-width: 1200px; 제거 */
+    width: 100%;
+    max-width: 100%;
     margin: auto;
     margin-top: 80px;
-    flex: 1; /* 내용이 부족해도 footer가 하단에 고정 */
+    flex: 1;
 }
-
 
 /* 사이드바 */
 .sidebar {
@@ -51,11 +50,6 @@ body {
     font-weight: bold;
 }
 
-.user-email {
-    font-size: 14px;
-    color: gray;
-}
-
 .menu {
     list-style: none;
     padding: 0;
@@ -70,7 +64,6 @@ body {
 }
 
 .menu-item a {
-    text-size: 17px;
     display: block;
     text-decoration: none;
     color: inherit;
@@ -91,8 +84,7 @@ body {
     margin-left: 20px;
     margin-right: 150px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    width: 100%; /* 추가: 전체 너비 차지 */
-    height : 300px;
+    width: 100%;
 }
 
 .section-title {
@@ -100,15 +92,8 @@ body {
     margin-bottom: 20px;
 }
 
-/* 콘텐츠 박스 */
-.profile-card, .security-card {
-    background: var(--sidebar-bg);
-    padding: 20px;
-    border-radius: var(--border-radius);
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-.edit-btn {
+/* 버튼 스타일 */
+.profile-card button{
     background: var(--button-bg);
     color: white;
     border: none;
@@ -118,10 +103,11 @@ body {
     font-size: 14px;
 }
 
-.edit-btn:hover {
+.profile-card button:hover {
     background: var(--button-hover);
 }
 
+/* 프로필 이미지 */
 .profile-img {
     display: inline-block;
     width: 100px;
@@ -137,10 +123,6 @@ body {
     object-fit: cover;
 }
 
-#profile-upload {
-    display: none;
-}
-
 /* 입력 필드 */
 input {
     width: 100%;
@@ -150,79 +132,6 @@ input {
     border-radius: var(--border-radius);
 }
 
-
-/* 검색 폼 스타일 */
-#search-form {
-    display: flex; /* 가로로 정렬 */
-    align-items: center; /* 세로 가운데 정렬 */
-    gap: 10px; /* 요소 간 간격 */
-    width: 100%; /* 전체 너비 */
-    max-width: 600px; /* 최대 너비 */
-    margin: 20px auto; /* 중앙 정렬 */
-    border-bottom: 1px solid #333; /* 밑줄 */
-}
-
-
-/* 검색 입력 필드 */
-.search-bar input[type="text"] {
-    flex: 1; /* 남은 공간 채우기 */
-    border: 1px solid #ffffff; /* 테두리 설정 */
-    outline: none; /* 포커스 시 외곽선 제거 */
-    font-size: 14px; /* 글씨 크기 */
-    color: #333; /* 기본 글자색 */
-    margin-left: 10px; /* 입력 필드 외부의 왼쪽 간격 추가 */
-}
-
-/* 드롭다운 메뉴 */
-.search-bar select {
-    padding: 10px;
-    border: 1px solid #ffffff;
-    font-size: 14px;
-}
-.search-bar select option {
-    padding: 10px; /* 리스트 아이템 간격 */
-    background-color: #fff; /* 드롭다운 아이템 배경 */
-    color: #333; /* 드롭다운 아이템 텍스트 색상 */
-    font-size: 14px; /* 드롭다운 아이템 글씨 크기 */
-}
-
-
-/* 검색 버튼 */
-.search-bar button {
-    background: none; /* 배경 제거 */
-    border: none; /* 테두리 제거 */
-    padding: 0; /* 여백 제거 */
-    cursor: pointer; /* 마우스 포인터 */
-    color: #333; /* 아이콘 색상 */
-    margin-left: 10px; /* 입력 필드와 버튼 간격 */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.search-bar button:hover {
-    color: #1674C3; /* 호버 시 색상 변경 */
-}
-
-/* 반응형 디자인 */
-@media (max-width: 768px) {
-    .search-bar {
-        flex-direction: column;
-        gap: 15px;
-    }
-
-    .search-bar input,
-    .search-bar select,
-    .search-bar button {
-        width: 100%;
-    }
-}
-
-/* 게시글 목록 */
-.post-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
 /* 모달 스타일 */
 .modal {
   display: none; /* 기본적으로 숨김 */
@@ -291,13 +200,4 @@ input {
 .btn-submit:hover {
   background-color: #9678F2;
   box-shadow: 0px 3px 8px rgba(150, 120, 242, 0.4);
-}
-
-footer.align-center {
-    display: flex;
-    justify-content: center; /* 수평 중앙 정렬 */
-}
-
-#history p {
-    display: none;
 }

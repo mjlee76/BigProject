@@ -46,14 +46,12 @@ public class UserService {
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
     }
 
-    public String checkUnique(String userId, String password, String phoneNum, String eMail) {
+    public String checkUnique(String userId, String phoneNum, String eMail) {
         List<User> listUsers = userRepository.findAll();
 
         for(User listUser : listUsers) {
             if(userRepository.findByUserId(userId) != null) {
                 return "아이디중복";
-            }else if(passwordEncoder.matches(password, listUser.getPassword())) {
-                return "비밀번호중복";
             }else if(userRepository.findByPhone(phoneNum) != null) {
                 return "핸드폰중복";
             }else if(userRepository.findByEmail(eMail) != null) {
