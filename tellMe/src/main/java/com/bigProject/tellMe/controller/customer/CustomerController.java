@@ -63,15 +63,20 @@ public class CustomerController {
     public String paging(@PageableDefault(page = 1) Pageable pageable, Model model) {
         Page<NoticeDTO> noticeList = noticeService.paging(pageable);
 
-        int blockLimit = 10; // 화면에 보여지는 페이지 갯수
-        int startPage = (((int)(Math.ceil((double)pageable.getPageNumber() / blockLimit))) - 1) * blockLimit + 1;  // 1, 6, 11, ~
-        int endPage = ((startPage + blockLimit - 1) < noticeList.getTotalPages()) ? startPage + blockLimit - 1 : noticeList.getTotalPages();
+        int blockLimit = 5; // 화면에 보여지는 페이지 갯수
+        int totalPages = Math.max(noticeList.getTotalPages(), 1); // 🔹 최소 1페이지 보장
+
+        int startPage = (((int)(Math.ceil((double)pageable.getPageNumber() / blockLimit))) - 1) * blockLimit + 1;
+        int endPage = Math.min(startPage + blockLimit - 1, totalPages); // 🔹 최소 1페이지 보장
 
         model.addAttribute("noticeList", noticeList);
         model.addAttribute("startPage", startPage);
         model.addAttribute("endPage", endPage);
+        model.addAttribute("totalPages", totalPages); // 🔹 총 페이지 수 전달
+
         return "customer/notice";
     }
+
 
     // 공시사항 제목을 클릭하여 상세페이지 표출 메서드
     @GetMapping("/notice/{id}")

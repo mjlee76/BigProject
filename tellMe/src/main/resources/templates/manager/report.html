@@ -91,7 +91,7 @@
 
 
     <!-- 페이지네이션 -->
-    <div class="pagination" th:if="${not reports.isEmpty()}" th:classappend="${reports.isEmpty() ? 'no-pagination' : ''}">
+    <div class="pagination" >
         <!-- 첫 번째 페이지로 이동 -->
         <a th:href="@{/manager/report(query=${query}, status=${status}, page=1)}">«</a>
 

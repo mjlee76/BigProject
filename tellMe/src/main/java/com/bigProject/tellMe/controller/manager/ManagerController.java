@@ -59,17 +59,18 @@ public class ManagerController {
             reportPage = reportService.searchReportsPaged(query, status, pageable);
         }
 
-        int totalPages = reportPage.getTotalPages();
+        // ✅ 최소 1페이지 보장
+        int totalPages = Math.max(reportPage.getTotalPages(), 1);
 
-        // 5페이지씩 그룹으로 나누기
+        // ✅ 5페이지씩 그룹으로 나누기
         int groupSize = 5;
         int currentGroup = (page - 1) / groupSize;
         int startPage = currentGroup * groupSize + 1;
         int endPage = Math.min(startPage + groupSize - 1, totalPages);
 
-        // 이전 그룹, 다음 그룹 링크를 위한 로직
-        int prevGroup = (currentGroup > 0) ? currentGroup - 1 : 0;
-        int nextGroup = (currentGroup + 1) * groupSize < totalPages ? currentGroup + 1 : currentGroup;
+        // ✅ 이전 그룹, 다음 그룹 링크 로직 수정
+        int prevGroup = (startPage > 1) ? startPage - groupSize : 1;
+        int nextGroup = (endPage < totalPages) ? endPage + 1 : totalPages;
 
         log.info("Fetching reports - Query: {}, Status: {}, Current Page: {}, Total Pages: {}, Total Elements: {}",
                 query, status, page, totalPages, reportPage.getTotalElements());
@@ -86,6 +87,7 @@ public class ManagerController {
 
         return "manager/report";
     }
+
 
 
 

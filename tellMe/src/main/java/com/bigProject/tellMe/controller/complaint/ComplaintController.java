@@ -109,10 +109,14 @@ public class ComplaintController {
         // 검색 및 필터링 결과 조회
         Page<QuestionDTO> questionList = questionService.searchAndFilter(query, status, category, role, pageable);
 
-        // 페이징 정보 계산
-        int blockLimit = 5; // 화면에 보여질 페이지 번호 개수
-        int startPage = (((int)(Math.ceil((double)page / blockLimit))) - 1) * blockLimit + 1;
-        int endPage = Math.min(startPage + blockLimit - 1, questionList.getTotalPages());
+        // ✅ 최소 1페이지 보장
+        int totalPages = Math.max(questionList.getTotalPages(), 1);
+
+        // ✅ 5페이지씩 그룹으로 나누기
+        int blockLimit = 5;
+        int currentGroup = (page - 1) / blockLimit;
+        int startPage = currentGroup * blockLimit + 1;
+        int endPage = Math.min(startPage + blockLimit - 1, totalPages);
 
         // 모델에 데이터 추가
         model.addAttribute("questionList", questionList);
