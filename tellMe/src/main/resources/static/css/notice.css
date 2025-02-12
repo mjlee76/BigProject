@@ -569,7 +569,7 @@ body.delete-mode .delete-mode-buttons {
     transform: translateX(-50%); /* 정확한 중앙 정렬 */
     display: flex;
     align-items: center;
-    margin-left: 140px;
+    margin-left: 130px;
 }
 
 .feather feather-search {

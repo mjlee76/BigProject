@@ -14,136 +14,141 @@
 <body>
 <div th:replace="layouts/navbar::tellMe_header"></div>
 
-<main class="content">
-    <h1>민원 게시판</h1>
-    <table>
-        <tr class="border-top">
-            <th>번호</th>
-            <td th:text="${question.id}"></td>
-            <th>작성자</th>
-            <td>
-                <span th:text="${question.userName}"></span>
-            </td>
-            <th>작성일</th>
-            <td>
-                <span th:text="${#temporals.format(question.createDate, 'yyyy-MM-dd')}">2025-01-17 18:00:00</span>
-            </td>
-        </tr>
-        <tr>
-            <th>공개여부</th>
-            <td>
-                <span th:text="${question.reveal}"></span>
-            </td>
-            <th>답변여부</th>
-            <td>
-                <span th:text="${question.status}"></span>
-            </td>
-            <th>조회수</th>
-            <td>
-                <span th:text="${question.views}">0</span>
-            </td>
-        </tr>
-        <tr>
-            <th>첨부파일1</th>
-            <td>
-                <span th:if="${question.file1 != null}">
-                    <a th:href="@{/files/{fileName}(fileName=${question.file})}" title="첨부파일 다운로드">
-                        <img th:src = "@{/image/attachment.jpg}" alt="첨부파일 아이콘" style="width: 16px; height: 16px; vertical-align: middle; margin-right: 5px;">
-                        <span th:text="${question.file}"></span>
-                    </a>
-                </span>
-                <span th:if="${question.file1 == null}">없음</span>
-            </td>
-            <th>첨부파일2</th>
-            <td>
-                <span th:if="${question.file2 != null}">
-                    <a th:href="@{/files/{fileName}(fileName=${question.file})}" title="첨부파일 다운로드">
-                        <img th:src = "@{/image/attachment.jpg}" alt="첨부파일 아이콘" style="width: 16px; height: 16px; vertical-align: middle; margin-right: 5px;">
-                        <span th:text="${question.file}"></span>
-                    </a>
-                </span>
-                <span th:if="${question.file2 == null}">없음</span>
-            </td>
-            <th>첨부파일3</th>
-            <td>
-                <span th:if="${question.file3 != null}">
-                    <a th:href="@{/files/{fileName}(fileName=${question.file})}" title="첨부파일 다운로드">
-                        <img th:src = "@{/image/attachment.jpg}" alt="첨부파일 아이콘" style="width: 16px; height: 16px; vertical-align: middle; margin-right: 5px;">
-                        <span th:text="${question.file}"></span>
-                    </a>
-                </span>
-                <span th:if="${question.file3 == null}">없음</span>
-            </td>
-        </tr>
-        <tr>
-            <th>제목</th>
-            <td colspan="5" th:if="${question.filterTitle == null or question.filterTitle.isEmpty()}">
-                <span th:text="${question.title}"></span>
-            </td>
-            <td colspan="5" th:if="${question.filterTitle != null and !question.filterTitle.isEmpty()}">
-                <span th:text="${question.filterTitle}"></span>
-            </td>
-        </tr>
-        <tr>
-            <td colspan="6" th:if="${question.filterContent == null or question.filterContent.isEmpty()}">
-                <span th:text="${question.content}" class="content-text">게시글 내용을 불러오는 중...</span>
-            </td>
-            <td colspan="6" th:if="${question.filterContent != null and !question.filterContent.isEmpty()}">
-                <span th:text="${question.filterContent}" class="content-text">게시글 내용을 불러오는 중...</span>
-            </td>
-        </tr>
-    </table>
-    <!-- 답변 표시 섹션 -->
-    <div th:if="${question.answer != null}">
-        <h1>답변</h1>
+<main>
+    <div class="inquiry-header">
+        <h1>문의게시판</h1>
+        <p>궁금한 점이 있다면 언제든 문의해주세요 😊</p>
+    </div>
+    <div class="content">
         <table>
             <tr class="border-top">
-                <th>답변자</th>
-                <td colspan="3">
-                    <span th:text="${question.answer.userName}">답변자 이름</span>
+                <th>번호</th>
+                <td th:text="${question.id}"></td>
+                <th>작성자</th>
+                <td>
+                    <span th:text="${question.userName}"></span>
                 </td>
-                <th>답변일</th>
-                <td colspan="3">
-                    <span th:text="${#temporals.format(question.answer.createDate, 'yyyy-MM-dd')}">2025-01-17</span>
+                <th>작성일</th>
+                <td>
+                    <span th:text="${#temporals.format(question.createDate, 'yyyy-MM-dd')}">2025-01-17 18:00:00</span>
                 </td>
             </tr>
             <tr>
-                <td colspan="6">
-                    <span th:text="${question.answer.content}" class="content-text">답변 내용</span>
+                <th>공개여부</th>
+                <td>
+                    <span th:text="${question.reveal}"></span>
+                </td>
+                <th>답변여부</th>
+                <td>
+                    <span th:text="${question.status}"></span>
+                </td>
+                <th>조회수</th>
+                <td>
+                    <span th:text="${question.views}">0</span>
+                </td>
+            </tr>
+            <tr>
+                <th>첨부파일1</th>
+                <td>
+                <span th:if="${question.file1 != null}">
+                    <a th:href="@{'/tellMe/tellMe-uploadFile/question/' + ${question.id} + '/' + ${question.file1}}" title="첨부파일 다운로드" download>
+                        <img th:src = "@{/image/attachment.jpg}" alt="첨부파일 아이콘" style="width: 16px; height: 16px; vertical-align: middle; margin-right: 5px;">
+                        <span th:text="${question.file1}"></span>
+                    </a>
+                </span>
+                    <span th:if="${question.file1 == null}">없음</span>
+                </td>
+                <th>첨부파일2</th>
+                <td>
+                <span th:if="${question.file2 != null}">
+                    <a th:href="@{'/tellMe/tellMe-uploadFile/question/' + ${question.id} + '/' + ${question.file2}}" title="첨부파일 다운로드" download>
+                        <img th:src = "@{/image/attachment.jpg}" alt="첨부파일 아이콘" style="width: 16px; height: 16px; vertical-align: middle; margin-right: 5px;">
+                        <span th:text="${question.file2}"></span>
+                    </a>
+                </span>
+                    <span th:if="${question.file2 == null}">없음</span>
+                </td>
+                <th>첨부파일3</th>
+                <td>
+                <span th:if="${question.file3 != null}">
+                    <a th:href="@{'/tellMe/tellMe-uploadFile/question/' + ${question.id} + '/' + ${question.file3}}" title="첨부파일 다운로드" download>
+                        <img th:src = "@{/image/attachment.jpg}" alt="첨부파일 아이콘" style="width: 16px; height: 16px; vertical-align: middle; margin-right: 5px;">
+                        <span th:text="${question.file3}"></span>
+                    </a>
+                </span>
+                    <span th:if="${question.file3 == null}">없음</span>
+                </td>
+            </tr>
+            <tr>
+                <th>제목</th>
+                <td colspan="5" th:if="${question.filterTitle == null or question.filterTitle.isEmpty()}">
+                    <span th:text="${question.title}"></span>
+                </td>
+                <td colspan="5" th:if="${question.filterTitle != null and !question.filterTitle.isEmpty()}">
+                    <span th:text="${question.filterTitle}"></span>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="6" th:if="${question.filterContent == null or question.filterContent.isEmpty()}">
+                    <span th:text="${question.content}" class="content-text">게시글 내용을 불러오는 중...</span>
+                </td>
+                <td colspan="6" th:if="${question.filterContent != null and !question.filterContent.isEmpty()}">
+                    <span th:text="${question.filterContent}" class="content-text">게시글 내용을 불러오는 중...</span>
                 </td>
             </tr>
         </table>
-    </div>
+        <!-- 답변 표시 섹션 -->
+        <div th:if="${question.answer != null}">
+            <h1>답변</h1>
+            <table>
+                <tr class="border-top">
+                    <th>답변자</th>
+                    <td colspan="3">
+                        <span th:text="${question.answer.userName}">답변자 이름</span>
+                    </td>
+                    <th>답변일</th>
+                    <td colspan="3">
+                        <span th:text="${#temporals.format(question.answer.createDate, 'yyyy-MM-dd')}">2025-01-17</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="6">
+                        <span th:text="${question.answer.content}" class="content-text">답변 내용</span>
+                    </td>
+                </tr>
+            </table>
+        </div>
 
-    <!-- 답변박스 (매니저만 보임) -->
-    <div sec:authorize="hasRole('ROLE_MANAGER')" th:unless="${question.answer}" class="answer-box">
-        <form th:action="@{/complaint/answer}" method="post" class="answer-form">
-            <div class="textarea-wrapper">
-                <input type="hidden" name="questionId" th:value="${question.id}" />
-                <textarea name="content" placeholder="답변을 입력하세요"></textarea>
-            </div>
-            <div class="button-wrapper">
-                <button type="submit">답변 등록</button>
-            </div>
-        </form>
-    </div>
+        <!-- 답변박스 (매니저만 보임) -->
+        <div sec:authorize="hasRole('ROLE_MANAGER')" th:unless="${question.answer}" class="answer-box">
+            <form th:action="@{/complaint/answer}" method="post" class="answer-form">
+                <div class="textarea-wrapper">
+                    <input type="hidden" name="questionId" th:value="${question.id}" />
+                    <textarea name="content" placeholder="답변을 입력하세요"></textarea>
+                </div>
+                <div class="button-wrapper">
+                    <button type="submit">답변 등록</button>
+                </div>
+            </form>
+        </div>
 
-    <input type="hidden" id="page" th:value="${page}" /> <!-- 현재 페이지 번호 -->
-    <input type="hidden" id="questionId" th:value="${question.id}" /> <!-- 문의 ID -->
+        <input type="hidden" id="page" th:value="${page}" /> <!-- 현재 페이지 번호 -->
+        <input type="hidden" id="questionId" th:value="${question.id}" /> <!-- 문의 ID -->
 
-    <!-- 버튼 -->
-    <div class="buttons">
-        <button class="list-button" th:onclick="detailListReq()">목록보기</button>
-        <form th:action="@{/complaint/question/{id}/status(id=${question.id})}" method="post">
-            <button th:onclick="updateQuestionStatus()" sec:authorize="hasRole('ROLE_MANAGER')">처리중으로 변경</button>
-        </form>
-        <!-- 삭제 버튼: 로그인한 사용자가 해당 게시글 작성자일 경우에만 표시 -->
-        <form th:if="${currentUserId == question.userId}"
-              th:action="@{/complaint/delete/{id}(id=${question.id})}"
-              method="post"
-              onsubmit="return handleDeleteFormSubmit(this);">
-            <button type="submit" sec:authorize="hasRole('ROLE_USER')">삭제하기</button>
-        </form>
+        <!-- 버튼 -->
+        <div class="buttons">
+            <button class="list-button" th:onclick="detailListReq()">목록보기</button>
+            <form th:action="@{/complaint/question/{id}/status(id=${question.id})}" method="post">
+                <button th:onclick="updateQuestionStatus()" sec:authorize="hasRole('ROLE_MANAGER')">처리중으로 변경</button>
+            </form>
+            <!-- 삭제 버튼: 로그인한 사용자가 해당 게시글 작성자일 경우에만 표시 -->
+            <form th:if="${currentUserId == question.userId}"
+                  th:action="@{/complaint/delete/{id}(id=${question.id})}"
+                  method="post"
+                  onsubmit="return handleDeleteFormSubmit(this);">
+                <button type="submit" sec:authorize="hasRole('ROLE_USER')">삭제하기</button>
+            </form>
+        </div>
     </div>
 </main>
 <div th:replace="layouts/footer::tellMe_footer"></div>

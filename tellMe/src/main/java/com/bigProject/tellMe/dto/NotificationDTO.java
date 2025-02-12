@@ -18,8 +18,9 @@ public class NotificationDTO {
     private boolean isRead;
     private LocalDateTime createDate;
 
-    public NotificationDTO(Long id, String message, boolean isRead) {
+    public NotificationDTO(Long id, Long userId, String message, boolean isRead) {
         this.id = id;
+        this.userId = userId;
         this.message = message;
         this.isRead = isRead;
     }

@@ -42,8 +42,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // 초기화 시 삭제 모드 버튼 숨기기
-    document.querySelector('.delete-mode-buttons').style.display = 'none';
 
     // ✅ 선택된 공지사항 삭제 요청
     function deleteSelectedNotices() {
