@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -112,17 +113,6 @@ public class UserService {
         return false;
     }
 
-//    public boolean updateUserName(String userId, String newName) {
-//        User user = userRepository.findByUserId(userId);
-//        if(user != null) {
-//            UserDTO userDTO = userMapper.userToUserDTO(user);
-//            userDTO.setUserName(newName);
-//            user = userMapper.userDTOToUser(userDTO);
-//            userRepository.save(user);
-//            return true;
-//        }
-//        return false;
-//    }
     public boolean updateUserName(String userId, String currentPassword, String newName) {
         User user = userRepository.findByUserId(userId);
         if (user == null) {
@@ -214,5 +204,10 @@ public class UserService {
         user.setAddress(newAddress);
         userRepository.save(user);
         return true;
+    }
+
+
+    public List<Long> getAllUserIds() {
+        return userRepository.findAll().stream().map(User::getId).collect(Collectors.toList());
     }
 }
