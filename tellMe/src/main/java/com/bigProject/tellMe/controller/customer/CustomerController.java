@@ -47,7 +47,7 @@ public class CustomerController {
         noticeDTO = noticeMapper.noTONoDTO(notice);
         Long noticeId = noticeDTO.getId();
         System.out.println("=============="+multipartFile.toString());
-        if(!multipartFile.isEmpty()) {
+        if(multipartFile != null && multipartFile.stream().anyMatch(file -> !file.isEmpty())) {
             String uploadDir = "tellMe/tellMe-uploadFile/notice/" + noticeId;
             List<String> savedFiles = FileUpLoadUtil.saveFiles(uploadDir, multipartFile);
 
@@ -63,7 +63,7 @@ public class CustomerController {
     public String paging(@PageableDefault(page = 1) Pageable pageable, Model model) {
         Page<NoticeDTO> noticeList = noticeService.paging(pageable);
 
-        int blockLimit = 10; // 화면에 보여지는 페이지 갯수
+        int blockLimit = 5; // 화면에 보여지는 페이지 갯수
         int startPage = (((int)(Math.ceil((double)pageable.getPageNumber() / blockLimit))) - 1) * blockLimit + 1;  // 1, 6, 11, ~
         int endPage = ((startPage + blockLimit - 1) < noticeList.getTotalPages()) ? startPage + blockLimit - 1 : noticeList.getTotalPages();
 
