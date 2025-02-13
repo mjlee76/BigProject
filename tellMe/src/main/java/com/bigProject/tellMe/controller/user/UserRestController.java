@@ -2,6 +2,8 @@ package com.bigProject.tellMe.controller.user;
 
 import com.bigProject.tellMe.dto.UserDTO;
 import com.bigProject.tellMe.entity.User;
+import com.bigProject.tellMe.repository.UserRepository;
+import com.bigProject.tellMe.service.EmailService;
 import com.bigProject.tellMe.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -11,21 +13,26 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import java.util.HashMap;
+import java.util.Map;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
+
+import jakarta.mail.MessagingException;
+import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
 public class UserRestController {
+    private final UserRepository userRepository;
     private final UserService userService;
+    private final EmailService emailService;
 
     //태식 : 회원가입할 때 userId랑 phone, email이 중복되는지 체크
     @PostMapping("/user/check/unique")
-    public String checkIdDuplicate(@RequestParam("userId") String userId, @RequestParam("password") String password,
-                                   @RequestParam("phone") String phoneNum, @RequestParam("email") String eMail) {
-        return userService.checkUnique(userId, password, phoneNum, eMail);
+    public String checkIdDuplicate(@RequestParam("userId") String userId, @RequestParam("phone") String phoneNum, @RequestParam("email") String eMail) {
+        return userService.checkUnique(userId, phoneNum, eMail);
     }
 
     //태식 : 아이디 찾기
@@ -73,47 +80,139 @@ public class UserRestController {
     }
 
     @PostMapping("/user/updateName")
-    public ResponseEntity<String> updateName(Authentication auth, @RequestBody Map<String, String> request) {
-        // 클라이언트로부터 받은 새 이름
-        String newName = request.get("newName");
+    public ResponseEntity<Map<String, String>> updateUserName(Authentication auth, @RequestBody UserDTO userDTO) {
+        String userId = auth.getName();  // 현재 로그인한 사용자 ID
 
-        // 사용자 이름 업데이트 처리
-        boolean isUpdated = userService.updateUserName(auth.getName(), newName);
+        boolean isUpdated = userService.updateUserName(userId, userDTO.getPassword(), userDTO.getUserName());
 
+        Map<String, String> response = new HashMap<>();
         if (isUpdated) {
-            return ResponseEntity.ok("이름이 성공적으로 업데이트되었습니다.");
+            response.put("success", "true");
+            response.put("message", "이름이 성공적으로 변경되었습니다.");
+            return ResponseEntity.ok(response);
         } else {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("이름 업데이트 실패");
+            response.put("success", "false");
+            response.put("message", "비밀번호가 일치하지 않습니다.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
     }
 
     @PostMapping("/user/updatePhone")
-    public ResponseEntity<String> updatePhone(Authentication auth, @RequestBody Map<String, String> request) {
-        // 클라이언트로부터 받은 새 이름
-        String newPhone = request.get("newPhone");
+    public ResponseEntity<Map<String, String>> updatePhone(Authentication auth, @RequestBody UserDTO userDTO) {
+        String userId = auth.getName();  // 현재 로그인한 사용자 ID
 
-        // 사용자 이름 업데이트 처리
-        boolean isUpdated = userService.updatePhone(auth.getName(), newPhone);
+        boolean isUpdated = userService.updatePhone(userId, userDTO.getPassword(), userDTO.getPhone());
 
+        Map<String, String> response = new HashMap<>();
         if (isUpdated) {
-            return ResponseEntity.ok("이름이 성공적으로 업데이트되었습니다.");
+            response.put("success", "true");
+            response.put("message", "핸드폰 번호가 성공적으로 변경되었습니다.");
+            return ResponseEntity.ok(response);
         } else {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("이름 업데이트 실패");
+            response.put("success", "false");
+            response.put("message", "비밀번호가 일치하지 않습니다.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
     }
 
     @PostMapping("/user/updateEmail")
-    public ResponseEntity<String> updateEmail(Authentication auth, @RequestBody Map<String, String> request) {
-        // 클라이언트로부터 받은 새 이름
-        String newEmail = request.get("newEmail");
+    public ResponseEntity<Map<String, String>> updateEmail(Authentication auth, @RequestBody UserDTO userDTO) {
+        String userId = auth.getName();  // 현재 로그인한 사용자 ID
 
-        // 사용자 이름 업데이트 처리
-        boolean isUpdated = userService.updateEmail(auth.getName(), newEmail);
+        boolean isUpdated = userService.updateEmail(userId, userDTO.getPassword(), userDTO.getEmail());
 
+        Map<String, String> response = new HashMap<>();
         if (isUpdated) {
-            return ResponseEntity.ok("이름이 성공적으로 업데이트되었습니다.");
+            response.put("success", "true");
+            response.put("message", "이메일이 성공적으로 변경되었습니다.");
+            return ResponseEntity.ok(response);
         } else {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("이름 업데이트 실패");
+            response.put("success", "false");
+            response.put("message", "비밀번호가 일치하지 않습니다.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
+    }
+
+    @PostMapping("/user/updateAddress")
+    public ResponseEntity<Map<String, String>> updateAddress(Authentication auth, @RequestBody UserDTO userDTO) {
+        String userId = auth.getName();  // 현재 로그인한 사용자 ID
+
+        boolean isUpdated = userService.updateAddress(userId, userDTO.getPassword(), userDTO.getAddress());
+
+        Map<String, String> response = new HashMap<>();
+        if (isUpdated) {
+            response.put("success", "true");
+            response.put("message", "주소가 성공적으로 변경되었습니다.");
+            return ResponseEntity.ok(response);
+        } else {
+            response.put("success", "false");
+            response.put("message", "비밀번호가 일치하지 않거나 주소 변경에 실패했습니다.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
+    }
+
+    // 1️⃣ 이메일 인증 요청 (인증 코드 전송)
+    @PostMapping("/request-verification")
+    public ResponseEntity<Map<String, String>> requestVerification(Authentication auth) {
+        String userId = auth.getName();  // ✅ 현재 로그인한 사용자의 ID 가져오기
+
+        // ✅ 데이터베이스에서 사용자 정보 가져오기
+        Optional<User> userOptional = Optional.ofNullable(userRepository.findByUserId(userId));
+        if (userOptional.isEmpty()) {
+            return ResponseEntity.status(404).body(Map.of("success", "false", "message", "사용자를 찾을 수 없습니다."));
+        }
+
+        User user = userOptional.get();
+        String originalEmail = user.getEmail();  // ✅ 원래 이메일 가져오기
+
+        try {
+            emailService.sendVerificationEmail(originalEmail);  // ✅ 원래 이메일로 인증 코드 전송
+            return ResponseEntity.ok(Map.of("success", "true", "message", "인증 코드가 전송되었습니다."));
+        } catch (MessagingException e) {
+            return ResponseEntity.status(500).body(Map.of("success", "false", "message", "이메일 전송 실패"));
+        }
+    }
+
+    // 2️⃣ 인증 코드 검증
+    @PostMapping("/verify-code")
+    public ResponseEntity<Map<String, String>> verifyCode(Authentication auth, @RequestBody Map<String, String> request) {
+        String userId = auth.getName();
+        String code = request.get("code");
+
+        // ✅ 사용자 이메일 가져오기 (이메일을 따로 받지 않으므로 DB에서 조회)
+        Optional<User> userOptional = Optional.ofNullable(userRepository.findByUserId(userId));
+        if (userOptional.isEmpty()) {
+            return ResponseEntity.status(400).body(Map.of("success", "false", "message", "사용자를 찾을 수 없습니다."));
+        }
+
+        User user = userOptional.get();
+        String email = user.getEmail();  // ✅ 사용자 원래 이메일 가져오기
+
+        // ✅ 이메일에 해당하는 인증 코드 검증
+        boolean isValid = emailService.verifyCode(email, code);
+        if (isValid) {
+            return ResponseEntity.ok(Map.of("success", "true", "message", "이메일 인증 성공!"));
+        } else {
+            return ResponseEntity.status(400).body(Map.of("success", "false", "message", "인증 코드가 올바르지 않습니다."));
+        }
+    }
+
+    // 3️⃣ 이름 변경 요청 (이메일 인증 후)
+    @PostMapping("/update-name")
+    public ResponseEntity<Map<String, String>> updateUserName(Authentication auth, @RequestBody Map<String, String> request) {
+        String userId = auth.getName();
+        String newName = request.get("newName");
+
+        Optional<User> userOptional = Optional.ofNullable(userRepository.findByUserId(userId));
+        if (userOptional.isEmpty()) {
+            return ResponseEntity.status(400).body(Map.of("success", "false", "message", "사용자를 찾을 수 없습니다."));
+        }
+
+        User user = userOptional.get();
+        user.setUserName(newName);
+
+        userRepository.save(user); // ✅ 이름 업데이트
+
+        return ResponseEntity.ok(Map.of("success", "true", "message", "이름이 성공적으로 변경되었습니다."));
     }
 }

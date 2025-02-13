@@ -64,7 +64,9 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(Customizer.withDefaults())
+                .csrf(csrf -> csrf
+                        .ignoringRequestMatchers("/request-verification", "/verify-code", "/update-name") // ✅ 특정 API는 CSRF 예외 처리
+                )
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/updateName").authenticated()
                         .requestMatchers("/manager/**").hasAnyRole("MANAGER")
@@ -77,7 +79,6 @@ public class WebSecurityConfig {
                         .failureHandler(customAuthFailureHandler)
                         .successHandler(customAuthSuccessHandler)
                         .permitAll()
-
                 )
                 .logout(logout -> logout
                         .logoutSuccessUrl("/")

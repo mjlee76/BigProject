@@ -15,3 +15,29 @@ document.addEventListener("DOMContentLoaded", function () {
     }
  });
 
+
+document.addEventListener("DOMContentLoaded", function () {
+    const passwordInput = document.getElementById("password");
+    const confirmPasswordInput = document.getElementById("confirmPassword");
+    const passwordMismatchMessage = document.getElementById("passwordMismatch");
+
+    function checkPasswordMatch() {
+        if (passwordInput.value !== confirmPasswordInput.value) {
+            passwordMismatchMessage.style.display = "block";
+            return false;
+        } else {
+            passwordMismatchMessage.style.display = "none";
+            return true;
+        }
+    }
+
+    passwordInput.addEventListener("input", checkPasswordMatch);
+    confirmPasswordInput.addEventListener("input", checkPasswordMatch);
+
+    document.querySelector("form").addEventListener("submit", function (event) {
+        if (!checkPasswordMatch()) {
+            event.preventDefault();
+            alert("비밀번호가 일치하지 않습니다.");
+        }
+    });
+});
