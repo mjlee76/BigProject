@@ -47,7 +47,7 @@ public class CustomerController {
         noticeDTO = noticeMapper.noTONoDTO(notice);
         Long noticeId = noticeDTO.getId();
         System.out.println("=============="+multipartFile.toString());
-        if(!multipartFile.isEmpty()) {
+        if(multipartFile != null && multipartFile.stream().anyMatch(file -> !file.isEmpty())) {
             String uploadDir = "tellMe/tellMe-uploadFile/notice/" + noticeId;
             List<String> savedFiles = FileUpLoadUtil.saveFiles(uploadDir, multipartFile);
 
@@ -63,7 +63,7 @@ public class CustomerController {
     public String paging(@PageableDefault(page = 1) Pageable pageable, Model model) {
         Page<NoticeDTO> noticeList = noticeService.paging(pageable);
 
-        int blockLimit = 10; // 화면에 보여지는 페이지 갯수
+        int blockLimit = 5; // 화면에 보여지는 페이지 갯수
         int startPage = (((int)(Math.ceil((double)pageable.getPageNumber() / blockLimit))) - 1) * blockLimit + 1;  // 1, 6, 11, ~
         int endPage = ((startPage + blockLimit - 1) < noticeList.getTotalPages()) ? startPage + blockLimit - 1 : noticeList.getTotalPages();
 
@@ -102,10 +102,14 @@ public class CustomerController {
     }
 
     // 공지사항 상세페이지에서 삭제
-    @GetMapping("/delete/{id}")
-    public String deleteNotice(@PathVariable Long id, Model model) {
+    @PostMapping("/delete")
+    public ResponseEntity<Void> deleteNotice(@RequestBody Map<String, Long> request) {
+        Long id = request.get("id");
+        if (id == null) {
+            return ResponseEntity.badRequest().build(); // 요청 데이터가 없을 경우 400 반환
+        }
         noticeService.delete(id);
-        return "redirect:/customer/notice";
+        return ResponseEntity.ok().build();
     }
 
     // delete-notices POST 요청을 받아 선택된 공지사항들을 삭제

@@ -4,6 +4,7 @@ body {
     margin: 0;
     padding: 0;
     background-color: #ffffff;
+    padding-top: 60px;
     color: #333;
 }
 
@@ -16,24 +17,28 @@ main {
     border-radius: 4px;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
 } */
-/* 공지사항 상단 제목 */
+
+/* 문의게시판 상단 제목 */
 .report-header {
+    display: flex;
     text-align: left; /* 중앙 정렬 */
-    margin-bottom: 30px; /* 아래 간격 */
-    padding: 30px 10%; /* 상하 여백과 좌우 패딩 */
-    background-color: #f4f4f4; /* 배경색 */
+    align-items: center;
+    gap: 20px;
+    padding: 55px 180px 0px 180px; /* 상하 여백과 좌우 패딩 */
+    background-color: #fff; /* 배경색 */
 }
 
 .report-header h1 {
-    font-size: 24px;
+    font-size: 28px;
     font-weight: bold;
     color: #333;
-    margin-bottom: 10px; /* 제목과 페이지 정보 간격 */
+    margin: 10px 10px 10px 10px; /* 제목과 페이지 정보 간격 */
 }
 
 .report-header p {
-    font-size: 14px;
+    font-size: 16px;
     color: #666;
+    margin: 10px 10px 0px 10px;
 }
 
 /* 게시글 목록 */
@@ -145,9 +150,10 @@ main {
 .tabs {
     display: flex;
     border-bottom: 1px solid #e0e0e0;
-    margin-bottom: 63px;
+    margin-top: 30px;
+    margin-bottom: 60px;
     position: sticky; /* 스크롤 시 상단에 고정 */
-    top: 0; /* 상단에서의 고정 위치 */
+    top: 53px; /* 상단에서의 고정 위치 */
     z-index: 10; /* 다른 요소 위에 표시되도록 설정 */
     padding: 0 10%; /* 탭 컨테이너의 좌우 여백 */
 }
@@ -201,7 +207,7 @@ a:-webkit-any-link {
     margin: 0 auto; /* 가운데 정렬 */
     border-collapse: collapse;
     margin-top: 20px;
-    margin-bottom: 20px; /* 테이블 하단 여백 추가 */
+    /* margin-bottom: 20px; 테이블 하단 여백 추가 */
 }
 
 .post-table th, .post-table td {
@@ -211,7 +217,6 @@ a:-webkit-any-link {
     text-align: center; /* 모든 셀 중앙 정렬 */
 }
 .post-table td a:hover {
-
     color: #1674C3; /* 호버 시 색상 변경 (선택 사항) */
 }
 
@@ -244,6 +249,7 @@ a:-webkit-any-link {
     /* font-weight: bold; 굵게 */
     text-align: center; /* 중앙 정렬 */
     padding: 10px; /* 여백 */
+    white-space: nowrap;
     background-color: #f4f4f4; /* 배경색 (필요 시) */
 
 }
@@ -343,7 +349,7 @@ a:-webkit-any-link {
     text-decoration: none;
     font-size: 14px;
     color: #989EFF;
-    border-radius: 4px;;
+    border-radius: 4px;
 }
 
 /* 비활성화된 링크 스타일 (첫 페이지, 마지막 페이지 비활성화 시) */

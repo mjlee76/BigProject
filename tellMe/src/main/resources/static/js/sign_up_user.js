@@ -15,7 +15,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
  });
 
-
 document.addEventListener("DOMContentLoaded", function () {
     const passwordInput = document.getElementById("password");
     const confirmPasswordInput = document.getElementById("confirmPassword");

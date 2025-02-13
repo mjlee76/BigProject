@@ -6,16 +6,18 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>tellme</title>
+    <title>Tellme</title>
     <link rel="stylesheet" type="text/css" th:href="@{/css/home.css}" />
     <link href="https://cdn.jsdelivr.net/gh/sun-typeface/SUIT@2/fonts/static/woff2/SUIT.css" rel="stylesheet">
     <script type="text/javascript" th:src="@{/js/home.js}"></script>
-    <link rel="icon" type="image/png" th:href="@{/image/tellme_icon.png}">
 </head>
 <body>
 <div th:replace="layouts/navbar::tellMe_header"></div>
 
 <div id="home" class="section">
+    <div class="write-button-container">
+        <a th:href="@{/complaint/new}"  class="write-button" sec:authorize="hasRole('ROLE_USER')">시작하기</a>
+    </div>
     <div class="slider">
         <div class="slide">
             <div class="wrapper">
@@ -25,7 +27,7 @@
                         <p>신고하고 싶은 글?<br>AI 필터가 먼저 차단해요!</p>
                     </div>
                     <div class="image-container">
-                        <img th:src="@{/image/lee.png}">
+                        <img th:src="@{/image/background.png}">
                     </div>
                 </div>
                 <div class="area right">
@@ -34,14 +36,14 @@
                             <div>
                                 <div class="icon-container">
                                     <p>빠른 민원 접수!</p>
-                                    <span class="icon"><img th:src="@{/image/doc.png}"></span>
+                                    <span class="icon"><img th:src="@{/image/icon1.png}"></span>
                                 </div>
                                 <p class="description">쉽고 직관적인 인터페이스로<br> 빠르게 민원 작성</p>
                             </div>
                             <div>
                                 <div class="icon-container">
                                     <p>불필요한 항목 없이</p>
-                                    <span class="icon"><img th:src="@{/image/doc.png}"></span>
+                                    <span class="icon"><img th:src="@{/image/icon3.png}"></span>
                                 </div>
                                 <p class="description">언제 어디서나<br>간편하게 이용 가능</p>
                             </div>
@@ -50,14 +52,14 @@
                             <div>
                                 <div class="icon-container">
                                     <p>불편한 글 자동 순화!</p>
-                                    <span class="icon"><img th:src="@{/image/abuse.png}"></span>
+                                    <span class="icon"><img th:src="@{/image/icon2.png}"></span>
                                 </div>
                                 <p class="description">욕설, 도배, 혐오 표현 없이<br>쾌적한 환경 제공</p>
                             </div>
                             <div>
                                 <div class="icon-container">
                                     <p>AI 실시간 민원 감지</p>
-                                    <span class="icon"><img th:src="@{/image/doc.png}"></span>
+                                    <span class="icon"><img th:src="@{/image/icon4.png}"></span>
                                 </div>
                                 <p class="description">도배 또는 중복 게시물<br>자동 필터링</p>
                             </div>
@@ -68,47 +70,46 @@
         </div>
         <div class="slide">
             <div class="wrapper2">
-                <div class="video-container">
-                    <video autoplay loop muted playsinline>
-                        <source th:src="@{/image/keyboard1.mp4}" type="video/mp4">
-                    </video>
+                <div class="image-left">
+                    <img th:src="@{/image/filter.png}">
                 </div>
-                <div class="video-content">
-                    <p>불편한 게시글은 사라지고, 원하는 답변은 빠르게!</p>
-                </div>
-            </div>
-        </div>
-        <div class="slide">
-            <div class="wrapper">
-                <div class="area left">
-                    <div>
-                        <h1>깨끗하고 원활한 민원 접수,<br>안심하세요!</h1>
-                        <p>신고하고 싶은 글?<br>AI 필터가 먼저 차단해요!</p>
-                    </div>
+                <div class="content">
+                    <h2>유해 이미지 및 파일<br>
+                        자동 필터링</h2>
+                    <p>폭력적이거나 부적절한 이미지는 AI가 실시간 차단<br>
+                        음란물, 혐오 표현이 포함된 이미지 즉시 차단<br>
+                        부적절한 이미지가 포함된 게시물에겐 경고!</p>
                     <div class="button">
                         <a th:href="@{/complaint/new}" class="btn">
                             <span>시작하기</span>
                         </a>
                     </div>
                 </div>
+                <div class="img-stack">
+                    <img th:src="@{/image/jpg.png}" class="img img1">
+                    <img th:src="@{/image/txt.png}" class="img img2">
+                    <img th:src="@{/image/pdf.png}" class="img img3">
+                </div>
+            </div>
+        </div>
+        <div class="slide">
+            <div class="wrapper3">
+                <div class="area left">
+                    <div class="image-stack">
+                        <img th:src="@{/image/mypage1.png}" class="image image1">
+                        <img th:src="@{/image/report1.png}" class="image image2">
+                        <img th:src="@{/image/question1.png}" class="image image3">
+                    </div>
+                </div>
                 <div class="area right">
-                    <ul class="grid-container">
-                        <li class="box left">
-                            <div>
-                                <p>빠른 민원 접수</p>
-                                <p>쉽고 직관적인 인터페이스로 빠르게 민원 작성</p>
-                            </div>
-                            <div></div>
-                        </li>
-                        <li class="box right">
-                            <div>
-                                <p>불편한 글 자동 차단</p>
-                                <p>욕설, 도배, 혐오 표현 없이 쾌적한 환경 제공</p>
-                            </div>
-                            <div></div>
-                            <p></p>
-                        </li>
-                    </ul>
+                    <div>
+                        <h1>내 민원 처리 상황을 한눈에!</h1>
+                    </div>
+                    <div>
+                        <p>내가 남긴 글의 진행 상태를 실시간 확인<br>
+                            상태 필터링과 검색 옵션을 통해 신속한 민원 검색<br>
+                            처리 중, 답변 완료 등의 상태를 한눈에 볼 수 있는 대시보드</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -119,96 +120,6 @@
         <button class="control-button" onclick="goToSlide(2)"></button>
     </div>
 </div>
-
-
-<div class="wrapper">
-    <div class="area left">
-        <div>
-            <h1>깨끗하고 원활한 민원 접수,<br>안심하세요!</h1>
-            <p>신고하고 싶은 글?<br>AI 필터가 먼저 차단해요!</p>
-        </div>
-        <div class="button">
-            <a th:href="@{/complaint/new}" class="btn">
-                <span>시작하기</span>
-            </a>
-        </div>
-    </div>
-    <div class="area right">
-        <ul class="grid-container">
-            <li class="box left">
-                <div>
-                    <div class="icon-container">
-                        <p>빠른 민원 접수!</p>
-                        <span class="icon">
-                            <img th:src = "@{/image/doc.png}">
-                        </span>
-                    </div>
-                    <p class="description">쉽고 직관적인 인터페이스로<br> 빠르게 민원 작성</p>
-                </div>
-                <div>
-                    <p>불필요한 항목 없이</p>
-                    <p>언제 어디서나 간편하게 이용 가능</p>
-                </div>
-            </li>
-            <li class="box right">
-                <div>
-                    <div class="icon-container">
-                        <p>불편한 글 자동 순화!</p>
-                        <span class="icon">
-                            <img th:src = "@{/image/abuse.png}">
-                        </span>
-                    </div>
-                    <p class="description">욕설, 도배, 혐오 표현 없이<br>쾌적한 환경 제공</p>
-                </div>
-                <div>
-                    <p>AI를 통한 실시간 민원 감지</p>
-                    <p>도배 또는 중복 게시물 자동 필터링</p>
-                </div>
-            </li>
-        </ul>
-    </div>
-</div>
-
-
-<div class="wrapper">
-    <div class="area left">
-        <div>
-            <h1>깨끗하고 원활한 민원 접수,<br>안심하세요!</h1>
-            <p>신고하고 싶은 글?<br>AI 필터가 먼저 차단해요!</p>
-        </div>
-        <div class="button">
-            <a th:href="@{/complaint/new}" class="btn">
-                <span>시작하기</span>
-            </a>
-        </div>
-    </div>
-    <div class="area right">
-        <ul class="grid-container">
-            <li class="box left">
-                <div>
-                    <p>빠른 민원 접수</p>
-                    <p>쉽고 직관적인 인터페이스로 빠르게 민원 작성</p>
-                </div>
-                <div>
-                    <p></p>
-                    <p></p>
-                </div>
-            </li>
-            <li class="box right">
-                <div>
-                    <p>불편한 글 자동 차단</p>
-                    <p>욕설, 도배, 혐오 표현 없이 쾌적한 환경 제공</p>
-                </div>
-                <div>
-                    <p></p>
-                    <p></p>
-                </div>
-                <p></p>
-            </li>
-        </ul>
-    </div>
-</div>
-
 <div th:replace="layouts/footer::tellMe_footer"></div>
 </body>
 </html>

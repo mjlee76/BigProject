@@ -27,39 +27,73 @@ public class MyPageController {
     private final UserService userService;
     private final QuestionService questionService;
 
-    @GetMapping("/myComplaint")
-    public String myPage(@RequestParam(required = false) String query,
-                         @RequestParam(required = false) Status status,
-                         @RequestParam(required = false) String category, // 카테고리 추가
-                         @RequestParam(defaultValue = "1") int page,
-                         @RequestParam(defaultValue = "5") int size,
-                         Authentication auth,
-                         Model model) {
-        UserDTO userDTO = userService.findByUserId(auth.getName());
-        User user = userService.findUserById(userDTO.getId());
+//    @GetMapping("/myComplaint")
+//    public String myPage(@RequestParam(required = false) String query,
+//                         @RequestParam(required = false) Status status,
+//                         @RequestParam(required = false) String category, // 카테고리 추가
+//                         @RequestParam(defaultValue = "1") int page,
+//                         @RequestParam(defaultValue = "5") int size,
+//                         Authentication auth,
+//                         Model model) {
+//        UserDTO userDTO = userService.findByUserId(auth.getName());
+//        User user = userService.findUserById(userDTO.getId());
+//
+//        userDTO.setPhone(maskPhNum(userDTO.getPhone()));
+//        userDTO.setEmail(maskEmail(userDTO.getEmail()));
+//
+//        Pageable pageable = PageRequest.of(page - 1, size, Sort.by(Sort.Direction.DESC, "id"));
+//        Page<QuestionDTO> questions = questionService.searchUserQuestions(user, query, status, category, pageable);
+//
+//        int blockLimit = 5;
+//        int startPage = Math.max(1, ((page - 1) / blockLimit) * blockLimit + 1);
+//        int endPage = Math.min(startPage + blockLimit - 1, questions.getTotalPages());
+//
+//        model.addAttribute("user", userDTO);
+//        model.addAttribute("questions", questions);
+//        model.addAttribute("startPage", startPage);
+//        model.addAttribute("endPage", endPage);
+//        model.addAttribute("currentPage", page);
+//        model.addAttribute("totalPages", questions.getTotalPages());
+//        model.addAttribute("query", query);
+//        model.addAttribute("status", status);
+//        model.addAttribute("category", category); // 카테고리 추가
+//
+//        return "mypage/my_complaint";
+//    }
+@GetMapping("/myComplaint")
+public String myPage(@RequestParam(required = false) String query,
+                     @RequestParam(required = false) Status status,
+                     @RequestParam(required = false) String category, // 카테고리 추가
+                     @RequestParam(defaultValue = "1") int page,
+                     @RequestParam(defaultValue = "5") int size,
+                     Authentication auth,
+                     Model model) {
+    UserDTO userDTO = userService.findByUserId(auth.getName());
+    User user = userService.findUserById(userDTO.getId());
 
-        userDTO.setPhone(maskPhNum(userDTO.getPhone()));
-        userDTO.setEmail(maskEmail(userDTO.getEmail()));
+    userDTO.setPhone(maskPhNum(userDTO.getPhone()));
+    userDTO.setEmail(maskEmail(userDTO.getEmail()));
 
-        Pageable pageable = PageRequest.of(page - 1, size, Sort.by(Sort.Direction.DESC, "id"));
-        Page<QuestionDTO> questions = questionService.searchUserQuestions(user, query, status, category, pageable);
+    Pageable pageable = PageRequest.of(page - 1, size, Sort.by(Sort.Direction.DESC, "id"));
+    Page<QuestionDTO> questions = questionService.searchUserQuestions(user, query, status, category, pageable);
 
-        int blockLimit = 5;
-        int startPage = Math.max(1, ((page - 1) / blockLimit) * blockLimit + 1);
-        int endPage = Math.min(startPage + blockLimit - 1, questions.getTotalPages());
+    int blockLimit = 5;
+    int startPage = Math.max(1, ((page - 1) / blockLimit) * blockLimit + 1);
+    int endPage = Math.min(startPage + blockLimit - 1, questions.getTotalPages());
 
-        model.addAttribute("user", userDTO);
-        model.addAttribute("questions", questions);
-        model.addAttribute("startPage", startPage);
-        model.addAttribute("endPage", endPage);
-        model.addAttribute("currentPage", page);
-        model.addAttribute("totalPages", questions.getTotalPages());
-        model.addAttribute("query", query);
-        model.addAttribute("status", status);
-        model.addAttribute("category", category); // 카테고리 추가
+    model.addAttribute("user", userDTO);
+    model.addAttribute("questions", questions);
+    model.addAttribute("startPage", startPage);
+    model.addAttribute("endPage", endPage);
+    model.addAttribute("currentPage", page);
+    model.addAttribute("totalPages", questions.getTotalPages());
+    model.addAttribute("query", query);
+    model.addAttribute("status", status);
+    model.addAttribute("category", category); // 카테고리 추가
 
-        return "mypage/my_complaint";
-    }
+    return "mypage/my_complaint";
+}
+
     private String maskPhNum(String phone) {
         if (phone != null && phone.length() == 11) {
             return phone.substring(0, 3) + "-" + phone.charAt(3) + "***-" + phone.charAt(7) + "***";

@@ -14,11 +14,10 @@
 <body>
 <div th:replace="layouts/navbar::tellMe_header"></div>
 <main id="inquiry-board">
-
     <div class="inquiry-header">
         <h1>문의게시판</h1>
+        <p>궁금한 점이 있다면 언제든 문의해주세요 😊</p>
     </div>
-
     <div class="tabs">
         <a class="tab" th:href="@{/complaint/question(query=${query}, category=${category}, status=null, page=1, size=${questionList.size})}"
            th:classappend="${status == 'all' or status == null} ? 'active' : ''" data-status="all">전체</a>
@@ -71,7 +70,12 @@
         <!-- 데이터가 있는 경우 -->
         <tr th:each="question : ${questionList}">
             <td th:text="${question.id}"></td>
-            <td><a th:href="@{/complaint/question/{id}(id=${question.id}, page=${questionList.number + 1})}" th:text="${question.Title}"></a></td>
+            <td th:if="${question.filterTitle == null or question.filterTitle.isEmpty()}">
+                <a th:href="@{/complaint/question/{id}(id=${question.id}, page=${questionList.number + 1})}" th:text="${question.Title}"></a>
+            </td>
+            <td th:if="${question.filterTitle != null and !question.filterTitle.isEmpty()}">
+                <a th:href="@{/complaint/question/{id}(id=${question.id}, page=${questionList.number + 1})}" th:text="${question.filterTitle}"></a>
+            </td>
             <td th:text="${question.userName}"></td>
             <td th:text="*{#temporals.format(question.createDate, 'yyyy-MM-dd')}"></td>
             <td th:text="${question.status}"></td>
@@ -86,7 +90,7 @@
         </script>
     </table>
     <div class="content-area"></div>
-        <div class="pagination" th:if="${not questionList.isEmpty()}">
+        <div class="pagination">
             <!-- 첫 번째 페이지로 이동 버튼 (<<) -->
             <a th:href="@{/complaint/question(query=${query}, category=${category}, status=${status}, page=1, size=10)}"
                th:classappend="${currentPage == 1} ? 'disabled' : ''">«</a>

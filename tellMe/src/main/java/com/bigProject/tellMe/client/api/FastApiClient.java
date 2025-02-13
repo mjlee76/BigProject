@@ -12,6 +12,9 @@ import java.util.Map;
 
 @FeignClient(name = "fastApiClient", url = "${api.url}", configuration = FeignConfig.class)
 public interface FastApiClient {
+    @PostMapping(value = "/upload", consumes = "application/json", produces = "application/json")
+    Map<String, Object> getUploadFile(@RequestBody Map<String, Object> requestBody);
+
     @PostMapping(value = "/check_spam", consumes = "application/json", produces = "application/json")
     Map<String, Object> getSpam(@RequestBody Map<String, Object> requestBody);
 

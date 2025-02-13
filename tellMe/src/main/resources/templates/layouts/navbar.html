@@ -5,10 +5,9 @@
     <link rel="stylesheet" type="text/css" th:href="@{/css/navbar.css}" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" type="image/x-icon" th:href="@{/image/favicon.png}">
     <script src="https://code.jquery.com/jquery-3.6.3.js"></script>
     <script type="text/javascript" th:src="@{/js/common.js}"></script>
-    <script type="text/javascript" th:src="@{/js/navbar.js}"></script>
-    <link rel="icon" type="image/png" th:href="@{/image/tellme_icon.png}">
 </head>
 <body>
 <header th:fragment="tellMe_header">
@@ -16,7 +15,7 @@
         <div class="nav-container">
             <div class="logo">
                 <a th:href="@{/}">
-                    <img th:src="@{/image/tellme2.png}" class="logo-img">
+                    <img th:src="@{/image/logo.png}" class="logo-img">
                 </a>
             </div>
             <div>
@@ -24,9 +23,9 @@
                     <li><a th:href="@{/}">홈</a></li>
                     <li><a th:href="@{/customer/notice}">공지사항</a></li>
                     <li><a th:href="@{/complaint/question}">문의게시판</a></li>
-                    <li sec:authorize="hasRole('ROLE_MANAGER')">
-                        <a th:href="@{/manager/statistics}">문의통계</a>
-                    </li>
+<!--                    <li sec:authorize="hasRole('ROLE_MANAGER')">-->
+<!--                        <a th:href="@{/manager/statistics}">문의통계</a>-->
+<!--                    </li>-->
                     <li sec:authorize="hasRole('ROLE_MANAGER')">
                         <a th:href="@{/manager/report}">보고서관리</a>
                     </li>
@@ -38,16 +37,20 @@
                     <a th:href="@{/user/signUp}" class="auth-link signup">회원가입</a>
                 </div>
                 <div sec:authorize="isAuthenticated()">
+                    <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
+                    <script th:inline="javascript">
+                        window.userId = /*[[${#authentication.name}]]*/ 'anonymous';
+                    </script>
                     <!-- 알림 영역 -->
                     <div class="notification-container">
-                        <div id="notification-icon" class="notification-bell" th:data-userid="${#authentication.name}">
+                        <div id="notification-icon" class="notification-bell"><!-- th:data-userid="${#authentication.name ?: 'anonymous'}" -->
                             <span id="notification-count" class="badge">0</span>
                             <span class="notification-text">알림</span>
                         </div>
                         <!-- 알림 메시지 박스 -->
                         <div id="notification-box" class="notification-box" style="display: none;">
                             <ul id="notification-list">
-                                <li>새로운 알림이 없습니다.</li>
+                                <li class="no-notification">새로운 알림이 없습니다.</li>
                             </ul>
                         </div>
                     </div>

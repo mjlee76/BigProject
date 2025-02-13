@@ -9,9 +9,11 @@ import com.bigProject.tellMe.entity.User;
 import com.bigProject.tellMe.enumClass.Reveal;
 import com.bigProject.tellMe.enumClass.Status;
 import com.bigProject.tellMe.mapper.QuestionMapper;
+import com.bigProject.tellMe.repository.QuestionRepository;
 import com.bigProject.tellMe.service.AnswerService;
 import com.bigProject.tellMe.service.QuestionService;
 import com.bigProject.tellMe.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -40,6 +42,7 @@ public class ComplaintController {
     private final UserService userService;
     private final QuestionService questionService;
     private final AnswerService answerService;
+    private final QuestionRepository questionRepository;
 
     @GetMapping("/new")
     public String newComplaintForm(Authentication auth, Model model) {
@@ -76,6 +79,44 @@ public class ComplaintController {
         return "redirect:/complaint/question";
     }
 
+//    // 파일조회 추가
+//    @PostMapping("/create")
+//    public String createComplaint(QuestionDTO questionDTO, @RequestParam("files") List<MultipartFile> multipartFiles) throws IOException {
+//        if ((questionDTO.getTitle() != null && !questionDTO.getTitle().trim().isEmpty()) ||
+//                (questionDTO.getContent() != null && !questionDTO.getContent().trim().isEmpty())) {
+//            // 1. 질문 저장
+//            Question question = questionService.save(questionDTO);
+//            Long questionId = question.getId();
+//
+//            // 2. 파일 업로드 처리
+//            if (multipartFiles != null && multipartFiles.stream().anyMatch(file -> !file.isEmpty())) {
+//                String uploadDir = "tellMe/tellMe-uploadFile/question/" + questionId;
+//                List<String> savedFiles = FileUpLoadUtil.saveFiles(uploadDir, multipartFiles);
+//
+//                // 3. 기존 엔티티 조회
+//                Question existingQuestion = questionRepository.findById(questionId)
+//                        .orElseThrow(() -> new RuntimeException("Question not found with ID: " + questionId));
+//
+//                // 4. 파일 필드 업데이트
+//                existingQuestion.updateFiles(
+//                        savedFiles.size() > 0 ? savedFiles.get(0) : null,
+//                        savedFiles.size() > 1 ? savedFiles.get(1) : null,
+//                        savedFiles.size() > 2 ? savedFiles.get(2) : null
+//                );
+//
+//                // 5. 변경 사항 저장
+//                questionRepository.save(existingQuestion);
+//            }
+//
+//            // 6. DTO로 변환 후 필터 API 호출
+//            questionDTO = questionMapper.quToQuDTO(question);
+//            questionService.filterApi(questionDTO);
+//        }
+//        return "redirect:/complaint/question";
+//    }
+
+
+
 //    // 모든 공지사항 데이터를 조회하여 뷰에 전달하는 메서드.
 //    @GetMapping("/question")
 //    public String findAll(Model model) {
@@ -97,21 +138,25 @@ public class ComplaintController {
 
         // 현재 사용자의 역할 확인
         String role = "ROLE_USER";
+        Long userId = 0L;
         if (auth != null && auth.isAuthenticated()) {
             UserDTO user = userService.findByUserId(auth.getName());
             role = String.valueOf(user.getRole());
+            userId = user.getId();
         }
 
         // Pageable 객체 생성
         Pageable pageable = PageRequest.of(page - 1, size, Sort.by(Sort.Direction.DESC, "id"));
 
         // 검색 및 필터링 결과 조회
-        Page<QuestionDTO> questionList = questionService.searchAndFilter(query, status, category, role, pageable);
+        Page<QuestionDTO> questionList = questionService.searchAndFilter(query, status, category, role, userId, pageable);
 
-        // 페이징 정보 계산
-        int blockLimit = 5; // 화면에 보여질 페이지 번호 개수
-        int startPage = (((int)(Math.ceil((double)page / blockLimit))) - 1) * blockLimit + 1;
-        int endPage = Math.min(startPage + blockLimit - 1, questionList.getTotalPages());
+
+        int totalPages = Math.max(questionList.getTotalPages(), 1);
+        int blockLimit = 5;
+        int currentGroup = (page - 1) / blockLimit;
+        int startPage = currentGroup * blockLimit + 1;
+        int endPage = Math.min(startPage + blockLimit - 1, totalPages);
 
         // 모델에 데이터 추가
         model.addAttribute("questionList", questionList);
@@ -126,16 +171,41 @@ public class ComplaintController {
         return "complaint/question";
     }
 
-    // 문의 제목을 클릭하여 상세페이지 표출 메서드
+//    // 문의 제목을 클릭하여 상세페이지 표출 메서드
+//    @GetMapping("/question/{id}")
+//    public String getQuestion(@PathVariable Long id,
+//                              @RequestParam(required = false, defaultValue = "1")int page,
+//                              Model model) {
+//        QuestionDTO questionDTO = questionService.getQuestion(id);
+//        model.addAttribute("question", questionDTO);
+//        model.addAttribute("page", page);
+//        return "complaint/question-detail";
+//    }
+
     @GetMapping("/question/{id}")
     public String getQuestion(@PathVariable Long id,
-                              @RequestParam(required = false, defaultValue = "1")int page,
+                              @RequestParam(required = false, defaultValue = "1") int page,
+                              Authentication auth, // 🔹 로그인한 사용자 정보 가져오기
                               Model model) {
         QuestionDTO questionDTO = questionService.getQuestion(id);
+
+        // 현재 로그인한 사용자 정보 가져오기
+        Long currentUserId = null;
+        if (auth != null && auth.isAuthenticated()) {
+            UserDTO userDTO = userService.findByUserId(auth.getName());
+            currentUserId = userDTO.getId();
+        }
+
+        // 모델에 현재 로그인한 사용자 ID 추가
         model.addAttribute("question", questionDTO);
-        model.addAttribute("page", page);
+        model.addAttribute("currentUserId", currentUserId); // 로그인한 유저 ID    model.addAttribute("page", page);
+
         return "complaint/question-detail";
     }
+
+
+
+
 
     // 접수중을 처리중으로 변경하는 메서드
     @PostMapping("/question/{id}/status")
@@ -166,10 +236,23 @@ public class ComplaintController {
         return "redirect:/myPage/editInfo";
     }
 
+//    @PostMapping("/delete/{id}")
+//    public String delete(@PathVariable Long id) {
+//        questionService.deleteQuestion(id);
+//        return "redirect:/myPage/editInfo";
+//    }
+
     @PostMapping("/delete/{id}")
-    public String delete(@PathVariable Long id) {
+    public String delete(@PathVariable Long id, @RequestParam(required = false) String from) {
         questionService.deleteQuestion(id);
-        return "redirect:/myPage/editInfo";
+
+        // from 파라미터에 따라 리다이렉트 경로 결정
+        if ("myPage".equals(from)) {
+            return "redirect:/myPage/myComplaint";
+        } else {
+            return "redirect:/complaint/question";
+        }
     }
+
 
 }

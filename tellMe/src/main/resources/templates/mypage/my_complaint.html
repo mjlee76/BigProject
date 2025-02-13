@@ -80,10 +80,13 @@
         <tbody class="post-list">
         <tr th:each="question : ${questions}">
           <td th:text="${question.id}"></td>
-          <td class="post-title">
-            <a th:href="@{/complaint/question/{id}(id=${question.id})}"
-               th:text="${question.title}"></a>
+          <td th:if="${question.filterTitle == null or question.filterTitle.isEmpty()}">
+            <a th:href="@{/complaint/question/{id}(id=${question.id})}" th:text="${question.title}"></a>
           </td>
+          <td th:if="${question.filterTitle != null and !question.filterTitle.isEmpty()}">
+            <a th:href="@{/complaint/question/{id}(id=${question.id})}" th:text="${question.filterTitle}"></a>
+          </td>
+
           <td th:text="${#temporals.format(question.createDate, 'yyyy-MM-dd')}"></td>
           <td class="answer-status"
               th:classappend="${question.status == '답변완료'} ? 'completed' : 'pending'">
@@ -104,47 +107,49 @@
         </tbody>
       </table>
 
-      <div class="pagination" th:if="${not questions.isEmpty()}">
+      <div class="pagination-container">
+        <div class="pagination" th:if="${not questions.isEmpty()}">
 
-        <!-- 첫 번째 페이지로 이동 버튼 (<<) -->
-        <a th:href="@{/myPage/myComplaint(
-           query=${query},
-           category=${category},
-           status=${status},
-           page=1)}"
-           th:classappend="${currentPage == 1} ? 'disabled' : ''">«</a>
+          <!-- 첫 번째 페이지로 이동 버튼 (<<) -->
+          <a th:href="@{/myPage/myComplaint(
+             query=${query},
+             category=${category},
+             status=${status},
+             page=1)}"
+             th:classappend="${currentPage == 1} ? 'disabled' : ''">«</a>
 
-        <!-- 이전 페이지 이동 버튼 (<) -->
-        <a th:href="@{/myPage/myComplaint(
-           query=${query},
-           category=${category},
-           status=${status},
-           page=${T(java.lang.Math).max(1, currentPage - 1)})}"
-           th:classappend="${currentPage == 1} ? 'disabled' : ''" >‹</a>
+          <!-- 이전 페이지 이동 버튼 (<) -->
+          <a th:href="@{/myPage/myComplaint(
+             query=${query},
+             category=${category},
+             status=${status},
+             page=${T(java.lang.Math).max(1, currentPage - 1)})}"
+             th:classappend="${currentPage == 1} ? 'disabled' : ''" >‹</a>
 
-        <!-- 페이지 번호 -->
-        <span th:each="pageNum : ${#numbers.sequence(startPage, endPage)}">
-        <a th:if="${pageNum != currentPage}"
-           th:href="@{/myPage/myComplaint(query=${query}, category=${category}, status=${status}, page=${pageNum})}"
-           th:text="${pageNum}"></a>
-        <span th:unless="${pageNum != currentPage}" th:text="${pageNum}" class="current"></span>
-        </span>
+          <!-- 페이지 번호 -->
+          <span th:each="pageNum : ${#numbers.sequence(startPage, endPage)}">
+          <a th:if="${pageNum != currentPage}"
+             th:href="@{/myPage/myComplaint(query=${query}, category=${category}, status=${status}, page=${pageNum})}"
+             th:text="${pageNum}"></a>
+          <span th:unless="${pageNum != currentPage}" th:text="${pageNum}" class="current"></span>
+          </span>
 
-        <!-- 다음 페이지 이동 버튼 (>) -->
-        <a th:href="@{/myPage/myComplaint(
-           query=${query},
-           category=${category},
-           status=${status},
-           page=${T(java.lang.Math).min(totalPages, currentPage + 1)})}"
-           th:classappend="${currentPage == totalPages} ? 'disabled' : ''">›</a>
+          <!-- 다음 페이지 이동 버튼 (>) -->
+          <a th:href="@{/myPage/myComplaint(
+             query=${query},
+             category=${category},
+             status=${status},
+             page=${T(java.lang.Math).min(totalPages, currentPage + 1)})}"
+             th:classappend="${currentPage == totalPages} ? 'disabled' : ''">›</a>
 
-        <!-- 마지막 페이지로 이동 버튼 (>>) -->
-        <a th:href="@{/myPage/myComplaint(
-           query=${query},
-           category=${category},
-           status=${status},
-           page=${totalPages})}"
-           th:classappend="${currentPage == totalPages} ? 'disabled' : ''">»</a>
+          <!-- 마지막 페이지로 이동 버튼 (>>) -->
+          <a th:href="@{/myPage/myComplaint(
+             query=${query},
+             category=${category},
+             status=${status},
+             page=${totalPages})}"
+             th:classappend="${currentPage == totalPages} ? 'disabled' : ''">»</a>
+        </div>
       </div>
 
     </section>

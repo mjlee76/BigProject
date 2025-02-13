@@ -3,82 +3,82 @@
 <head th:replace="layouts/navbar::tellMe_head"/>
 <head th:replace="layouts/footer::tellMe_foot"/>
 <head>
-  <meta charset="UTF-8">
-  <title>마이페이지</title>
-  <script src="https://code.jquery.com/jquery-3.6.3.js"></script>
-  <script type="text/javascript" th:src="@{/js/myPageEditInfo.js}"></script>
-  <script type="text/javascript" th:src="@{/js/myPage.js}"></script>
-  <link rel="stylesheet" type="text/css" th:href="@{/css/myPage.css}" />
-  <link href="https://cdn.jsdelivr.net/gh/sun-typeface/SUIT@2/fonts/static/woff2/SUIT.css" rel="stylesheet">
-  <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+    <meta charset="UTF-8">
+    <title>마이페이지</title>
+    <script src="https://code.jquery.com/jquery-3.6.3.js"></script>
+    <script type="text/javascript" th:src="@{/js/myPageEditInfo.js}"></script>
+    <script type="text/javascript" th:src="@{/js/myPage.js}"></script>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/myPage.css}" />
+    <link href="https://cdn.jsdelivr.net/gh/sun-typeface/SUIT@2/fonts/static/woff2/SUIT.css" rel="stylesheet">
+    <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 </head>
 <body>
 <div th:replace="layouts/navbar::tellMe_header"></div>
 <div class="container">
-  <aside class="sidebar">
-    <div class="profile-header">
-      <div class="profile-img">
-        <img id="profile-pic" th:src="@{/image/profile.png}" alt="프로필 사진">
-      </div>
-      <form th:action="@{/user/save}" th:object="${user}" method="post" onsubmit="return checkNameUnique(this)">
-        <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
-        <input type="hidden" th:field="*{id}"/>
-        <div class="user-name" th:text="*{userName}"></div>
-      </form>
-    </div>
-    <ul class="menu">
-      <li class="menu-item active"><a th:href = "@{/myPage/editInfo}">내 프로필</a></li>
-      <li class="menu-item"><a th:href = "@{/myPage/editPassword}">비밀번호 설정</a></li>
-      <li class="menu-item" sec:authorize="hasRole('ROLE_USER')"><a th:href = "@{/myPage/myComplaint}">내 민원 조회</a></li>
-    </ul>
-  </aside>
+    <aside class="sidebar">
+        <div class="profile-header">
+            <div class="profile-img">
+                <img id="profile-pic" th:src="@{/image/profile.png}" alt="프로필 사진">
+            </div>
+            <form th:action="@{/user/save}" th:object="${user}" method="post" onsubmit="return checkNameUnique(this)">
+                <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
+                <input type="hidden" th:field="*{id}"/>
+                <div class="user-name" th:text="*{userName}"></div>
+            </form>
+        </div>
+        <ul class="menu">
+            <li class="menu-item active"><a th:href = "@{/myPage/editInfo}">내 프로필</a></li>
+            <li class="menu-item"><a th:href = "@{/myPage/editPassword}">비밀번호 설정</a></li>
+            <li class="menu-item" sec:authorize="hasRole('ROLE_USER')"><a th:href = "@{/myPage/myComplaint}">내 민원 조회</a></li>
+        </ul>
+    </aside>
 
-  <main class="content">
-    <section id="profile" class="content-section">
-      <h2 class="section-title">내 프로필</h2>
-      <div class="profile-card">
-        <form th:action="@{/user/save}" th:object="${user}" method="post" onsubmit="return checkNameUnique(this)">
-          <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
-          <input type="hidden" th:field="*{id}"/>
-          <p><strong>이름:</strong> <span class="user-name" th:text="*{userName}"></span> <button type="button" class="edit-name-btn" onclick="openNameEditModal()">이름 수정</button></p>
-          <p><strong>전화번호:</strong> <span class="user-phone" th:text="*{phone}"></span> <button type="button" class="edit-phone-btn" onclick="changePhone()">핸드폰 수정</button></p>
-          <p><strong>이메일:</strong> <span class="user-email" th:text="*{email}"></span> <button type="button" class="edit-email-btn" onclick="changeEmail()">이메일 수정</button></p>
-          <p><strong>주소:</strong> <span class="user-address" th:text="*{address}"></span> <button type="button" class="edit-address-btn" onclick="changeAddress()">주소 수정</button></p>
-        </form>
-      </div>
-    </section>
-  </main>
+    <main class="content">
+        <section id="profile" class="content-section">
+            <h2 class="section-title">내 프로필</h2>
+            <div class="profile-card">
+                <form th:action="@{/user/save}" th:object="${user}" method="post" onsubmit="return checkNameUnique(this)">
+                    <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
+                    <input type="hidden" th:field="*{id}"/>
+                    <p><strong>이름:</strong> <span class="user-name" th:text="*{userName}"></span> <button type="button" class="edit-name-btn" onclick="openNameEditModal()">이름 수정</button></p>
+                    <p><strong>전화번호:</strong> <span class="user-phone" th:text="*{phone}"></span> <button type="button" class="edit-phone-btn" onclick="changePhone()">핸드폰 수정</button></p>
+                    <p><strong>이메일:</strong> <span class="user-email" th:text="*{email}"></span> <button type="button" class="edit-email-btn" onclick="changeEmail()">이메일 수정</button></p>
+                    <p><strong>주소:</strong> <span class="user-address" th:text="*{address}"></span> <button type="button" class="edit-address-btn" onclick="changeAddress()">주소 수정</button></p>
+                </form>
+            </div>
+        </section>
+    </main>
 </div>
 
 <!-- 이름 수정 모달 -->
 <div id="nameEditModal" class="modal">
-  <div class="modal-content">
-    <span class="close" onclick="closeNameEditModal()">&times;</span>
-    <h2>이름 수정</h2>
+    <div class="modal-content">
+        <span class="close" onclick="closeNameEditModal()">&times;</span>
+        <h2>이름 수정</h2>
 
-    <!-- 이메일 인증 버튼 -->
-    <div class="form-group">
-      <label for="emailVerificationBtn">이메일 인증</label>
-      <button type="button" id="emailVerificationBtn" onclick="sendVerificationEmail()">인증 메일 보내기</button>
-      <span id="emailVerificationStatus" style="color: red; margin-left: 10px;"></span>
+        <!-- 이메일 인증 버튼 -->
+        <div class="form-group">
+            <label for="emailVerificationBtn">이메일 인증</label>
+            <button type="button" id="emailVerificationBtn" onclick="sendVerificationEmail()">인증 메일 보내기</button>
+            <span id="emailVerificationStatus" style="color: red; margin-left: 10px;"></span>
+        </div>
+
+        <!-- 인증 코드 입력 필드 -->
+        <div class="form-group">
+            <label for="emailVerificationCode">인증 코드</label>
+            <input type="text" id="emailVerificationCode" name="emailVerificationCode" required>
+            <button type="button" id="verifyEmailBtn" onclick="verifyEmailCode()">인증 확인</button>
+        </div>
+
+        <!-- 새 이름 입력 필드 (이메일 인증 후 활성화) -->
+        <div class="form-group">
+            <label for="newName">새 이름</label>
+            <input type="text" id="newName" name="newName" required disabled>
+        </div>
+
+        <!-- 수정 버튼 (이메일 인증 후 활성화) -->
+        <button type="button" id="submitNameBtn" class="btn-submit" onclick="changeUserName()" disabled>수정</button>
     </div>
-
-    <!-- 인증 코드 입력 필드 -->
-    <div class="form-group">
-      <label for="emailVerificationCode">인증 코드</label>
-      <input type="text" id="emailVerificationCode" name="emailVerificationCode" required>
-      <button type="button" id="verifyEmailBtn" onclick="verifyEmailCode()">인증 확인</button>
-    </div>
-
-    <!-- 새 이름 입력 필드 (이메일 인증 후 활성화) -->
-    <div class="form-group">
-      <label for="newName">새 이름</label>
-      <input type="text" id="newName" name="newName" required disabled>
-    </div>
-
-    <!-- 수정 버튼 (이메일 인증 후 활성화) -->
-    <button type="button" id="submitNameBtn" class="btn-submit" onclick="changeUserName()" disabled>수정</button>
-  </div>
 </div>
 
 
