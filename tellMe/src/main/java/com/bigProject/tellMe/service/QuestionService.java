@@ -164,7 +164,7 @@ public class QuestionService {
             Map<String, Object> reportBody = new HashMap<>();
             reportBody.put("category", new ArrayList<>());
             reportBody.put("post_origin_data", new HashMap<>());
-            reportBody.put("report_path", "");
+            reportBody.put("file_name", "");
             reportBody.put("create_date", "");
 
             requestBody.put("post_data", postBody);
@@ -239,7 +239,7 @@ public class QuestionService {
             String categoryString = String.join(",", responseCategories);
             System.out.println("==============reportApi : categoryString : "+categoryString);
 
-            reportDTO.setReport((String)reportReq.get("report_path"));
+            reportDTO.setReport((String)reportReq.get("file_name"));
             String createDateStr = (String) reportReq.get("create_date"); // 🔹 FastAPI 응답에서 가져오기
             // 🔹 변환을 위한 포맷 정의
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyMMdd_HHmmss");

@@ -135,6 +135,7 @@ class UserInfo(BaseModel):
 
 # 게시글 정보
 class PostBody(BaseModel):
+    question_id : int
     title: str
     content: str
     user: UserInfo
@@ -143,7 +144,7 @@ class PostBody(BaseModel):
 class ReportBody(BaseModel):
     category : list
     post_origin_data : dict
-    report_path : str
+    file_name : str = ""
     create_date : str
     
 class CombinedModel(BaseModel):
@@ -185,6 +186,7 @@ class MakeReport():
         prompt = (
             "당신은 민원에 대한 처리를 하는 상담사입니다. 특이민원이 발생하여 이에 대한 보고서를 작성해야합니다."
             "다음 문장을 보고 특이민원 발생요지에 대해서 6하원칙에 따라 핵심내용 위주만 간략하게 작성해주세요"
+            "예) 폭언, 욕설이 담겨져있는 내용 민원글 작성"
             f"판단할 내용 : {full_text}"
             )
         try:
@@ -224,10 +226,12 @@ class MakeReport():
         prompt = self.report_prompt(report_body)
         table.cell(6, 1).text = prompt
         
-    def report_save(self):
-        output_file = f"특이민원_보고서_{self.time}.docx"
-        report_file_path = os.path.join(self.path, "made_reported/")
-        self.doc.save(report_file_path + output_file)
+    def report_save(self, post_body : PostBody):
+        output_file = f"{post_body.question_id}번 게시글_특이민원_보고서.docx"
+        report_file_path = "C:/Users/User/Desktop/빅프로젝트/BigProject/tellMe/tellMe-reports"
+        self.doc.save(f"{report_file_path}" + f"/{output_file}")
+        '''report_file_path = report_body.report_path
+        self.doc.save(report_file_path + output_file)'''
         print(f"문서가 {output_file}에 저장되었습니다.")
         return self.time, output_file
 
@@ -272,12 +276,7 @@ class LoadDocumentFile:
         elif ext in [".doc", ".docx"]:
             loader = Docx2txtLoader(docu_path)
         elif ext == ".txt":
-            text_loader_kwargs = {"autodetect_encoding": True}
-            loader = DirectoryLoader(docu_file_path, glob="**/*.txt",
-                    loader_cls=TextLoader,
-                    silent_errors=True,
-                    loader_kwargs=text_loader_kwargs,
-                    )
+            loader = TextLoader(docu_path, autodetect_encoding=True)
         else: 
             raise ValueError(f"지원되지 않는 파일 형식: {ext}")
         data = loader.load()

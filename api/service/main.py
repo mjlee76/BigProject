@@ -4,6 +4,7 @@ from pydantic import BaseModel, Field
 from langchain_chroma import Chroma
 from langchain_openai import OpenAIEmbeddings
 
+import shutil
 import os
 import basic_module as bm
 import nsfw_detection as nd
@@ -23,13 +24,6 @@ def read_root():
     return {"Hello": "World"}
 
 # Setting environment
-@app.on_event("startup")
-async def startup_event():
-    global api_key, llm
-    path = "./api_key.txt"
-    api_key = await bm.load_api_key(path)
-    os.environ["OPENAI_API_KEY"] = api_key
-    llm = await bm.selecting_model(api_key)
     
 model_path = "./20250204_roberta 파인튜닝"
 file_path = os.getcwd()
@@ -47,6 +41,18 @@ report = MakeReport()
 docu_loader = LoadDocumentFile()
 logger = logging.getLogger("my_logger")
 
+@app.on_event("startup")
+async def startup_event():
+    global api_key, llm
+    path = "./api_key.txt"
+    api_key = await bm.load_api_key(path)
+    os.environ["OPENAI_API_KEY"] = api_key
+    llm = await bm.selecting_model(api_key)
+    await docu_loader.init()
+    await changetexter.init()
+    await spam_detector.init()
+    await report.init()
+
 #게시글 작성자 정보
 class UserInfo(BaseModel):
     user_name: str
@@ -55,16 +61,16 @@ class UserInfo(BaseModel):
 
 # 게시글 정보
 class PostBody(BaseModel):
+    question_id : int = 0
     title: str
     content: str
     user: UserInfo
-    question_id: int = 0
 
 #DB로 넘길 report 정보
 class ReportBody(BaseModel):
     category : List[str] = Field(default_factory=list)
     post_origin_data : Dict[str, str] = Field(default_factory=dict)
-    report_path : str = ""
+    file_name : str = ""
     create_date : str = ""
     
 class CombinedModel(BaseModel):
@@ -89,8 +95,6 @@ class SpamQuestionRequest(BaseModel):
     question_data: QuestionData
 
 #민원 악성탐지 및 순화
-# db에 저장할수있게 카테고리를 리스트안에 넣어서 해주세요
-# make report()가 안되는 거 수정해야됨
 
 @app.post("/filtered_module")
 async def update_item(data: CombinedModel):
@@ -98,7 +102,6 @@ async def update_item(data: CombinedModel):
     try:
         post_data = data.post_data
         report_req = data.report_req
-
         title = post_data.title
         content = post_data.content
         post_origin_data = dict(제목=title, 내용=content) # 원문데이터 저장용
@@ -108,7 +111,7 @@ async def update_item(data: CombinedModel):
         title_label = classifier.classify_text(title)
         content_label = classifier.classify_text(content)
         
-        await changetexter.init()
+        # await changetexter.init()
         result = {}
         if title_label != '정상' or content_label != '정상':
             if title_label != '정상' and content_label == '정상':
@@ -159,23 +162,22 @@ async def update_item(data: CombinedModel):
             "message" : f"처리 실패: {str(e)}",
         }
         
-@app.post("/make_report")        
+@app.post("/make_report")
 async def make_report(data: CombinedModel):
         post_data, report_req = data.post_data, data.report_req
         if report_req.category != "정상":
-            await report.init()
             report.report_prompt(report_req)
             report.cell_fill(post_data, report_req)
-            time, output_file = report.report_save()
+            time, output_file = report.report_save(post_data)
             report_req.create_date = time
-            report_req.report_path = output_file
+            report_req.file_name = output_file
             
         return {
                 "valid": True,
                 "message": "보고서 작성 완료",
                 "post_data": post_data.model_dump(),
                 "report_req": report_req.model_dump()
-        }        
+        }
         
 @app.post("/check_spam")
 async def check_spam(request: SpamQuestionRequest):
@@ -185,7 +187,6 @@ async def check_spam(request: SpamQuestionRequest):
     try:
         post = request.post_data
         questions = request.question_data.question
-        await spam_detector.init()
         spam = await spam_detector.async_check_spam_and_store(post, questions)
         return {
             "valid" : True,
@@ -207,6 +208,7 @@ class FilePath(BaseModel):
 
 @app.post("/upload")
 async def upload_image(file: FilePath):
+    print(123)
     
     file_path = file.file_path
     filenames = os.listdir(file_path)
@@ -226,7 +228,7 @@ async def upload_image(file: FilePath):
                 return {
                     "valid": False,
                     "message" : "이미지 파일이 손상되었거나 유효하지 않습니다.",
-                    "file_path" : file_path
+                    "file_path" : file_name
                 }
             
             result = image_classifier(image)
@@ -237,11 +239,11 @@ async def upload_image(file: FilePath):
             if nsfw_score is not None and nsfw_score > 0.7:
                 results = "악성"
             else : results = "정상"
-
+            shutil.rmtree(file_path)
             return {
                 "valid": True,
                 "message" : results,
-                "file_path" : file_path
+                "file_path" : file_name
             }
 
         except Exception as e:
@@ -249,26 +251,19 @@ async def upload_image(file: FilePath):
             return {
                 "valid": False,
                 "message" : str(e),
-                "file_path" : file_path
+                "file_path" : file_name
                 }
         
-        finally : 
-            if nsfw_score is not None and nsfw_score < 0.7 :
-                os.remove(file_location)
-    
     else:
         if not file_name.lower().endswith((".hwp", ".hwpx", ".doc", ".docx", ".pdf", ".txt")):
             return {
                 "valid": False,
                 "message" : "유효한 문서 파일이 아닙니다.",
-                "file_path" : file_path
+                "file_path" : file_name
                 }
-        elif file_name.lower().endswith(".txt"):
-             file_location = file_path
 
         chroma = Chroma("fewshot_chat", OpenAIEmbeddings())
         data = await docu_loader.select_loader(file_location)
-        await docu_loader.init()
         llm_chain = await docu_loader.make_llm_text(data)
         combined_text = " ".join(llm_chain)
         
@@ -276,35 +271,22 @@ async def upload_image(file: FilePath):
             return {
                 "valid": False,
                 "message": "문서 내용이 없습니다. 올바른 문서를 업로드하세요.",
-                "file_path": file_location
+                "file_path": file_name
             }
         
         content_label = await docu_loader.make_classify_text(combined_text)
         if content_label != '정상':
-            if file_name.lower().endswith((".hwp", ".hwpx", ".doc", ".docx", ".pdf")):
-                os.remove(file_location)
-            elif file_name.lower().endswith(".txt"):
-                file_path = file.file_path
-                filenames = os.listdir(file_path)
-                file_name = filenames[0]
-                file_location = os.path.join(file_path, file_name)
-                os.remove(file_location)
+            if file_name.lower().endswith((".hwp", ".hwpx", ".doc", ".docx", ".pdf",".txt")):
+                shutil.rmtree(file_path)
             return {
                 "valid": True,
                 "message" : "악성",
-                "file_path" : file_path
+                "file_path" : file_name
             }
         else:
-            if file_name.lower().endswith((".hwp", ".hwpx", ".doc", ".docx", ".pdf")):
-                os.remove(file_location)
-            elif file_name.lower().endswith(".txt"):
-                file_path = file.file_path
-                filenames = os.listdir(file_path)
-                file_name = filenames[0]
-                file_location = os.path.join(file_path, file_name)
-                os.remove(file_location)
+            shutil.rmtree(file_path)
             return {
                 "valid": True,
                 "message" : "정상",
-                "file_path" : file_path
+                "file_path" : file_name
             }

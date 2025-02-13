@@ -68,9 +68,7 @@
             <td th:text="${(currentPage - 1) * 10 + stat.index + 1}"></td>  <!-- 순번 계산 -->
             <td>
                 <!-- 보고서 제목 클릭 시 웹뷰어에서 열기 -->
-
                 <a th:href="@{/manager/report/view/{id}(id=${report.id})}" target="_blank" th:text="${report.report}"></a>
-
             </td>
             <td th:text="${#temporals.format(report.createDate, 'yyyy-MM-dd')}"></td>
             <td th:text="${report.category}"></td>
