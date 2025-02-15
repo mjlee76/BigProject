@@ -65,10 +65,10 @@
                 <tr><!-- 공개 여부 -->
                     <th>공개 여부</th>
                     <td>
-                        <div th:each="option : ${question.reveal.values()}">
+                        <span th:each="option : ${question.reveal.values()}">
                             <input type="radio" th:field="*{reveal}" th:value="${option}" th:id="${option}" />
                             <label th:for="${option}" th:text="${option}"></label>
-                        </div>
+                        </span>
                     </td>
                 </tr>
                 <tr><!-- 내용 -->

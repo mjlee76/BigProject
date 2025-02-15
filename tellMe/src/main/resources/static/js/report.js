@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const searchInput = document.getElementById("search-input");
     const searchForm = document.getElementById("search-form");
     const tabs = document.querySelectorAll(".tab");
-    //const downloadLinks = document.querySelectorAll('.download-link');  // 다운로드 링크 선택자
+    const downloadLinks = document.querySelectorAll('.download-link');  // 다운로드 링크 선택자
 
     // ✅ 현재 URL에서 파라미터 값을 가져오는 함수
     function getQueryParam(param) {
@@ -47,7 +47,6 @@ document.addEventListener("DOMContentLoaded", function () {
             body: JSON.stringify({ status: '확인완료' }),
         })
         .then(response => response.json())
-
         .then(data => {
             if (data.success) {
                     // 상태 셀 업데이트

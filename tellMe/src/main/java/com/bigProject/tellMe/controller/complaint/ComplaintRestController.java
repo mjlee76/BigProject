@@ -32,7 +32,7 @@ public class ComplaintRestController {
     private final UserService userService;
     private final NotificationService notificationService;
 
-    @PostMapping("/uploadFile")
+    //@PostMapping("/uploadFile")
     public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile file, Authentication auth) {
         UserDTO userDTO = userService.findByUserId(auth.getName());
         System.out.println("===========uploadFile" + file);
@@ -53,7 +53,7 @@ public class ComplaintRestController {
     }
 
     @PostMapping("/spam")
-    @ResponseBody
+//    @ResponseBody
     public ResponseEntity<Map<String, Object>> spamCheck(@RequestBody Map<String, String> request) {
         try{
             Map<String, Object> response = questionService.spamCheck(request);

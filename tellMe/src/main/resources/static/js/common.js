@@ -5,8 +5,6 @@ $(document).ready(function() {
    });
 });
 
-//const notificationIcon = document.getElementById("notification-icon");
-//const userId = notificationIcon ? notificationIcon.dataset.userid : null;
 document.addEventListener("DOMContentLoaded", function () {
     const notificationIcon = document.getElementById("notification-icon");
     const notificationBox = document.getElementById("notification-box");
@@ -105,7 +103,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 if (response.ok) {
                     console.log(`✅ 알림(${notificationId})을 읽음 상태로 변경`);
 
-//                    const notificationElement = document.querySelector(`[data-id="${notificationId}"]`);
+//                    const notificationElement = document.querySelector([data-id="${notificationId}"]);
 //                    if (notificationElement) {
 //                        notificationElement.classList.add("read"); // ✅ 읽은 알림 스타일 적용
 //                    }

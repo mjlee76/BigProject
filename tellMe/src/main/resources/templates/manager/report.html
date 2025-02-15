@@ -69,6 +69,9 @@
             <td>
                 <!-- 보고서 제목 클릭 시 웹뷰어에서 열기 -->
                 <a th:href="@{/manager/report/view/{id}(id=${report.id})}" target="_blank" th:text="${report.report}"></a>
+<!--                <a th:href="@{'/tellMe/tellMe-reports/' + ${report.report}}" class="download-link" title="첨부파일 다운로드" download>-->
+<!--                    <span th:text="${report.report}"></span>-->
+<!--                </a>-->
             </td>
             <td th:text="${#temporals.format(report.createDate, 'yyyy-MM-dd')}"></td>
             <td th:text="${report.category}"></td>

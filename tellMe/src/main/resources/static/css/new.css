@@ -51,6 +51,7 @@ form {
 }
 
 .form-table th {
+    font-weight: normal;
     text-align: center;
     padding: 10px;
     font-size: 13px;
@@ -63,6 +64,7 @@ form {
 }
 
 .form-table td {
+    font-size: 13px;
     padding: 10px;
     border-bottom: 1px solid #ddd;
 }
@@ -190,4 +192,23 @@ button.cancel:hover {
     font-size: 14px;
     border-radius: 5px;
     transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.radio-group {
+    display: flex; /* 한 줄 정렬 */
+    gap: 15px; /* 버튼 간격 조정 */
+    align-items: center; /* 세로 중앙 정렬 */
+    font-family: 'SUIT', sans-serif; /* 글씨체 변경 */
+    font-size: 13px; /* 글자 크기 조정 */
+    font-weight: bold; /* 글씨 두껍게 (선택 사항) */
+}
+
+.radio-group input[type="radio"] {
+    margin-right: 5px; /* 라디오 버튼과 라벨 사이 간격 */
+    transform: scale(1.2); /* 라디오 버튼 크기 살짝 키우기 */
+}
+
+.upload-status {
+    font-weight: bold;
+    font-size: 10px;
 }

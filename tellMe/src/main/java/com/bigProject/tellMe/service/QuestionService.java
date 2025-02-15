@@ -32,6 +32,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -39,6 +40,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 import java.time.LocalDateTime;
 
@@ -153,7 +155,7 @@ public class QuestionService {
             userNode.put("user_name", userDTO.getUserName());
             userNode.put("phone", userDTO.getPhone());
             //userNode.put("count", userDTO.getCount());
-            //ObjectNode를 `Map<String, Object>`로 변환
+            //ObjectNode를 Map<String, Object>로 변환
             Map<String, Object> userMap = objectMapper.convertValue(userNode, Map.class);
 
             Map<String, Object> postBody = new HashMap<>();
@@ -243,7 +245,7 @@ public class QuestionService {
             String createDateStr = (String) reportReq.get("create_date"); // 🔹 FastAPI 응답에서 가져오기
             // 🔹 변환을 위한 포맷 정의
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyMMdd_HHmmss");
-            // 🔹 `LocalDateTime`으로 변환
+            // 🔹 LocalDateTime으로 변환
             LocalDateTime createDate = LocalDateTime.parse(createDateStr, formatter);
             reportDTO.setCreateDate(createDate);
             reportDTO.setCategory(categoryString);
