@@ -64,9 +64,9 @@ public class QuestionDTO {
         questionDTO.setStatus(question.getStatus());
         questionDTO.setViews(question.getViews());
         questionDTO.setCategory(question.getCategory());
-        questionDTO.setFile1(questionDTO.getFile1());
-        questionDTO.setFile2(questionDTO.getFile2());
-        questionDTO.setFile3(questionDTO.getFile3());
+        questionDTO.setFile1(question.getFile1());
+        questionDTO.setFile2(question.getFile2());
+        questionDTO.setFile3(question.getFile3());
 
         if (question.getAnswer() != null) {
             questionDTO.setAnswer(AnswerDTO.toAnswerDTO(question.getAnswer()));

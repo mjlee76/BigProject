@@ -43,6 +43,10 @@
         </tr>
         </thead>
         <tbody id="table-body">
+<!--        &lt;!&ndash; 데이터가 없는 경우 &ndash;&gt;-->
+<!--        <tr th:if="${noticeList.isEmpty()}" class="empty-message">-->
+<!--            <td colspan="6" style="text-align: center;">등록된 공지사항이 없습니다.</td>-->
+<!--        </tr>-->
         <tr th:each="notice, iterStat : ${noticeList}">
             <!-- 🔹 번호 칼럼 (삭제 모드에서 체크박스로 변경) -->
             <!--            <td class="number-column" style="text-align: center;">-->

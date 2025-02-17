@@ -13,51 +13,53 @@
 </head>
 <body>
 <div th:replace="layouts/navbar::tellMe_header"></div>
-<header>
-    <div class="complaint-header">
-        <h1>공지사항 작성</h1>
-    </div>
-</header>
+
 <main>
-    <form th:action="@{/customer/create}" th:object="${notice}" method="post" id="announcement-form" enctype="multipart/form-data">
-        <input type="hidden" th:field="${notice.id}">
-        <table class="form-table">
-            <!-- 제목 -->
-            <tr>
-                <th><label>제목 </label></th>
-                <td><input type="text" id="title" th:field="*{title}" placeholder="제목을 입력하세요" required /></td>
-            </tr>
+    <div class="question-header">
+        <h1>공지사항 작성</h1>
+        <p>새로운 소식을 정리해 주세요. 사람들이 쉽게 이해할 수 있도록 작성해 주세요.</p>
+    </div>
+    <div class="content2">
+        <form th:action="@{/customer/create}" th:object="${notice}" method="post" id="announcement-form" enctype="multipart/form-data">
+            <input type="hidden" th:field="${notice.id}">
+            <table class="form-table">
+                <!-- 제목 -->
+                <tr>
+                    <th><label>제목 </label></th>
+                    <td><input type="text" id="title" th:field="*{title}" placeholder="제목을 입력하세요" required /></td>
+                </tr>
 
-            <!-- 내용 -->
-            <tr>
-                <th><label>내용 </label></th>
-                <td><textarea id="content" th:field="*{content}" rows="6" placeholder="내용을 입력하세요" required></textarea></td>
-            </tr>
+                <!-- 내용 -->
+                <tr>
+                    <th><label>내용 </label></th>
+                    <td><textarea id="content" th:field="*{content}" rows="6" placeholder="내용을 입력하세요" required></textarea></td>
+                </tr>
 
-            <!-- 첨부파일 -->
-            <tr>
-                <th>첨부파일</th>
-                <td>
-                    <div id="file-upload-container">
-                        <div class="file-input">
-                            <input type="hidden" th:field="*{file}" />
-                            <input type="file" name="image" id="fileImage" accept="image/png, image/jpeg, image/jpg, application/pdf, application/hwp, application/vnd.openxmlformats-officedocument.wordprocessingml.document, text/plain" class="file-input-field"/>
-                            <br>
-                            <!--                    <img id="thumbnail" th:src="@{${notice.photosImagePath}}" class="img-fluid" />-->
-                            <!--                    <input type="file" name="file" class="file-input-field" />-->
-                            <button type="button" class="remove-file-button" onclick="resetFileInput()">취소</button>
+                <!-- 첨부파일 -->
+                <tr>
+                    <th>첨부파일</th>
+                    <td>
+                        <div id="file-upload-container">
+                            <div class="file-input">
+                                <input type="hidden" th:field="*{file}" />
+                                <input type="file" name="image" id="fileImage" accept="image/png, image/jpeg, image/jpg, application/pdf, application/hwp, application/vnd.openxmlformats-officedocument.wordprocessingml.document, text/plain" class="file-input-field"/>
+                                <br>
+                                <!--                    <img id="thumbnail" th:src="@{${notice.photosImagePath}}" class="img-fluid" />-->
+                                <!--                    <input type="file" name="file" class="file-input-field" />-->
+                                <button type="button" class="remove-file-button" onclick="resetFileInput()">취소</button>
+                            </div>
                         </div>
-                    </div>
-                </td>
-            </tr>
-        </table>
+                    </td>
+                </tr>
+            </table>
 
-        <!-- 버튼 -->
-        <div class="form-actions">
-            <button type="submit" class="btn-primary">등록하기</button>
-            <button type="button" id="view-list-button" class="btn-secondary" th:onclick="writeListReq()">목록보기</button>
-        </div>
-    </form>
+            <!-- 버튼 -->
+            <div class="form-actions">
+                <button type="submit" class="btn-primary">등록하기</button>
+                <button type="button" id="view-list-button" class="btn-secondary" th:onclick="writeListReq()">목록보기</button>
+            </div>
+        </form>
+    </div>
 </main>
 <div th:replace="layouts/footer::tellMe_footer"></div>
 </body>

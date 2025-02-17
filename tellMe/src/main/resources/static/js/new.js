@@ -1,7 +1,7 @@
 function spamAPI(event) {
     event.preventDefault();
 
-//    여기 팝업창 기능
+    //여기 팝업창 기능
     const submitButton = document.querySelector("button[type='submit']");
     submitButton.disabled = true; // 중복 클릭 방지
 
@@ -110,6 +110,13 @@ function uploadFile(file, index) {
     let formData = new FormData();
     let csrfToken = document.querySelector('input[name="_csrf"]').value;
     formData.append("file", file);
+    //formData.append("userId", ${userId});
+
+    //여기 팝업창 기능
+    const submitButton = document.querySelector("button[type='submit']");
+    submitButton.disabled = true; // 중복 클릭 방지
+
+    document.getElementById("loading-overlay2").style.display = "flex";
 
     $.ajax({
         url: "/tellMe/api/uploadFile",  // 백엔드 API 엔드포인트 설정
@@ -119,20 +126,26 @@ function uploadFile(file, index) {
         processData: false,
         beforeSend: function (xhr) {
             xhr.setRequestHeader("X-CSRF-TOKEN", csrfToken);
-            $("#uploadStatus" + index).text("업로드 중..."); // 상태 표시
+            //$("#uploadStatus" + index).text("업로드 중..."); // 상태 표시
         },
         success: function (response) {
             if(response.trim() === "정상") {
-                $("#uploadStatus" + index).text("파일이 정상으로 판단되어 업로드 가능합니다.");
+                $("#uploadStatus" + index).text("✅ 파일이 정상으로 판단되어 업로드 가능합니다.");
             }else if(response.trim() === "악성") {
-                $("#uploadStatus" + index).text("파일이 악성으로 감지되어 업로드되지 못합니다.");
-                resetFileInput(index);
+                $("#uploadStatus" + index).text("❌ 파일이 악성으로 감지되어 업로드되지 못합니다.");
+                const fileInput = $("#fileImage" + index);
+                fileInput.val(""); // 파일 입력 초기화
             }
 
         },
         error: function (xhr) {
-            $("#uploadStatus" + index).text("❌ 업로드 실패");
+            $("#uploadStatus" + index).text("❌ 업로드 오류");
             console.error("업로드 실패: ", xhr.responseText);
+        },
+        complete: function () {
+            // ✅ 로딩 화면 해제 및 버튼 활성화
+            document.getElementById("loading-overlay2").style.display = "none";
+            submitButton.disabled = false;
         }
     });
 }
@@ -141,5 +154,6 @@ function uploadFile(file, index) {
 function resetFileInput(index) {
     const fileInput = $("#fileImage" + index);
     fileInput.val(""); // 파일 입력 초기화
+    $("#uploadStatus" + index).text("");
 }
 

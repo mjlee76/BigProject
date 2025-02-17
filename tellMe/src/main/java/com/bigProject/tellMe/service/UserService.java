@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -45,23 +46,38 @@ public class UserService {
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
     }
 
-    public String checkUnique(String userId, String password, String phoneNum, String eMail) {
-        List<User> listUsers = userRepository.findAll();
+//    public String checkUnique(String userId, String password, String phoneNum, String eMail) {
+//        List<User> listUsers = userRepository.findAll();
+//
+//        for(User listUser : listUsers) {
+//            if(userRepository.findByUserId(userId) != null) {
+//                return "아이디중복";
+//            }else if(passwordEncoder.matches(password, listUser.getPassword())) {
+//                return "비밀번호중복";
+//            }else if(userRepository.findByPhone(phoneNum) != null) {
+//                return "핸드폰중복";
+//            }else if(userRepository.findByEmail(eMail) != null) {
+//                return "이메일중복";
+//            }
+//        }
+//
+//        return "중복없음";
+//    }
+public String checkUnique(String userId, String phoneNum, String eMail) {
+    List<User> listUsers = userRepository.findAll();
 
-        for(User listUser : listUsers) {
-            if(userRepository.findByUserId(userId) != null) {
-                return "아이디중복";
-            }else if(passwordEncoder.matches(password, listUser.getPassword())) {
-                return "비밀번호중복";
-            }else if(userRepository.findByPhone(phoneNum) != null) {
-                return "핸드폰중복";
-            }else if(userRepository.findByEmail(eMail) != null) {
-                return "이메일중복";
-            }
+    for(User listUser : listUsers) {
+        if(userRepository.findByUserId(userId) != null) {
+            return "아이디중복";
+        }else if(userRepository.findByPhone(phoneNum) != null) {
+            return "핸드폰중복";
+        }else if(userRepository.findByEmail(eMail) != null) {
+            return "이메일중복";
         }
-
-        return "중복없음";
     }
+
+    return "중복없음";
+}
 
     public String checkNameAndFindId(String userName, String phoneNum) {
         List<User> nameList = userRepository.findByUserName(userName);
@@ -112,29 +128,101 @@ public class UserService {
         return false;
     }
 
-    public boolean updateUserName(String userId, String newName) {
+    public boolean updateUserName(String userId, String currentPassword, String newName) {
         User user = userRepository.findByUserId(userId);
-        if(user != null) {
-            UserDTO userDTO = userMapper.userToUserDTO(user);
-            userDTO.setUserName(newName);
-            user = userMapper.userDTOToUser(userDTO);
-            userRepository.save(user);
-            return true;
+        if (user == null) {
+            return false;  // 사용자 존재하지 않음
         }
-        return false;
-    }
 
+        // 비밀번호 확인
+        if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
+            return false;  // 비밀번호 불일치
+        }
 
-    public boolean updatePhone(String userId, String newPhone) {
+        // 이름 변경
+        user.setUserName(newName);
+        userRepository.save(user);
         return true;
     }
 
-    public boolean updateEmail(String userId, String newEmail) {
+
+    public boolean updatePhone(String userId, String currentPassword, String newPhone) {
+        User user = userRepository.findByUserId(userId);
+        if (user == null) {
+            return false;  // 사용자를 찾을 수 없음
+        }
+
+        // 비밀번호 확인
+        if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
+            return false;  // 비밀번호 불일치
+        }
+
+        // 핸드폰 번호 변경
+        user.setPhone(newPhone);
+        userRepository.save(user);
+        return true;
+    }
+
+    public boolean updateEmail(String userId, String currentPassword, String newEmail) {
+        User user = userRepository.findByUserId(userId);
+        if (user == null) {
+            return false;  // 사용자를 찾을 수 없음
+        }
+
+        // 비밀번호 확인
+        if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
+            return false;  // 비밀번호 불일치
+        }
+
+        // 이메일 변경
+        user.setEmail(newEmail);
+        userRepository.save(user);
         return true;
     }
 
     public UserDTO findById(Long id) {
         User user = userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("User not found"));
         return userMapper.userToUserDTO(user);
+    }
+
+    public boolean updatePassword(String userId, String currentPassword, String newPassword) {
+        // 1️⃣ 사용자 조회 (UserDTO 사용 X, User 엔티티 직접 수정)
+        User user = userRepository.findByUserId(userId);
+        if (user == null) {
+            throw new IllegalArgumentException("사용자를 찾을 수 없습니다.");
+        }
+
+        // 2️⃣ 현재 비밀번호 검증
+        if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
+            return false;  // 현재 비밀번호가 틀리면 false 반환
+        }
+
+        // 3️⃣ 새 비밀번호 암호화 후 저장 (DTO 변환 없이 User 엔티티 직접 수정)
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);  // ✅ User 엔티티 직접 저장
+
+        return true;  // 비밀번호 변경 성공
+    }
+
+    public boolean updateAddress(String userId, String currentPassword, String newAddress) {
+        User user = userRepository.findByUserId(userId);
+        if (user == null) {
+            return false;  // 사용자를 찾을 수 없음
+        }
+
+        // 비밀번호 확인
+        if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
+            return false;  // 비밀번호 불일치
+        }
+
+        // 주소 변경
+        user.setAddress(newAddress);
+        userRepository.save(user);
+        return true;
+    }
+
+
+    public List<Long> getAllUserIds() {
+        return userRepository.findAll().stream().map(User::getId).collect(Collectors.toList());
     }
 }

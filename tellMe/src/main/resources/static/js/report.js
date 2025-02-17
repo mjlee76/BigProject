@@ -36,40 +36,51 @@ document.addEventListener("DOMContentLoaded", function () {
     if (searchForm) {
         searchForm.addEventListener("submit", searchReports);
     }
+});
 
-    // ✅ 다운로드 링크 클릭 시 상태 변경 요청을 서버로 보내는 함수
-    function updateReportStatus(reportId, linkElement) {
-        fetch(`/manager/report/update-status/${reportId}`, {
+function confirmAndDownload(reportId, reportName) {
+    //const csrfToken = document.querySelector('input[name="_csrf"]').value;
+    const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+    fetch('/tellMe/api/download/report/' + reportName)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('File download failed: ' + response.status);
+            }
+            return response.blob();
+        })
+        .then(blob => {
+            // 받은 Blob 데이터를 가상의 URL(Object URL)로 만든다
+            const downloadUrl = URL.createObjectURL(blob);
+
+            // a 태그를 동적으로 만들어서 클릭 이벤트 발생 -> 다운로드
+            const a = document.createElement('a');
+            a.href = downloadUrl;
+            // 여기서 파일명을 지정해주면, 다운로드될 때 해당 파일명으로 저장됨
+            // (서버에서 응답 헤더로도 filename을 내려주지만, JS에서 덮어쓸 수도 있음)
+            a.download = reportName;
+
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+
+            // 메모리 누수 방지를 위해 URL 해제
+            URL.revokeObjectURL(downloadUrl);
+        })
+        .then(() => {
+            // 3) 상태 업데이트 API (POST 요청)
+            return fetch(`/tellMe/report/updateStatus/${reportId}/confirm`, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ status: '확인완료' }),
+                "Content-Type": "application/json",
+                "X-CSRF-TOKEN": csrfToken
+            },});
         })
-        .then(response => response.json())
-
-        .then(data => {
-            if (data.success) {
-                    // 상태 셀 업데이트
-                    const statusCell = row.querySelector('td:nth-child(5)'); // 5번째 <td> (상태 셀)
-                    statusCell.textContent = '확인완료';
-                    statusCell.classList.remove('unchecked');
-                    statusCell.classList.add('checked');
-                }
-            }
+        .then(updateRes => {
+            if (!updateRes.ok) throw new Error('Confirm API error');
+            // 4) 화면의 상태 표시를 '확인완료'로 변경
+            document.getElementById(`status-${reportId}`).textContent = '확인완료';
         })
         .catch(error => {
-            console.error('상태 변경 오류:', error);
+            console.error('Error downloading file:', error);
         });
-    }
-
-    // ✅ 다운로드 링크 클릭 시 상태 변경
-    downloadLinks.forEach(link => {
-        link.addEventListener('click', function(e) {
-            const reportId = e.target.closest('a').getAttribute('data-report-id'); // 각 보고서 ID 가져오기
-            if (reportId) {
-                updateReportStatus(reportId);  // 상태 변경 요청 보내기
-            }
-        });
-    });
-});
+}

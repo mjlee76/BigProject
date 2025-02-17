@@ -41,13 +41,13 @@
             <tr>
                 <th>첨부파일</th>
                 <td colspan="5">
-            <span th:if="${notice.file != null}">
-            <a href="" class="download-link" th:data-filepath="@{'/tellMe/tellMe-image/notice/' + ${notice.id} + '/' + ${notice.file}}" title="첨부파일 다운로드">
-                <img th:src = "@{/image/attachment.jpg}" alt="첨부파일 아이콘" style="width: 16px; height: 16px; vertical-align: middle; margin-right: 5px;">
-                <span th:text="${notice.file}"></span>
-            </a>
-            </span>
-                    <span th:if="${notice.file == null}">없음</span>
+                    <span th:if="${notice.file != null and notice.file != ''}">
+                        <a th:href="@{'/tellMe/tellMe-uploadFile/notice/' + ${notice.id} + '/' + ${notice.file}}" class="download-link" title="첨부파일 다운로드" download>
+                            <img th:src = "@{/image/attachment.jpg}" alt="첨부파일 아이콘" style="width: 16px; height: 16px; vertical-align: middle; margin-right: 5px;">
+                            <span th:text="${notice.file}"></span>
+                        </a>
+                    </span>
+                    <span th:if="${notice.file == null or notice.file == ''}">없음</span>
                 </td>
             </tr>
             <tr>

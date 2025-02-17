@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 
 @Entity // 기본 생성자가 만들어짐
 @Builder // entity어노테이션이 생성자를 만들어서 만들지 않음, 근데 builder는 모든 매개변수가 있는 생성자가 필요 그래서 오류남
-@NoArgsConstructor //기본 생성자
+@NoArgsConstructor(access = AccessLevel.PROTECTED) //기본 생성자
 @AllArgsConstructor //전체 생성자
 @Getter
 @ToString
@@ -29,6 +29,7 @@ public class Notification {
     private String message;
 
     @Column(nullable = false)
+    @Builder.Default
     private boolean isRead = false;
 
     @CreatedDate
