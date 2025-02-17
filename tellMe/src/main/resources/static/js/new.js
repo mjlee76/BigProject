@@ -133,7 +133,8 @@ function uploadFile(file, index) {
                 $("#uploadStatus" + index).text("파일이 정상으로 판단되어 업로드 가능합니다.");
             }else if(response.trim() === "악성") {
                 $("#uploadStatus" + index).text("파일이 악성으로 감지되어 업로드되지 못합니다.");
-                resetFileInput(index);
+                const fileInput = $("#fileImage" + index);
+                fileInput.val(""); // 파일 입력 초기화
             }
 
         },
@@ -153,5 +154,6 @@ function uploadFile(file, index) {
 function resetFileInput(index) {
     const fileInput = $("#fileImage" + index);
     fileInput.val(""); // 파일 입력 초기화
+    $("#uploadStatus" + index).text("");
 }
 

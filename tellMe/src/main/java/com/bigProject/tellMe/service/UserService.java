@@ -46,7 +46,6 @@ public class UserService {
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
     }
 
-<<<<<<< HEAD
     public String checkUnique(String userId, String phoneNum, String eMail) {
         List<User> listUsers = userRepository.findAll();
 
@@ -58,40 +57,10 @@ public class UserService {
             }else if(userRepository.findByEmail(eMail) != null) {
                 return "이메일중복";
             }
-=======
-//    public String checkUnique(String userId, String password, String phoneNum, String eMail) {
-//        List<User> listUsers = userRepository.findAll();
-//
-//        for(User listUser : listUsers) {
-//            if(userRepository.findByUserId(userId) != null) {
-//                return "아이디중복";
-//            }else if(passwordEncoder.matches(password, listUser.getPassword())) {
-//                return "비밀번호중복";
-//            }else if(userRepository.findByPhone(phoneNum) != null) {
-//                return "핸드폰중복";
-//            }else if(userRepository.findByEmail(eMail) != null) {
-//                return "이메일중복";
-//            }
-//        }
-//
-//        return "중복없음";
-//    }
-public String checkUnique(String userId, String phoneNum, String eMail) {
-    List<User> listUsers = userRepository.findAll();
-
-    for(User listUser : listUsers) {
-        if(userRepository.findByUserId(userId) != null) {
-            return "아이디중복";
-        }else if(userRepository.findByPhone(phoneNum) != null) {
-            return "핸드폰중복";
-        }else if(userRepository.findByEmail(eMail) != null) {
-            return "이메일중복";
->>>>>>> 25389e745540d744ba6801f6b40f6f935e3230ac
         }
-    }
 
-    return "중복없음";
-}
+        return "중복없음";
+    }
 
     public String checkNameAndFindId(String userName, String phoneNum) {
         List<User> nameList = userRepository.findByUserName(userName);
