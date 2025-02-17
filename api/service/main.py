@@ -8,13 +8,17 @@ import shutil
 import os
 import basic_module as bm
 import nsfw_detection as nd
+import blob_test as bt
 import logging
-
+import os
+from azure.storage.blob import BlobServiceClient
+from dotenv import load_dotenv
 from basic_module import TextClassifier
 from basic_module import ChangeText
 from basic_module import MakeReport
 from basic_module import LoadDocumentFile
 from spam_detect import SpamDetector
+
 
 # POST: to create data. GET: to read data. PUT: to update data. DELETE: to delete data.
 app = FastAPI()
@@ -40,6 +44,13 @@ changetexter = ChangeText()
 report = MakeReport()
 docu_loader = LoadDocumentFile()
 logger = logging.getLogger("my_logger")
+
+load_dotenv()
+connect_str = os.getenv('AZURE_STORAGE_CONNECTION_STRING')
+container_name = "fastapi"
+
+blob_service_client = BlobServiceClient.from_connection_string(connect_str)
+container_client = blob_service_client.get_container_client(container_name)
 
 @app.on_event("startup")
 async def startup_event():
@@ -203,20 +214,30 @@ async def check_spam(request: SpamQuestionRequest):
 
 #이미지 탐지
 class FilePath(BaseModel):
-    file_path : str
+    file_name : str
+    user_id : int
 
 @app.post("/upload")
 async def upload_image(file: FilePath):
-    
-    file_path = file.file_path
-    filenames = os.listdir(file_path)
+    local_dir = f"./uploaded_images/{file.user_id}/"
+    # blob URL에서 파일 이름 동적으로 추출
+    blob_filename = f"{file.user_id}/{file.file_name}"
+    download_path = local_dir + f"{file.file_name}"
+    os.makedirs(local_dir, exist_ok=True)
+    # Azure Blob Storage에서 파일 다운로드
+    bt.download_file(blob_filename, download_path)
+
+    # 다운로드된 파일이 있는지 확인
+    filenames = os.listdir(local_dir)
+    if not filenames:
+        return {"valid": False, "message": "다운로드된 파일이 없습니다.", "file_path": local_dir}
     file_name = filenames[0]
-    file_location = os.path.join(file_path, file_name)
+    file_location = os.path.join(local_dir, file_name)
 
     if file_name.lower().endswith((".jpg", ".jpeg", ".png", ".gif", ".bmp")):
         nsfw_score = None
         try:
-            image = nd.load_image(file_path)
+            image = nd.load_image(local_dir)
             # 이미지가 손상되었는지 체크
             try : 
                 image.verify()
@@ -226,7 +247,8 @@ async def upload_image(file: FilePath):
                 return {
                     "valid": False,
                     "message" : "이미지 파일이 손상되었거나 유효하지 않습니다.",
-                    "file_path" : file_name
+                    "file_path" : file_name,
+                    "user_id" :  file.user_id
                 }
             
             result = image_classifier(image)
@@ -237,11 +259,12 @@ async def upload_image(file: FilePath):
             if nsfw_score is not None and nsfw_score > 0.7:
                 results = "악성"
             else : results = "정상"
-            shutil.rmtree(file_path)
+            shutil.rmtree(local_dir)
             return {
                 "valid": True,
                 "message" : results,
-                "file_path" : file_name
+                "file_path" : file_name,
+                "user_id" :  file.user_id
             }
 
         except Exception as e:
@@ -249,18 +272,17 @@ async def upload_image(file: FilePath):
             return {
                 "valid": False,
                 "message" : str(e),
-                "file_path" : file_name
+                "file_path" : file_name,
+                "user_id" :  file.user_id
                 }
-        
-        finally : 
-            if nsfw_score is not None and nsfw_score < 0.7 :
-                shutil.rmtree(file_path)
+
     else:
         if not file_name.lower().endswith((".hwp", ".hwpx", ".doc", ".docx", ".pdf", ".txt")):
             return {
                 "valid": False,
                 "message" : "유효한 문서 파일이 아닙니다.",
-                "file_path" : file_name
+                "file_path" : file_name,
+                "user_id" :  file.user_id
                 }
 
         chroma = Chroma("fewshot_chat", OpenAIEmbeddings())
@@ -272,22 +294,25 @@ async def upload_image(file: FilePath):
             return {
                 "valid": False,
                 "message": "문서 내용이 없습니다. 올바른 문서를 업로드하세요.",
-                "file_path": file_name
+                "file_path": file_name,
+                "user_id" :  file.user_id
             }
         
         content_label = await docu_loader.make_classify_text(combined_text)
         if content_label != '정상':
             if file_name.lower().endswith((".hwp", ".hwpx", ".doc", ".docx", ".pdf",".txt")):
-                shutil.rmtree(file_path)
+                shutil.rmtree(local_dir)
             return {
                 "valid": True,
                 "message" : "악성",
-                "file_path" : file_name
+                "file_path" : file_name,
+                "user_id" :  file.user_id
             }
         else:
-            shutil.rmtree(file_path)
+            shutil.rmtree(local_dir)
             return {
                 "valid": True,
                 "message" : "정상",
-                "file_path" : file_name
+                "file_path" : file_name,
+                "user_id" :  file.user_id
             }
