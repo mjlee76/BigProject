@@ -41,7 +41,7 @@ import java.util.Map;
 @Slf4j // ✅ Lombok의 Slf4j 추가
 public class ManagerController {
     private final ReportService reportService;
-    private static final String REPORT_BASE_PATH = "C:/Users/User/Desktop/BigProject/tellMe/tellMe-reports/";
+    private static final String REPORT_BASE_PATH = "C:/Users/User/BigProject/tellMe/tellMe-reports/";
 
     // ✅ 보고서 목록 조회 (페이지네이션 적용)
     @GetMapping("/report")
@@ -112,6 +112,8 @@ public class ManagerController {
     private MediaType getMediaType(String filePath) {
         if (filePath.endsWith(".docx")) {
             return MediaType.valueOf("application/vnd.openxmlformats-officedocument.wordprocessingml.document");
+        } else if (filePath.endsWith(".txt")) {
+            return MediaType.TEXT_PLAIN;  // ✅ .txt 파일 MIME 타입 추가
         } else if (filePath.endsWith(".hwp")) {
             return MediaType.valueOf("application/x-hwp");
         } else if (filePath.endsWith(".pdf")) {

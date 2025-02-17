@@ -68,10 +68,23 @@
             <td th:text="${(currentPage - 1) * 10 + stat.index + 1}"></td>  <!-- 순번 계산 -->
             <td>
                 <!-- 보고서 제목 클릭 시 웹뷰어에서 열기 -->
-                <a th:href="@{/manager/report/view/{id}(id=${report.id})}" target="_blank" th:text="${report.report}"></a>
-<!--                <a th:href="@{'/tellMe/tellMe-reports/' + ${report.report}}" class="download-link" title="첨부파일 다운로드" download>-->
+<!--                <a th:href="@{/manager/report/view/{id}(id=${report.id})}" target="_blank" th:text="${report.report}"></a>-->
+<!--                <a th:href="@{'/tellMe/tellMe-reports/' + ${#strings.replace(report.report, ' ', '%20')}}" class="download-link" title="첨부파일 다운로드" download>-->
 <!--                    <span th:text="${report.report}"></span>-->
 <!--                </a>-->
+                <a th:href="@{'/tellMe-reports/' + ${report.report}}" class="download-link" title="첨부파일 다운로드" download>
+                    <span th:text="${report.report}"></span>
+                </a>
+<!--                <a id="download-link" class="download-link" title="첨부파일 다운로드" download>-->
+<!--                    <span th:text="${report.report}"></span>-->
+<!--                </a>-->
+
+<!--                <script th:inline="javascript">-->
+<!--                    /*<![CDATA[*/-->
+<!--                    var fileName = /*[[${report.report}]]*/ "default.docx";-->
+<!--                    document.getElementById("download-link").href = "/tellMe-reports/" + encodeURIComponent(fileName);-->
+<!--                    /*]]>*/-->
+<!--                </script>-->
             </td>
             <td th:text="${#temporals.format(report.createDate, 'yyyy-MM-dd')}"></td>
             <td th:text="${report.category}"></td>

@@ -228,7 +228,7 @@ class MakeReport():
         
     def report_save(self, post_body : PostBody):
         output_file = f"{post_body.question_id}번_게시글_특이민원_보고서.docx"
-        report_file_path = "C:/Users/User/Desktop/BigProject/tellMe/tellMe-reports"
+        report_file_path = "C:/Users/User/BigProject/tellMe/tellMe-reports"
         self.doc.save(f"{report_file_path}" + f"/{output_file}")
         print(f"문서가 {output_file}에 저장되었습니다.")
         return self.time, output_file
