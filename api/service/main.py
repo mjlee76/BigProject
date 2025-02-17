@@ -174,6 +174,8 @@ async def update_item(data: CombinedModel):
         
 @app.post("/make_report")
 async def make_report(data: CombinedModel):
+        report = MakeReport()
+        await report.init()
         post_data, report_req = data.post_data, data.report_req
         if report_req.category != "정상":
             report.report_prompt(report_req)
