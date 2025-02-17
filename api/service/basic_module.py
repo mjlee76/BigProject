@@ -4,6 +4,7 @@ import torch
 import asyncio
 import aiofiles
 import datetime
+import blob_test as bt
 from docx import Document
 from docx.shared import Pt
 from docx.oxml.ns import qn
@@ -227,11 +228,11 @@ class MakeReport():
         table.cell(6, 1).text = prompt
         
     def report_save(self, post_body : PostBody):
-        output_file = f"{post_body.question_id}번 게시글_특이민원_보고서.docx"
-        report_file_path = "C:/Users/User/Desktop/빅프로젝트/BigProject/tellMe/tellMe-reports"
+        output_file = f"{post_body.question_id}_특이민원_보고서.docx"
+        report_file_path = "./make_reports"
         self.doc.save(f"{report_file_path}" + f"/{output_file}")
-        '''report_file_path = report_body.report_path
-        self.doc.save(report_file_path + output_file)'''
+        upload_path = os.path.join(report_file_path, output_file)
+        bt.upload_file(upload_path, output_file)
         print(f"문서가 {output_file}에 저장되었습니다.")
         return self.time, output_file
 

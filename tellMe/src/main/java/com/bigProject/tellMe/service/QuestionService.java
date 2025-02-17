@@ -18,6 +18,7 @@ import com.bigProject.tellMe.mapper.ReportMapper;
 import com.bigProject.tellMe.repository.FilteredRepository;
 import com.bigProject.tellMe.repository.QuestionRepository;
 import com.bigProject.tellMe.repository.ReportRepository;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -32,22 +33,22 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.time.LocalDate;
 import java.util.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
-import java.time.LocalDateTime;
 
 
 @Service
-@RequiredArgsConstructor
-public class QuestionService {
+    @RequiredArgsConstructor
+    public class QuestionService {
     private final FastApiClient fastApiClient;
-
+    private final Map<String, SseEmitter> emitters = new ConcurrentHashMap<>();
     @Lazy
     @Autowired
     private ComplaintRestController complaintRestController;
@@ -153,7 +154,7 @@ public class QuestionService {
             userNode.put("user_name", userDTO.getUserName());
             userNode.put("phone", userDTO.getPhone());
             //userNode.put("count", userDTO.getCount());
-            //ObjectNode를 `Map<String, Object>`로 변환
+            //ObjectNode를 Map<String, Object>로 변환
             Map<String, Object> userMap = objectMapper.convertValue(userNode, Map.class);
 
             Map<String, Object> postBody = new HashMap<>();
@@ -216,7 +217,7 @@ public class QuestionService {
                 // ✅ 모든 사용자에게 새로고침 이벤트 전송
                 List<Long> allUserIds = userService.getAllUserIds(); // 전체 사용자 ID 조회
                 for (Long userIds : allUserIds) {
-                    complaintRestController.triggerEvent(userIds, "refresh", null);
+                    complaintRestController.triggerEvent(userIds, "refresh", "reload");
                 }
             }
             return CompletableFuture.completedFuture(null);
@@ -226,6 +227,7 @@ public class QuestionService {
         }
     }
 
+    @Transactional
     private void reportApi(Map<String, Object> requestBody) {
         System.out.println("==============reportApi : requestBody : "+requestBody);
         Map<String, Object> responseBody = fastApiClient.getReport(requestBody);
@@ -243,7 +245,7 @@ public class QuestionService {
             String createDateStr = (String) reportReq.get("create_date"); // 🔹 FastAPI 응답에서 가져오기
             // 🔹 변환을 위한 포맷 정의
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyMMdd_HHmmss");
-            // 🔹 `LocalDateTime`으로 변환
+            // 🔹 LocalDateTime으로 변환
             LocalDateTime createDate = LocalDateTime.parse(createDateStr, formatter);
             reportDTO.setCreateDate(createDate);
             reportDTO.setCategory(categoryString);

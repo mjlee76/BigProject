@@ -9,9 +9,11 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface NotificationMapper {
     @Mapping(target = "user", source = "notificationDTO.userId")
+    @Mapping(target = "isRead", source = "notificationDTO.read")
     Notification nocaDTOToNoca(NotificationDTO notificationDTO);
 
     @Mapping(target = "userId", source = "notification.user.id")
+    @Mapping(target = "isRead", source = "notification.read")
     NotificationDTO nocaToNocaDTO(Notification notification);
 
     default User mapUser(Long userId) {
