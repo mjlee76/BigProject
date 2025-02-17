@@ -18,6 +18,7 @@ import com.bigProject.tellMe.mapper.ReportMapper;
 import com.bigProject.tellMe.repository.FilteredRepository;
 import com.bigProject.tellMe.repository.QuestionRepository;
 import com.bigProject.tellMe.repository.ReportRepository;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -38,18 +39,16 @@ import java.time.LocalDate;
 import java.util.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
-import java.time.LocalDateTime;
 
 
 @Service
-@RequiredArgsConstructor
-public class QuestionService {
+    @RequiredArgsConstructor
+    public class QuestionService {
     private final FastApiClient fastApiClient;
-
+    private final Map<String, SseEmitter> emitters = new ConcurrentHashMap<>();
     @Lazy
     @Autowired
     private ComplaintRestController complaintRestController;
@@ -218,7 +217,7 @@ public class QuestionService {
                 // ✅ 모든 사용자에게 새로고침 이벤트 전송
                 List<Long> allUserIds = userService.getAllUserIds(); // 전체 사용자 ID 조회
                 for (Long userIds : allUserIds) {
-                    complaintRestController.triggerEvent(userIds, "refresh", null);
+                    complaintRestController.triggerEvent(userIds, "refresh", "reload");
                 }
             }
             return CompletableFuture.completedFuture(null);
@@ -228,6 +227,7 @@ public class QuestionService {
         }
     }
 
+    @Transactional
     private void reportApi(Map<String, Object> requestBody) {
         System.out.println("==============reportApi : requestBody : "+requestBody);
         Map<String, Object> responseBody = fastApiClient.getReport(requestBody);
