@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
-<html lang="en">
 <head th:replace="layouts/navbar::tellMe_head"/>
 <head th:replace="layouts/footer::tellMe_foot"/>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="_csrf" th:content="${_csrf.token}"/>
     <title>보고서 관리</title>
     <link rel="stylesheet" type="text/css" th:href="@{/css/report.css}" />
     <link href="https://cdn.jsdelivr.net/gh/sun-typeface/SUIT@2/fonts/static/woff2/SUIT.css" rel="stylesheet">
@@ -63,27 +63,30 @@
         <tr th:if="${reports.isEmpty()}" class="empty-message">
             <td colspan="6" style="text-align: center;">등록된 보고서가 없습니다.</td>
         </tr>
+        <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
         <!-- 데이터베이스에서 불러온 보고서 목록 표시 -->
         <tr th:each="report, stat : ${reports}">
             <td th:text="${(currentPage - 1) * 10 + stat.index + 1}"></td>  <!-- 순번 계산 -->
             <td>
                 <!-- 보고서 제목 클릭 시 웹뷰어에서 열기 -->
-                <a th:href="@{/manager/report/view/{id}(id=${report.id})}" target="_blank" th:text="${report.report}"></a>
+<!--                <a th:href="@{/manager/report/view/{id}(id=${report.id})}" target="_blank" th:text="${report.report}"></a>-->
 <!--                <a th:href="@{'/tellMe/tellMe-reports/' + ${report.report}}" class="download-link" title="첨부파일 다운로드" download>-->
 <!--                    <span th:text="${report.report}"></span>-->
 <!--                </a>-->
+                <span style="cursor: pointer;" th:text="${report.report}" th:attr="data-report-id=${report.id}, data-report-name=${report.report}"></span>
             </td>
             <td th:text="${#temporals.format(report.createDate, 'yyyy-MM-dd')}"></td>
             <td th:text="${report.category}"></td>
-            <td th:text="${report.reportStatus}" th:classappend="${report.reportStatus == '미확인' ? 'unchecked' : 'checked'}"></td>
+<!--            <td th:text="${report.reportStatus}" th:classappend="${report.reportStatus == '미확인' ? 'unchecked' : 'checked'}"></td>-->
+            <td th:id="|status-${report.id}|" th:text="${report.reportStatus}"></td>
             <td>
-                <a th:href="@{/manager/report/view/{id}(id=${report.id})}" class="download-link" data-report-id="${report.id}">
+                <span style="cursor: pointer;" th:attr="data-report-id=${report.id}, data-report-name=${report.report}">
                     <svg xmlns="http://www.w3.org/2000/svg" width="15" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-download" viewBox="0 0 24 24">
                         <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                         <polyline points="7 10 12 15 17 10"></polyline>
                         <line x1="12" y1="15" x2="12" y2="3"></line>
                     </svg>
-                </a>
+                </span>
             </td>
         </tr>
         </tbody>
@@ -118,6 +121,14 @@
 </main>
 <div th:replace="layouts/footer::tellMe_footer"></div>
 
-
+<script>
+    document.querySelectorAll('span[data-report-id]').forEach(function(span) {
+        span.addEventListener('click', function() {
+            const reportId = span.getAttribute('data-report-id');
+            const reportName = span.getAttribute('data-report-name');
+            confirmAndDownload(reportId, reportName);
+        });
+    });
+</script>
 </body>
 </html>

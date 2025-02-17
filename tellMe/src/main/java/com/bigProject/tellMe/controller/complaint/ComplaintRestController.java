@@ -73,6 +73,9 @@ public class ComplaintRestController {
     @GetMapping("/sse/{userId}")
     public SseEmitter subscribe(@PathVariable String userId) {
         UserDTO user = userService.findByUserId(userId);
+        if (user == null) {
+            throw new IllegalArgumentException("❌ 유효하지 않은 사용자 ID: " + userId);
+        }
         Long id = user.getId();
         SseEmitter emitter = new SseEmitter(60 * 1000L); // 1분 타임아웃
         emitters.put(id, emitter);
@@ -85,7 +88,7 @@ public class ComplaintRestController {
     }
 
     // ✅ 특정 사용자에게 이벤트 전송 (알림 또는 새로고침)
-    public void triggerEvent(@PathVariable Long userId, @RequestParam String type, @RequestBody(required = false) String message) {
+    public void triggerEvent(Long userId, String type, String message) {
         SseEmitter emitter = emitters.get(userId);
         if(emitter == null) {
             emitter = new SseEmitter(60 * 1000L);
@@ -95,7 +98,7 @@ public class ComplaintRestController {
             if ("notification".equals(type)) {
                 emitter.send(SseEmitter.event().name(type).data(message));
             } else if ("refresh".equals(type)) {
-                emitter.send(SseEmitter.event().name(type).data("reload"));
+                emitter.send(SseEmitter.event().name(type).data(message));
             }
             //emitter.send(SseEmitter.event().data(message));
         } catch (IOException e) {
