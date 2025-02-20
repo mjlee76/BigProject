@@ -5,8 +5,6 @@ $(document).ready(function() {
    });
 });
 
-//const notificationIcon = document.getElementById("notification-icon");
-//const userId = notificationIcon ? notificationIcon.dataset.userid : null;
 document.addEventListener("DOMContentLoaded", function () {
     const notificationIcon = document.getElementById("notification-icon");
     const notificationBox = document.getElementById("notification-box");
@@ -16,18 +14,16 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const userId = window.userId;
 
-    if (typeof userId === "undefined" || !userId || userId === "anonymous") {
+    if (!userId || userId === "anonymous") {
         console.error("❌ userId가 정의되지 않았습니다. SSE를 실행할 수 없습니다.");
+        return;  // ❗ userId가 없으면 코드 실행 중지
     } else {
-    //    const notificationIcon = document.getElementById("notification-icon");
-    //    const userId = notificationIcon ? notificationIcon.dataset.userid : null;
         console.log(userId);
         let eventSource = new EventSource(`/tellMe/api/sse/${userId}`);
 
         // ✅ 알림 이벤트 처리
         eventSource.addEventListener("notification", function (event) {
             console.log("🔔 새로운 알림 수신:", event.data);
-            //alert(event.data); // 알림 UI 업데이트 로직 추가
             fetchNotifications(); // 새 알림 수신 시 UI 갱신
         });
 
@@ -80,12 +76,8 @@ document.addEventListener("DOMContentLoaded", function () {
         // 알림 개수 표시 함수
         function showNotificationBadge(notifications) {
             const unreadCount = notifications.filter(n => !n.read).length;
-            if (unreadCount > 0) {
-                notificationCount.textContent = unreadCount ;
-                notificationCount.style.display = "block";
-            } else {
-                notificationCount.style.display = "none";
-            }
+            notificationCount.textContent = unreadCount > 0 ? unreadCount : "";
+            notificationCount.style.display = unreadCount > 0 ? "block" : "none";
         }
 
         // ✅ 알림 클릭 시 읽음 상태 업데이트
@@ -104,18 +96,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 if (response.ok) {
                     console.log(`✅ 알림(${notificationId})을 읽음 상태로 변경`);
-
-//                    const notificationElement = document.querySelector(`[data-id="${notificationId}"]`);
-//                    if (notificationElement) {
-//                        notificationElement.classList.add("read"); // ✅ 읽은 알림 스타일 적용
-//                    }
-
                     await fetchNotifications(); // ✅ DB 변경 후 즉시 UI 반영
                 } else {
                     console.error("❌ 알림 상태 변경 실패");
                 }
-                //UI에서 읽음 상태 반영
-                //element.classList.add("read");
             }catch (error) {
                 console.error("❌ 알림 읽음 처리 실패:", error);
             }
@@ -160,4 +144,3 @@ document.addEventListener("DOMContentLoaded", function () {
         fetchNotifications();
     }
 });
-

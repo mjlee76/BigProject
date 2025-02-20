@@ -219,7 +219,7 @@ function sendVerificationEmail() {
         }
     })
     .then(response => response.json())
-    .then(data => {
+    .then(data =>
         document.getElementById("emailVerificationStatus").innerText = data.message;
     })
     .catch(error => {
