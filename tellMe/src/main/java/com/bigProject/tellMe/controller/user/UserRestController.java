@@ -199,9 +199,13 @@ public class UserRestController {
 
     // 3️⃣ 이름 변경 요청 (이메일 인증 후)
     @PostMapping("/update-name")
-    public ResponseEntity<Map<String, String>> updateUserName(Authentication auth, @RequestBody Map<String, String> request) {
+    public ResponseEntity<Map<String, String>> updateUserName(
+            Authentication auth,
+            @RequestBody UserDTO userDTO,  // ✅ userName만 DTO로 받음
+            @RequestHeader("Verification-Code") String verificationCode) {  // ✅ 인증 코드는 헤더에서 받음
+
         String userId = auth.getName();
-        String newName = request.get("newName");
+        String newName = userDTO.getUserName();  // ✅ DTO에서 이름 가져오기
 
         Optional<User> userOptional = Optional.ofNullable(userRepository.findByUserId(userId));
         if (userOptional.isEmpty()) {
@@ -209,10 +213,19 @@ public class UserRestController {
         }
 
         User user = userOptional.get();
-        user.setUserName(newName);
+        String email = user.getEmail();
 
-        userRepository.save(user); // ✅ 이름 업데이트
+        // ✅ 이메일 인증 코드 검증
+        boolean isValid = emailService.verifyCode(email, verificationCode);
+        if (!isValid) {
+            return ResponseEntity.status(400).body(Map.of("success", "false", "message", "인증 코드가 올바르지 않습니다."));
+        }
+
+        // ✅ 이름 변경
+        user.setUserName(newName);
+        userRepository.save(user);
 
         return ResponseEntity.ok(Map.of("success", "true", "message", "이름이 성공적으로 변경되었습니다."));
     }
+
 }

@@ -257,21 +257,25 @@ function verifyEmailCode() {
 // ✅ 이름 변경 요청 (이메일을 보내지 않고, 백엔드에서 사용자 식별)
 function changeUserName() {
     const newName = document.getElementById("newName").value;
+    const verificationCode = document.getElementById("emailVerificationCode").value; // ✅ 인증 코드 가져오기
 
     fetch("/tellMe/update-name", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
-            "X-CSRF-TOKEN": document.querySelector("input[name='_csrf']").value
+            "X-CSRF-TOKEN": document.querySelector("input[name='_csrf']").value,
+            "Verification-Code": verificationCode  // ✅ 인증 코드를 헤더에 포함
         },
-        body: JSON.stringify({ newName: newName })  // ✅ 이메일 없이 이름만 보냄
+        body: JSON.stringify({
+            userName: newName  // ✅ 이름만 JSON으로 보냄
+        })
     })
     .then(response => response.json())
     .then(data => {
         alert(data.message);
         if (data.success) {
-            document.querySelector(".user-name").innerText = newName;  // ✅ UI에서 이름 변경 반영
-            closeNameEditModal(); // ✅ 모달 닫기
+            document.querySelector(".user-name").innerText = newName;
+            closeNameEditModal();
             location.reload();
         }
     })
@@ -279,4 +283,5 @@ function changeUserName() {
         console.error("Error:", error);
     });
 }
+
 
