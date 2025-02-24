@@ -41,7 +41,6 @@ image_model, processor, image_classifier = nd.load_model(load_directory)
 spam_detector = SpamDetector()
 classifier = TextClassifier()
 changetexter = ChangeText()
-report = MakeReport()
 docu_loader = LoadDocumentFile()
 logger = logging.getLogger("my_logger")
 
@@ -62,7 +61,6 @@ async def startup_event():
     await docu_loader.init()
     await changetexter.init()
     await spam_detector.init()
-    await report.init()
 
 #게시글 작성자 정보
 class UserInfo(BaseModel):

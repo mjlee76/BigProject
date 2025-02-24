@@ -220,10 +220,11 @@ class MakeReport():
             cell_label = table.cell(2, 1)
         else:
             cell_label = table.cell(2, 8)
-        paragraph = cell_label.paragraphs[0]
-        run = paragraph.add_run("○")
-        run.font.size = Pt(22)
-        
+            
+        if "○" not in cell_label.text:
+            paragraph = cell_label.paragraphs[0]
+            run = paragraph.add_run("○")
+            run.font.size = Pt(22)
         prompt = self.report_prompt(report_body)
         table.cell(6, 1).text = prompt
         
