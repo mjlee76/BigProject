@@ -56,7 +56,7 @@ public class ComplaintRestController {
             throw new IllegalArgumentException("❌ 유효하지 않은 사용자 ID: " + userId);
         }
         Long id = user.getId();
-        SseEmitter emitter = new SseEmitter(60 * 1000L); // 1분 타임아웃
+        SseEmitter emitter = new SseEmitter(3 * 60 * 1000L); // 1분 타임아웃
         emitters.put(id, emitter);
 
         // 연결 종료 처리
@@ -70,7 +70,7 @@ public class ComplaintRestController {
     public void triggerEvent(Long userId, String type, String message) {
         SseEmitter emitter = emitters.get(userId);
         if(emitter == null) {
-            emitter = new SseEmitter(60 * 1000L);
+            emitter = new SseEmitter(3 * 60 * 1000L);
             emitters.put(userId, emitter);
         }
         try {
