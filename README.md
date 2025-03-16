@@ -3,26 +3,6 @@
 - 기한 : 2024.12.30 ~ 2025.02.13
 - 서비스 개요 : 악성민원 클린 ai봇
 
-# 팀원
-<table>
-  <tbody>
-    <tr>
-      <td align="center"><a href="https://github.com/mjlee76"><img src="https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white" width="100px;" alt=""/><br /><sub><b> 이민준 </b></sub></a><br /></td>
-      <td align="center"><a href="https://github.com/mjlee76"><img src="https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white" width="100px;" alt=""/><br /><sub><b> 문태식 </b></sub></a><br /></td>
-      <td align="center"><a href="https://github.com/mjlee76"><img src="https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white" width="100px;" alt=""/><br /><sub><b> 문태식 </b></sub></a><br /></td>
-    </tr>
-  </tbody>
-</table>
-<table>
-  <tbody>
-    <tr>
-      <td align="center"><a href="https://github.com/mjlee76"><img src="https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white" width="100px;" alt=""/><br /><sub><b> 이민준 </b></sub></a><br /></td>
-      <td align="center"><a href="https://github.com/mjlee76"><img src="https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white" width="100px;" alt=""/><br /><sub><b> 문태식 </b></sub></a><br /></td>
-      <td align="center"><a href="https://github.com/mjlee76"><img src="https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white" width="100px;" alt=""/><br /><sub><b> 문태식 </b></sub></a><br /></td>
-    </tr>
-  </tbody>
-</table>
-
 # 서비스 소개
 
 ## 가상환경 설정
